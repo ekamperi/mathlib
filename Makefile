@@ -47,10 +47,10 @@ t_cbrt: t_cbrt.c
 t_constants: t_constants.c
 	$(CC99) $(CCFLAGS) $(INCLUDE) t_constants.c -o t_constants $(LIB)
 
-t_copysign: t_copysign.c
+t_copysign: t_copysign.c subr_random.c
 	$(CC99) $(CCFLAGS) $(INCLUDE) t_copysign.c subr_random.c -o t_copysign $(LIB)
 
-t_fmax: t_fmax.c
+t_fmax: t_fmax.c subr_random.c
 	$(CC99) $(CCFLAGS) $(INCLUDE) t_fmax.c subr_random.c -o t_fmax $(LIB)
 
 t_float: t_float.c
@@ -68,10 +68,10 @@ t_hypot: t_hypot.c
 t_ldexp: t_ldexp.c
 	$(CC99) $(CCFLAGS) $(INCLUDE) t_ldexp.c -o t_ldexp $(LIB)
 
-t_mac: t_mac.c
+t_mac: t_mac.c subr_random.c subr_errhandling.c
 	$(CC99) $(CCFLAGS) $(INCLUDE) t_mac.c subr_random.c subr_errhandling.c -o t_mac $(LIB)
 
-t_nextafter: t_nextafter.c
+t_nextafter: t_nextafter.c subr_random.c subr_errhandling.c
 	$(CC99) $(CCFLAGS) $(INCLUDE) t_nextafter.c subr_errhandling.c subr_random.c -o t_nextafter $(LIB)
 
 t_sqrt: t_sqrt.c
@@ -80,13 +80,13 @@ t_sqrt: t_sqrt.c
 t_tanh: t_tanh.c subr_random.c
 	$(CC99) $(CCFLAGS) $(INCLUDE) t_tanh.c subr_random.c -o t_tanh $(LIB)
 
-t_tgamma: t_tgamma.c
+t_tgamma: t_tgamma.c subr_random.c subr_errhandling.c
 	$(CC99) $(CCFLAGS) $(INCLUDE) t_tgamma.c subr_random.c subr_errhandling.c  -o t_tgamma $(LIB)
 
-t_trig_ident: t_trig_ident.c
+t_trig_ident: t_trig_ident.c subr_random.c
 	$(CC99) $(CCFLAGS) $(INCLUDE) t_trig_ident.c subr_random.c -o t_trig_ident $(LIB)
 
-t_trunc: t_trunc.c
+t_trunc: t_trunc.c subr_random.c
 	$(CC99) $(CCFLAGS) $(INCLUDE) t_trunc.c subr_random.c -o t_trunc $(LIB)
 
 t_types: t_types.c
