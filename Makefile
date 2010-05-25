@@ -29,7 +29,7 @@ CCFLAGS=-Wall -W -Wformat-nonliteral -Wcast-align -Wpointer-arith 		\
 INCLUDE=-I/usr/opt/include
 LIB=-L/usr/opt/lib -lm -latf-c
 
-t_acos: t_acos.c
+t_acos: t_acos.c subr_fpcmp.h
 	$(CC99) $(CCFLAGS) $(INCLUDE) 				\
 		t_acos.c 					\
 	-o t_acos 						\
