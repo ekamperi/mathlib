@@ -63,17 +63,3 @@ DECL(float)
 DECL(double)
 typedef long double long_double;
 DECL(long_double)
-
-#if 0
-int
-main(void)
-{
-	srand48(time(NULL));
-	int i;
-	for (i = 0; i < 10; i++)
-		printf("%Len", random_long_double(FP_NORMAL));
-
-	return  0;
-}
-#endif
-
