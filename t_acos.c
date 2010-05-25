@@ -1,0 +1,122 @@
+#define _XOPEN_SOURCE 600
+
+#include <math.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
+
+#include <atf-c.h>
+
+struct tentry {
+	double x;       /* Input */
+	double y;       /* acos output */
+} ttable[] = {
+	{  0.4692869279377545,  1.0823132365133747 },
+	{ -0.11347486190157241, 1.6845161380609253 },
+	{  0.4647505724144434,  1.087443434912057  },
+	{ -0.6976324477513756,  2.3428839502471837 },
+	{ -0.2452115558455712,  1.8185342314424182 },
+	{  0.4589749043710669,  1.0939552758742006 },
+	{  0.6611969343774788,  0.8483832246938233 },
+	{ -0.9541427464713692,  2.8375792166185008 },
+	{ -0.2530558053894705,  1.8266338963621322 },
+	{ -0.7909187169003782,  2.4831052355172236 },
+	{  0.5757528726313965,  0.9572716712493159 },
+	{ -0.7155298261397389,  2.368178569675924  },
+	{  0.42990536464184537, 1.1264083681668051 },
+	{  0.3573656087378052,  1.2053506152655027 },
+	{  0.8352071602803219,  0.5822869499591871 },
+	{  0.6113005673267504,  0.9130933983404338 },
+	{ -0.2545812668769236,  1.8282110054372431 },
+	{  0.8354152061585842,  0.5819085315754063 },
+	{  0.6010496167223316,  0.9259825505608865 },
+	{ -0.04366697399123387, 1.6144771901052724 }
+};
+
+/*
+ * Test case 1 -- Basic functionality
+ */
+ATF_TC(test_acos1);
+ATF_TC_HEAD(test_acos1, tc)
+{
+	atf_tc_set_md_var(tc,
+	    "descr",
+	    "Basic functionality based on a set of good (x, acos(x)) pairs");
+}
+ATF_TC_BODY(test_acos1, tc)
+{
+	size_t i, N;
+
+	N = sizeof(ttable) / sizeof(ttable[0]);
+	for (i = 0; i < N; i++) {
+		ATF_REQUIRE(ttable[i].x >= -1.0 && ttable[i].x <= 1.0);
+
+		ATF_CHECK(fabs(acos(ttable[i].x) - ttable[i].y) < 1E-5);
+	}
+}
+
+/*
+ * Test case 2 -- Range
+ */
+ATF_TC(test_acos2);
+ATF_TC_HEAD(test_acos2, tc)
+{
+	atf_tc_set_md_var(tc,
+	    "descr",
+	    "The range of acos functions is [0, pi] radians");
+}
+ATF_TC_BODY(test_acos2, tc)
+{
+	size_t i, N;
+
+	N = sizeof(ttable) / sizeof(ttable[0]);
+	for (i = 0; i < N; i++) {
+		ATF_REQUIRE(ttable[i].x >= -1.0 && ttable[i].x <= 1.0);
+
+		ATF_CHECK(acos(ttable[i].x) >= 0.0);
+		ATF_CHECK(acos(ttable[i].x) <= M_PI);
+	}
+
+	/* Try the same thing but with some random input */
+	srand(time(NULL));
+
+	for (i = 0; i < 10000; i++) {
+		double x = -1.0 + rand() / ((RAND_MAX / 2.0) + 1.0);
+		ATF_REQUIRE(x >= -1.0 && x <= 1.0);
+
+		ATF_CHECK(acos(x) >= 0.0);
+		ATF_CHECK(acos(x) <= M_PI);
+	}
+}
+
+/*
+ * Test case 3 -- Edge cases
+ */
+ATF_TC(test_acos3);
+ATF_TC_HEAD(test_acos3, tc)
+{
+	atf_tc_set_md_var(tc,
+	    "descr",
+	    "Check some edge cases");
+}
+ATF_TC_BODY(test_acos3, tc)
+{
+#ifdef	NAN
+	/* If x is NaN, a NaN shall be returned */
+	ATF_CHECK(fpclassify(acos(NAN)) == FP_NAN);
+#endif
+
+	/* If x is +1, +0 shall be returned */
+	ATF_CHECK(fpclassify(acos(1.0)) == FP_ZERO);
+	ATF_CHECK(signbit(acos(1.0)) == 0);
+}
+
+/* Add test cases to test program */
+ATF_TP_ADD_TCS(tp)
+{
+	ATF_TP_ADD_TC(tp, test_acos1);
+	ATF_TP_ADD_TC(tp, test_acos2);
+	ATF_TP_ADD_TC(tp, test_acos3);
+
+	return atf_no_error();
+}
