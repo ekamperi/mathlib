@@ -35,13 +35,13 @@ t_acos: t_acos.c subr_fpcmp.h
 	-o t_acos 						\
 	$(LIB)
 
-t_asin: t_asin.c
+t_asin: t_asin.c subr_fpcmp.h
 	$(CC99) $(CCFLAGS) $(INCLUDE) 				\
 		t_asin.c 					\
 	-o t_asin 						\
 	$(LIB)
 
-t_atan: t_atan.c
+t_atan: t_atan.c subr_fpcmp.h
 	$(CC99) $(CCFLAGS) $(INCLUDE)				\
 		t_atan.c					\
 	-o t_atan						\

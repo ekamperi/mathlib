@@ -1,11 +1,12 @@
 #define _XOPEN_SOURCE 600
 
+#include <atf-c.h>
 #include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
 
-#include <atf-c.h>
+#include "subr_fpcmp.h"
 
 struct tentry {
 	double x;       /* Input */
@@ -16,15 +17,15 @@ struct tentry {
 	{   1.711232427407161,   1.0419456601902422  },
 	{  -1.246969484557519,  -0.8948709940669250  },
 	{   0.2449559926325371,  0.2402257569534314  },
-	{  -1.601381594401872,  -1.0125848589164963  },			       
+	{  -1.601381594401872,  -1.0125848589164963  },
 	{   1.566410045518831,   1.0026172984325502  },
 	{   0.8968664489700577,  0.7310811581675730  },
-	{  -1.323657975719039,  -0.9237958518208762  },			    
+	{  -1.323657975719039,  -0.9237958518208762  },
 	{   0.1604104449543282,  0.1590554363795588  },
 	{   0.9703219032425796,  0.7703367399058148  },
 	{   1.978948399056122,   1.1029026684533513  },
 	{   1.756387255122500,   1.0532181446147413  },
-	{  -0.3095501907121543, -0.3001952453616477  },			       
+	{  -0.3095501907121543, -0.3001952453616477  },
 	{  -0.7126646723375600, -0.6191752701433691  },
 	{   1.149582555243343,   0.8548729605680148  },
 	{  -0.9528324881152832, -0.7612494752261140  },
@@ -59,7 +60,7 @@ ATF_TC_BODY(test_atan1, tc)
 
 	N = sizeof(ttable) / sizeof(ttable[0]);
 	for (i = 0; i < N; i++) {
-		ATF_CHECK(fabs(atan(ttable[i].x) - ttable[i].y) < 1E-5);
+		ATF_CHECK(FPCMP_EQUAL(atan(ttable[i].x), ttable[i].y));
 	}
 }
 
@@ -76,6 +77,7 @@ ATF_TC_HEAD(test_atan2, tc)
 ATF_TC_BODY(test_atan2, tc)
 {
 	size_t i, N;
+	double x;
 
 	N = sizeof(ttable) / sizeof(ttable[0]);
 	for (i = 0; i < N; i++) {
@@ -87,15 +89,54 @@ ATF_TC_BODY(test_atan2, tc)
 	srand(time(NULL));
 
 	for (i = 0; i < 10000; i++) {
-		double x = -1.0 + rand() / ((RAND_MAX / 2.0) + 1.0);
+		x = -1.0 + rand() / ((RAND_MAX / 2.0) + 1.0);
+
 		ATF_CHECK(atan(x) >= -M_PI_2 -0.1);
-		ATF_CHECK(atan(x) <= M_PI_2 +0.1);
+		ATF_CHECK(atan(x) <=  M_PI_2 +0.1);
 	}
 }
 
 /*
  * Test case 3 -- Edge cases
  */
+#define CHK_REG         (1 << 0)
+#define CHK_ZERO        (1 << 1)
+#define CHK_NAN         (1 << 2)
+#define CHK_SIGN        (1 << 3)
+
+struct t3entry {
+	double x;       /* Input */
+	double y;       /* atan output */
+	int check;
+} t3table[] = {
+	/* If x is NaN, a NaN shall be returned */
+#ifdef NAN
+	{ NAN, NAN, CHK_NAN },
+#endif
+
+	/* If x is +-0, x shall be returned */
+	{ +0.0, +0.0, CHK_ZERO | CHK_SIGN },
+	{ -0.0, -0.0, CHK_ZERO | CHK_SIGN },
+
+	/* If x is +-Inf, +-pi/2 shall be returned */
+#ifdef  INFINITY
+	{  INFINITY,  M_PI_2, CHK_REG },
+	{ -INFINITY, -M_PI_2, CHK_REG },
+#endif
+#ifdef	HUGE_VAL
+	{  HUGE_VAL,  M_PI_2, CHK_REG },
+	{ -HUGE_VAL, -M_PI_2, CHK_REG },
+#endif
+#ifdef	HUGE_VALF
+	{  HUGE_VALF,  M_PI_2, CHK_REG },
+	{ -HUGE_VALF, -M_PI_2, CHK_REG },
+#endif
+#ifdef	HUGE_VALL
+	{  HUGE_VALL,  M_PI_2, CHK_REG },
+	{ -HUGE_VALL, -M_PI_2, CHK_REG },
+#endif
+};
+
 ATF_TC(test_atan3);
 ATF_TC_HEAD(test_atan3, tc)
 {
@@ -105,22 +146,37 @@ ATF_TC_HEAD(test_atan3, tc)
 }
 ATF_TC_BODY(test_atan3, tc)
 {
-#ifdef	NAN
-	/* If x is NaN, a NaN shall be returned */
-	ATF_CHECK(fpclassify(atan(NAN)) == FP_NAN);
-#endif
+	size_t i, N;
+	double oval;    /* output value */
 
-	/* If x is +-0, x shall be returned */
-	ATF_CHECK(fpclassify(atan(+0.0)) == FP_ZERO);
-	ATF_CHECK(signbit(atan(+0.0)) == 0);
+	N = sizeof(t3table) / sizeof(t3table[0]);
+	for (i = 0; i < N; i++) {
+		/* Make sure that only allowed checks are set */
+		ATF_REQUIRE((t3table[i].check
+			& ~(CHK_REG | CHK_ZERO | CHK_NAN | CHK_SIGN)) == 0);
 
-	ATF_CHECK(fpclassify(atan(-0.0)) == FP_ZERO);
-	ATF_CHECK(signbit(atan(-0.0)) != 0);
+		/* Don't allow conflicting types to be set */
+		ATF_REQUIRE((t3table[i].check & (CHK_REG | CHK_NAN))
+		    != (CHK_REG | CHK_NAN));
+		ATF_REQUIRE((t3table[i].check & (CHK_ZERO | CHK_NAN))
+		    != (CHK_ZERO | CHK_NAN));
 
-	/* If x is +-Inf, +-/pi2 shall be returned */
+
+		/* Ready to go */
+		oval = atan(t3table[i].x);
+		if (t3table[i].check & CHK_REG) {
+			ATF_CHECK(FPCMP_EQUAL(oval, t3table[i].y));
+		}
+		if (t3table[i].check & CHK_ZERO) {
+			ATF_CHECK(fpclassify(oval) == FP_ZERO);
+		}
+		if (t3table[i].check & CHK_SIGN) {
+			ATF_CHECK(signbit(oval) == signbit(t3table[i].y));
+		}
+	}
 
 	/*
-	 * If x is subnormal, a range error _may_ occur and x _should_ be
+	 * XXX: If x is subnormal, a range error _may_ occur and x _should_ be
 	 * returned.
 	 */
 }
