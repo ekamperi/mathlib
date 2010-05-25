@@ -1,4 +1,5 @@
 all:	t_acos		\
+	t_acosh		\
 	t_asin		\
 	t_atan		\
 	t_atan2		\
@@ -33,6 +34,12 @@ t_acos: t_acos.c subr_fpcmp.h
 	$(CC99) $(CCFLAGS) $(INCLUDE) 				\
 		t_acos.c 					\
 	-o t_acos 						\
+	$(LIB)
+
+t_acosh: t_acosh.c subr_fpcmp.h
+	$(CC99) $(CCFLAGS) $(INCLUDE)				\
+		t_acosh.c					\
+	-o t_acosh						\
 	$(LIB)
 
 t_asin: t_asin.c subr_fpcmp.h
