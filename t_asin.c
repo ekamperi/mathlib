@@ -1,11 +1,12 @@
 #define _XOPEN_SOURCE 600
 
+#include <atf-c.h>
 #include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
 
-#include <atf-c.h>
+#include "subr_fpcmp.h"
 
 struct tentry {
 	double x;       /* Input */
@@ -49,9 +50,11 @@ ATF_TC_BODY(test_asin1, tc)
 
 	N = sizeof(ttable) / sizeof(ttable[0]);
 	for (i = 0; i < N; i++) {
+		/* Sanity check */
 		ATF_REQUIRE(ttable[i].x >= -1.0 && ttable[i].x <= 1.0);
 
-		ATF_CHECK(fabs(acos(ttable[i].x) - ttable[i].y) < 1E-5);
+		/* Actual check */
+		ATF_CHECK(FPCMP_EQUAL(acos(ttable[i].x), ttable[i].y));
 	}
 }
 
@@ -68,11 +71,14 @@ ATF_TC_HEAD(test_asin2, tc)
 ATF_TC_BODY(test_asin2, tc)
 {
 	size_t i, N;
+	double x;
 
 	N = sizeof(ttable) / sizeof(ttable[0]);
 	for (i = 0; i < N; i++) {
+		/* Sanity check */
 		ATF_REQUIRE(ttable[i].x >= -1.0 && ttable[i].x <= 1.0);
 
+		/* Actual checks */
 		ATF_CHECK(asin(ttable[i].x) >= -M_PI_2 -0.1);
 		ATF_CHECK(asin(ttable[i].x) <=  M_PI_2 +0.1);
 	}
@@ -81,11 +87,13 @@ ATF_TC_BODY(test_asin2, tc)
 	srand(time(NULL));
 
 	for (i = 0; i < 10000; i++) {
-		double x = -1.0 + rand() / ((RAND_MAX / 2.0) + 1.0);
+		x = -1.0 + rand() / ((RAND_MAX / 2.0) + 1.0);
+		/* Sanity check */
 		ATF_REQUIRE(x >= -1.0 && x <= 1.0);
 
-		ATF_CHECK(asin(x) >= -M_PI_2 -0.1);
-		ATF_CHECK(asin(x) <= M_PI_2 +0.1);
+		/* XXX: Actual checks */
+		ATF_CHECK(asin(x) >= -M_PI_2 - 0.1);
+		ATF_CHECK(asin(x) <=  M_PI_2 + 0.1);
 	}
 }
 
