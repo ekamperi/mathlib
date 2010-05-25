@@ -96,4 +96,4 @@ clean:
 	git clean -f
 
 run:
-	atf-run | atf-report
+	atf-run . fenv | atf-report
