@@ -48,6 +48,12 @@ t_asin: t_asin.c subr_fpcmp.h
 	-o t_asin 						\
 	$(LIB)
 
+t_asinh: t_asinh.c subr_fpcmp.h
+	$(CC99) $(CCFLAGS) $(INCLUDE)				\
+		t_asinh.c					\
+	-o t_asinh						\
+	$(LIB)
+
 t_atan: t_atan.c subr_fpcmp.h
 	$(CC99) $(CCFLAGS) $(INCLUDE)				\
 		t_atan.c					\
