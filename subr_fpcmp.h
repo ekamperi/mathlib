@@ -1,14 +1,17 @@
 #ifndef	__SUBR_FPCMP_H__
 #define	__SUBR_FPCMP_H__
 
+#define _XOPEN_SOURCE	600
 #include "math.h"
 
 #define	FPCMP_EQUAL(x, y)	\
 	(fabs((x) - (y)) < (1E-5 * fmax(fabs((x)), fabs((y)))))
 
 #ifndef	iszero
-#define	iszero(x)	(fpclassify((x) == FP_ZERO))
+#define	iszero(x)	(fpclassify(x) == FP_ZERO)
 #endif
+
+int fpcmp_equal(double x, double y);
 
 int
 fpcmp_equal(double x, double y)
@@ -24,7 +27,7 @@ fpcmp_equal(double x, double y)
 		return ((iszero(x) && iszero(y))
 		    && (signbit(x) == signbit(y)));
 
-	return ((fabs(x) - y) < (1E-5 * fmax(fabs(x), fabs(y))));
+	return ((fabs(x - y) < (1E-10 * fmax(fabs(x), fabs(y)))));
 }
 
 #endif  /* !__SUBR_FPCMP_H__ */
