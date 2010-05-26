@@ -14,7 +14,7 @@ void
 clear_exceptions(void)
 {
 #if defined(math_errhandling) && defined(MATH_ERREXCEPT)        \
-        && (math_errhandling & MATH_ERREXCEPT)
+	&& (math_errhandling & MATH_ERREXCEPT)
 	ATF_REQUIRE(feclearexcept(FE_ALL_EXCEPT) == 0);
 #endif
 }
@@ -23,28 +23,56 @@ void
 clear_errno(void)
 {
 #if defined(math_errhandling) && defined(MATH_ERRNO)            \
-        && (math_errhandling & MATH_ERRNO)
+	&& (math_errhandling & MATH_ERRNO)
 	errno = 0;
 #endif
 }
 
+/*
+ * Checks if `excepts' were raised.
+ *
+ * If the implementation doesn't support floating-point exceptions, we silently
+ * skip this check. The consumer must first have checked that either errno or
+ * floating-point exceptions is supported in the host environment.
+ *
+ * This allows us to write from the test case, for example:
+ * ATF_CHECK(raised_exceptions(FE_INVALID));
+ *
+ * instead of:
+ * if (haserrexcept)
+ *	ATF_CHECK(raised_exceptions(FE_INVALID));
+ */
 int
-raised_exceptions(void)
+raised_exceptions(int excepts)
 {
-	int raised = 0;
+	int raised;
 
-#if defined(math_errhandling) && defined(MATH_ERREXCEPT)        \
-        && (math_errhandling & MATH_ERREXCEPT)
+#if defined(math_errhandling) && defined(MATH_ERREXCEPT)	\
+	&& (math_errhandling & MATH_ERREXCEPT)
 
-	raised = fetestexcept(FE_INVALID | FE_DIVBYZERO		\
-	    | FE_OVERFLOW | FE_UNDERFLOW);
+	raised = fetestexcept(excepts);
+	return (raised & excepts);
 #endif
 
-	/*
-	 * XXX: Is it possible that some FE_* constant is
-	 * defined as zero ?
-	 */
-	return (raised);
+	return (1);
+}
+
+/*
+ * Checks if `errno' is equal to `error'.
+ *
+ * If the implementation doesn't support errno, we silently skip this check.
+ * The consumer must first have checked that either errno or floating-point
+ * exceptions is supported in the host environment.
+ */
+int
+iserrno_equalto(int error)
+{
+#if defined(math_errhandling) && defined(MATH_ERRNO)		\
+	&& (math_errhandling & MATH_ERRNO)
+	return (error == errno);
+#endif
+
+	return (1);
 }
 
 int
@@ -52,7 +80,7 @@ set_errno(void)
 {
 	int error = 0;
 #if defined(math_errhandling) && defined(MATH_ERRNO)            \
-        && (math_errhandling & MATH_ERRNO)
+	&& (math_errhandling & MATH_ERRNO)
 	error = errno;
 #endif
 	return (error);
