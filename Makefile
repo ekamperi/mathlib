@@ -1,6 +1,7 @@
 all:	t_acos		\
 	t_acosh		\
 	t_asin		\
+	t_asinh		\
 	t_atan		\
 	t_atan2		\
 	t_cbrt		\
