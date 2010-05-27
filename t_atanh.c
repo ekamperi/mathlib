@@ -89,8 +89,8 @@ struct t3entry {
 	{ TYPE_FLT, -1.0, -HUGE_VALF, ERANGE, FE_INVALID },
 #endif
 #ifdef	HUGE_VALL
-	{ TYPE_LDBL,  1.0, -HUGE_VALL, ERANGE, FE_INVALID },
-	{ TYPE_LDBL, -1.0,  HUGE_VALL, ERANGE, FE_INVALID},
+	{ TYPE_LDBL,  1.0,  HUGE_VALL, ERANGE, FE_INVALID },
+	{ TYPE_LDBL, -1.0, -HUGE_VALL, ERANGE, FE_INVALID},
 #endif
 
 	/*
@@ -100,6 +100,9 @@ struct t3entry {
 	{ TYPE_DBL,   1.0 +  DBL_EPSILON, NAN_IF_AVAIL, ERANGE, FE_INVALID },
 	{ TYPE_FLT,   1.0 +  FLT_EPSILON, NAN_IF_AVAIL, ERANGE, FE_INVALID },
 	{ TYPE_LDBL,  1.0 + LDBL_EPSILON, NAN_IF_AVAIL, ERANGE, FE_INVALID },
+	{ TYPE_DBL,  -1.0 -  DBL_EPSILON, NAN_IF_AVAIL, ERANGE, FE_INVALID },
+        { TYPE_FLT,  -1.0 -  FLT_EPSILON, NAN_IF_AVAIL, ERANGE, FE_INVALID },
+        { TYPE_LDBL, -1.0 - LDBL_EPSILON, NAN_IF_AVAIL, ERANGE, FE_INVALID },
 
 	/*
 	 * If x is +-Inf, a domain error shall occur, and either a NaN
@@ -174,24 +177,27 @@ ATF_TC_BODY(test_atanh3, tc)
 
 		/* Override NAN if avalaible */
 #ifdef	NAN
-		t3table[i].y = NAN;
+		if (t3table[i].y == NAN_IF_AVAIL)
+			t3table[i].y = NAN;
 #endif
 
 		switch(t3table[i].type) {
 		case TYPE_DBL:
-			ldy = atanh((double)t3table[i].x);
+			ldy = atanhl(t3table[i].x);
 			break;
 		case TYPE_FLT:
-			ldy = atanh((float)t3table[i].x);
+			ldy = atanhf(t3table[i].x);
 			break;
 		case TYPE_LDBL:
-			ldy = atanh(t3table[i].x);
+			ldy = atanhl(t3table[i].x);
 			break;
+		default:
+			/* XXX abort */
+			exit(1);		   
 		}
 
 		/* Check return value */
 		if (t3table[i].y != NAN_IF_AVAIL) {
-			printf("%f       %f   %f\n", t3table[i].x, ldy, t3table[i].y);
 			ATF_CHECK(fpcmp_equal(ldy, t3table[i].y));
 		}
 
