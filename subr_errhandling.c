@@ -92,6 +92,10 @@ query_errhandling(int *hasfp, int *haserrno)
 	assert(hasfp);
 	assert(haserrno);
 
+	/* Initialize values */
+	*hasfp = 0;
+	*haserrno = 0;
+
 #if defined(math_errhandling) && defined(MATH_ERREXCEPT)	\
 	&& (math_errhandling & MATH_ERREXCEPT)
 	*hasfp = 1;
