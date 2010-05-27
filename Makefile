@@ -68,9 +68,9 @@ t_atan2: t_atan2.c
 	-o t_atan2						\
 	$(LIB)
 
-t_atanh: t_atanh.c subr_errhandling.c
+t_atanh: t_atanh.c subr_errhandling.c subr_fpcmp.h
 	$(CC99) $(INCLUDE)					\
-		t_atan2.c subr_errhandling.c			\
+		t_atanh.c subr_errhandling.c			\
 	-o t_atanh						\
 	$(LIB)
 
