@@ -89,8 +89,8 @@ struct t3entry {
 	{ TYPE_FLT, -1.0, -HUGE_VALF, ERANGE, FE_INVALID },
 #endif
 #ifdef	HUGE_VALL
-	{ TYPE_LDBL,  1.0, -HUGE_VALL, ERANGE, HUGE_VALL },
-	{ TYPE_LDBL, -1.0,  HUGE_VALL, ERANGE, HUGE_VALL },
+	{ TYPE_LDBL,  1.0, -HUGE_VALL, ERANGE, FE_INVALID },
+	{ TYPE_LDBL, -1.0,  HUGE_VALL, ERANGE, FE_INVALID},
 #endif
 
 	/*
@@ -172,6 +172,11 @@ ATF_TC_BODY(test_atanh3, tc)
 		clear_exceptions();
 		clear_errno();
 
+		/* Override NAN if avalaible */
+#ifdef	NAN
+		t3table[i].y = NAN;
+#endif
+
 		switch(t3table[i].type) {
 		case TYPE_DBL:
 			ldy = atanh((double)t3table[i].x);
@@ -185,11 +190,8 @@ ATF_TC_BODY(test_atanh3, tc)
 		}
 
 		/* Check return value */
-		if (ttable[i].y == NAN_IF_AVAIL) {
-#ifdef	NAN
-			ATF_CHECK(isnan(ldy));
-#endif
-		} else {
+		if (t3table[i].y != NAN_IF_AVAIL) {
+			printf("%f       %f   %f\n", t3table[i].x, ldy, t3table[i].y);
 			ATF_CHECK(fpcmp_equal(ldy, t3table[i].y));
 		}
 
