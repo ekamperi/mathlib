@@ -3,6 +3,7 @@
 #include <atf-c.h>
 #include <errno.h>
 #include <fenv.h>
+#include <float.h>	/* {DBL, FLT, LDBL}_EPSILON */
 #include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -61,15 +62,18 @@ ATF_TC_BODY(test_atanh2, tc)
 /*
  * Test case 3 -- Errors
  */
-#define	NAN_IF_AVAIL
+#define	NAN_IF_AVAIL 0
+#define TYPE_DBL  1
+#define TYPE_FLT  2
+#define TYPE_LDBL 3
 
-struct tentry {
+struct t3entry {
 	int type;
 	long double x;
 	long double y;
 	int error;
 	int except;
-} ttable[] = {
+} t3table[] = {
 	/*
 	 * If x is +-1, a pole error shall occur, and atanh(), atanhf(), and
 	 * atanhl() shall return the value of the macro HUGE_VAL, HUGE_VALF,
@@ -93,9 +97,9 @@ struct tentry {
 	 * For finite |x|>1, a domain error shall occur, and either a NaN
 	 * (if supported), or an implementation-defined value shall be returned.
 	 */
-	{ TYPE_DBL,   1.0 +   DBL_EPSILON, NAN_IF_AVAIL, ERANGE, FE_INVALID },
-	{ TYPE_FLT,   1.0 +   FLT_EPSILON, NAN_IF_AVAIL, ERANGE, FE_INVALID },
-	{ TYPE_LDBL,  1.0 + LDLBL_EPSILON, NAN_IF_AVAIL, ERANGE, FE_INVALID },
+	{ TYPE_DBL,   1.0 +  DBL_EPSILON, NAN_IF_AVAIL, ERANGE, FE_INVALID },
+	{ TYPE_FLT,   1.0 +  FLT_EPSILON, NAN_IF_AVAIL, ERANGE, FE_INVALID },
+	{ TYPE_LDBL,  1.0 + LDBL_EPSILON, NAN_IF_AVAIL, ERANGE, FE_INVALID },
 
 	/*
 	 * If x is +-Inf, a domain error shall occur, and either a NaN
@@ -109,7 +113,7 @@ struct tentry {
 	{ TYPE_FLT, -INFINITY, NAN_IF_AVAIL, ERANGE, FE_INVALID },
 
 	{ TYPE_LDBL,  INFINITY, NAN_IF_AVAIL, ERANGE, FE_INVALID },
-	{ TYPE_LDBL, -INFINITY, NAN_IF_AVAIL, ERANGE, FE_INVALID }
+	{ TYPE_LDBL, -INFINITY, NAN_IF_AVAIL, ERANGE, FE_INVALID },
 #endif
 #ifdef  HUGE_VAL
         { TYPE_DBL,  HUGE_VAL, NAN_IF_AVAIL, ERANGE, FE_INVALID },
@@ -119,7 +123,7 @@ struct tentry {
         { TYPE_FLT, -HUGE_VAL, NAN_IF_AVAIL, ERANGE, FE_INVALID },
 
         { TYPE_LDBL,  HUGE_VAL, NAN_IF_AVAIL, ERANGE, FE_INVALID },
-        { TYPE_LDBL, -HUGE_VAL, NAN_IF_AVAIL, ERANGE, FE_INVALID }
+        { TYPE_LDBL, -HUGE_VAL, NAN_IF_AVAIL, ERANGE, FE_INVALID },
 #endif
 #ifdef  HUGE_VALF
         { TYPE_DBL,  HUGE_VALF, NAN_IF_AVAIL, ERANGE, FE_INVALID },
@@ -129,7 +133,7 @@ struct tentry {
         { TYPE_FLT, -HUGE_VALF, NAN_IF_AVAIL, ERANGE, FE_INVALID },
 
         { TYPE_LDBL,  HUGE_VALF, NAN_IF_AVAIL, ERANGE, FE_INVALID },
-        { TYPE_LDBL, -HUGE_VALF, NAN_IF_AVAIL, ERANGE, FE_INVALID }
+        { TYPE_LDBL, -HUGE_VALF, NAN_IF_AVAIL, ERANGE, FE_INVALID },
 #endif
 #ifdef  HUGE_VALL
         { TYPE_DBL,  HUGE_VALL, NAN_IF_AVAIL, ERANGE, FE_INVALID },
@@ -161,22 +165,22 @@ ATF_TC_BODY(test_atanh3, tc)
 	query_errhandling(&haserrexcept, &haserrno);
 	ATF_REQUIRE(haserrexcept || haserrno);
 
-	N = sizeof(ttable) / sizeof(ttable[0]);
+	N = sizeof(t3table) / sizeof(t3table[0]);
 	ATF_REQUIRE(N > 0);
 	for (i = 0; i < N; i++) {
 		/* Initialize error handling */
 		clear_exceptions();
 		clear_errno();
 
-		switch(ttable[i].type) {
+		switch(t3table[i].type) {
 		case TYPE_DBL:
-			ldy = atanh((double)ttable[i].x);
+			ldy = atanh((double)t3table[i].x);
 			break;
 		case TYPE_FLT:
-			ldy = atanh((float)ttable[i].x);
+			ldy = atanh((float)t3table[i].x);
 			break;
 		case TYPE_LDBL:
-			ldy = atanh(ttable[i].x);
+			ldy = atanh(t3table[i].x);
 			break;
 		}
 
@@ -186,14 +190,14 @@ ATF_TC_BODY(test_atanh3, tc)
 			ATF_CHECK(isnan(ldy));
 #endif
 		} else {
-			ATF_CHECK(fmpcmp_equal(ldy, ttable[i].y));
+			ATF_CHECK(fpcmp_equal(ldy, t3table[i].y));
 		}
 
 		/* Check errno */
-		ATF_CHECK(iserrno_equalto(ttable[i].error));
+		ATF_CHECK(iserrno_equalto(t3table[i].error));
 
 		/* Check floating-point exception */
-		ATF_CHECK(raised_exceptions(FE_INVALID));
+		ATF_CHECK(raised_exceptions(t3table[i].except));
 	}
 }
 
