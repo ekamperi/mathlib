@@ -10,6 +10,7 @@ all:	t_acos		\
 	t_constants	\
 	t_copysign	\
 	t_float		\
+	t_floor		\
 	t_fmax		\
 	t_fpclassify	\
 	t_fpmacros	\
@@ -109,6 +110,12 @@ t_float: t_float.c
 	$(CC99) $(CCFLAGS) $(INCLUDE) 				\
 		t_float.c					\
 	-o t_float 						\
+	$(LIB)
+
+t_floor: t_floor.c subr_random.c
+	$(CC99) $(CCFLAGS) $(INCLUDE)				\
+		t_floor.c subr_random.c				\
+	-o t_floor						\
 	$(LIB)
 
 t_fpclassify: t_fpclassify.c
