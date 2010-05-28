@@ -63,15 +63,15 @@ ATF_TC_BODY(test_ceil2, tc)
 		dx = random_double(FP_NORMAL);
 		dy = ceil(dx);
 		ATF_CHECK(dy >= dx);
-                ATF_CHECK(floor(dy) == dy);
-                ATF_CHECK(ceil(dy) == dy);
+		ATF_CHECK(floor(dy) == dy);
+		ATF_CHECK(ceil(dy) == dy);
 
 		/* long double */
 		ldx = random_double(FP_NORMAL);
-		ldy = ceil(ldx);
+		ldy = ceill(ldx);
 		ATF_CHECK(ldy >= ldx);
 		ATF_CHECK(floorl(dy) == dy);
-                ATF_CHECK(ceill(dy) == dy);
+		ATF_CHECK(ceill(dy) == dy);
 	}
 }
 
