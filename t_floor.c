@@ -42,24 +42,36 @@ ATF_TC_HEAD(test_floor2, tc)
 {
 	atf_tc_set_md_var(tc,
 	    "descr",
-	    "Result is the largest integral value not greater than x");
+	    "Result is the smallest _integral value_ _not greater_ than x");
 }
 ATF_TC_BODY(test_floor2, tc)
 {
+	float fx, fy;
+	double dx, dy;
+	long double ldx, ldy;
 	size_t i;
-	float fx;
-	double dx;
-	long double ldx;
 
 	for (i = 0; i < 1000000; i++) {
+		/* float */
 		fx = random_float(FP_NORMAL);
-		ATF_CHECK(floor(fx) <= fx);
+		fy = floorf(fx);
+		ATF_CHECK(fy <= fx);
+		ATF_CHECK(floorf(fy) == fy);
+		ATF_CHECK(floorf(fy) == fy);
 
+		/* double */
 		dx = random_double(FP_NORMAL);
-		ATF_CHECK(floor(dx) <= dx);
+		dy = floor(dx);
+		ATF_CHECK(dy <= dx);
+		ATF_CHECK(floor(dy) == dy);
+		ATF_CHECK(floor(dy) == dy);
 
+		/* long double */
 		ldx = random_double(FP_NORMAL);
-		ATF_CHECK(floor(ldx) <= ldx);
+		ldy = floorl(ldx);
+		ATF_CHECK(ldy <= ldx);
+		ATF_CHECK(floorl(dy) == dy);
+		ATF_CHECK(floorl(dy) == dy);
 	}
 }
 
@@ -99,9 +111,9 @@ struct t3entry {
 ATF_TC(test_floor3);
 ATF_TC_HEAD(test_floor3, tc)
 {
-        atf_tc_set_md_var(tc,
-            "descr",
-            "Check some edge cases");
+	atf_tc_set_md_var(tc,
+	    "descr",
+	    "Check some edge cases");
 }
 ATF_TC_BODY(test_floor3, tc)
 {
