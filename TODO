@@ -1,0 +1,1 @@
+* Initialize random number generator in tests which call random_$TYPE()
