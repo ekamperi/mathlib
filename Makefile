@@ -6,6 +6,7 @@ all:	t_acos		\
 	t_atan2		\
 	t_atanh		\
 	t_cbrt		\
+	t_ceil		\
 	t_constants	\
 	t_copysign	\
 	t_float		\
@@ -78,6 +79,12 @@ t_cbrt: t_cbrt.c
 	$(CC99) $(CCFLAGS) $(INCLUDE)				\
 		t_cbrt.c					\
 	-o t_cbrt						\
+	 $(LIB)
+
+t_ceil: t_ceil.c subr_random.c
+	$(CC99) $(CCFLAGS) $(INCLUDE)				\
+		t_ceil.c subr_random.c				\
+	-o t_ceil						\
 	 $(LIB)
 
 t_constants: t_constants.c
