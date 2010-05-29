@@ -6,6 +6,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#include "subr_atf.h"
 #include "subr_fpcmp.h"
 #include "subr_random.h"
 
@@ -49,9 +50,11 @@ ATF_TC_BODY(test_ceil2, tc)
 	float fx, fy;
 	double dx, dy;
 	long double ldx, ldy;
-	size_t i;
+	long i, N;
 
-	for (i = 0; i < 1000000; i++) {
+	N = get_config_var_as_long(tc, "iterations");
+	ATF_REQUIRE(N > 0);
+	for (i = 0; i < N; i++) {
 		/* float */
 		fx = random_float(FP_NORMAL);
 		fy = ceilf(fx);
