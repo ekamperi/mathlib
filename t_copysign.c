@@ -10,7 +10,7 @@
 
 struct tentry {
 	double x;       /* Input */
-	double y;       /* acos output */
+	double y;       /* copysign output */
 } ttable[] = {
 };
 
@@ -22,7 +22,7 @@ ATF_TC_HEAD(test_copysign1, tc)
 {
 	atf_tc_set_md_var(tc,
 	    "descr",
-	    "Basic functionality based on a set of good (x, acos(x)) pairs");
+	    "Basic functionality based on a set of good (x, copysign(x)) pairs");
 }
 ATF_TC_BODY(test_copysign1, tc)
 {
