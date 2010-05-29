@@ -85,9 +85,9 @@ t_cbrt: t_cbrt.c
 	-o t_cbrt						\
 	 $(LIB)
 
-t_ceil: t_ceil.c subr_random.c
+t_ceil: t_ceil.c subr_atf.c subr_random.c
 	$(CC99) $(CCFLAGS) $(INCLUDE)				\
-		t_ceil.c subr_random.c				\
+		t_ceil.c subr_atf.c subr_random.c		\
 	-o t_ceil						\
 	 $(LIB)
 
@@ -115,9 +115,9 @@ t_float: t_float.c
 	-o t_float 						\
 	$(LIB)
 
-t_floor: t_floor.c subr_random.c
+t_floor: t_floor.c subr_atf.c subr_random.c
 	$(CC99) $(CCFLAGS) $(INCLUDE)				\
-		t_floor.c subr_random.c				\
+		t_floor.c subr_atf.c subr_random.c		\
 	-o t_floor						\
 	$(LIB)
 
