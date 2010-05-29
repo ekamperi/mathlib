@@ -70,7 +70,7 @@ ATF_TC_BODY(test_ceil2, tc)
 		ATF_CHECK(ceil(dy) == dy);
 
 		/* long double */
-		ldx = random_double(FP_NORMAL);
+		ldx = random_long_double(FP_NORMAL);
 		ldy = ceill(ldx);
 		ATF_CHECK(ldy >= ldx);
 		ATF_CHECK(floorl(ldy) == ldy);
