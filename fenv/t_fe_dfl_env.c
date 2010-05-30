@@ -88,19 +88,27 @@ ATF_TC_BODY(test_memcpy, tc)
 	fenv_t env1, env2;
 	fenv_t tmp;
 
-	/* Get the floating point environment installed at program startup */
-        ATF_REQUIRE(fegetenv(&env1) == 0);
+	/*
+	 * Since we are going to compare the two environments,
+	 * be paranoid and assign to them different contents.
+	 */
+	memset(&env1, 0x00, sizeof(env1));
+	memset(&env2, 0xFF, sizeof(env2));
 
+	/* Get the floating point environment installed at program startup */
+	ATF_REQUIRE(fegetenv(&env1) == 0);
+
+	/* Make a copy of it through FE_DFL_ENV */
 	memcpy(&tmp, FE_DFL_ENV, sizeof tmp);
 
 	/*
 	 * Set the floating point environment to the default one,
 	 * but do so via an intermediate variable.
 	 */
-        ATF_REQUIRE(fesetenv(&tmp) == 0);
+	ATF_REQUIRE(fesetenv(&tmp) == 0);
 
 	/* And get it again */
-        ATF_REQUIRE(fegetenv(&env2) == 0);
+	ATF_REQUIRE(fegetenv(&env2) == 0);
 
 	ATF_CHECK(memcmp(&env1, &env2, sizeof env1) == 0);
 }
