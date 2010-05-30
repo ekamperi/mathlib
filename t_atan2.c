@@ -1,5 +1,6 @@
 #define _XOPEN_SOURCE 600
 
+#include <atf-c.h>
 #include <assert.h>
 #include <errno.h>
 #include <math.h>
@@ -7,7 +8,7 @@
 #include <stdlib.h>
 #include <time.h>
 
-#include <atf-c.h>
+#include "subr_atf.h"
 
 struct tentry {
 	double y;	/* Input */
@@ -80,7 +81,7 @@ ATF_TC_HEAD(test_atan22, tc)
 }
 ATF_TC_BODY(test_atan22, tc)
 {
-	size_t i, N;
+	long i, N;
 
 	N = sizeof(ttable) / sizeof(ttable[0]);
 	for (i = 0; i < N; i++) {
@@ -90,6 +91,9 @@ ATF_TC_BODY(test_atan22, tc)
 
 	/* Try the same thing but with some random input */
 	srand(time(NULL));
+
+	N = get_config_var_as_long(tc, "iterations");
+	ATF_REQUIRE(N > 0);
 
 #define X1      -1E4
 #define X2       1E4

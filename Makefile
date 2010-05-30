@@ -67,9 +67,9 @@ t_atan: t_atan.c subr_fpcmp.h
 	-o t_atan						\
 	$(LIB)
 
-t_atan2: t_atan2.c
+t_atan2: t_atan2.c subr_atf.c
 	$(CC99) $(INCLUDE)					\
-		t_atan2.c					\
+		t_atan2.c subr_atf.c				\
 	-o t_atan2						\
 	$(LIB)
 
