@@ -73,11 +73,44 @@ ATF_TC_BODY(test_feupdateenv, tc)
 	ATF_CHECK(memcmp(&env, &env2, sizeof(env)) == 0);
 }
 
+/*
+ * Test case 3 -- memcpy()
+ */
+ATF_TC(test_memcpy);
+ATF_TC_HEAD(test_memcpy, tc)
+{
+	atf_tc_set_md_var(tc,
+	    "descr",
+	    "memcmpy()");
+}
+ATF_TC_BODY(test_memcpy, tc)
+{
+	fenv_t env1, env2;
+	fenv_t tmp;
+
+	/* Get the floating point environment installed at program startup */
+        ATF_REQUIRE(fegetenv(&env1) == 0);
+
+	memcpy(&tmp, FE_DFL_ENV, sizeof tmp);
+
+	/*
+	 * Set the floating point environment to the default one,
+	 * but do so via an intermediate variable.
+	 */
+        ATF_REQUIRE(fesetenv(&tmp) == 0);
+
+	/* And get it again */
+        ATF_REQUIRE(fegetenv(&env2) == 0);
+
+	ATF_CHECK(memcmp(&env1, &env2, sizeof env1) == 0);
+}
+
 /* Add test cases to test program */
 ATF_TP_ADD_TCS(tp)
 {
 	ATF_TP_ADD_TC(tp, test_fesetenv);
 	ATF_TP_ADD_TC(tp, test_feupdateenv);
+	ATF_TP_ADD_TC(tp, test_memcpy);
 
 	return atf_no_error();
 }
