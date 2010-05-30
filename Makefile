@@ -61,9 +61,9 @@ t_asinh: t_asinh.c subr_fpcmp.h
 	-o t_asinh						\
 	$(LIB)
 
-t_atan: t_atan.c subr_fpcmp.h
+t_atan: t_atan.c subr_atf.c subr_fpcmp.h
 	$(CC99) $(CCFLAGS) $(INCLUDE)				\
-		t_atan.c					\
+		t_atan.c subr_atf.c				\
 	-o t_atan						\
 	$(LIB)
 

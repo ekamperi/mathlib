@@ -6,6 +6,7 @@
 #include <stdlib.h>
 #include <time.h>
 
+#include "subr_atf.h"
 #include "subr_fpcmp.h"
 
 struct tentry {
