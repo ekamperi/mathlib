@@ -16,6 +16,8 @@
 #include <fenv.h>
 #endif  /* HAS_MATH_ERREXCEPT */
 
+#include "subr_atf.h"
+
 /*
  * Test case 1 -- Basic functionality
  */
@@ -102,9 +104,12 @@ ATF_TC_HEAD(test_nextafter3, tc)
 ATF_TC_BODY(test_nextafter3, tc)
 {
 	double x;
-	size_t i;
+	long i, N;
 
-	for (i = 0; i < 1000000; i++) {
+	N = get_config_var_as_long(tc, "iterations");
+	ATF_REQUIRE(N > 0);
+
+	for (i = 0; i < N; i++) {
 		x = random_float(FP_NORMAL);
 
 		/* If x == y, y (of the type x) shall be returned */

@@ -151,10 +151,10 @@ t_mac: t_mac.c subr_atf.c subr_random.c subr_errhandling.c
 	-o t_mac						\
 	$(LIB)
 
-t_nextafter: t_nextafter.c subr_random.c subr_errhandling.c
-	$(CC99) $(CCFLAGS) $(INCLUDE) 				\
-		t_nextafter.c subr_errhandling.c subr_random.c	\
-	 -o t_nextafter 					\
+t_nextafter: t_nextafter.c subr_atf.c subr_random.c subr_errhandling.c
+	$(CC99) $(CCFLAGS) $(INCLUDE)						\
+		t_nextafter.c subr_atf.c subr_errhandling.c subr_random.c	\
+	 -o t_nextafter								\
 	$(LIB)
 
 t_sqrt: t_sqrt.c
