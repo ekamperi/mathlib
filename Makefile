@@ -37,9 +37,9 @@ LIB=-L/usr/opt/lib -lm -latf-c
 foo: foo.c subr_atf.c
 	$(CC99) $(CCFLAGS) $(INCLUDE) foo.c subr_atf.c -o foo $(LIB)
 
-t_acos: t_acos.c subr_fpcmp.h
+t_acos: t_acos.c subr_atf.c subr_fpcmp.h
 	$(CC99) $(CCFLAGS) $(INCLUDE) 				\
-		t_acos.c 					\
+		t_acos.c subr_atf.c				\
 	-o t_acos 						\
 	$(LIB)
 
