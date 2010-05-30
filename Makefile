@@ -145,9 +145,9 @@ t_ldexp: t_ldexp.c
 	-o t_ldexp 						\
 	$(LIB)
 
-t_mac: t_mac.c subr_random.c subr_errhandling.c
+t_mac: t_mac.c subr_atf.c subr_random.c subr_errhandling.c
 	$(CC99) $(CCFLAGS) $(INCLUDE) 				\
-		t_mac.c subr_random.c subr_errhandling.c 	\
+		t_mac.c subr_atf.c subr_random.c subr_errhandling.c 	\
 	-o t_mac						\
 	$(LIB)
 
