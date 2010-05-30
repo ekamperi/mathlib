@@ -4,6 +4,7 @@
 #include <stdlib.h>
 #include <time.h>
 
+#include "subr_atf.h"
 #include "subr_random.h"
 
 /*
@@ -49,16 +50,19 @@ ATF_TC_HEAD(test_trunc2, tc)
 }
 ATF_TC_BODY(test_trunc2, tc)
 {
-	size_t i;
 	float fx, fy;
 	double dx, dy;
+	long i, N;
 
 	/*
 	 * These functions shall round their argument to the integer value, in
 	 * floating format, nearest to but no larger in magnitude than the
 	 * argument.
 	 */
-	for (i = 0; i < 1000000; i++) {
+	N = get_config_var_as_long(tc, "iterations");
+	ATF_REQUIRE(N > 0);
+
+	for (i = 0; i < N; i++) {
 		/* double */
 		dx = random_double(FP_NORMAL);
 		dy = trunc(dx);

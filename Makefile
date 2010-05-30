@@ -181,9 +181,9 @@ t_trig_ident: t_trig_ident.c subr_random.c
 	-o t_trig_ident						\
 	$(LIB)
 
-t_trunc: t_trunc.c subr_random.c
+t_trunc: t_trunc.c subr_atf.c subr_random.c
 	$(CC99) $(CCFLAGS) $(INCLUDE)				\
-		t_trunc.c subr_random.c 			\
+		t_trunc.c subr_atf.c subr_random.c 		\
 	-o t_trunc						\
 	$(LIB)
 
