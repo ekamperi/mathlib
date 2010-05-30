@@ -97,9 +97,9 @@ t_constants: t_constants.c
 	-o t_constants						\
 	$(LIB)
 
-t_copysign: t_copysign.c subr_random.c
+t_copysign: t_copysign.c subr_atf.c subr_random.c
 	$(CC99) $(CCFLAGS) $(INCLUDE) 				\
-		t_copysign.c subr_random.c			\
+		t_copysign.c subr_atf.c subr_random.c		\
 	-o t_copysign						\
 	$(LIB)
 

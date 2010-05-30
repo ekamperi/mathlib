@@ -6,6 +6,7 @@
 #include <stdlib.h>
 #include <time.h>
 
+#include "subr_atf.h"
 #include "subr_random.h"
 
 struct tentry {
@@ -42,11 +43,14 @@ ATF_TC_HEAD(test_copysign2, tc)
 }
 ATF_TC_BODY(test_copysign2, tc)
 {
-	size_t i;
 	double dx, dy, dz;
 	float fx, fy, fz;
+	long i, N;
 
-	for (i = 0; i < 1000000; i++) {
+	N = get_config_var_as_long(tc, "iterations");
+	ATF_REQUIRE(N > 0);
+
+	for (i = 0; i < N; i++) {
 		dx = random_double(FP_NORMAL);
 		dy = random_double(FP_NORMAL);
 
