@@ -4,6 +4,7 @@
 #include <stdlib.h>
 #include <time.h>
 
+#include "subr_atf.h"
 #include "subr_errhandling.h"
 #include "subr_random.h"
 
@@ -160,12 +161,15 @@ ATF_TC_HEAD(test_signbit, tc)
 }
 ATF_TC_BODY(test_signbit, tc)
 {
-	size_t i;
 	float fx;
 	double dy;
 	long double ldz;
+	long i, N;
 
-	for (i = 0; i < 1000000; i++) {
+	N = get_config_var_as_long(tc, "iterations");
+	ATF_REQUIRE(N > 0);
+
+	for (i = 0; i < N; i++) {
 		/* Float */
 		do {
 			fx = random_float(FP_NORMAL);
@@ -228,12 +232,15 @@ ATF_TC_HEAD(test_isgreater, tc)
 }
 ATF_TC_BODY(test_isgreater, tc)
 {
-	size_t i;
 	float fx, fy;
 	double dx, dy;
 	long double ldx, ldy;
+	long i, N;
 
-	for (i = 0; i < 100000; i++) {
+	N = get_config_var_as_long(tc, "iterations");
+	ATF_REQUIRE(N > 0);
+
+	for (i = 0; i < N; i++) {
 		/* Float */
 		fx = random_float(FP_NORMAL);
 		fy = random_float(FP_NORMAL);
@@ -372,12 +379,15 @@ ATF_TC_HEAD(test_isunordered, tc)
 }
 ATF_TC_BODY(test_isunordered, tc)
 {
-	size_t i;
 	float fx;
 	double dx;
 	long double ldx;
+	long i, N;
 
-	for (i = 0; i < 1000; i++) {
+	N = get_config_var_as_long(tc, "iterations");
+	ATF_REQUIRE(N > 0);
+
+	for (i = 0; i < N; i++) {
 		fx = random_float(FP_NORMAL);
 		dx = random_double(FP_NORMAL);
 		ldx = random_long_double(FP_NORMAL);
