@@ -49,9 +49,9 @@ t_acosh: t_acosh.c subr_fpcmp.h
 	-o t_acosh						\
 	$(LIB)
 
-t_asin: t_asin.c subr_fpcmp.h
+t_asin: t_asin.c subr_atf.c subr_fpcmp.h
 	$(CC99) $(CCFLAGS) $(INCLUDE) 				\
-		t_asin.c 					\
+		t_asin.c subr_atf.c				\
 	-o t_asin 						\
 	$(LIB)
 
