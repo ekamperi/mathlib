@@ -97,7 +97,7 @@ ATF_TC_BODY(test_atan22, tc)
 
 #define X1      -1E4
 #define X2       1E4
-	for (i = 0; i < 10000; i++) {
+	for (i = 0; i < N; i++) {
 		double x = X1 + rand() / (RAND_MAX / (X2 - X1 + 1.0) + 1.0);
 		double y = X1 + rand() / (RAND_MAX / (X2 - X1 + 1.0) + 1.0);
 		if (fpclassify(x) == FP_ZERO) {
