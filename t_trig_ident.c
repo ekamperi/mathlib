@@ -3,6 +3,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#include "subr_atf.h"
 #include "subr_fpcmp.h"
 #include "subr_random.h"
 
@@ -23,14 +24,17 @@ ATF_TC_HEAD(test_symmetry, tc)
 }
 ATF_TC_BODY(test_symmetry, tc)
 {
-	size_t i;
 	double x;
+	long i, N;
 
-	for (i = 0; i < 1000000; i++) {
+	N = get_config_var_as_long(tc, "iterations");
+	ATF_REQUIRE(N > 0);
+
+	for (i = 0; i < N; i++) {
 		x = random_double(FP_NORMAL);
 
-		ATF_CHECK(FPCMP(sin(-x), -sin(x)));
-		ATF_CHECK(FPCMP(cos(-x),  cos(x)));
+		ATF_CHECK(FPCMP_EQUAL(sin(-x), -sin(x)));
+		ATF_CHECK(FPCMP_EQUAL(cos(-x),  cos(x)));
 	}
 }
 
@@ -46,10 +50,13 @@ ATF_TC_HEAD(test_shifts, tc)
 }
 ATF_TC_BODY(test_shifts, tc)
 {
-	size_t i;
 	double x;
+	long i, N;
 
-	for (i = 0; i < 1000000; i++) {
+	N = get_config_var_as_long(tc, "iterations");
+	ATF_REQUIRE(N > 0);
+
+	for (i = 0; i < N; i++) {
 		x = random_double(FP_NORMAL);
 
 		ATF_CHECK(fabs(sin(x + M_PI_2) - cos(x)) < 0.001);
@@ -69,10 +76,13 @@ ATF_TC_HEAD(test_angle_sum, tc)
 }
 ATF_TC_BODY(test_angle_sum, tc)
 {
-	size_t i;
 	double x, y, s;
+	long i, N;
 
-	for (i = 0; i < 1000000; i++) {
+	N = get_config_var_as_long(tc, "iterations");
+	ATF_REQUIRE(N > 0);
+
+	for (i = 0; i < N; i++) {
 		x = random_double(FP_NORMAL);
 		y = random_double(FP_NORMAL);
 
@@ -102,10 +112,13 @@ ATF_TC_HEAD(test_half_angle, tc)
 }
 ATF_TC_BODY(test_half_angle, tc)
 {
-	size_t i;
 	double x;
+	long i, N;
 
-	for (i = 0; i < 1000000; i++) {
+	N = get_config_var_as_long(tc, "iterations");
+	ATF_REQUIRE(N > 0);
+
+	for (i = 0; i < N; i++) {
 		x = random_double(FP_NORMAL);
 
 		ATF_CHECK(fabs(sin(x/2)*sin(x/2) - 0.5*(1-cos(x))) < 0.001);
@@ -134,10 +147,13 @@ ATF_TC_HEAD(test_product_to_sum, tc)
 }
 ATF_TC_BODY(test_product_to_sum, tc)
 {
-	size_t i;
 	double x, y, s;
+	long i, N;
 
-	for (i = 0; i < 1000000; i++) {
+	N = get_config_var_as_long(tc, "iterations");
+	ATF_REQUIRE(N > 0);
+
+	for (i = 0; i < N; i++) {
 		x = random_double(FP_NORMAL);
 		y = random_double(FP_NORMAL);
 
@@ -167,10 +183,13 @@ ATF_TC_HEAD(test_fundamental, tc)
 }
 ATF_TC_BODY(test_fundamental, tc)
 {
-	size_t i;
 	double x;
+	long i, N;
 
-	for (i = 0; i < 1000000; i++) {
+	N = get_config_var_as_long(tc, "iterations");
+	ATF_REQUIRE(N > 0);
+
+	for (i = 0; i < N; i++) {
 		x = random_double(FP_NORMAL);
 
 		ATF_CHECK(fabs((sin(x)*sin(x) + cos(x)*cos(x)) - 1) < 0.0001);
@@ -189,10 +208,13 @@ ATF_TC_HEAD(test_power_reduction, tc)
 }
 ATF_TC_BODY(test_power_reduction, tc)
 {
-	size_t i;
 	double x, e1, e2;
+	size_t i, N;
 
-	for (i = 0; i < 1000000; i++) {
+	N = get_config_var_as_long(tc, "iterations");
+	ATF_REQUIRE(N > 0);
+
+	for (i = 0; i < N; i++) {
 		x = random_double(FP_NORMAL);
 
 		/* sin^2(x) = 0.5(1 - cos(2x)) */
@@ -217,7 +239,7 @@ ATF_TC_BODY(test_power_reduction, tc)
 
 		/* cos^3(x) = 0.25(3cos(x) + cos(3x)) */
 		e1 = cos(x) * cos(x) * cos(x);
-		e2 = 0.25 * (3*cos(x) + cos(3x));
+		e2 = 0.25 * (3*cos(x) + cos(3*x));
 		ATF_CHECK(e1 == e2);
 
 		/* sin^3(x)*cos^3(x) = 0.03125(3sin(2x) - sin(6x)) */

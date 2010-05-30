@@ -175,9 +175,9 @@ t_tgamma: t_tgamma.c subr_random.c subr_errhandling.c
 	-o t_tgamma						\
 	$(LIB)
 
-t_trig_ident: t_trig_ident.c subr_random.c
+t_trig_ident: t_trig_ident.c subr_atf.c subr_random.c
 	$(CC99) $(CCFLAGS) $(INCLUDE) 				\
-		t_trig_ident.c subr_random.c			\
+		t_trig_ident.c subr_atf.c subr_random.c		\
 	-o t_trig_ident						\
 	$(LIB)
 
