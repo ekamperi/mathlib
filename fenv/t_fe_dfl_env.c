@@ -17,17 +17,17 @@ ATF_TC_HEAD(test_fesetenv, tc)
 }
 ATF_TC_BODY(test_fesetenv, tc)
 {
-	fenv_t env, env2;
+	fenv_t env1, env2;
 
 	/*
 	 * Since we are going to compare the two environments,
 	 * be paranoid and assign to them different contents.
 	 */
-	memset(&env, 0x00, sizeof(env));
+	memset(&env1, 0x00, sizeof(env1));
 	memset(&env2, 0xFF, sizeof(env2));
 
 	/* Get the floating point environment installed at program startup */
-	ATF_REQUIRE(fegetenv(&env) == 0);
+	ATF_REQUIRE(fegetenv(&env1) == 0);
 
 	/* Set the floating point environment to the default one */
 	ATF_REQUIRE(fesetenv(FE_DFL_ENV) == 0);
@@ -36,7 +36,7 @@ ATF_TC_BODY(test_fesetenv, tc)
 	ATF_REQUIRE(fegetenv(&env2) == 0);
 
 	/* These two should be equal */
-	ATF_CHECK(memcmp(&env, &env2, sizeof(env)) == 0);
+	ATF_CHECK(memcmp(&env1, &env2, sizeof(env1)) == 0);
 }
 
 /*
@@ -51,17 +51,17 @@ ATF_TC_HEAD(test_feupdateenv, tc)
 }
 ATF_TC_BODY(test_feupdateenv, tc)
 {
-	fenv_t env, env2;
+	fenv_t env1, env2;
 
 	/*
 	 * Since we are going to compare the two environments,
 	 * be paranoid and assign to them different contents.
 	 */
-	memset(&env, 0x00, sizeof(env));
+	memset(&env1, 0x00, sizeof(env1));
 	memset(&env2, 0xFF, sizeof(env2));
 
 	/* Get the floating point environment installed at program startup */
-	ATF_REQUIRE(fegetenv(&env) == 0);
+	ATF_REQUIRE(fegetenv(&env1) == 0);
 
 	/* Update the floating point environment to the default one */
 	ATF_REQUIRE(feupdateenv(FE_DFL_ENV) == 0);
@@ -70,7 +70,7 @@ ATF_TC_BODY(test_feupdateenv, tc)
 	ATF_REQUIRE(fegetenv(&env2) == 0);
 
 	/* These two should be equal */
-	ATF_CHECK(memcmp(&env, &env2, sizeof(env)) == 0);
+	ATF_CHECK(memcmp(&env1, &env2, sizeof(env1)) == 0);
 }
 
 /*
@@ -110,7 +110,7 @@ ATF_TC_BODY(test_memcpy, tc)
 	/* And get it again */
 	ATF_REQUIRE(fegetenv(&env2) == 0);
 
-	ATF_CHECK(memcmp(&env1, &env2, sizeof env1) == 0);
+	ATF_CHECK(memcmp(&env1, &env2, sizeof(env1)) == 0);
 }
 
 /* Add test cases to test program */
