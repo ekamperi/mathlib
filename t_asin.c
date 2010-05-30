@@ -6,6 +6,7 @@
 #include <stdlib.h>
 #include <time.h>
 
+#include "subr_atf.h"
 #include "subr_fpcmp.h"
 
 struct tentry {
@@ -70,8 +71,8 @@ ATF_TC_HEAD(test_asin2, tc)
 }
 ATF_TC_BODY(test_asin2, tc)
 {
-	size_t i, N;
 	double x;
+	long i, N;
 
 	N = sizeof(ttable) / sizeof(ttable[0]);
 	for (i = 0; i < N; i++) {
@@ -86,7 +87,10 @@ ATF_TC_BODY(test_asin2, tc)
 	/* Try the same thing but with some random input */
 	srand(time(NULL));
 
-	for (i = 0; i < 10000; i++) {
+	N = get_config_var_as_long(tc, "iterations");
+	ATF_REQUIRE(N > 0);
+
+	for (i = 0; i < N; i++) {
 		x = -1.0 + rand() / ((RAND_MAX / 2.0) + 1.0);
 		/* Sanity check */
 		ATF_REQUIRE(x >= -1.0 && x <= 1.0);
