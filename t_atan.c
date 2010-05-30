@@ -76,8 +76,8 @@ ATF_TC_HEAD(test_atan2, tc)
 }
 ATF_TC_BODY(test_atan2, tc)
 {
-	size_t i, N;
 	double x;
+	long i, N;
 
 	N = sizeof(ttable) / sizeof(ttable[0]);
 	for (i = 0; i < N; i++) {
@@ -88,7 +88,10 @@ ATF_TC_BODY(test_atan2, tc)
 	/* Try the same thing but with some random input */
 	srand(time(NULL));
 
-	for (i = 0; i < 10000; i++) {
+	N = get_config_var_as_long(tc, "iterations");
+	ATF_REQUIRE(N > 0);
+
+	for (i = 0; i < N; i++) {
 		x = -1.0 + rand() / ((RAND_MAX / 2.0) + 1.0);
 
 		ATF_CHECK(atan(x) >= -M_PI_2 -0.1);
