@@ -103,9 +103,9 @@ t_copysign: t_copysign.c subr_atf.c subr_random.c
 	-o t_copysign						\
 	$(LIB)
 
-t_fmax: t_fmax.c subr_random.c
+t_fmax: t_fmax.c subr_atf.c subr_random.c
 	$(CC99) $(CCFLAGS) $(INCLUDE)				\
-		t_fmax.c subr_random.c				\
+		t_fmax.c subr_atf.c subr_random.c		\
 	-o t_fmax 						\
 	$(LIB)
 

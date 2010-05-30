@@ -4,6 +4,7 @@
 #include <stdlib.h>
 #include <time.h>
 
+#include "subr_atf.h"
 #include "subr_random.h"
 
 /*
@@ -172,11 +173,14 @@ ATF_TC_HEAD(test_fmax3, tc)
 }
 ATF_TC_BODY(test_fmax3, tc)
 {
-	size_t i;
 	double x, y;
+	long i, N;
+
+	N = get_config_var_as_long(tc, "iterations");
+	ATF_REQUIRE(N > 0);
 
 	/* Normal - normal */
-	for (i = 0; i < 1000000; i++) {
+	for (i = 0; i < N; i++) {
 		do {
 			x = random_double(FP_NORMAL);
 			y = random_double(FP_NORMAL);
@@ -188,7 +192,7 @@ ATF_TC_BODY(test_fmax3, tc)
 	}
 
 	/* Normal - subnormal */
-	for (i = 0; i < 1000; i++) {
+	for (i = 0; i < N; i++) {
 		do {
 			x = random_double(FP_NORMAL);
 			y = random_double(FP_SUBNORMAL);
@@ -213,7 +217,7 @@ ATF_TC_BODY(test_fmax3, tc)
 	}
 
 	/* Subnormal - subnormal */
-	for (i = 0; i < 1000; i++) {
+	for (i = 0; i < N; i++) {
 		do {
 			x = random_double(FP_SUBNORMAL);
 			y = random_double(FP_SUBNORMAL);
