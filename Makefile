@@ -19,6 +19,7 @@ all:	t_acos		\
 	t_hypot		\
 	t_ldexp		\
 	t_nextafter	\
+	t_signbit	\
 	t_sqrt		\
 	t_trig_ident	\
 	t_tanh		\
@@ -155,6 +156,12 @@ t_nextafter: t_nextafter.c subr_atf.c subr_random.c subr_errhandling.c
 	$(CC99) $(CCFLAGS) $(INCLUDE)						\
 		t_nextafter.c subr_atf.c subr_errhandling.c subr_random.c	\
 	 -o t_nextafter								\
+	$(LIB)
+
+t_signbit: t_signbit.c subr_atf.c subr_random.c
+	$(CC99) $(CCFLAGS) $(INCLUDE)				\
+		t_signbit.c subr_atf.c subr_random.c		\
+	-o t_signbit						\
 	$(LIB)
 
 t_sqrt: t_sqrt.c
