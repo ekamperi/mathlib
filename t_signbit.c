@@ -30,9 +30,9 @@ ATF_TC_BODY(test_signbit1, tc)
 
 	N = sizeof(ttable) / sizeof(ttable[0]);
 	for (i = 0; i < N; i++) {
-		ATF_CHECK(         signbit(ttable[i].x) == ttable[i].y);
-		ATF_CHECK((float)  signbit(ttable[i].x) == ttable[i].y);
-                ATF_CHECK((double) signbit(ttable[i].x) == ttable[i].y);
+		ATF_CHECK(         signbit(ttable[i].x)  == ttable[i].y);
+		ATF_CHECK(((float )signbit(ttable[i].x)) == ttable[i].y);
+                ATF_CHECK(((double)signbit(ttable[i].x)) == ttable[i].y);
 	}
 }
 
