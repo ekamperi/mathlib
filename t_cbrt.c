@@ -1,18 +1,17 @@
+#include <atf-c.h>
 #include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
 
-#include <atf-c.h>
-
+/*
+ * Test case 1 -- Basic functionality
+ */
 struct tentry {
 	double x;       /* Input */
 	double y;       /* cbrt output */
 } ttable[] = {
 };
 
-/*
- * Test case 1 -- Basic functionality
- */
 ATF_TC(test_cbrt1);
 ATF_TC_HEAD(test_cbrt1, tc)
 {
