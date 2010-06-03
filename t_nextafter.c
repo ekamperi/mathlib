@@ -72,7 +72,7 @@ ATF_TC_BODY(test_nextafter2, tc)
 	double start, next;
 	size_t i, j;
 
-	for (i = 0; i < NWALKS; i++) {
+	ATF_FOR_LOOP(i, NWALKS, i++) {
 		start = random_double(FP_NORMAL);
 		next = start;
 
@@ -87,7 +87,7 @@ ATF_TC_BODY(test_nextafter2, tc)
 		}
 
 		/* We should be back to square 1 by now */
-		ATF_CHECK(next == start);
+		ATF_PASS_OR_BREAK(next == start);
 	}
 }
 
@@ -109,11 +109,11 @@ ATF_TC_BODY(test_nextafter3, tc)
 	N = get_config_var_as_long(tc, "iterations");
 	ATF_REQUIRE(N > 0);
 
-	for (i = 0; i < N; i++) {
+	ATF_FOR_LOOP(i, N, i++) {
 		x = random_float(FP_NORMAL);
 
 		/* If x == y, y (of the type x) shall be returned */
-		ATF_CHECK(nextafter(x, x) == x);
+		ATF_PASS_OR_BREAK(nextafter(x, x) == x);
 
 		/*
 		 * If x or y is NaN, a NaN shall be returned
@@ -122,11 +122,11 @@ ATF_TC_BODY(test_nextafter3, tc)
 		 * If NAN is defined/supported, so should the FP_NAN symbol.
 		 */
 #ifdef	NAN
-		ATF_CHECK(isnan(nextafter(NAN, x)));
-		ATF_CHECK(fpclassify(nextafter(NAN, x)) == FP_NAN);
+		ATF_PASS_OR_BREAK(isnan(nextafter(NAN, x)));
+		ATF_PASS_OR_BREAK(fpclassify(nextafter(NAN, x)) == FP_NAN);
 
-		ATF_CHECK(isnan(nextafter(x, NAN)));
-		ATF_CHECK(fpclassify(nextafter(x, NAN)) == FP_NAN);
+		ATF_PASS_OR_BREAK(isnan(nextafter(x, NAN)));
+		ATF_PASS_OR_BREAK(fpclassify(nextafter(x, NAN)) == FP_NAN);
 #endif
 	}
 }
