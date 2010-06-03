@@ -4,6 +4,12 @@
 #include <stdlib.h>
 #include <time.h>
 
+#include "config.h"
+
+#ifdef  HAS_MATH_ERREXCEPT
+#include <fenv.h>
+#endif  /* HAS_MATH_ERREXCEPT */
+
 #include "subr_atf.h"
 #include "subr_errhandling.h"
 #include "subr_random.h"
@@ -363,8 +369,10 @@ ATF_TC_BODY(test_isgreater, tc)
 	ATF_CHECK(isgreaterequal(ldx, NAN) == 0);
 #endif	/* NAN */
 
-	/* XXX: Should we refine it to only check against FE_INVALID ? */
-	ATF_CHECK(!raised_exceptions());
+	/* XXX: Should we refine it to only check against FE_ALL_EXCEPT ? */
+#ifdef	HAS_MATHERREXCEPT
+	ATF_CHECK(!raised_exceptions(FE_INVALID));
+#endif
 }
 
 /*
@@ -425,8 +433,10 @@ ATF_TC_BODY(test_isunordered, tc)
 
 	ATF_CHECK(isunordered(NAN, NAN));
 
-	/* XXX: Should we refine it to only check against FE_INVALID ? */
+	/* XXX: Should we refine it to only check against FE_ALL_EXCEPT ? */
+#ifdef	HAS_MATHERREXCEPT
 	ATF_CHECK(!raised_exceptions());
+#endif	/* HAS_MATHERREXCEPT */
 #endif	/* NAN */
 }
 
