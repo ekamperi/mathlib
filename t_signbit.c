@@ -56,24 +56,24 @@ ATF_TC_BODY(test_signbit2, tc)
 	N = get_config_var_as_long(tc, "iterations");
 	ATF_REQUIRE(N > 0);
 
-	for (i = 0; i < N; i++) {
+	ATF_FOR_LOOP(i, N, i++) {
 		/* float */
 		fx = random_float(FP_NORMAL);
-		ATF_CHECK(
-			(fx >= 0.0 && !signbit(fx)) ||
-			(fx <  0.0 &&  signbit(fx)));
+		ATF_PASS_OR_BREAK(
+				  (fx >= 0.0 && !signbit(fx)) ||
+				  (fx <  0.0 &&  signbit(fx)));
 
 		/* double */
 		dx = random_double(FP_NORMAL);
-		ATF_CHECK(
-			(dx >= 0.0 && !signbit(dx)) ||
-			(dx <  0.0 &&  signbit(dx)));
+		ATF_PASS_OR_BREAK(
+				  (dx >= 0.0 && !signbit(dx)) ||
+				  (dx <  0.0 &&  signbit(dx)));
 
 		/* long double */
 		ldx = random_long_double(FP_NORMAL);
-		ATF_CHECK(
-			(ldx >= 0.0 && !signbit(ldx)) ||
-			(ldx <  0.0 &&  signbit(ldx)));
+		ATF_PASS_OR_BREAK(
+				  (ldx >= 0.0 && !signbit(ldx)) ||
+				  (ldx <  0.0 &&  signbit(ldx)));
 	}
 }
 
