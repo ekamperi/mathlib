@@ -1,6 +1,7 @@
 #define _XOPEN_SOURCE 600
 
 #include "config.h"
+#include "subr_atf.h"
 #include "subr_errhandling.h"
 #include "subr_fpcmp.h"
 #include "subr_random.h"
@@ -64,6 +65,8 @@ ATF_TC_HEAD(test_tgamma2, tc)
 }
 ATF_TC_BODY(test_tgamma2, tc)
 {
+	long i, N, cnt;
+
 	/*
 	 * We can't proceed if there's no way to detect errors,
 	 * especially overflows.
@@ -77,8 +80,11 @@ ATF_TC_BODY(test_tgamma2, tc)
 	/* First for real numbers */
 	srand48(time(NULL));
 
-	size_t i, cnt = 0;
-	for (i = 0; i < 1000000; i++) {
+	N = get_config_var_as_long(tc, "iterations");
+	ATF_REQUIRE(N > 0);
+
+	cnt = 0;
+	ATF_FOR_LOOP(i, N, i++) {
 		/* Initialize error handling */
 		clear_exceptions();
 		clear_errno();
@@ -90,10 +96,10 @@ ATF_TC_BODY(test_tgamma2, tc)
 		g1 = tgamma(z+1);
 
 		/* If there was an error, just skip this value */
-		if (raised_exceptions() || set_errno())
+		if (raised_exceptions(FE_ALL_EXCEPT) || set_errno())
 			continue;
 
-		ATF_CHECK(FPCMP_EQUAL(g1, z*g0));
+		ATF_PASS_OR_BREAK(FPCMP_EQUAL(g1, z*g0));
 		++cnt;
 	}
 	ATF_CHECK(cnt > i/2);
@@ -109,8 +115,6 @@ ATF_TC_HEAD(test_tgamma3, tc)
 	    "descr",
 	    "For IEEE Std 754-1985 double, overflow happens when "
 	    "0 < x < 1/DBL_MAX, and 171.7 < x");
-
-
 }
 ATF_TC_BODY(test_tgamma3, tc)
 {
