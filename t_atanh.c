@@ -92,9 +92,8 @@ ATF_TC_BODY(test_atanh1, tc)
 	size_t i, N;
 
 	N = sizeof(ttable) / sizeof(ttable[0]);
-	for (i = 0; i < N; i++) {
+	for (i = 0; i < N; i++)
 		ATF_CHECK(fpcmp_equal(atanh(ttable[i].x), ttable[i].y));
-	}
 }
 
 /*
