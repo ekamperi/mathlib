@@ -134,9 +134,9 @@ t_fpmacros: t_fpmacros.c
 	-o t_fpmacros 						\
 	$(LIB)
 
-t_hypot: t_hypot.c
+t_hypot: t_hypot.c subr_errhandling.c
 	$(CC99) $(CCFLAGS) $(INCLUDE) 				\
-		t_hypot.c					\
+		t_hypot.c subr_errhandling.c			\
 	-o t_hypot		 				\
 	$(LIB)
 

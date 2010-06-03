@@ -8,6 +8,8 @@
 #include <stdlib.h>
 
 #include "config.h"
+#include "subr_errhandling.h"
+#include "subr_fpcmp.h"
 
 #ifdef  HAS_MATH_ERREXCEPT
 #include <fenv.h>
@@ -39,55 +41,50 @@ ATF_TC_BODY(test_hypot1, tc)
 	/*ATF_REQUIRE(N > 0);*/
 
 	for (i = 0; i < N; i++) {
-		ATF_CHECK(fabs(hypot(t1table[i].x, t1table[i].y) - t1table[i].z)
-		    < 1E-5);
+		ATF_CHECK(fpcmp_equal(
+			    hypot(t1table[i].x, t1table[i].y), t1table[i].z));
 	}
 }
 
 /*
  * Test case 2 -- Edge cases
  */
-#define CHK_NAN		(1 << 0)
-#define	CHK_INF		(1 << 1)
-#define CHK_SIGN        (1 << 2)
-
 struct t2entry {
 	double x;       /* Input */
 	double y;	/* Input */
 	double z;       /* hypot() output */
-	int check;
 } t2table[] = {
 #ifdef	INFINITY
 	/* If x is +-Inf, +Inf shall be returned */
-	{  INFINITY,   0.0, INFINITY, CHK_INF | CHK_SIGN },
-	{  INFINITY,   1.0, INFINITY, CHK_INF | CHK_SIGN },
-	{  INFINITY,   2.0, INFINITY, CHK_INF | CHK_SIGN },
-	{  INFINITY, 10E10, INFINITY, CHK_INF | CHK_SIGN },
+	{  INFINITY,   0.0, INFINITY },
+	{  INFINITY,   1.0, INFINITY },
+	{  INFINITY,   2.0, INFINITY },
+	{  INFINITY, 10E10, INFINITY },
 
-	{ -INFINITY,   0.0, INFINITY, CHK_INF | CHK_SIGN },
-	{ -INFINITY,   1.0, INFINITY, CHK_INF | CHK_SIGN },
-	{ -INFINITY,   2.0, INFINITY, CHK_INF | CHK_SIGN },
-	{ -INFINITY, 10E10, INFINITY, CHK_INF | CHK_SIGN },
+	{ -INFINITY,   0.0, INFINITY },
+	{ -INFINITY,   1.0, INFINITY },
+	{ -INFINITY,   2.0, INFINITY },
+	{ -INFINITY, 10E10, INFINITY },
 
 	/* If y is +-Inf, +Inf shall be returned */
-	{    0.0, INFINITY, INFINITY, CHK_INF | CHK_SIGN },
-	{    1.0, INFINITY, INFINITY, CHK_INF | CHK_SIGN },
-	{    2.0, INFINITY, INFINITY, CHK_INF | CHK_SIGN },
-	{  10E10, INFINITY, INFINITY, CHK_INF | CHK_SIGN },
+	{    0.0, INFINITY, INFINITY },
+	{    1.0, INFINITY, INFINITY },
+	{    2.0, INFINITY, INFINITY },
+	{  10E10, INFINITY, INFINITY },
 
-	{   0.0, -INFINITY, INFINITY, CHK_INF | CHK_SIGN },
-	{   1.0, -INFINITY, INFINITY, CHK_INF | CHK_SIGN },
-	{   2.0, -INFINITY, INFINITY, CHK_INF | CHK_SIGN },
-	{ 10E10, -INFINITY, INFINITY, CHK_INF | CHK_SIGN },
+	{   0.0, -INFINITY, INFINITY },
+	{   1.0, -INFINITY, INFINITY },
+	{   2.0, -INFINITY, INFINITY },
+	{ 10E10, -INFINITY, INFINITY },
 #endif
 
 	/* ... even if one of x or y is NaN */
 #if defined(NAN) && defined(INFINITY)
-	{ NAN,  INFINITY, INFINITY, CHK_INF | CHK_SIGN },
-	{ NAN, -INFINITY, INFINITY, CHK_INF | CHK_SIGN },
+	{ NAN,  INFINITY, INFINITY },
+	{ NAN, -INFINITY, INFINITY },
 
-	{  INFINITY, NAN, INFINITY, CHK_INF | CHK_SIGN },
-	{ -INFINITY, NAN, INFINITY, CHK_INF | CHK_SIGN },
+	{  INFINITY, NAN, INFINITY },
+	{ -INFINITY, NAN, INFINITY },
 #endif
 
 	/*
@@ -95,13 +92,13 @@ struct t2entry {
 	 * a NaN shall be returned.
 	 */
 #if defined(NAN) && defined(INFINITY)
-	{ NAN,   1.0, NAN, CHK_NAN },
-	{ NAN,   2.0, NAN, CHK_NAN },
-	{ NAN, 10E10, NAN, CHK_NAN },
+	{ NAN,   1.0, NAN },
+	{ NAN,   2.0, NAN },
+	{ NAN, 10E10, NAN },
 
-	{   1.0, NAN, NAN, CHK_NAN },
-	{   2.0, NAN, NAN, CHK_NAN },
-	{ 10E10, NAN, NAN, CHK_NAN }
+	{   1.0, NAN, NAN },
+	{   2.0, NAN, NAN },
+	{ 10E10, NAN, NAN }
 #endif
 };
 
@@ -121,29 +118,8 @@ ATF_TC_BODY(test_hypot2, tc)
 	ATF_REQUIRE(N > 0);
 
 	for (i = 0; i < N; i++) {
-		/* Make sure that only allowed checks are set */
-		ATF_REQUIRE((t2table[i].check
-			& ~(CHK_NAN | CHK_INF | CHK_SIGN)) == 0);
-
-		/* Don't allow conflicting types to be set */
-		ATF_REQUIRE((t2table[i].check & (CHK_NAN | CHK_INF))
-		    != (CHK_NAN | CHK_INF));
-
-		/* Ready to go */
 		oval = hypot(t2table[i].x, t2table[i].y);
-		if (t2table[i].check & CHK_INF) {
-			/*
-			 * Grab the opportunity to cross-check the results and
-			 * at the same time cross-check the functions with
-			 * respect to each other.
-			 */
-			ATF_CHECK(isinf(oval));
-			ATF_CHECK(!isfinite(oval));
-			ATF_CHECK(fpclassify(oval) == FP_INFINITE);
-		}
-		if (t2table[i].check & CHK_SIGN) {
-			ATF_CHECK(signbit(oval) == signbit(t2table[i].z));
-		}
+		ATF_CHECK(fpcmp_equal(oval, t2table[i].z));
 	}
 }
 
@@ -162,20 +138,11 @@ ATF_TC_BODY(test_hypot3, tc)
 	int hasfp = 0;		/* Whether exceptions are supported */
 	int haserrno = 0;	/* Whether errno is supported */
 
-#if defined(math_errhandling) && defined(MATH_ERREXCEPT) && \
-	(math_errhandling & MATH_ERREXCEPT)
-	hasfp = 1;
-#endif
-
-#if defined(math_errhandling) && defined(MATH_ERRNO) && \
-	(math_errhandling & MATH_ERRNO)
-	haserrno = 1;
-#endif
-
 	/*
 	 * POSIX requires that at least one of the error reporting mechanisms
 	 * is supported.
 	 */
+	query_errhandling(&hasfp, &haserrno);
 	ATF_REQUIRE(hasfp || haserrno);
 
 	volatile double x, y;
@@ -238,20 +205,11 @@ ATF_TC_BODY(test_hypot4, tc)
 	int hasfp = 0;          /* Whether exceptions are supported */
 	int haserrno = 0;       /* Whether errno is supported */
 
-#if defined(math_errhandling) && defined(MATH_ERREXCEPT) && \
-	(math_errhandling & MATH_ERREXCEPT)
-	hasfp = 1;
-#endif
-
-#if defined(math_errhandling) && defined(MATH_ERRNO) && \
-	(math_errhandling & MATH_ERRNO)
-	haserrno = 1;
-#endif
-
 	/*
 	 * POSIX requires that at least one of the error reporting mechanisms
 	 * is supported.
 	 */
+	query_errhandling(&hasfp, &haserrno);
 	ATF_REQUIRE(hasfp || haserrno);
 
 	volatile double x, y;
@@ -291,7 +249,7 @@ ATF_TC_BODY(test_hypot5, tc)
 {
 	/* hypot(x,y), hypot(y,x), and hypot(x, -y) are equivalent */
 	
-	/* hypot(x, ±0) is equivalent to fabs(x) */
+	/* hypot(x, +-0) is equivalent to fabs(x) */
 }
 
 /* Add test cases to test program */
