@@ -4,13 +4,6 @@
 bool get_config_var_as_bool(const atf_tc_t *tc, const char *name);
 long get_config_var_as_long(const atf_tc_t *tc, const char *name);
 
-/* Ugly, I know */
-#define ATF_MYCHECK(x, cond)			\
-do {						\
-	*(cond) = (x);				\
-	ATF_CHECK(x);				\
-} while(0)
-
 #define ATF_PRINT_ERRMSG(fmt, ...)					\
 do {									\
 	atf_tc_fail_check(__FILE__, __LINE__, fmt, ##__VA_ARGS__);	\
