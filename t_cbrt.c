@@ -26,9 +26,11 @@ ATF_TC_BODY(test_cbrt1, tc)
 
 	N = sizeof(ttable) / sizeof(ttable[0]);
 	for (i = 0; i < N; i++) {
+		/* Sanity check */
 		ATF_REQUIRE(ttable[i].x >= -1.0 && ttable[i].x <= 1.0);
 
-		ATF_CHECK(fabs(cbrt(ttable[i].x) - ttable[i].y) < 1E-5);
+		/* Actual checks */
+		ATF_CHECK(fpcmp_equal(cbrt(ttable[i].x), ttable[i].y));
 	}
 }
 
@@ -50,7 +52,7 @@ ATF_TC_BODY(test_cbrt2, tc)
 	/* If x is NaN, a NaN shall be returned */
 	ATF_CHECK(fpclassify(cbrt(NAN)) == FP_NAN);
 #endif
-	
+
 	/* If x is +-0, x shall be returned */
 	x = +0.0;
 	ATF_CHECK(fpclassify(cbrt(x)) == FP_ZERO);
@@ -67,8 +69,8 @@ ATF_TC_BODY(test_cbrt2, tc)
 	ATF_CHECK(signbit(cbrt(x)) == 0);
 
 	x = -INFINITY;
-        ATF_CHECK(fpclassify(cbrt(x)) == FP_INFINITE);
-        ATF_CHECK(signbit(cbrt(x)) != 0);
+	ATF_CHECK(fpclassify(cbrt(x)) == FP_INFINITE);
+	ATF_CHECK(signbit(cbrt(x)) != 0);
 #endif
 }
 
