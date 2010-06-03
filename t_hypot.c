@@ -175,19 +175,19 @@ ATF_TC_BODY(test_hypot3, tc)
 		int ex;
 
 		/* Clean all the exceptions */
-                ATF_REQUIRE(feclearexcept(FE_ALL_EXCEPT) == 0);
-                (void)hypot(x, y);
+		ATF_REQUIRE(feclearexcept(FE_ALL_EXCEPT) == 0);
+		(void)hypot(x, y);
 
-                /* ... and check if it was raised */
-                ex = fetestexcept(FE_OVERFLOW);
-                ATF_CHECK((ex & FE_OVERFLOW) == FE_OVERFLOW );
-        }
+		/* ... and check if it was raised */
+		ex = fetestexcept(FE_OVERFLOW);
+		ATF_CHECK((ex & FE_OVERFLOW) == FE_OVERFLOW );
+	}
 
-        if (haserrno) {
-                errno = 0;
-                (void)hypot(x, y);
-                ATF_CHECK(errno == 0);
-        }
+	if (haserrno) {
+		errno = 0;
+		(void)hypot(x, y);
+		ATF_CHECK(errno == 0);
+	}
 }
 
 /*
@@ -248,7 +248,7 @@ ATF_TC_HEAD(test_hypot5, tc)
 ATF_TC_BODY(test_hypot5, tc)
 {
 	/* hypot(x,y), hypot(y,x), and hypot(x, -y) are equivalent */
-	
+
 	/* hypot(x, +-0) is equivalent to fabs(x) */
 }
 
