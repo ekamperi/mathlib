@@ -9,6 +9,7 @@
 #include <time.h>
 
 #include "subr_atf.h"
+#include "subr_fpcmp.h"
 
 struct tentry {
 	double y;	/* Input */
@@ -64,8 +65,9 @@ ATF_TC_BODY(test_atan21, tc)
 
 	N = sizeof(ttable) / sizeof(ttable[0]);
 	for (i = 0; i < N; i++) {
-		ATF_CHECK(fabs(atan2(ttable[i].y, ttable[i].x) - ttable[i].z)
-		    < 1E-5);
+		ATF_CHECK(fpcmp_equal(
+			    atan2(ttable[i].y, ttable[i].x),
+			    ttable[i].z));
 	}
 }
 
@@ -97,162 +99,152 @@ ATF_TC_BODY(test_atan22, tc)
 
 #define X1      -1E4
 #define X2       1E4
-	for (i = 0; i < N; i++) {
+	ATF_FOR_LOOP(i, N, i++) {
 		double x = X1 + rand() / (RAND_MAX / (X2 - X1 + 1.0) + 1.0);
 		double y = X1 + rand() / (RAND_MAX / (X2 - X1 + 1.0) + 1.0);
 		if (fpclassify(x) == FP_ZERO) {
 			continue;
 		}
 
-		ATF_CHECK(atan2(y, x) >= -M_PI);
-		ATF_CHECK(atan2(y, x) <=  M_PI);
+		ATF_PASS_OR_BREAK(atan2(y, x) >= -M_PI);
+		ATF_PASS_OR_BREAK(atan2(y, x) <=  M_PI);
 	}
 }
 
 /*
  * Test case 3 -- Edge cases
  */
-#define CHK_REG         (1 << 0)
-#define CHK_ZERO        (1 << 1)
-#define CHK_NAN		(1 << 2)
-#define CHK_SIGN        (1 << 3)
-
-#define MY_NAN	1
-#define MY_INF 2
-#define DOESNT_MATTER 2
-
 struct t3entry {
 	double y;       /* Input */
 	double x;
-	double z;       /* pow output */
-	int check;
+	double z;       /* atan2 output */
 } t3table[] = {
 	/* If y is +-0 and x is < 0, +-Pi shall be returned */
-	{ +0.0, -1E-5, M_PI, CHK_REG },
-	{ +0.0, -1.0,  M_PI, CHK_REG },
-	{ +0.0, -2.0,  M_PI, CHK_REG },
+	{ +0.0, -1E-5, M_PI },
+	{ +0.0, -1.0,  M_PI },
+	{ +0.0, -2.0,  M_PI },
 
-	{ -0.0, -1E-5,-M_PI, CHK_REG },
-	{ -0.0, -1.0, -M_PI, CHK_REG },
-	{ -0.0, -2.0, -M_PI, CHK_REG },
+	{ -0.0, -1E-5,-M_PI },
+	{ -0.0, -1.0, -M_PI },
+	{ -0.0, -2.0, -M_PI },
 
 	/* If y is +-0 and x is > 0, +-0 shall be returned */
-	{ +0.0, 1E-5,+0.0, CHK_ZERO | CHK_SIGN },
-	{ +0.0, 1.0, +0.0, CHK_ZERO | CHK_SIGN },
-	{ +0.0, 2.0, +0.0, CHK_ZERO | CHK_SIGN },
+	{ +0.0, 1E-5,+0.0 },
+	{ +0.0, 1.0, +0.0 },
+	{ +0.0, 2.0, +0.0 },
 
-	{ -0.0, 1E-5,-0.0, CHK_ZERO | CHK_SIGN },
-	{ -0.0, 1.0, -0.0, CHK_ZERO | CHK_SIGN },
-	{ -0.0, 2.0, -0.0, CHK_ZERO | CHK_SIGN },
+	{ -0.0, 1E-5,-0.0 },
+	{ -0.0, 1.0, -0.0 },
+	{ -0.0, 2.0, -0.0 },
 
 	/* If y is < 0 and x is +-0, -Pi/2 shall be returned */
-	{ -1E-5, +0.0, -M_PI_2, CHK_REG },
-	{ -1.0,  +0.0, -M_PI_2, CHK_REG },
-	{ -2.0,  +0.0, -M_PI_2, CHK_REG },
+	{ -1E-5, +0.0, -M_PI_2 },
+	{ -1.0,  +0.0, -M_PI_2 },
+	{ -2.0,  +0.0, -M_PI_2 },
 
-	{ -1E-5, -0.0, -M_PI_2, CHK_REG },
-	{ -1.0,  -0.0, -M_PI_2, CHK_REG },
-	{ -2.0,  -0.0, -M_PI_2, CHK_REG },
+	{ -1E-5, -0.0, -M_PI_2 },
+	{ -1.0,  -0.0, -M_PI_2 },
+	{ -2.0,  -0.0, -M_PI_2 },
 
 	/* If y is > 0 and x is +-0, Pi/2 shall be returned */
-	{ 1E-5, +0.0, M_PI_2, CHK_REG },
-	{ 1.0,  +0.0, M_PI_2, CHK_REG },
-	{ 2.0,  +0.0, M_PI_2, CHK_REG },
+	{ 1E-5, +0.0, M_PI_2 },
+	{ 1.0,  +0.0, M_PI_2 },
+	{ 2.0,  +0.0, M_PI_2 },
 
-	{ 1E-5, -0.0, M_PI_2, CHK_REG },
-	{ 1.0,  -0.0, M_PI_2, CHK_REG },
-	{ 2.0,  -0.0, M_PI_2, CHK_REG },
+	{ 1E-5, -0.0, M_PI_2 },
+	{ 1.0,  -0.0, M_PI_2 },
+	{ 2.0,  -0.0, M_PI_2 },
 
 	/* If either x or y is NaN, a NaN shall be returned */
-#if 0
-	{ MY_NAN, +0.0, DOESNT_MATTER, CHK_NAN },
-	{ MY_NAN, +1.0, DOESNT_MATTER, CHK_NAN },
-	{ MY_NAN, +2.0, DOESNT_MATTER, CHK_NAN },
-	{ MY_NAN, -0.0, DOESNT_MATTER, CHK_NAN },
-	{ MY_NAN, -1.0, DOESNT_MATTER, CHK_NAN },
-	{ MY_NAN, -2.0, DOESNT_MATTER, CHK_NAN },
+#ifdef	NAN
+	{ NAN, +0.0, NAN },
+	{ NAN, +1.0, NAN },
+	{ NAN, +2.0, NAN },
+	{ NAN, -0.0, NAN },
+	{ NAN, -1.0, NAN },
+	{ NAN, -2.0, NAN },
 
-	{ +0.0, MY_NAN, DOESNT_MATTER, CHK_NAN },
-	{ +1.0, MY_NAN, DOESNT_MATTER, CHK_NAN },
-	{ +2.0, MY_NAN, DOESNT_MATTER, CHK_NAN },
-	{ -0.0, MY_NAN, DOESNT_MATTER, CHK_NAN },
-	{ -1.0, MY_NAN, DOESNT_MATTER, CHK_NAN },
-	{ -2.0, MY_NAN, DOESNT_MATTER, CHK_NAN },
-#endif
+	{ +0.0, NAN, NAN },
+	{ +1.0, NAN, NAN },
+	{ +2.0, NAN, NAN },
+	{ -0.0, NAN, NAN },
+	{ -1.0, NAN, NAN },
+	{ -2.0, NAN, NAN },
+#endif	/* NAN */
 	/* If y is +-0 and x is -0, +-Pi shall be returned */
-	{ +0.0, -0.0,  M_PI, CHK_REG },
-	{ +0.0, -0.0,  M_PI, CHK_REG },
-	{ +0.0, -0.0,  M_PI, CHK_REG },
+	{ +0.0, -0.0,  M_PI },
+	{ +0.0, -0.0,  M_PI },
+	{ +0.0, -0.0,  M_PI },
 
-	{ -0.0, -0.0, -M_PI, CHK_REG },
-	{ -0.0, -0.0, -M_PI, CHK_REG },
-	{ -0.0, -0.0, -M_PI, CHK_REG },
+	{ -0.0, -0.0, -M_PI },
+	{ -0.0, -0.0, -M_PI },
+	{ -0.0, -0.0, -M_PI },
 
 	/* If y is +-0 and x is +0, +-0 shall be returned */
-	{ +0.0, +0.0, +0.0, CHK_ZERO | CHK_SIGN },
-	{ +0.0, +0.0, +0.0, CHK_ZERO | CHK_SIGN },
-	{ +0.0, +0.0, +0.0, CHK_ZERO | CHK_SIGN },
+	{ +0.0, +0.0, +0.0 },
+	{ +0.0, +0.0, +0.0 },
+	{ +0.0, +0.0, +0.0 },
 
-	{ -0.0, +0.0, -0.0, CHK_ZERO | CHK_SIGN },
-	{ -0.0, +0.0, -0.0, CHK_ZERO | CHK_SIGN },
-	{ -0.0, +0.0, -0.0, CHK_ZERO | CHK_SIGN },
+	{ -0.0, +0.0, -0.0 },
+	{ -0.0, +0.0, -0.0 },
+	{ -0.0, +0.0, -0.0 },
 
-#if 0
 	/* For finite values of +-y > 0, if x is -Inf, +-Pi shall be returned */
-	{ 1E-5, -INFINITY, M_PI, CHK_REG },
-	{  1.0, -INFINITY, M_PI, CHK_REG },
-	{  2.0, -INFINITY, M_PI, CHK_REG },
-	{ 1E+5, -INFINITY, M_PI, CHK_REG },
+#ifdef	INFINITY
+	{ 1E-5, -INFINITY, M_PI },
+	{  1.0, -INFINITY, M_PI },
+	{  2.0, -INFINITY, M_PI },
+	{ 1E+5, -INFINITY, M_PI },
 
-	{ -1E-5, -INFINITY, -M_PI, CHK_REG },
-	{  -1.0, -INFINITY, -M_PI, CHK_REG },
-	{  -2.0, -INFINITY, -M_PI, CHK_REG },
-	{ -1E+5, -INFINITY, -M_PI, CHK_REG },
+	{ -1E-5, -INFINITY, -M_PI },
+	{  -1.0, -INFINITY, -M_PI },
+	{  -2.0, -INFINITY, -M_PI },
+	{ -1E+5, -INFINITY, -M_PI },
 
 	/* For finite values of +-y > 0, if x is +Inf, +-0 shall be returned */
-	{ 1E-5, +INFINITY, +0.0, CHK_ZERO | CHK_SIGN },
-	{  1.0, +INFINITY, +0.0, CHK_ZERO | CHK_SIGN },
-	{  2.0, +INFINITY, +0.0, CHK_ZERO | CHK_SIGN },
-	{ 1E+5, +INFINITY, +0.0, CHK_ZERO | CHK_SIGN },
+	{ 1E-5, +INFINITY, +0.0 },
+	{  1.0, +INFINITY, +0.0 },
+	{  2.0, +INFINITY, +0.0 },
+	{ 1E+5, +INFINITY, +0.0 },
 
-	{ -1E-5, +INFINITY, -0.0, CHK_ZERO | CHK_SIGN },
-	{  -1.0, +INFINITY, -0.0, CHK_ZERO | CHK_SIGN },
-	{  -2.0, +INFINITY, -0.0, CHK_ZERO | CHK_SIGN },
-	{ -1E+5, +INFINITY, -0.0, CHK_ZERO | CHK_SIGN },
+	{ -1E-5, +INFINITY, -0.0 },
+	{  -1.0, +INFINITY, -0.0 },
+	{  -2.0, +INFINITY, -0.0 },
+	{ -1E+5, +INFINITY, -0.0 },
 
 	/* For finite values of x, if y is +-Inf, +-Pi/2 shall be returned */
-	{ +INFINITY,  1E-5,  M_PI_2, CHK_REG },
-	{ +INFINITY,   1.0,  M_PI_2, CHK_REG },
-	{ +INFINITY,   2.0,  M_PI_2, CHK_REG },
-	{ +INFINITY,  1E+5,  M_PI_2, CHK_REG },
+	{ +INFINITY,  1E-5,  M_PI_2 },
+	{ +INFINITY,   1.0,  M_PI_2 },
+	{ +INFINITY,   2.0,  M_PI_2 },
+	{ +INFINITY,  1E+5,  M_PI_2 },
 
-	{ -INFINITY, -1E-5, -M_PI_2, CHK_REG },
-	{ -INFINITY,  -1.0, -M_PI_2, CHK_REG },
-	{ -INFINITY,  -2.0, -M_PI_2, CHK_REG },
-	{ -INFINITY, -1E+5, -M_PI_2, CHK_REG },
+	{ -INFINITY, -1E-5, -M_PI_2 },
+	{ -INFINITY,  -1.0, -M_PI_2 },
+	{ -INFINITY,  -2.0, -M_PI_2 },
+	{ -INFINITY, -1E+5, -M_PI_2 },
 
 	/* If y is +-Inf and x is -Inf, +-3Pi/4 shall be returned */
-	{ +INFINITY, -INFINITY,  3*M_PI/4, CHK_REG },
-        { +INFINITY, -INFINITY,  3*M_PI/4, CHK_REG },
-        { +INFINITY, -INFINITY,  3*M_PI/4, CHK_REG },
-        { +INFINITY, -INFINITY,  3*M_PI/4, CHK_REG },
+	{ +INFINITY, -INFINITY,  3*M_PI/4 },
+        { +INFINITY, -INFINITY,  3*M_PI/4 },
+        { +INFINITY, -INFINITY,  3*M_PI/4 },
+        { +INFINITY, -INFINITY,  3*M_PI/4 },
 
-        { -INFINITY, -INFINITY, -3*M_PI/4, CHK_REG },
-        { -INFINITY, -INFINITY, -3*M_PI/4, CHK_REG },
-        { -INFINITY, -INFINITY, -3*M_PI/4, CHK_REG },
-        { -INFINITY, -INFINITY, -3*M_PI/4, CHK_REG },
+        { -INFINITY, -INFINITY, -3*M_PI/4 },
+        { -INFINITY, -INFINITY, -3*M_PI/4 },
+        { -INFINITY, -INFINITY, -3*M_PI/4 },
+        { -INFINITY, -INFINITY, -3*M_PI/4 },
 
 	/* If y is +-Inf and x is +Inf, +-Pi/4 shall be returned */
-        { +INFINITY, INFINITY,  M_PI/4, CHK_REG },
-        { +INFINITY, INFINITY,  M_PI/4, CHK_REG },
-        { +INFINITY, INFINITY,  M_PI/4, CHK_REG },
-        { +INFINITY, INFINITY,  M_PI/4, CHK_REG },
+        { +INFINITY, INFINITY,  M_PI/4 },
+        { +INFINITY, INFINITY,  M_PI/4 },
+        { +INFINITY, INFINITY,  M_PI/4 },
+        { +INFINITY, INFINITY,  M_PI/4 },
 
-        { -INFINITY, INFINITY, -M_PI/4, CHK_REG },
-        { -INFINITY, INFINITY, -M_PI/4, CHK_REG },
-        { -INFINITY, INFINITY, -M_PI/4, CHK_REG },
-        { -INFINITY, INFINITY, -M_PI/4, CHK_REG },
-#endif
+        { -INFINITY, INFINITY, -M_PI/4 },
+        { -INFINITY, INFINITY, -M_PI/4 },
+        { -INFINITY, INFINITY, -M_PI/4 },
+        { -INFINITY, INFINITY, -M_PI/4 },
+#endif	/* INFINITY */
 
 };
 
@@ -270,30 +262,9 @@ ATF_TC_BODY(test_atan23, tc)
 
 	N = sizeof(t3table) / sizeof(t3table[0]);
 	for (i = 0; i < N; i++) {
-		/* Make sure that only allowed checks are set */
-		ATF_REQUIRE((t3table[i].check
-			& ~(CHK_REG | CHK_ZERO | CHK_NAN | CHK_SIGN)) == 0);
-
-		/* Don't allow conflicting types to be set */
-                ATF_REQUIRE((t3table[i].check & (CHK_REG | CHK_NAN))
-                    != (CHK_REG | CHK_NAN));
-                ATF_REQUIRE((t3table[i].check & (CHK_ZERO | CHK_NAN))
-                    != (CHK_ZERO | CHK_NAN));
-
-		if (t3table[i].y == MY_NAN)
-			continue;
-
 		/* Mind that y comes before x */
 		oval = atan2(t3table[i].y, t3table[i].x);
-		if (t3table[i].check & CHK_REG) {
-			ATF_CHECK(fabs(oval - t3table[i].z) < 1E-5);
-		}
-		if (t3table[i].check & CHK_ZERO) {
-			ATF_CHECK(fpclassify(oval) == FP_ZERO);
-		}
-		if (t3table[i].check & CHK_SIGN) {
-			ATF_CHECK(signbit(oval) == signbit(t3table[i].z));
-		}
+		ATF_CHECK(fpcmp_equal(oval, t3table[i].z));
 	}
 }
 
