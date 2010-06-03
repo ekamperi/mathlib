@@ -30,11 +30,11 @@ ATF_TC_BODY(test_symmetry, tc)
 	N = get_config_var_as_long(tc, "iterations");
 	ATF_REQUIRE(N > 0);
 
-	for (i = 0; i < N; i++) {
+	ATF_FOR_LOOP(i, N, i++) {
 		x = random_double(FP_NORMAL);
 
-		ATF_CHECK(FPCMP_EQUAL(sin(-x), -sin(x)));
-		ATF_CHECK(FPCMP_EQUAL(cos(-x),  cos(x)));
+		ATF_PASS_OR_BREAK(FPCMP_EQUAL(sin(-x), -sin(x)));
+		ATF_PASS_OR_BREAK(FPCMP_EQUAL(cos(-x),  cos(x)));
 	}
 }
 
@@ -56,11 +56,11 @@ ATF_TC_BODY(test_shifts, tc)
 	N = get_config_var_as_long(tc, "iterations");
 	ATF_REQUIRE(N > 0);
 
-	for (i = 0; i < N; i++) {
+	ATF_FOR_LOOP(i, N, i++) {
 		x = random_double(FP_NORMAL);
 
-		ATF_CHECK(fabs(sin(x + M_PI_2) - cos(x)) < 0.001);
-		ATF_CHECK(fabs(cos(x + M_PI_2) + sin(x)) < 0.001);
+		ATF_PASS_OR_BREAK(fabs(sin(x + M_PI_2) - cos(x)) < 0.001);
+		ATF_PASS_OR_BREAK(fabs(cos(x + M_PI_2) + sin(x)) < 0.001);
 	}
 }
 
@@ -82,21 +82,21 @@ ATF_TC_BODY(test_angle_sum, tc)
 	N = get_config_var_as_long(tc, "iterations");
 	ATF_REQUIRE(N > 0);
 
-	for (i = 0; i < N; i++) {
+	ATF_FOR_LOOP(i, N, i++) {
 		x = random_double(FP_NORMAL);
 		y = random_double(FP_NORMAL);
 
 		s = sin(x) * cos(y) + cos(x) * sin(y);
-		ATF_CHECK(fabs(sin(x+y) - s) < 0.001);
+		ATF_PASS_OR_BREAK(fabs(sin(x+y) - s) < 0.001);
 
 		s = sin(x) * cos(y) - cos(x) * sin(y);
-		ATF_CHECK(fabs(sin(x-y) - s) < 0.001);
+		ATF_PASS_OR_BREAK(fabs(sin(x-y) - s) < 0.001);
 
 		s = cos(x) * cos(y) + sin(x) * sin(y);
-		ATF_CHECK(fabs(cos(x-y) - s) < 0.001);
+		ATF_PASS_OR_BREAK(fabs(cos(x-y) - s) < 0.001);
 
 		s = cos(x) * cos(y) + sin(x) * sin(y);
-		ATF_CHECK(fabs(cos(x-y) - s) < 0.001);
+		ATF_PASS_OR_BREAK(fabs(cos(x-y) - s) < 0.001);
 	}
 }
 
@@ -118,19 +118,19 @@ ATF_TC_BODY(test_half_angle, tc)
 	N = get_config_var_as_long(tc, "iterations");
 	ATF_REQUIRE(N > 0);
 
-	for (i = 0; i < N; i++) {
+	ATF_FOR_LOOP(i, N, i++) {
 		x = random_double(FP_NORMAL);
 
-		ATF_CHECK(fabs(sin(x/2)*sin(x/2) - 0.5*(1-cos(x))) < 0.001);
-		ATF_CHECK(fabs(cos(x/2)*cos(x/2) - 0.5*(1+cos(x))) < 0.001);
+		ATF_PASS_OR_BREAK(fabs(sin(x/2)*sin(x/2) - 0.5*(1-cos(x))) < 0.001);
+		ATF_PASS_OR_BREAK(fabs(cos(x/2)*cos(x/2) - 0.5*(1+cos(x))) < 0.001);
 
-		ATF_CHECK(fabs(sin(2*x) - 2*sin(x)*cos(x)) < 0.001);
-		ATF_CHECK(fabs(cos(2*x) - (cos(x)*cos(x) - sin(x)*sin(x)))
+		ATF_PASS_OR_BREAK(fabs(sin(2*x) - 2*sin(x)*cos(x)) < 0.001);
+		ATF_PASS_OR_BREAK(fabs(cos(2*x) - (cos(x)*cos(x) - sin(x)*sin(x)))
 		    < 0.001);
 
-		ATF_CHECK(fabs(sin(3*x) - (3*sin(x) - 4*sin(x)*sin(x)*sin(x)))
+		ATF_PASS_OR_BREAK(fabs(sin(3*x) - (3*sin(x) - 4*sin(x)*sin(x)*sin(x)))
 		    < 0.001);
-		ATF_CHECK(fabs(cos(3*x) - (4*cos(x)*cos(x)*cos(x) - 3*cos(x)))
+		ATF_PASS_OR_BREAK(fabs(cos(3*x) - (4*cos(x)*cos(x)*cos(x) - 3*cos(x)))
 		    < 0.001);
 	}
 }
@@ -153,21 +153,21 @@ ATF_TC_BODY(test_product_to_sum, tc)
 	N = get_config_var_as_long(tc, "iterations");
 	ATF_REQUIRE(N > 0);
 
-	for (i = 0; i < N; i++) {
+	ATF_FOR_LOOP(i, N, i++) {
 		x = random_double(FP_NORMAL);
 		y = random_double(FP_NORMAL);
 
 		s = 0.5*(cos(x-y) + cos(x + y));
-		ATF_CHECK(fabs(cos(x)*cos(y) - s) < 0.001);
+		ATF_PASS_OR_BREAK(fabs(cos(x)*cos(y) - s) < 0.001);
 
 		s = 0.5*(cos(x-y) - cos(x+y));
-		ATF_CHECK(fabs(sin(x)*sin(y) - s) < 0.001);
+		ATF_PASS_OR_BREAK(fabs(sin(x)*sin(y) - s) < 0.001);
 
 		s = 0.5*(sin(x+y) + sin(x-y));
-		ATF_CHECK(fabs(sin(x)*cos(y) - s) < 0.001);
+		ATF_PASS_OR_BREAK(fabs(sin(x)*cos(y) - s) < 0.001);
 
 		s = 0.5*(sin(x+y) - sin(x-y));
-		ATF_CHECK(fabs(cos(x)*sin(y) - s) < 0.001);
+		ATF_PASS_OR_BREAK(fabs(cos(x)*sin(y) - s) < 0.001);
 	}
 }
 
@@ -189,10 +189,10 @@ ATF_TC_BODY(test_fundamental, tc)
 	N = get_config_var_as_long(tc, "iterations");
 	ATF_REQUIRE(N > 0);
 
-	for (i = 0; i < N; i++) {
+	ATF_FOR_LOOP(i, N, i++) {
 		x = random_double(FP_NORMAL);
 
-		ATF_CHECK(fabs((sin(x)*sin(x) + cos(x)*cos(x)) - 1) < 0.0001);
+		ATF_PASS_OR_BREAK(fabs((sin(x)*sin(x) + cos(x)*cos(x)) - 1) < 0.0001);
 	}
 }
 
@@ -214,38 +214,38 @@ ATF_TC_BODY(test_power_reduction, tc)
 	N = get_config_var_as_long(tc, "iterations");
 	ATF_REQUIRE(N > 0);
 
-	for (i = 0; i < N; i++) {
+	ATF_FOR_LOOP(i, N, i++) {
 		x = random_double(FP_NORMAL);
 
 		/* sin^2(x) = 0.5(1 - cos(2x)) */
 		e1 = sin(x) * sin(x);
 		e2 = 0.5 * (1 - cos(2*x));
-		ATF_CHECK(e1 == e2);
+		ATF_PASS_OR_BREAK(FPCMP_EQUAL(e1, e2));
 
 		/* cos^2(x) = 0.5(1 + cos(2x)) */
 		e1 = cos(x) * cos(x);
 		e2 = 0.5 * (1 + cos(2*x));
-		ATF_CHECK(e1 == e2);
+		ATF_PASS_OR_BREAK(FPCMP_EQUAL(e1, e2));
 
 		/* sin^2(x)*cos^2(x) = 0.125(1-cos(4x)) */
 		e1 = sin(x)*sin(x) * cos(x)*cos(x);
 		e2 = 0.125*(1-cos(4*x));
-		ATF_CHECK(e1 == e2);
+		ATF_PASS_OR_BREAK(FPCMP_EQUAL(e1, e2));
 
 		/* sin^3(x) = 0.25(3sin(x) - sin(3x)) */
 		e1 = sin(x) * sin(x) * sin(x);
 		e2 = 0.25 * (3*sin(x) - sin(3*x));
-		ATF_CHECK(e1 == e2);
+		ATF_PASS_OR_BREAK(FPCMP_EQUAL(e1, e2));
 
 		/* cos^3(x) = 0.25(3cos(x) + cos(3x)) */
 		e1 = cos(x) * cos(x) * cos(x);
 		e2 = 0.25 * (3*cos(x) + cos(3*x));
-		ATF_CHECK(e1 == e2);
+		ATF_PASS_OR_BREAK(FPCMP_EQUAL(e1, e2));
 
 		/* sin^3(x)*cos^3(x) = 0.03125(3sin(2x) - sin(6x)) */
 		e1 = sin(x)*sin(x)*sin(x) * cos(x)*cos(x)*cos(x);
 		e2 = 0.03125 * (3*sin(2*x) - sin(6*x));
-		ATF_CHECK(e1 == e2);
+		ATF_PASS_OR_BREAK(FPCMP_EQUAL(e1, e2));
 	}
 }
 
