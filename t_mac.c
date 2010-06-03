@@ -137,21 +137,23 @@ ATF_TC_HEAD(test_isnormal, tc)
 }
 ATF_TC_BODY(test_isnormal, tc)
 {
-	size_t i;
 	float fx;
 	double dy;
 	long double ldz;
+	long i, N;
 
-#define	NITERATIONS 10000000
-	for (i = 0; i < NITERATIONS; i++) {
+	N = get_config_var_as_long("iterations");
+	ATF_REQUIRE(N > 0);
+
+	ATF_FOR_LOOP(i, N, i++) {
 		fx = random_float(FP_NORMAL);
-		ATF_CHECK(isnormal(fx));
+		ATF_PASS_OR_BREAK(isnormal(fx));
 
 		dy = random_double(FP_NORMAL);
-		ATF_CHECK(isnormal(dy));
+		ATF_PASS_OR_BREAK(isnormal(dy));
 
 		ldz = random_long_double(FP_NORMAL);
-		ATF_CHECK(isnormal(ldz));
+		ATF_OR_BREAK(isnormal(ldz));
 	}
 }
 
