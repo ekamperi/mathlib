@@ -54,27 +54,28 @@ ATF_TC_BODY(test_ceil2, tc)
 
 	N = get_config_var_as_long(tc, "iterations");
 	ATF_REQUIRE(N > 0);
-	for (i = 0; i < N; i++) {
+
+	ATF_FOR_LOOP(i, N, i++) {
 		/* float */
 		fx = random_float(FP_NORMAL);
 		fy = ceilf(fx);
-		ATF_CHECK(fy >= fx);
-		ATF_CHECK(floorf(fy) == fy);
-		ATF_CHECK(ceilf(fy) == fy);
+		ATF_PASS_OR_BREAK(fy >= fx);
+		ATF_PASS_OR_BREAK(floorf(fy) == fy);
+		ATF_PASS_OR_BREAK(ceilf(fy) == fy);
 
 		/* double */
 		dx = random_double(FP_NORMAL);
 		dy = ceil(dx);
-		ATF_CHECK(dy >= dx);
-		ATF_CHECK(floor(dy) == dy);
-		ATF_CHECK(ceil(dy) == dy);
+		ATF_PASS_OR_BREAK(dy >= dx);
+		ATF_PASS_OR_BREAK(floor(dy) == dy);
+		ATF_PASS_OR_BREAK(ceil(dy) == dy);
 
 		/* long double */
 		ldx = random_long_double(FP_NORMAL);
 		ldy = ceill(ldx);
-		ATF_CHECK(ldy >= ldx);
-		ATF_CHECK(floorl(ldy) == ldy);
-		ATF_CHECK(ceill(ldy) == ldy);
+		ATF_PASS_OR_BREAK(ldy >= ldx);
+		ATF_PASS_OR_BREAK(floorl(ldy) == ldy);
+		ATF_PASS_OR_BREAK(ceill(ldy) == ldy);
 	}
 }
 
@@ -125,9 +126,8 @@ ATF_TC_BODY(test_ceil3, tc)
 	N = sizeof(t3table) / sizeof(t3table[0]);
 	ATF_REQUIRE(N > 0);
 
-	for (i = 0; i < N; i++) {
+	for (i = 0; i < N; i++)
 		ATF_CHECK(fpcmp_equal(ceil(t3table[i].x), t3table[i].y));
-	}
 }
 
 /*
