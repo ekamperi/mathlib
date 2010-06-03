@@ -176,9 +176,9 @@ t_tanh: t_tanh.c subr_random.c
 	-o t_tanh						\
 	 $(LIB)
 
-t_tgamma: t_tgamma.c subr_random.c subr_errhandling.c
+t_tgamma: t_tgamma.c subr_atf.c subr_random.c subr_errhandling.c
 	$(CC99) $(CCFLAGS) $(INCLUDE) 				\
-		t_tgamma.c subr_random.c subr_errhandling.c	\
+		t_tgamma.c subr_atf.c subr_random.c subr_errhandling.c	\
 	-o t_tgamma						\
 	$(LIB)
 
