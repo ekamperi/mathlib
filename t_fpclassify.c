@@ -1,8 +1,7 @@
+#include <atf-c.h>
 #include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
-
-#include <atf-c.h>
 
 /*
  * Test case 1 -- float version
@@ -13,8 +12,8 @@ struct t1entry {
 } t1table[] = {
 	/* Infinity */
 #ifdef  HUGE_VALF
-        {  HUGE_VALF, FP_INFINITE },
-        { -HUGE_VALF, FP_INFINITE },
+	{  HUGE_VALF, FP_INFINITE },
+	{ -HUGE_VALF, FP_INFINITE },
 #endif
 
 	/* NAN */
@@ -47,7 +46,6 @@ ATF_TC_BODY(test_fpclassify_float, tc)
 
 	N = sizeof(t1table) / sizeof(t1table[0]);
 	for (i = 0; i < N; i++) {
-	  printf("%f\n", t1table[i].x);
 		oval = fpclassify(t1table[i].x);
 		ATF_CHECK(oval == t1table[i].class);
 	}
@@ -62,13 +60,13 @@ struct t2entry {
 } t2table[] = {
 	/* Infinity */
 #ifdef  HUGE_VALF
-        {  HUGE_VALF, FP_INFINITE },
-        { -HUGE_VALF, FP_INFINITE },
+	{  HUGE_VALF, FP_INFINITE },
+	{ -HUGE_VALF, FP_INFINITE },
 #endif
 #ifdef	HUGE_VAL
 	{  HUGE_VAL, FP_INFINITE },
 	{ -HUGE_VAL, FP_INFINITE },
-#endif 
+#endif
 
 	/* NAN */
 #ifdef	NAN
@@ -116,8 +114,8 @@ struct t3entry {
 } t3table[] = {
 	/* Infinity */
 #ifdef  HUGE_VALF
-        {  HUGE_VALF, FP_INFINITE },
-        { -HUGE_VALF, FP_INFINITE },
+	{  HUGE_VALF, FP_INFINITE },
+	{ -HUGE_VALF, FP_INFINITE },
 #endif
 #ifdef	HUGE_VAL
 	{  HUGE_VAL, FP_INFINITE },
