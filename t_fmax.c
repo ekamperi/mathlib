@@ -179,53 +179,49 @@ ATF_TC_BODY(test_fmax3, tc)
 	N = get_config_var_as_long(tc, "iterations");
 	ATF_REQUIRE(N > 0);
 
-	/* Normal - normal */
-	for (i = 0; i < N; i++) {
+	ATF_FOR_LOOP(i, N, i++) {
+		/* Normal - normal */
 		do {
 			x = random_double(FP_NORMAL);
 			y = random_double(FP_NORMAL);
 		} while (x == y);
 
-		ATF_CHECK((fmax(x, y) == x) || (fmax(x, y) == y));
-		ATF_CHECK((fmin(x, y) == x) || (fmin(x, y) == y));
-		ATF_CHECK((fmax(x, y) != fmin(x, y)));
-	}
+		ATF_PASS_OR_BREAK((fmax(x, y) == x) || (fmax(x, y) == y));
+		ATF_PASS_OR_BREAK((fmin(x, y) == x) || (fmin(x, y) == y));
+		ATF_PASS_OR_BREAK((fmax(x, y) != fmin(x, y)));
 
-	/* Normal - subnormal */
-	for (i = 0; i < N; i++) {
+		/* Normal - subnormal */
 		do {
 			x = random_double(FP_NORMAL);
 			y = random_double(FP_SUBNORMAL);
 		} while (x == y);
 
-		ATF_CHECK((fmax(x, y) == x) || (fmax(x, y) == y));
-		ATF_CHECK((fmin(x, y) == x) || (fmin(x, y) == y));
-		ATF_CHECK((fmax(x, y) != fmin(x, y)));
+		ATF_PASS_OR_BREAK((fmax(x, y) == x) || (fmax(x, y) == y));
+		ATF_PASS_OR_BREAK((fmin(x, y) == x) || (fmin(x, y) == y));
+		ATF_PASS_OR_BREAK((fmax(x, y) != fmin(x, y)));
 
-#ifdef  NAN
 		/*
 		 * Since we are here, check again that if just one argument is a
 		 * NaN, the other argument shall be returned. But this time do
 		 * it with some random input and also try with subnormals.
 		 */
+#ifdef	NAN
 		ATF_CHECK(fmax(NAN, x) == x);
 		ATF_CHECK(fmax(NAN, y) == y);
 
 		ATF_CHECK(fmax(x, NAN) == x);
 		ATF_CHECK(fmax(y, NAN) == y);
 #endif
-	}
 
-	/* Subnormal - subnormal */
-	for (i = 0; i < N; i++) {
+		/* Subnormal - subnormal */
 		do {
 			x = random_double(FP_SUBNORMAL);
 			y = random_double(FP_SUBNORMAL);
 		} while (x == y);
 
-		ATF_CHECK((fmax(x, y) == x) || (fmax(x, y) == y));
-		ATF_CHECK((fmin(x, y) == x) || (fmin(x, y) == y));
-		ATF_CHECK((fmax(x, y) != fmin(x, y)));
+		ATF_PASS_OR_BREAK((fmax(x, y) == x) || (fmax(x, y) == y));
+		ATF_PASS_OR_BREAK((fmin(x, y) == x) || (fmin(x, y) == y));
+		ATF_PASS_OR_BREAK((fmax(x, y) != fmin(x, y)));
 	}
 }
 
