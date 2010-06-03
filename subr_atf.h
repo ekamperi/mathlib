@@ -11,4 +11,20 @@ do {						\
 	ATF_CHECK(x);				\
 } while(0)
 
+#define ATF_PRINT_ERRMSG(fmt, ...)					\
+do {									\
+	atf_tc_fail_check(__FILE__, __LINE__, fmt, ##__VA_ARGS__);	\
+} while(0)
+
+#define ATF_PASS_OR_BREAK(x)			\
+do {						\
+	__cond = (x);				\
+	if (!__cond)				\
+		ATF_PRINT_ERRMSG(#x);		\
+} while(0)
+
+#define ATF_FOR_LOOP(i, end, incr)		\
+int __cond = 1;					\
+for (i = 0; i < (end) && __cond; incr)
+
 #endif	/* ! __SUBR_ATF_H__ */

@@ -175,39 +175,39 @@ ATF_TC_BODY(test_signbit, tc)
 	N = get_config_var_as_long(tc, "iterations");
 	ATF_REQUIRE(N > 0);
 
-	for (i = 0; i < N; i++) {
+	ATF_FOR_LOOP(i, N, i++) {
 		/* Float */
 		do {
 			fx = random_float(FP_NORMAL);
 		} while (fx < 0.0);
-		ATF_CHECK(signbit(fx) == 0);
+		ATF_PASS_OR_BREAK(signbit(fx) == 0);
 
 		do {
 			fx = random_float(FP_NORMAL);
 		} while (fx > 0.0);
-		ATF_CHECK(signbit(fx) != 0);
+		ATF_PASS_OR_BREAK(signbit(fx) != 0);
 
 		/* Double */
 		do {
 			dy = random_double(FP_NORMAL);
 		} while (dy < 0.0);
-		ATF_CHECK(signbit(dy) == 0);
+		ATF_PASS_OR_BREAK(signbit(dy) == 0);
 
 		do {
 			dy = random_double(FP_NORMAL);
 		} while (dy > 0.0);
-		ATF_CHECK(signbit(dy) != 0);
+		ATF_PASS_OR_BREAK(signbit(dy) != 0);
 
 		/* Long double */
 		do {
 			ldz = random_long_double(FP_NORMAL);
 		} while (ldz < 0.0);
-		ATF_CHECK(signbit(ldz) == 0);
+		ATF_PASS_OR_BREAK(signbit(ldz) == 0);
 
 		do {
 			ldz = random_long_double(FP_NORMAL);
 		} while (ldz > 0.0);
-		ATF_CHECK(signbit(ldz) != 0);
+		ATF_PASS_OR_BREAK(signbit(ldz) != 0);
 	}
 
 	/* Also check some special cases */
@@ -246,65 +246,65 @@ ATF_TC_BODY(test_isgreater, tc)
 	N = get_config_var_as_long(tc, "iterations");
 	ATF_REQUIRE(N > 0);
 
-	for (i = 0; i < N; i++) {
+	ATF_FOR_LOOP(i, N, i++) {
 		/* Float */
 		fx = random_float(FP_NORMAL);
 		fy = random_float(FP_NORMAL);
 		if (fx > fy) {
-			ATF_CHECK(isgreater(fx, fy));
-			ATF_CHECK(isless(fy, fx));
+			ATF_PASS_OR_BREAK(isgreater(fx, fy));
+			ATF_PASS_OR_BREAK(isless(fy, fx));
 
-			ATF_CHECK(islessgreater(fx, fy));
-			ATF_CHECK(islessgreater(fy, fx));
+			ATF_PASS_OR_BREAK(islessgreater(fx, fy));
+			ATF_PASS_OR_BREAK(islessgreater(fy, fx));
 		} else if (fx < fy) {
-			ATF_CHECK(isgreater(fy, fx));
-			ATF_CHECK(isless(fx, fy));
+			ATF_PASS_OR_BREAK(isgreater(fy, fx));
+			ATF_PASS_OR_BREAK(isless(fx, fy));
 
-			ATF_CHECK(islessgreater(fx, fy));
-			ATF_CHECK(islessgreater(fy, fx));
+			ATF_PASS_OR_BREAK(islessgreater(fx, fy));
+			ATF_PASS_OR_BREAK(islessgreater(fy, fx));
 		} else {
-			ATF_CHECK(!islessgreater(fx, fy));
-			ATF_CHECK(!islessgreater(fy, fx));
+			ATF_PASS_OR_BREAK(!islessgreater(fx, fy));
+			ATF_PASS_OR_BREAK(!islessgreater(fy, fx));
 		}
 
 		/* Double */
 		dx = random_double(FP_NORMAL);
 		dy = random_double(FP_NORMAL);
 		if (dx > dy) {
-			ATF_CHECK(isgreater(dx, dy));
-			ATF_CHECK(isless(dy, dx));
+			ATF_PASS_OR_BREAK(isgreater(dx, dy));
+			ATF_PASS_OR_BREAK(isless(dy, dx));
 
-			ATF_CHECK(islessgreater(dx, dy));
-			ATF_CHECK(islessgreater(dy, dx));
+			ATF_PASS_OR_BREAK(islessgreater(dx, dy));
+			ATF_PASS_OR_BREAK(islessgreater(dy, dx));
 		} else if (dx < dy) {
-			ATF_CHECK(isgreater(dy, dx));
-			ATF_CHECK(isless(dx, dy));
+			ATF_PASS_OR_BREAK(isgreater(dy, dx));
+			ATF_PASS_OR_BREAK(isless(dx, dy));
 
-			ATF_CHECK(islessgreater(dx, dy));
-			ATF_CHECK(islessgreater(dy, dx));
+			ATF_PASS_OR_BREAK(islessgreater(dx, dy));
+			ATF_PASS_OR_BREAK(islessgreater(dy, dx));
 		} else {
-			ATF_CHECK(!islessgreater(fx, fy));
-			ATF_CHECK(!islessgreater(fy, fx));
+			ATF_PASS_OR_BREAK(!islessgreater(fx, fy));
+			ATF_PASS_OR_BREAK(!islessgreater(fy, fx));
 		}
 
 		/* Long double */
 		ldx = random_long_double(FP_NORMAL);
 		ldy = random_long_double(FP_NORMAL);
 		if (ldx > ldy) {
-			ATF_CHECK(isgreater(ldx, ldy));
-			ATF_CHECK(isless(ldy, ldx));
+			ATF_PASS_OR_BREAK(isgreater(ldx, ldy));
+			ATF_PASS_OR_BREAK(isless(ldy, ldx));
 
-			ATF_CHECK(islessgreater(ldx, ldy));
-			ATF_CHECK(islessgreater(ldy, ldx));
+			ATF_PASS_OR_BREAK(islessgreater(ldx, ldy));
+			ATF_PASS_OR_BREAK(islessgreater(ldy, ldx));
 		} else if (ldx < ldy) {
-			ATF_CHECK(isgreater(ldy, ldx));
-			ATF_CHECK(isless(ldx, ldy));
+			ATF_PASS_OR_BREAK(isgreater(ldy, ldx));
+			ATF_PASS_OR_BREAK(isless(ldx, ldy));
 
-			ATF_CHECK(islessgreater(ldx, ldy));
-			ATF_CHECK(islessgreater(ldy, ldx));
+			ATF_PASS_OR_BREAK(islessgreater(ldx, ldy));
+			ATF_PASS_OR_BREAK(islessgreater(ldy, ldx));
 		} else {
-			ATF_CHECK(!islessgreater(fx, fy));
-			ATF_CHECK(!islessgreater(fy, fx));
+			ATF_PASS_OR_BREAK(!islessgreater(fx, fy));
+			ATF_PASS_OR_BREAK(!islessgreater(fy, fx));
 		}
 	}
 
@@ -395,25 +395,25 @@ ATF_TC_BODY(test_isunordered, tc)
 	N = get_config_var_as_long(tc, "iterations");
 	ATF_REQUIRE(N > 0);
 
-	for (i = 0; i < N; i++) {
+	ATF_FOR_LOOP(i, N, i++) {
 		fx = random_float(FP_NORMAL);
 		dx = random_double(FP_NORMAL);
 		ldx = random_long_double(FP_NORMAL);
 
 		/* float - */
-		ATF_CHECK(!isunordered(fx, fx));
-		ATF_CHECK(!isunordered(fx, dx));
-		ATF_CHECK(!isunordered(fx, ldx));
+		ATF_PASS_OR_BREAK(!isunordered(fx, fx));
+		ATF_PASS_OR_BREAK(!isunordered(fx, dx));
+		ATF_PASS_OR_BREAK(!isunordered(fx, ldx));
 
 		/* double - */
-		ATF_CHECK(!isunordered(dx, dx));
-		ATF_CHECK(!isunordered(dx, fx));
-		ATF_CHECK(!isunordered(dx, ldx));
+		ATF_PASS_OR_BREAK(!isunordered(dx, dx));
+		ATF_PASS_OR_BREAK(!isunordered(dx, fx));
+		ATF_PASS_OR_BREAK(!isunordered(dx, ldx));
 
 		/* long double - */
-		ATF_CHECK(!isunordered(ldx, ldx));
-		ATF_CHECK(!isunordered(ldx, fx));
-		ATF_CHECK(!isunordered(ldx, dx));
+		ATF_PASS_OR_BREAK(!isunordered(ldx, ldx));
+		ATF_PASS_OR_BREAK(!isunordered(ldx, fx));
+		ATF_PASS_OR_BREAK(!isunordered(ldx, dx));
 	}
 
 #ifdef	NAN
