@@ -2,6 +2,7 @@
 
 #include <atf-c.h>
 #include <math.h>
+#include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
@@ -73,6 +74,7 @@ ATF_TC_BODY(test_acos2, tc)
 {
 	double x;
 	long i, N;
+	bool cond;
 
 	N = sizeof(ttable) / sizeof(ttable[0]);
 	for (i = 0; i < N; i++) {
@@ -96,8 +98,19 @@ ATF_TC_BODY(test_acos2, tc)
 		ATF_REQUIRE(x >= -1.0 && x <= 1.0);
 
 		/* Actual checks */
-		ATF_CHECK(acos(x) >= 0.0);
-		ATF_CHECK(acos(x) <= M_PI);
+		ATF_MYCHECK(acos(x) >= 0.0, &cond);
+		if (!cond) {
+			fprintf(stderr,
+			    "x = %.16e,  acos(x) = %.16e\n", x, acos(x));
+			break;
+		}
+
+		ATF_MYCHECK(acos(x) <= M_PI, &cond);
+		if (!cond) {
+			fprintf(stderr,
+			    "x = %.16e,  acos(x) = %.16e\n", x, acos(x));
+			break;
+		}
 	}
 }
 
