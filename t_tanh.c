@@ -74,41 +74,35 @@ ATF_TC_BODY(test_tanh2, tc)
 /*
  * Test case 3 -- Edge cases
  */
-#define	CHK_REG		(1 << 0)
-#define CHK_ZERO        (1 << 1)
-#define CHK_NAN		(1 << 2)
-#define CHK_SIGN        (1 << 3)
-
 struct t3entry {
-	long double x;       /* Input */
+	long double x;	/* Input */
 	long double y;	/* tanh() output */
-	int check;
 } t3table[] = {
 	/* If x is NaN, a NaN shall be returned */
 #ifdef	NAN
-	{ NAN, NAN, CHK_NAN },
+	{ NAN, NAN },
 #endif
 
 	/* If x is +-0, x shall be returned */
-	{ +0.0, +0.0, CHK_ZERO | CHK_SIGN },
-	{ -0.0, -0.0, CHK_ZERO | CHK_SIGN },
+	{ +0.0, +0.0 },
+	{ -0.0, -0.0 },
 
 	/* If x is +-Inf, +-1 shall be returned */
 #ifdef	INFINITY
-	{  INFINITY,  1.0, CHK_REG },
-	{ -INFINITY, -1.0, CHK_REG },
+	{  INFINITY,  1.0 },
+	{ -INFINITY, -1.0 },
 #endif
 #ifdef	HUGE_VAL
-	{  HUGE_VAL,  1.0, CHK_REG },
-	{ -HUGE_VAL, -1.0, CHK_REG },
+	{  HUGE_VAL,  1.0 },
+	{ -HUGE_VAL, -1.0 },
 #endif
 #ifdef	HUGE_VALF
-	{  HUGE_VALF,  1.0, CHK_REG },
-	{ -HUGE_VALF, -1.0, CHK_REG },
+	{  HUGE_VALF,  1.0 },
+	{ -HUGE_VALF, -1.0 },
 #endif
 #ifdef	HUGE_VALL
-	{  HUGE_VALL,  1.0, CHK_REG },
-	{ -HUGE_VALL, -1.0, CHK_REG },
+	{  HUGE_VALL,  1.0 },
+	{ -HUGE_VALL, -1.0 },
 #endif
 
 	/* If x is subnormal, [...] x should be returned */
@@ -123,32 +117,24 @@ ATF_TC_HEAD(test_tanh3, tc)
 }
  ATF_TC_BODY(test_tanh3, tc)
 {
+	float fy;
+	double dy;
+	long double ldy;
 	size_t i, N;
-	double oval;	/* output value */
 
 	N = sizeof(t3table) / sizeof(t3table[0]);
 	for (i = 0; i < N; i++) {
-		/* Make sure that only allowed checks are set */
-		ATF_REQUIRE((t3table[i].check
-			& ~(CHK_REG | CHK_ZERO | CHK_NAN | CHK_SIGN)) == 0);
+		/* float */
+		fy = tanhf(t3table[i].x);
+		ATF_CHECK(fpcmp_equal(fy, t3table[i].y));
 
-		/* Don't allow conflicting types to be set */
-		ATF_REQUIRE((t3table[i].check & (CHK_REG | CHK_NAN))
-		    != (CHK_REG | CHK_NAN));
-		ATF_REQUIRE((t3table[i].check & (CHK_ZERO | CHK_NAN))
-		    != (CHK_ZERO | CHK_NAN));
+		/* double */
+		dy = tanh(t3table[i].x);
+		ATF_CHECK(fpcmp_equal(fy, t3table[i].y));
 
-		/* Ready to go */
-		oval = tanh(t3table[i].x);
-		if (t3table[i].check & CHK_REG) {
-			ATF_CHECK(fabs(oval - t3table[i].y) < 1E-5);
-		}
-		if (t3table[i].check & CHK_ZERO) {
-			ATF_CHECK(fpclassify(oval) == FP_ZERO);
-		}
-		if (t3table[i].check & CHK_SIGN) {
-			ATF_CHECK(signbit(oval) == signbit(t3table[i].y));
-		}
+		/* long double */
+		ldy = tanhl(t3table[i].y);
+		ATF_CHECK(fpcmp_equal(ldy, t3table[i].y));
 	}
 }
 

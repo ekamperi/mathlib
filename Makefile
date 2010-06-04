@@ -74,9 +74,9 @@ t_atan2: t_atan2.c subr_atf.c
 	-o t_atan2						\
 	$(LIB)
 
-t_atanh: t_atanh.c subr_errhandling.c subr_fpcmp.h
+t_atanh: t_atanh.c subr_atf.c subr_errhandling.c subr_fpcmp.h
 	$(CC99) $(INCLUDE)					\
-		t_atanh.c subr_errhandling.c			\
+		t_atanh.c subr_atf.c subr_errhandling.c		\
 	-o t_atanh						\
 	$(LIB)
 
@@ -170,9 +170,9 @@ t_sqrt: t_sqrt.c
 	-o t_sqrt						\
 	$(LIB)
 
-t_tanh: t_tanh.c subr_random.c
+t_tanh: t_tanh.c subr_atf.c subr_random.c
 	$(CC99) $(CCFLAGS) $(INCLUDE)				\
-		t_tanh.c subr_random.c				\
+		t_tanh.c subr_atf.c subr_random.c		\
 	-o t_tanh						\
 	 $(LIB)
 
