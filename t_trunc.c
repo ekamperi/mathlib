@@ -5,6 +5,7 @@
 #include <time.h>
 
 #include "subr_atf.h"
+#include "subr_fpcmp.h"
 #include "subr_random.h"
 
 /*
@@ -44,14 +45,15 @@ ATF_TC_BODY(test_trunc1, tc)
 ATF_TC(test_trunc2);
 ATF_TC_HEAD(test_trunc2, tc)
 {
-        atf_tc_set_md_var(tc,
-            "descr",
+	atf_tc_set_md_var(tc,
+	    "descr",
 	    "Use random input");
 }
 ATF_TC_BODY(test_trunc2, tc)
 {
 	float fx, fy;
 	double dx, dy;
+	long double ldx, ldy;
 	long i, N;
 
 	/*
@@ -62,59 +64,60 @@ ATF_TC_BODY(test_trunc2, tc)
 	N = get_config_var_as_long(tc, "iterations");
 	ATF_REQUIRE(N > 0);
 
-	for (i = 0; i < N; i++) {
-		/* double */
-		dx = random_double(FP_NORMAL);
-		dy = trunc(dx);
-		ATF_CHECK(floor(dy) == dy);
-		ATF_CHECK(ceil(dy) == dy);
-		ATF_CHECK(fabs(dx) >= fabs(dy));
-
+	ATF_FOR_LOOP(i, N, i++) {
 		/* float */
 		fx = random_float(FP_NORMAL);
 		fy = truncf(fx);
-		ATF_CHECK(floor(fy) == fy);
-                ATF_CHECK(ceil(fy) == fy);
-                ATF_CHECK(fabs(fx) >= fabs(fy));
+		ATF_PASS_OR_BREAK(floor(fy) == fy);
+		ATF_PASS_OR_BREAK(ceil(fy) == fy);
+		ATF_PASS_OR_BREAK(fabs(fx) >= fabs(fy));
+
+		/* double */
+		dx = random_double(FP_NORMAL);
+		dy = trunc(dx);
+		ATF_PASS_OR_BREAK(floor(dy) == dy);
+		ATF_PASS_OR_BREAK(ceil(dy) == dy);
+		ATF_PASS_OR_BREAK(fabs(dx) >= fabs(dy));
+
+		/* long double */
+		ldx = random_long_double(FP_NORMAL);
+		ldy = truncl(dx);
+		ATF_PASS_OR_BREAK(floorl(dy) == dy);
+		ATF_PASS_OR_BREAK(ceill(dy) == dy);
+		ATF_PASS_OR_BREAK(fabsl(dx) >= fabsl(dy));
 	}
 }
 
 /*
  * Test case 3 -- Edge cases
  */
-#define CHK_ZERO        (1 << 0)
-#define CHK_NAN         (1 << 1)
-#define	CHK_INF		(1 << 2)
-#define CHK_SIGN        (1 << 3)
-
-#define DOESNT_MATTER	1
-
 struct tentry {
-	double x;	/* Input */
-	double y;	/* trunc() output */
-	int check;
+	long double x;	/* Input */
+	long double y;	/* trunc() output */
 } t3table[] = {
 	/* If x is NaN, a NaN shall be returned */
 #ifdef	NAN
-	{ NAN, DOESNT_MATTER, CHK_NAN },
+	{ NAN, NAN },
 #endif
 
 	/* If x is +-0 or +-Inf, x shall be returned */
-	{  0.0,  0.0, CHK_ZERO | CHK_SIGN },
-	{ -0.0, -0.0, CHK_ZERO | CHK_SIGN },
+	{  0.0,  0.0 },
+	{ -0.0, -0.0 },
 #ifdef	INFINITY
-	{  INFINITY,  INFINITY, CHK_INF | CHK_SIGN },
-	{ -INFINITY, -INFINITY, CHK_INF | CHK_SIGN },
+	{  INFINITY,  INFINITY },
+	{ -INFINITY, -INFINITY },
 #endif
-
 #ifdef	HUGE_VAL
-	{  HUGE_VAL,  HUGE_VAL, CHK_INF | CHK_SIGN },
-	{ -HUGE_VAL, -HUGE_VAL, CHK_INF | CHK_SIGN },
+	{  HUGE_VAL,  HUGE_VAL },
+	{ -HUGE_VAL, -HUGE_VAL },
 #endif
-
 #ifdef	HUGE_VALF
-        {  HUGE_VALF,  HUGE_VALF, CHK_INF | CHK_SIGN },
-        { -HUGE_VALF, -HUGE_VALF, CHK_INF | CHK_SIGN },
+	{  HUGE_VALF,  HUGE_VALF },
+	{ -HUGE_VALF, -HUGE_VALF },
+#endif
+#ifdef	HUGE_VALL
+	{  HUGE_VALL,  HUGE_VALL },
+	{ -HUGE_VALL, -HUGE_VALL }
 #endif
 };
 
@@ -127,40 +130,24 @@ ATF_TC_HEAD(test_trunc3, tc)
 }
 ATF_TC_BODY(test_trunc3, tc)
 {
+	float fy;
+	double dy;
+	long double ldy;
 	size_t i, N;
-	double oval;	/* Output value */
 
 	N = sizeof(t3table) / sizeof(t3table[0]);
 	for (i = 0; i < N; i++) {
-                /* Make sure that only allowed checks are set */
-                ATF_REQUIRE((t3table[i].check
-                        & ~(CHK_ZERO | CHK_NAN | CHK_INF | CHK_SIGN)) == 0);
+		/* float */
+		fy = truncf(t3table[i].x);
+		ATF_CHECK(fpcmp_equal(fy, (float)t3table[i].y));
 
-                /* Don't allow conflicting types to be set */
-                ATF_REQUIRE((t3table[i].check & (CHK_ZERO | CHK_NAN))
-                    != (CHK_ZERO | CHK_NAN));
-                ATF_REQUIRE((t3table[i].check & (CHK_ZERO | CHK_INF))
-                    != (CHK_ZERO | CHK_INF));
-                ATF_REQUIRE((t3table[i].check & (CHK_NAN | CHK_INF))
-                    != (CHK_NAN | CHK_INF));
+		/* double */
+		dy = trunc(t3table[i].x);
+		ATF_CHECK(fpcmp_equal(dy, (double)t3table[i].y));
 
-		/* Ready to go */
-		oval = trunc(t3table[i].x);
-
-		if (t3table[i].check & CHK_ZERO) {
-                        ATF_CHECK(fpclassify(oval) == FP_ZERO);
-                }
-		if (t3table[i].check & CHK_NAN) {
-			ATF_CHECK(isnan(oval));
-			ATF_CHECK(fpclassify(oval) == FP_NAN);
-		}
-		if (t3table[i].check & CHK_INF) {
-			ATF_CHECK(isinf(oval));
-			ATF_CHECK(fpclassify(oval) == FP_INFINITE);
-		}
-                if (t3table[i].check & CHK_SIGN) {
-                        ATF_CHECK(signbit(oval) == signbit(t3table[i].y));
-                }
+		/* long double */
+		ldy = truncl(t3table[i].x);
+		ATF_CHECK(fpcmp_equal(ldy, t3table[i].y));
 	}
 }
 
