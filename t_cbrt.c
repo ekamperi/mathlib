@@ -3,6 +3,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#include "subr_fpcmp.h"
+
 /*
  * Test case 1 -- Basic functionality
  */

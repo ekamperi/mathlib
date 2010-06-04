@@ -80,9 +80,9 @@ t_atanh: t_atanh.c subr_atf.c subr_errhandling.c subr_fpcmp.h
 	-o t_atanh						\
 	$(LIB)
 
-t_cbrt: t_cbrt.c
+t_cbrt: t_cbrt.c subr_atf.c
 	$(CC99) $(CCFLAGS) $(INCLUDE)				\
-		t_cbrt.c					\
+		t_cbrt.c subr_atf.c				\
 	-o t_cbrt						\
 	 $(LIB)
 
