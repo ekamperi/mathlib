@@ -142,7 +142,7 @@ ATF_TC_BODY(test_isnormal, tc)
 	long double ldz;
 	long i, N;
 
-	N = get_config_var_as_long("iterations");
+	N = get_config_var_as_long(tc, "iterations");
 	ATF_REQUIRE(N > 0);
 
 	ATF_FOR_LOOP(i, N, i++) {
@@ -153,7 +153,7 @@ ATF_TC_BODY(test_isnormal, tc)
 		ATF_PASS_OR_BREAK(isnormal(dy));
 
 		ldz = random_long_double(FP_NORMAL);
-		ATF_OR_BREAK(isnormal(ldz));
+		ATF_PASS_OR_BREAK(isnormal(ldz));
 	}
 }
 
