@@ -4,6 +4,8 @@
 #include <stdlib.h>
 #include <time.h>
 
+#include "subr_atf.h"
+#include "subr_fpcmp.h"
 #include "subr_random.h"
 
 struct tentry {
@@ -43,14 +45,29 @@ ATF_TC_HEAD(test_tanh2, tc)
 }
 ATF_TC_BODY(test_tanh2, tc)
 {
-	size_t i;
-	double x, y;
+	float fx, fy;
+	double dx, dy;
+	long double ldx, ldy;
+	long i, N;
 
-	for (i = 0; i < 1000; i++) {
-		x = random_double(FP_NORMAL);
-		y = tanh(x);
+	N = get_config_var_as_long(tc, "iterations");
+	ATF_REQUIRE(N > 0);
 
-		ATF_CHECK(y >= -1.0 && y <= 1.0);
+	ATF_FOR_LOOP(i, N, i++) {
+		/* float */
+		fx = random_float(FP_NORMAL);
+		fy = tanhf(fx);
+		ATF_PASS_OR_BREAK(fy >= -1.0 && fy <= 1.0);
+
+		/* double */
+		dx = random_double(FP_NORMAL);
+		dy = tanh(dx);
+		ATF_PASS_OR_BREAK(dy >= -1.0 && dy <= 1.0);
+
+		/* long double */
+		ldx = random_long_double(FP_NORMAL);
+		ldy = tanhl(FP_NORMAL);
+		ATF_PASS_OR_BREAK(ldy >= -1.0 && ldy <= 1.0);
 	}
 }
 
@@ -63,8 +80,8 @@ ATF_TC_BODY(test_tanh2, tc)
 #define CHK_SIGN        (1 << 3)
 
 struct t3entry {
-	double x;       /* Input */
-	double y;	/* tanh() output */
+	long double x;       /* Input */
+	long double y;	/* tanh() output */
 	int check;
 } t3table[] = {
 	/* If x is NaN, a NaN shall be returned */
@@ -87,7 +104,7 @@ struct t3entry {
 #endif
 #ifdef	HUGE_VALF
 	{  HUGE_VALF,  1.0, CHK_REG },
-	{ -HUGE_VALF, -1.0, CHK_REG }, 
+	{ -HUGE_VALF, -1.0, CHK_REG },
 #endif
 #ifdef	HUGE_VALL
 	{  HUGE_VALL,  1.0, CHK_REG },
@@ -116,10 +133,10 @@ ATF_TC_HEAD(test_tanh3, tc)
 			& ~(CHK_REG | CHK_ZERO | CHK_NAN | CHK_SIGN)) == 0);
 
 		/* Don't allow conflicting types to be set */
-                ATF_REQUIRE((t3table[i].check & (CHK_REG | CHK_NAN))
-                    != (CHK_REG | CHK_NAN));
-                ATF_REQUIRE((t3table[i].check & (CHK_ZERO | CHK_NAN))
-                    != (CHK_ZERO | CHK_NAN));
+		ATF_REQUIRE((t3table[i].check & (CHK_REG | CHK_NAN))
+		    != (CHK_REG | CHK_NAN));
+		ATF_REQUIRE((t3table[i].check & (CHK_ZERO | CHK_NAN))
+		    != (CHK_ZERO | CHK_NAN));
 
 		/* Ready to go */
 		oval = tanh(t3table[i].x);
