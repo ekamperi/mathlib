@@ -20,6 +20,7 @@ all:	t_acos		\
 	t_ldexp		\
 	t_nextafter	\
 	t_signbit	\
+	t_sin		\
 	t_sqrt		\
 	t_trig_ident	\
 	t_tanh		\
@@ -162,6 +163,12 @@ t_signbit: t_signbit.c subr_atf.c subr_random.c
 	$(CC99) $(CCFLAGS) $(INCLUDE)				\
 		t_signbit.c subr_atf.c subr_random.c		\
 	-o t_signbit						\
+	$(LIB)
+
+t_sin: t_sin.c subr_atf.c subr_random.c
+	$(CC99) $(CCFLAGS) $(INCLUDE)				\
+		t_sin.c subr_atf.c subr_random.c		\
+	-o t_sin						\
 	$(LIB)
 
 t_sqrt: t_sqrt.c
