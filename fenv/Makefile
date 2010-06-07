@@ -1,4 +1,5 @@
-all:	t_fegetround		\
+all:	t_feclearexcept		\
+	t_fegetround		\
 	t_fegetexceptflag	\
 	t_feholdexcept		\
 	t_fenv			\
@@ -17,6 +18,12 @@ CCFLAGS=-Wall -W -Wformat-nonliteral -Wcast-align -Wpointer-arith 		\
 	-Wswitch -Wbad-function-cast -g
 INCLUDE=-I/usr/opt/include
 LIB=-L/usr/opt/lib -lm -latf-c
+
+t_feclearexcept: t_feclearexcept.c
+	$(CC99) $(CCFLAGS) $(INCLUDE)				\
+		t_feclearexcept.c				\
+	-o t_feclearexcept					\
+	$(LIB)
 
 t_fegetround: t_fegetround.c
 	$(CC99) $(CCFLAGS) $(INCLUDE) 				\
