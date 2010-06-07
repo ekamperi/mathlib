@@ -1,8 +1,10 @@
+#include <atf-c.h>
 #include <fenv.h>
+#include <limits.h>	/* For INT_MAX */
 #include <stdio.h>
 #include <string.h>
 
-#include <atf-c.h>
+#include "../subr_combinatorics.h"
 
 /*
  * Each FE_* symbol shall expand to an _integer constant_ expression,
@@ -22,30 +24,33 @@ int extable[] = {
 	FE_OVERFLOW,
 #endif
 #ifdef	FE_UNDERFLOW
-	FE_UNDERFLOW
+	FE_UNDERFLOW,
+#endif
+#ifdef	FE_ALL_EXCEPT
+	FE_ALL_EXCEPT
 #endif
 };
 
 /*
- * Test case 1 -- feraiseexcept()
+ * Test case 1 -- Basic functionality
  */
 ATF_TC(test_feraiseexcept);
 ATF_TC_HEAD(test_feraiseexcept, tc)
 {
 	atf_tc_set_md_var(tc,
 	    "descr",
-	    "Floating-point exception raising");
+	    "Basic functionality");
 }
 ATF_TC_BODY(test_feraiseexcept, tc)
 {
-	size_t i, N;
+	int comb, mth, nelms;
 	int ex;
 
-	N = sizeof(extable) / sizeof(extable[0]);
-	for (i = 0; i < N; i++) {
+        nelms = sizeof(extable) / sizeof(extable[0]);
+        FOREACH_BITWISE_COMBO(extable, nelms, &mth, &comb) {
 		/*
-		 * Clear all the floating-point exceptions
-		 * If this is not met, further execution results cannot be trusted
+		 * Clear all the floating-point exceptions If this is not
+		 * met, further execution results cannot be trusted
 		 */
 		ATF_REQUIRE(feclearexcept(FE_ALL_EXCEPT) == 0);
 
@@ -54,11 +59,11 @@ ATF_TC_BODY(test_feraiseexcept, tc)
                 ATF_REQUIRE((ex & FE_ALL_EXCEPT) == 0);
 
 		/* Raise an exception */
-		ATF_CHECK(feraiseexcept(extable[i]) == 0);
+		ATF_CHECK(feraiseexcept(comb) == 0);
 
 		/* Trust noone -- check for yourself */
-		ex = fetestexcept(extable[i]);
-		ATF_CHECK((ex & extable[i]) == extable[i]);
+		ex = fetestexcept(comb);
+		ATF_CHECK((ex & comb) == comb);
 	}
 }
 
