@@ -66,7 +66,7 @@ ATF_TC_BODY(test_sin2, tc)
 
 		/* long double */
 		ldx = random_long_double(FP_NORMAL);
-		ldy = sin(ldx);
+		ldy = sinl(ldx);
 		ATF_PASS_OR_BREAK(ldy >= -1.0 && ldy <= 1.0);
 	}
 }
