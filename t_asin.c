@@ -75,13 +75,13 @@ ATF_TC_BODY(test_asin2, tc)
 	long i, N;
 
 	N = sizeof(ttable) / sizeof(ttable[0]);
-	for (i = 0; i < N; i++) {
+	ATF_FOR_LOOP(i, N, i++) {
 		/* Sanity check */
 		ATF_REQUIRE(ttable[i].x >= -1.0 && ttable[i].x <= 1.0);
 
 		/* Actual checks */
-		ATF_CHECK(asin(ttable[i].x) >= -M_PI_2);
-		ATF_CHECK(asin(ttable[i].x) <=  M_PI_2);
+		ATF_PASS_OR_BREAK(asin(ttable[i].x) >= -M_PI_2);
+		ATF_PASS_OR_BREAK(asin(ttable[i].x) <=  M_PI_2);
 	}
 
 	/* Try the same thing but with some random input */
