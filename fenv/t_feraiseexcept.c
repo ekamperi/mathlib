@@ -95,7 +95,7 @@ ATF_TC_HEAD(test_feraiseexcept3, tc)
 }
 ATF_TC_BODY(test_feraiseexcept3, tc)
 {
-	/* Cleas all exceptions */
+	/* Clear all exceptions */
         ATF_CHECK(feclearexcept(FE_ALL_EXCEPT) == 0);
 
 	if (feraiseexcept(INT_MAX) == 0) {
