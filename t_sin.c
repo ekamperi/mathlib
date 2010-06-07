@@ -47,6 +47,7 @@ ATF_TC_BODY(test_sin2, tc)
 {
 	float fx, fy;
 	double dx, dy;
+	long double ldx, ldy;
 	long i, N;
 
 	N = get_config_var_as_long(tc, "iterations");
@@ -56,11 +57,17 @@ ATF_TC_BODY(test_sin2, tc)
 		/* float */
 		fx = random_float(FP_NORMAL);
 		fy = sinf(fx);
-		ATF_PASS_OR_BREAK(fy <= -1.0 && fy <= 1.0);
+		ATF_PASS_OR_BREAK(fy >= -1.0 && fy <= 1.0);
 
+		/* double */
 		dx = random_double(FP_NORMAL);
 		dy = sin(dx);
 		ATF_PASS_OR_BREAK(dy >= -1.0 && dy <= 1.0);
+
+		/* long double */
+		ldx = random_long_double(FP_NORMAL);
+		ldy = sin(ldx);
+		ATF_PASS_OR_BREAK(ldy >= -1.0 && ldy <= 1.0);
 	}
 }
 
