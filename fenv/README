@@ -1,0 +1,4 @@
+There is some overlap among the test cases, which means that if some fail, more
+will follow due to dependencies.
+
+It can't be made otherwise, unless we provide arch-specific tests.
