@@ -46,8 +46,8 @@ ATF_TC_BODY(test_feraiseexcept, tc)
 	int comb, mth, nelms;
 	int ex;
 
-        nelms = sizeof(extable) / sizeof(extable[0]);
-        FOREACH_BITWISE_COMBO(extable, nelms, &mth, &comb) {
+	nelms = sizeof(extable) / sizeof(extable[0]);
+	FOREACH_BITWISE_COMBO(extable, nelms, &mth, &comb) {
 		/*
 		 * Clear all the floating-point exceptions If this is not
 		 * met, further execution results cannot be trusted
@@ -55,8 +55,8 @@ ATF_TC_BODY(test_feraiseexcept, tc)
 		ATF_REQUIRE(feclearexcept(FE_ALL_EXCEPT) == 0);
 
 		/* A little bit paranoid */
-                ex = fetestexcept(FE_ALL_EXCEPT);
-                ATF_REQUIRE((ex & FE_ALL_EXCEPT) == 0);
+		ex = fetestexcept(FE_ALL_EXCEPT);
+		ATF_REQUIRE((ex & FE_ALL_EXCEPT) == 0);
 
 		/* Raise an exception */
 		ATF_CHECK(feraiseexcept(comb) == 0);
@@ -67,10 +67,27 @@ ATF_TC_BODY(test_feraiseexcept, tc)
 	}
 }
 
+/*
+ * Test case 2 -- Edge cases
+ */
+ATF_TC(test_feraiseexcept2);
+ATF_TC_HEAD(test_feraiseexcept2, tc)
+{
+	atf_tc_set_md_var(tc,
+	    "descr",
+	    "Check some edge cases");
+}
+ATF_TC_BODY(test_feraiseexcept2, tc)
+{
+	/* If the argument is zero [snip], feraisexcept() shall return zero */
+	ATF_CHECK(feraiseexcept(0) == 0);
+}
+
 /* Add test cases to test program */
 ATF_TP_ADD_TCS(tp)
 {
 	ATF_TP_ADD_TC(tp, test_feraiseexcept);
+	ATF_TP_ADD_TC(tp, test_feraiseexcept2);
 
 	return atf_no_error();
 }
