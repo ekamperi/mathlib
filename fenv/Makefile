@@ -51,7 +51,7 @@ t_fenv: t_fenv.c
 
 t_feraiseexcept: t_feraiseexcept.c
 	$(CC99) $(CCFLAGS) $(INCLUDE)				\
-		t_feraiseexcept.c				\
+		t_feraiseexcept.c ../subr_combinatorics.c	\
 	-o t_feraiseexcept					\
 	$(LIB)
 
