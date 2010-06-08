@@ -2,6 +2,8 @@
 #include <stdint.h>
 #include <string.h>
 
+#include "x86_dumpfenv.h"
+
 /* No-Wait Store x87 environment */
 #define __fnstenv(__env)        __asm__ __volatile__    \
         ("fnstenv %0" : "=m" (*(__env)))
@@ -10,17 +12,6 @@
 /* Store MXCSR register */
 #define	__stmxcsr(__csr)	__asm__ __volatile__	\
 	("stmxcsr %0" : "=m" (*(__csr)))
-
-typedef struct {
-        struct {
-                uint16_t control;
-                uint16_t status;
-                uint32_t tag;
-                uint32_t unused[4];
-        } x87;
-
-        uint32_t mxcsr;
-} myfenv_t;
 
 void
 fenv_dump(myfenv_t *envp)
