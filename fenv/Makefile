@@ -9,6 +9,7 @@ all:	t_feclearexcept		\
 	t_fesetround		\
 	t_fexcept		\
 	t_fe_dfl_env		\
+	t_thread
 
 CC99=gcc -std=c99
 CCFLAGS=-Wall -W -Wformat-nonliteral -Wcast-align -Wpointer-arith 		\
@@ -84,6 +85,13 @@ t_fe_dfl_env: t_fe_dfl_env.c
 		t_fe_dfl_env.c					\
 	-o t_fe_dfl_env						\
 	$(LIB)
+
+
+t_thread: t_thread.c
+	$(CC99) $(CCFLAGS) $(INCLUDE)				\
+		t_thread.c					\
+	-o t_thread						\
+	$(LIB) -lpthread
 
 clean:
 	git clean -f
