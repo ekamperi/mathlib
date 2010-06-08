@@ -33,7 +33,7 @@ fenv_print(const myfenv_t *envp)
         for (i = 0; i < 4; i++)
                 printf("others[%d] = 0x%x\n", i, envp->x87.others[i]);
 
-	printf("\n");
+	printf("mxcsr: 0x%x\n", envp->mxcsr);
 }
 
 #if 0
