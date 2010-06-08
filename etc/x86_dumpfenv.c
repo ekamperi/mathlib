@@ -7,7 +7,6 @@
 /* No-Wait Store x87 environment */
 #define __fnstenv(__env)        __asm__ __volatile__    \
         ("fnstenv %0" : "=m" (*(__env)))
-#endif
 
 /* Store MXCSR register */
 #define	__stmxcsr(__csr)	__asm__ __volatile__	\
