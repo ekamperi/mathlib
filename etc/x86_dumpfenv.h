@@ -1,11 +1,19 @@
 #ifndef	__DUMPFENV_H__
 #define	__DUMPFENV_H__
 
+#include <stdint.h>
+
 typedef struct {
 	struct {
 		uint16_t control;
+		uint16_t unused1;
+
 		uint16_t status;
-		uint32_t tag;
+		uint16_t unused2;
+
+		uint16_t tag;
+		uint16_t unused3;
+
 		uint32_t unused[4];
 	} x87;
 
