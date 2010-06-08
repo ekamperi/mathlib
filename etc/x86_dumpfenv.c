@@ -31,7 +31,7 @@ fenv_print(const myfenv_t *envp)
         printf("   tag: 0x%x\n", envp->x87.tag);
 
         for (i = 0; i < 4; i++)
-                printf("unused[%d] = 0x%x\n", i, envp->x87.unused[i]);
+                printf("others[%d] = 0x%x\n", i, envp->x87.others[i]);
 
 	printf("\n");
 }
@@ -53,7 +53,7 @@ main(void)
 
 	fenv_print(&env1);
 	fenv_print(&env2);
-	
+
 	return 0;
 }
 #endif

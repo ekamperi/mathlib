@@ -14,7 +14,7 @@ typedef struct {
 		uint16_t tag;
 		uint16_t unused3;
 
-		uint32_t unused[4];
+		uint32_t others[4];
 	} x87;
 
 	uint32_t mxcsr;
