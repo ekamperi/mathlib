@@ -110,7 +110,7 @@ ATF_TC_BODY(test_fesetexceptflag3, tc)
 
 	/*
 	 * We are going to compare them later on, so make sure
-	 * that they are indeed different at the first place.
+	 * that they are actually different at the first place.
 	 */
 	memset(&flag1, 0x00, sizeof(flag1));
 	memset(&flag2, 0xFF, sizeof(flag2));
@@ -121,7 +121,6 @@ ATF_TC_BODY(test_fesetexceptflag3, tc)
 	 */
 	ATF_REQUIRE(feclearexcept(FE_ALL_EXCEPT) == 0);
 
-	ATF_REQUIRE(fegetexceptflag(&flag1, FE_ALL_EXCEPT) == 0);
 	if (fesetexceptflag(&flag1, INT_MAX) == 0) {
 		ATF_REQUIRE(fegetexceptflag(&flag2, FE_ALL_EXCEPT) == 0);
 		ATF_CHECK(memcmp(&flag1, &flag2, sizeof(flag1)) == 0);
