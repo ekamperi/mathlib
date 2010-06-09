@@ -3,6 +3,7 @@
 #include <limits.h>	/* For INT_MAX */
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 #include "../subr_combinatorics.h"
 
@@ -64,14 +65,27 @@ ATF_TC_HEAD(test_fegetexceptflag2, tc)
 }
 ATF_TC_BODY(test_fegetexceptflag2, tc)
 {
-	int ex1, ex2 = -12345;
+	fexcept_t ex1, ex2;
+	unsigned char *p;
+	size_t i;
+
+	/*
+	 * We are going to compare them later on, so make sure
+	 * that they are indeed different at the first place.
+	 */
+	memset(&ex1, 0x00, sizeof(ex1));
+	memset(&ex2, 0xFF, sizeof(ex2));
 
 	ATF_REQUIRE(fegetexceptflag(&ex1, FE_ALL_EXCEPT) == 0);
 
+	/* Same as before, but use a superset of FE_ALL_EXCEPT */
 	if (fegetexceptflag(&ex2, INT_MAX) == 0) {
-		ATF_CHECK(ex1 == ex2);
+	  printf("0x%x\n0x%x\n", ex1, ex2);
+		ATF_CHECK(memcmp(&ex1, &ex2, sizeof(ex1)) == 0);
 	} else {
-		ATF_CHECK(ex2 == -12345);
+		p = (unsigned char *)&ex2;
+		for (i = 0; i < sizeof(ex2); i++)
+			ATF_CHECK(p[i] == 0xFF);
 	}
 }
 
