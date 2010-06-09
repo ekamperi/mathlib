@@ -9,6 +9,7 @@ all:	t_acos		\
 	t_ceil		\
 	t_constants	\
 	t_copysign	\
+	t_cos		\
 	t_float		\
 	t_floor		\
 	t_fmax		\
@@ -102,6 +103,12 @@ t_constants: t_constants.c
 t_copysign: t_copysign.c subr_atf.c subr_random.c
 	$(CC99) $(CCFLAGS) $(INCLUDE) 				\
 		t_copysign.c subr_atf.c subr_random.c		\
+	-o t_copysign						\
+	$(LIB)
+
+t_cos: t_cos.c subr_atf.c subr_random.c
+	$(CC99) $(CCFLAGS) $(INCLUDE)				\
+		t_cos.c subr_atf.c subr_random.c		\
 	-o t_copysign						\
 	$(LIB)
 
