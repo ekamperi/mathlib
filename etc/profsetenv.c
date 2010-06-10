@@ -5,13 +5,13 @@
 #include <sys/time.h>
 
 /* Function prototypes */
-static int prof_feclearexcept_FE_ALL_EXCEPT(size_t iterations);
-static int prof_feclearexcept(size_t iterations);
-static int prof_fegetenv(size_t iterations);
-static int prof_fesetenv(size_t iterations);
-static int prof_feupdateenv(size_t iterations);
-static int prof_fesetenv_fegetenv(size_t iterations);
-static int prof_feupdateenv_fegetenv(size_t iterations);
+static int prof_clearexcept_all(size_t iterations);
+static int prof_clearexcept_random(size_t iterations);
+static int prof_getenv(size_t iterations);
+static int prof_setenv_default(size_t iterations);
+static int prof_updateenv(size_t iterations);
+static int prof_setenv_getenv(size_t iterations);
+static int prof_updateenv_getenv(size_t iterations);
 
 /* Constants and macros */
 #define ITERATIONS (10 * 1000 * 1000)
@@ -53,37 +53,37 @@ main(void)
 	int msecs;
 
 	/* Profile feclearexcept() with FE_ALL_EXCEPT */
-	msecs = prof_feclearexcept_FE_ALL_EXCEPT(ITERATIONS);
+	msecs = prof_clearexcept_all(ITERATIONS);
 	printf("feclearexcept() FE_ALL_EXCEPT: %5d msecs for %d iterations\n",
 	    msecs, ITERATIONS);
 
 	/* Profile feclearexcept() */
-	msecs = prof_feclearexcept(ITERATIONS);
-	printf("feclearexcept()              : %5d msecs for %d iterations\n",
+	msecs = prof_clearexcept_random(ITERATIONS);
+	printf("feclearexcept()        random: %5d msecs for %d iterations\n",
 	    msecs, ITERATIONS);
 
 	/* Profile fegetenv() */
-	msecs = prof_fegetenv(ITERATIONS);
+	msecs = prof_getenv(ITERATIONS);
 	printf("     fegetenv()              : %5d msecs for %d iterations\n",
 	    msecs, ITERATIONS);
 
 	/* Profile fesetenv() with FE_DFL_ENV */
-	msecs = prof_fesetenv(ITERATIONS);
+	msecs = prof_setenv_default(ITERATIONS);
 	printf("     fesetenv()    FE_DFL_ENV: %5d msecs for %d iterations\n",
 	    msecs, ITERATIONS);
 
 	/* Profile feupdateenvv() with FE_DFL_ENV */
-	msecs = prof_feupdateenv(ITERATIONS);
+	msecs = prof_updateenv(ITERATIONS);
 	printf("  feupdateenv()    FE_DFL_ENV: %5d msecs for %d iterations\n",
 	    msecs, ITERATIONS);
 
 	/* Profile fesetenv() without FE_DFL_ENV */
-	msecs = prof_fesetenv_fegetenv(ITERATIONS);
+	msecs = prof_setenv_getenv(ITERATIONS);
 	printf("     fesetenv()        random: %5d msecs for %d iterations\n",
 	    msecs, ITERATIONS);
 
 	/* Profile feupdateenvv() without FE_DFL_ENV */
-	msecs = prof_feupdateenv_fegetenv(ITERATIONS);
+	msecs = prof_updateenv_getenv(ITERATIONS);
 	printf("  feupdateenv()        random: %5d msecs for %d iterations\n",
 	    msecs, ITERATIONS);
 
@@ -91,7 +91,7 @@ main(void)
 }
 
 static int
-prof_feclearexcept_FE_ALL_EXCEPT(size_t iterations)
+prof_clearexcept_all(size_t iterations)
 {
 	struct timeval tv1, tv2;
 	fenv_t env;
@@ -108,16 +108,16 @@ prof_feclearexcept_FE_ALL_EXCEPT(size_t iterations)
 }
 
 static int
-prof_feclearexcept(size_t iterations)
+prof_clearexcept_random(size_t iterations)
 {
 	struct timeval tv1, tv2;
 	fenv_t env;
 	size_t i, N;
 
-	MARK_START(&tv1);
-
 	N = sizeof(extable) / sizeof(extable[0]);
 	assert(N != 0);
+
+	MARK_START(&tv1);
 
 	for (i = 0; i < iterations; i++)
 		assert(feclearexcept(extable[i%N]) == 0);
@@ -128,7 +128,7 @@ prof_feclearexcept(size_t iterations)
 }
 
 static int
-prof_fegetenv(size_t iterations)
+prof_getenv(size_t iterations)
 {
 	struct timeval tv1, tv2;
 	fenv_t env;
@@ -145,7 +145,7 @@ prof_fegetenv(size_t iterations)
 }
 
 static int
-prof_fesetenv(size_t iterations)
+prof_setenv_default(size_t iterations)
 {
 	struct timeval tv1, tv2;
 	size_t i;
@@ -161,7 +161,7 @@ prof_fesetenv(size_t iterations)
 }
 
 static int
-prof_feupdateenv(size_t iterations)
+prof_updateenv(size_t iterations)
 {
 	struct timeval tv1, tv2;
 	size_t i;
@@ -178,7 +178,7 @@ prof_feupdateenv(size_t iterations)
 }
 
 static int
-prof_fesetenv_fegetenv(size_t iterations)
+prof_setenv_getenv(size_t iterations)
 {
 	struct timeval tv1, tv2;
 	fenv_t env;
@@ -197,7 +197,7 @@ prof_fesetenv_fegetenv(size_t iterations)
 }
 
 static int
-prof_feupdateenv_fegetenv(size_t iterations)
+prof_updateenv_getenv(size_t iterations)
 {
 	struct timeval tv1, tv2;
 	fenv_t env;
