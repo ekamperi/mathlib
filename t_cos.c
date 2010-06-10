@@ -91,16 +91,15 @@ ATF_TC_BODY(test_cos3, tc)
 #endif
 
 	/* If x is +-0, x shall be returned */
-	ATF_CHECK(fpcmp_equal(cos( 0.0),  0.0));
-	ATF_CHECK(fpcmp_equal(cos(-0.0), -0.0));
+	ATF_CHECK(fpcmp_equal(cos( 0.0), 1.0));
+	ATF_CHECK(fpcmp_equal(cos(-0.0), 1.0));
 
-	ATF_CHECK(fpcmp_equal(cosf( 0.0),  0.0));
-	ATF_CHECK(fpcmp_equal(cosf(-0.0), -0.0));
+	ATF_CHECK(fpcmp_equal(cosf( 0.0), 1.0));
+	ATF_CHECK(fpcmp_equal(cosf(-0.0), 1.0));
 
-	ATF_CHECK(fpcmp_equal(cosl( 0.0),  0.0));
-	ATF_CHECK(fpcmp_equal(cosl(-0.0), -0.0));
+	ATF_CHECK(fpcmp_equal(cosl( 0.0), 1.0));
+	ATF_CHECK(fpcmp_equal(cosl(-0.0), 1.0));
 }
-
 
 /*
  * Test case 4 -- Error conditions
