@@ -7,14 +7,20 @@
 /* Function prototypes */
 static int prof_clearexcept_all(size_t iterations);
 static int prof_clearexcept_random(size_t iterations);
+
 static int prof_getenv(size_t iterations);
+
+static int prof_raiseexcept(size_t iterations);
+
 static int prof_setenv_default(size_t iterations);
-static int prof_updateenv(size_t iterations);
 static int prof_setenv_getenv(size_t iterations);
+
+static int prof_updateenv_default(size_t iterations);
 static int prof_updateenv_getenv(size_t iterations);
 
+
 /* Constants and macros */
-#define ITERATIONS (10 * 1000 * 1000)
+#define ITERATIONS (1 * 1000 * 1000)
 
 #define	MARK_START(tv1)					\
 	assert(gettimeofday(tv1, NULL) == 0);
@@ -47,45 +53,60 @@ static int extable[] = {
 #endif
 };
 
+struct pentry {
+	const char *p_desc;
+	int (*p_func)();
+	size_t p_iter;
+} ptable[] = {
+	{ "feclearexcept() FE_ALL_EXCEPT",
+	  prof_clearexcept_all,
+	  ITERATIONS },
+
+	{ "feclearexcept()        random",
+	  prof_clearexcept_random,
+	  ITERATIONS },
+
+	{ "     fegetenv()              ",
+	  prof_getenv,
+	  ITERATIONS },
+
+        { "feraiseexcept()              ",
+          prof_raiseexcept,
+          ITERATIONS },
+
+	{ "     fesetenv()    FE_DFL_ENV",
+	  prof_setenv_default,
+	  ITERATIONS },
+
+	{ "     fesetenv()        random",
+	  prof_setenv_getenv,
+	  ITERATIONS },
+
+	{ "  feupdateenv()    FE_DFL_ENV",
+	  prof_updateenv_default,
+	  ITERATIONS },
+
+	{ "  feupdateenv()        random",
+	  prof_updateenv_getenv,
+	  ITERATIONS },
+
+	{ NULL, NULL, 0 }
+};
+
 int
 main(void)
 {
+	const struct pentry *p;
 	int msecs;
 
-	/* Profile feclearexcept() with FE_ALL_EXCEPT */
-	msecs = prof_clearexcept_all(ITERATIONS);
-	printf("feclearexcept() FE_ALL_EXCEPT: %5d msecs for %d iterations\n",
-	    msecs, ITERATIONS);
+	for (p = ptable; p; p++) {
+		if (p->p_desc == NULL && p->p_func == NULL && p->p_iter == 0)
+			break;
 
-	/* Profile feclearexcept() */
-	msecs = prof_clearexcept_random(ITERATIONS);
-	printf("feclearexcept()        random: %5d msecs for %d iterations\n",
-	    msecs, ITERATIONS);
-
-	/* Profile fegetenv() */
-	msecs = prof_getenv(ITERATIONS);
-	printf("     fegetenv()              : %5d msecs for %d iterations\n",
-	    msecs, ITERATIONS);
-
-	/* Profile fesetenv() with FE_DFL_ENV */
-	msecs = prof_setenv_default(ITERATIONS);
-	printf("     fesetenv()    FE_DFL_ENV: %5d msecs for %d iterations\n",
-	    msecs, ITERATIONS);
-
-	/* Profile feupdateenvv() with FE_DFL_ENV */
-	msecs = prof_updateenv(ITERATIONS);
-	printf("  feupdateenv()    FE_DFL_ENV: %5d msecs for %d iterations\n",
-	    msecs, ITERATIONS);
-
-	/* Profile fesetenv() without FE_DFL_ENV */
-	msecs = prof_setenv_getenv(ITERATIONS);
-	printf("     fesetenv()        random: %5d msecs for %d iterations\n",
-	    msecs, ITERATIONS);
-
-	/* Profile feupdateenvv() without FE_DFL_ENV */
-	msecs = prof_updateenv_getenv(ITERATIONS);
-	printf("  feupdateenv()        random: %5d msecs for %d iterations\n",
-	    msecs, ITERATIONS);
+		msecs = p->p_func(p->p_iter);
+		printf("%s: %5d msecs for %d iterations\n",
+		       p->p_desc, msecs, p->p_iter);
+	}
 
 	return 0;
 }
@@ -94,8 +115,7 @@ static int
 prof_clearexcept_all(size_t iterations)
 {
 	struct timeval tv1, tv2;
-	fenv_t env;
-	size_t i, N;
+	size_t i;
 
 	MARK_START(&tv1);
 
@@ -111,7 +131,6 @@ static int
 prof_clearexcept_random(size_t iterations)
 {
 	struct timeval tv1, tv2;
-	fenv_t env;
 	size_t i, N;
 
 	N = sizeof(extable) / sizeof(extable[0]);
@@ -161,11 +180,10 @@ prof_setenv_default(size_t iterations)
 }
 
 static int
-prof_updateenv(size_t iterations)
+prof_updateenv_default(size_t iterations)
 {
 	struct timeval tv1, tv2;
 	size_t i;
-	int msecs;
 
 	MARK_START(&tv1);
 
@@ -208,6 +226,26 @@ prof_updateenv_getenv(size_t iterations)
 	for (i = 0; i < iterations; i++) {
 		assert(fegetenv(&env) == 0);
 		assert(feupdateenv(&env) == 0);
+	}
+
+	MARK_END(&tv2);
+
+	return MSECS(tv1, tv2);
+}
+
+static int
+prof_raiseexcept(size_t iterations)
+{
+	struct timeval tv1, tv2;
+	size_t i, N;
+
+	N = sizeof(extable) / sizeof(extable[0]);
+	assert(N > 0);
+
+	MARK_START(&tv1);
+
+	for (i = 0; i < iterations; i++) {
+		assert(feraiseexcept(extable[i%N]) == 0);
 	}
 
 	MARK_END(&tv2);
