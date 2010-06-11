@@ -10,6 +10,7 @@ all:	t_acos		\
 	t_constants	\
 	t_copysign	\
 	t_cos		\
+	t_erf		\
 	t_float		\
 	t_floor		\
 	t_fmax		\
@@ -113,6 +114,13 @@ t_cos: t_cos.c subr_atf.c subr_errhandling.c subr_random.c
 	-o t_cos						\
 	$(LIB)
 
+t_erf: t_erf.c subr_atf.c subr_errhandling.c subr_random.c
+	$(CC99) $(CCFLAGS) $(INCLUDE)				\
+		t_erf.c						\
+		subr_atf.c subr_errhandling.c subr_random.c	\
+	-o t_erf						\
+	$(LIB)
+
 t_fmax: t_fmax.c subr_atf.c subr_random.c
 	$(CC99) $(CCFLAGS) $(INCLUDE)				\
 		t_fmax.c subr_atf.c subr_random.c		\
@@ -173,9 +181,10 @@ t_signbit: t_signbit.c subr_atf.c subr_random.c
 	-o t_signbit						\
 	$(LIB)
 
-t_sin: t_sin.c subr_atf.c subr_random.c
+t_sin: t_sin.c subr_atf.c subr_errhandling.c subr_random.c
 	$(CC99) $(CCFLAGS) $(INCLUDE)				\
-		t_sin.c subr_atf.c subr_random.c		\
+		t_sin.c						\
+	 subr_atf.c subr_errhandling.c subr_random.c		\
 	-o t_sin						\
 	$(LIB)
 
