@@ -11,6 +11,7 @@ all:	t_acos		\
 	t_copysign	\
 	t_cos		\
 	t_erf		\
+	t_exp		\
 	t_float		\
 	t_floor		\
 	t_fmax		\
@@ -119,6 +120,13 @@ t_erf: t_erf.c subr_atf.c subr_errhandling.c subr_random.c
 		t_erf.c						\
 		subr_atf.c subr_errhandling.c subr_random.c	\
 	-o t_erf						\
+	$(LIB)
+
+t_exp: t_exp.c subr_atf.c subr_errhandling.c subr_random.c
+	$(CC99) $(CCFLAGS) $(INCLUDE)                           \
+		t_exp.c                                         \
+		subr_atf.c subr_errhandling.c subr_random.c     \
+	-o t_exp						\
 	$(LIB)
 
 t_fmax: t_fmax.c subr_atf.c subr_random.c
