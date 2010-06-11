@@ -106,9 +106,10 @@ t_copysign: t_copysign.c subr_atf.c subr_random.c
 	-o t_copysign						\
 	$(LIB)
 
-t_cos: t_cos.c subr_atf.c subr_random.c
+t_cos: t_cos.c subr_atf.c subr_errhandling.c subr_random.c
 	$(CC99) $(CCFLAGS) $(INCLUDE)				\
-		t_cos.c subr_atf.c subr_random.c		\
+		t_cos.c						\
+		subr_atf.c subr_errhandling.c subr_random.c	\
 	-o t_cos						\
 	$(LIB)
 

@@ -1,10 +1,12 @@
 #define _XOPEN_SOURCE 600
 
 #include <atf-c.h>
+#include <errno.h>
 #include <math.h>
 #include <stdio.h>
 
 #include "subr_atf.h"
+#include "subr_errhandling.h"
 #include "subr_fpcmp.h"
 #include "subr_random.h"
 
@@ -104,6 +106,21 @@ ATF_TC_BODY(test_cos3, tc)
 /*
  * Test case 4 -- Error conditions
  */
+long double t4table[] = {
+#ifdef	INFINITY
+	INFINITY,
+#endif
+#ifdef	HUGE_VAL
+	HUGE_VAL,
+#endif
+#ifdef	HUGE_VALF
+	HUGE_VALF,
+#endif
+#ifdef	HUGE_VALL
+	HUGE_VALL
+#endif
+};
+
 ATF_TC(test_cos4);
 ATF_TC_HEAD(test_cos4, tc)
 {
@@ -113,13 +130,56 @@ ATF_TC_HEAD(test_cos4, tc)
 }
 ATF_TC_BODY(test_cos4, tc)
 {
+	float fy;
+	double dy;
+	long double ldy;
+	int haserrexcept;
+	int haserrno;
+	size_t i, N;
+
 	/*
 	 * If x is +-Inf, a domain error shall occur, and either a NaN
 	 * (if supported), or an implementation-defined value shall be
 	 * returned.
 	 */
-}
+	N = sizeof(t4table) / (t4table[0]);
 
+	for (i = 0; i < N; i++) {
+		/* float */
+		errno = 0;
+		clear_exceptions();
+		fy = cosf((float)t4table[i]);
+		ATF_CHECK(iserrno_equalto(EDOM));
+		ATF_CHECK(raised_exceptions(MY_FE_INVALID));
+#ifdef	NAN
+		ATF_CHECK(isnan(fy));
+#endif
+
+		/* double */
+		errno = 0;
+		clear_exceptions();
+		dy = cos((double)t4table[i]);
+                ATF_CHECK(iserrno_equalto(EDOM));
+                ATF_CHECK(raised_exceptions(MY_FE_INVALID));
+#ifdef	NAN
+		ATF_CHECK(isnan(dy));
+#endif
+
+		/* long double */
+		errno = 0;
+		clear_exceptions();
+		ldy = cosl(t4table[i]);
+		ATF_CHECK(iserrno_equalto(EDOM));
+		ATF_CHECK(raised_exceptions(MY_FE_INVALID));
+#ifdef	NAN
+		ATF_CHECK(isnan(ldy));
+#endif
+	}
+
+	/* Revenge is a Dish Best Served Cold :) */
+	query_errhandling(&haserrexcept, &haserrno);
+	ATF_REQUIRE(haserrexcept || haserrno);
+}
 
 /* Add test cases to test program */
 ATF_TP_ADD_TCS(tp)
@@ -127,6 +187,7 @@ ATF_TP_ADD_TCS(tp)
 	ATF_TP_ADD_TC(tp, test_cos1);
 	ATF_TP_ADD_TC(tp, test_cos2);
 	ATF_TP_ADD_TC(tp, test_cos3);
+	ATF_TP_ADD_TC(tp, test_cos4);
 
 	return atf_no_error();
 }
