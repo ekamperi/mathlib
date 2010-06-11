@@ -1,10 +1,12 @@
 #define _XOPEN_SOURCE 600
 
 #include <atf-c.h>
+#include <errno.h>
 #include <math.h>
 #include <stdio.h>
 
 #include "subr_atf.h"
+#include "subr_errhandling.h"
 #include "subr_fpcmp.h"
 #include "subr_random.h"
 
@@ -105,6 +107,21 @@ ATF_TC_BODY(test_sin3, tc)
 /*
  * Test case 4 -- Error conditions
  */
+long double t4table[] = {
+#ifdef  INFINITY
+        INFINITY,
+#endif
+#ifdef  HUGE_VAL
+        HUGE_VAL,
+#endif
+#ifdef  HUGE_VALF
+        HUGE_VALF,
+#endif
+#ifdef  HUGE_VALL
+        HUGE_VALL
+#endif
+};
+
 ATF_TC(test_sin4);
 ATF_TC_HEAD(test_sin4, tc)
 {
@@ -114,8 +131,63 @@ ATF_TC_HEAD(test_sin4, tc)
 }
 ATF_TC_BODY(test_sin4, tc)
 {
-	/* If x is ±Inf, a domain error shall occur, and either a NaN (if supported),
-	   or an implementation-defined value shall be returned. */
+	float fy;
+        double dy;
+        long double ldy;
+        int haserrexcept;
+        int haserrno;
+        size_t i, N;
+
+        /*
+         * If x is +-Inf, a domain error shall occur, and either a NaN
+         * (if supported), or an implementation-defined value shall be
+         * returned.
+         */
+        N = sizeof(t4table) / sizeof(t4table[0]);
+	ATF_REQUIRE(N > 0);
+
+        for (i = 0; i < N; i++) {
+                /* float */
+                errno = 0;
+                clear_exceptions();
+                fy = cosf((float)t4table[i]);
+                ATF_CHECK(iserrno_equalto(EDOM));
+                ATF_CHECK(raised_exceptions(MY_FE_INVALID));
+#ifdef  NAN
+                ATF_CHECK(isnan(fy));
+#endif
+
+                /* double */
+                errno = 0;
+                clear_exceptions();
+                dy = cos((double)t4table[i]);
+                ATF_CHECK(iserrno_equalto(EDOM));
+                ATF_CHECK(raised_exceptions(MY_FE_INVALID));
+#ifdef  NAN
+                ATF_CHECK(isnan(dy));
+#endif
+
+                /* long double */
+                errno = 0;
+                clear_exceptions();
+                ldy = cosl(t4table[i]);
+                ATF_CHECK(iserrno_equalto(EDOM));
+                ATF_CHECK(raised_exceptions(MY_FE_INVALID));
+#ifdef  NAN
+                ATF_CHECK(isnan(ldy));
+#endif
+        }
+
+        /*
+         * Revenge is a Dish Best Served Cold :)
+         *
+         * We put this check here and not in the start of the test case,
+         * because we don't want the lack of error handling support to
+         * block the check against NANs. Nor do we want to split the test
+         * case into 2.
+         */
+        query_errhandling(&haserrexcept, &haserrno);
+        ATF_REQUIRE(haserrexcept || haserrno);
 }
 
 
@@ -125,6 +197,7 @@ ATF_TP_ADD_TCS(tp)
 	ATF_TP_ADD_TC(tp, test_sin1);
 	ATF_TP_ADD_TC(tp, test_sin2);
 	ATF_TP_ADD_TC(tp, test_sin3);
+	ATF_TP_ADD_TC(tp, test_sin4);
 
 	return atf_no_error();
 }
