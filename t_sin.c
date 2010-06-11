@@ -181,7 +181,7 @@ ATF_TC_BODY(test_sin4, tc)
         /*
          * Revenge is a Dish Best Served Cold :)
          *
-         * We put this check here and not in the start of the test case,
+         * We put this check here and not in the beginning of the test case,
          * because we don't want the lack of error handling support to
          * block the check against NANs. Nor do we want to split the test
          * case into 2.
