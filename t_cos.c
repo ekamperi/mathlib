@@ -142,7 +142,8 @@ ATF_TC_BODY(test_cos4, tc)
 	 * (if supported), or an implementation-defined value shall be
 	 * returned.
 	 */
-	N = sizeof(t4table) / (t4table[0]);
+	N = sizeof(t4table) / sizeof(t4table[0]);
+	ATF_REQUIRE(N > 0);
 
 	for (i = 0; i < N; i++) {
 		/* float */
