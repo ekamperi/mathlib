@@ -1,13 +1,22 @@
 #define _XOPEN_SOURCE 600
 
 #include <atf-c.h>
+#include <errno.h>
+#include <float.h>	/* DBL_MIN */
 #include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
 
 #include "subr_atf.h"
+#include "subr_errhandling.h"
 #include "subr_fpcmp.h"
+#include "subr_random.h"
+
+/* Don't be too harsh with symbols */
+#ifndef M_PI_2
+#define M_PI_2	1.57079632679489661923
+#endif
 
 /*
  * Test case 1 -- Basic functionality
@@ -149,11 +158,76 @@ ATF_TC_BODY(test_erf2, tc)
 	}
 }
 
+ATF_TC(test_erf3);
+ATF_TC_HEAD(test_erf3, tc)
+{
+  atf_tc_set_md_var(tc,
+		    "descr",
+		    "Check for underflow");
+}
+ATF_TC_BODY(test_erf3, tc)
+{
+	float fx;
+	double dx;
+	long double ldx;
+	long i, N;
+	int haserrexcept;
+	int haserrno;
+
+	/*
+	 * We can't proceed if there's no way to detect errors,
+	 * especially overflows.
+	 */
+	query_errhandling(&haserrexcept, &haserrno);
+	ATF_REQUIRE(haserrexcept || haserrno);
+
+	/*
+	 * Underflow occurs when |x| < DBL_MIN * (sqrt(Pi)/2)
+	 * And if this happen, it _may_ result to a range error.
+	 * Check the ~ of this instead.
+	 */
+	N = get_config_var_as_long(tc, "iterations");
+	ATF_REQUIRE(N > 0);
+
+	for (i = 0; i < N; i++) {
+		/* float */
+		do {
+			fx = random_float(FP_NORMAL);
+		} while (fabsf(fx) < DBL_MIN * (sqrt(M_PI)/2));
+		errno = 0;
+		clear_exceptions();
+		(void)erff(fx);
+		ATF_CHECK(iserrno_equalto(0));
+		ATF_CHECK(!raised_exceptions(MY_FE_ALL_EXCEPT));
+
+		/* double */
+		do {
+			dx = random_double(FP_NORMAL);
+		} while (fabs(dx) < DBL_MIN * (sqrt(M_PI)/2));
+		errno = 0;
+		clear_exceptions();
+		(void)erf(dx);
+		ATF_CHECK(iserrno_equalto(0));
+		ATF_CHECK(!raised_exceptions(MY_FE_ALL_EXCEPT));
+
+		/* long double */
+		do {
+			ldx = random_float(FP_NORMAL);
+		} while (fabsf(ldx) < DBL_MIN * (sqrt(M_PI)/2));
+		errno = 0;
+		clear_exceptions();
+		(void)erfl(ldx);
+		ATF_CHECK(iserrno_equalto(0));
+		ATF_CHECK(!raised_exceptions(MY_FE_ALL_EXCEPT));
+	}
+}
+
 /* Add test cases to test program */
 ATF_TP_ADD_TCS(tp)
 {
 	ATF_TP_ADD_TC(tp, test_erf1);
 	ATF_TP_ADD_TC(tp, test_erf2);
+	ATF_TP_ADD_TC(tp, test_erf3);
 
 	return atf_no_error();
 }
