@@ -174,10 +174,7 @@ ATF_TC_BODY(test_erf3, tc)
 	int haserrexcept;
 	int haserrno;
 
-	/*
-	 * We can't proceed if there's no way to detect errors,
-	 * especially overflows.
-	 */
+	/* We can't proceed if there's no way to detect errors */
 	query_errhandling(&haserrexcept, &haserrno);
 	ATF_REQUIRE(haserrexcept || haserrno);
 
