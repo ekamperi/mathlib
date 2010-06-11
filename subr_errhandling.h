@@ -34,6 +34,12 @@
 #define MY_FE_UNDERFLOW	FE_IS_MISSING
 #endif
 
+#ifdef	FE_ALL_EXCEPT
+#define	MY_FE_ALL_EXCEPT	FE_ALL_EXCEPT
+#else
+#define	MY_FE_ALL_EXCEPT	FE_IS_MISSING
+#endif
+
 /* Function prototypes */
 void clear_exceptions(void);
 void clear_errno(void);
