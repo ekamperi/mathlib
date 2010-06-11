@@ -209,7 +209,7 @@ ATF_TC_BODY(test_erf3, tc)
 
 		/* long double */
 		do {
-			ldx = random_float(FP_NORMAL);
+			ldx = random_long_double(FP_NORMAL);
 		} while (fabsf(ldx) < DBL_MIN * (sqrt(M_PI)/2));
 		errno = 0;
 		clear_exceptions();
