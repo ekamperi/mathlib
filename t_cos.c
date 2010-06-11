@@ -176,7 +176,14 @@ ATF_TC_BODY(test_cos4, tc)
 #endif
 	}
 
-	/* Revenge is a Dish Best Served Cold :) */
+	/*
+	 * Revenge is a Dish Best Served Cold :)
+	 *
+	 * We put this check here and not in the start of the test case,
+	 * because we don't want the lack of error handling support to
+	 * block the check against NANs. Nor do we want to split the test
+	 * case into 2.
+	 */
 	query_errhandling(&haserrexcept, &haserrno);
 	ATF_REQUIRE(haserrexcept || haserrno);
 }
