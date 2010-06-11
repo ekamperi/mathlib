@@ -94,12 +94,12 @@ struct t2entry {
 } t2table[] = {
 	/* If x is NaN, a NaN shall be returned */
 #ifdef	NAN
-	{ NAN, NAN  },
+	{ NAN, NAN },
 #endif
 
 	/* If x is +-0, +-0 shall be returned */
-	{  0.0,  0.0  },
-	{ -0.0, -0.0  },
+	{  0.0,  0.0 },
+	{ -0.0, -0.0 },
 
 	/* If x is +-Inf, +-1 shall be returned */
 #ifdef	INFINITY
