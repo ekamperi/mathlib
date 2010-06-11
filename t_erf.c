@@ -217,6 +217,31 @@ ATF_TC_BODY(test_erf3, tc)
 		ATF_CHECK(iserrno_equalto(0));
 		ATF_CHECK(!raised_exceptions(MY_FE_ALL_EXCEPT));
 	}
+
+	/* Ok, couldn't resist */
+	/* float */
+	errno = 0;
+	clear_exceptions();
+	erff(0.5 * DBL_MIN);
+	ATF_CHECK(errno == 0 || errno == ERANGE);
+	ATF_CHECK(!raised_exceptions(MY_FE_ALL_EXCEPT) ||
+		  raised_exceptions(MY_FE_UNDERFLOW));
+
+	/* double */
+	errno = 0;
+        clear_exceptions();
+        erf(0.5 * DBL_MIN);
+        ATF_CHECK(errno == 0 || errno == ERANGE);
+        ATF_CHECK(!raised_exceptions(MY_FE_ALL_EXCEPT) ||
+                  raised_exceptions(MY_FE_UNDERFLOW));
+
+	/* long double */
+	errno = 0;
+        clear_exceptions();
+        erfl(0.5 * DBL_MIN);
+        ATF_CHECK(errno == 0 || errno == ERANGE);
+        ATF_CHECK(!raised_exceptions(MY_FE_ALL_EXCEPT) ||
+                  raised_exceptions(MY_FE_UNDERFLOW));
 }
 
 /* Add test cases to test program */
