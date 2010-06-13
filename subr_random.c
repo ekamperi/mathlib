@@ -63,3 +63,9 @@ DECL(float)
 DECL(double)
 typedef long double long_double;
 DECL(long_double)
+
+void
+init_randgen(void)
+{
+	srand48(time(NULL));
+}
