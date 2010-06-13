@@ -1,5 +1,6 @@
 #define _XOPEN_SOURCE 600
 
+#include <float.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -15,9 +16,9 @@ main(int argc, char *argv[])
 	const char *progname, *type;
 	int i, min = -1, max = -1, total = -1;
 	int opt;
-	float fx;
-	double dx;
-	long double ldx;
+	float fx, flower, fupper;
+	double dx, dlower, dupper;
+	long double ldx, ldlower, ldupper;
 
 	/* Save program name for later use */
 	progname = argv[0];
@@ -52,8 +53,8 @@ main(int argc, char *argv[])
 		exit(EXIT_FAILURE);
 	}
 
-	/* Make sure all arguments were supplied */
-	if (total == -1 || min == -1 || max == -1 || min >= max) {
+	/* Make sure all arguments were supplied, plus validate input */
+	if (total == -1 || min == -1 || max == -1 || min > max) {
 		usage(progname);
 		/* NEVER REACHED */
 	}
@@ -69,29 +70,43 @@ main(int argc, char *argv[])
 
 	/* Ready to go */
 	if (!strcmp(type, "float")) {
+		if (min == 0 && max == 0) {
+			flower = -FLT_MAX;
+			fupper =  FLT_MAX;
+		}
+
 		for (i = 0; i < total; i++) {
 			do {
 				fx = random_float(FP_NORMAL);
-			} while (fx < min || fx > max);
+			} while (fx < flower || fx > fupper);
 			printf("% .8e\n", fx);
 		}
 	}
 
 	if (!strcmp(type, "double")) {
+		if (min == 0 && max == 0) {
+			dlower = -DBL_MAX;
+			dupper =  DBL_MAX;
+		}
+
 		for (i = 0; i < total; i++) {
 			do {
 				dx = random_double(FP_NORMAL);
-			} while(dx < min || dx > max);
+			} while(dx < dlower || dx > dupper);
 			printf("% .16e\n", dx);
 		}
 	}
 
 	/* XXX: How many significand bits to write ? */
 	if (!strcmp(type, "ldouble")) {
+		if (min == 0 && max == 0) {
+                        ldlower = -LDBL_MAX;
+                        ldupper =  LDBL_MAX;
+                }
 		for (i = 0; i < total; i++) {
 			do {
 				ldx = random_long_double(FP_NORMAL);
-			} while(ldx < min || ldx > max);
+			} while(ldx < ldlower || ldx > ldupper);
 			printf("% .32Le\n", ldx);
 		}
 	}
@@ -105,5 +120,8 @@ usage(const char *progname)
 	fprintf(stderr,
 	    "usage: %s {float, double, ldouble} -t total -m min -M max\n",
 	    progname);
+	fprintf(stderr,
+	    "\tIf min == max, then all possible range is assumed,\n"
+	    "\te.g. [-DBL_MAX, DBL_MAX]\n");
 	exit(EXIT_FAILURE);
 }
