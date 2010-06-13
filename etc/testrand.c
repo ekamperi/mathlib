@@ -7,7 +7,6 @@
 
 #include "../subr_random.h"
 
-/* Function prototypes */
 static void usage(const char *progname);
 
 int
@@ -60,7 +59,7 @@ main(int argc, char *argv[])
 	}
 
 	if (strcmp(type, "float") && strcmp(type, "double")
-	    && (!strcmp(type, "ldouble"))) {
+	    && (strcmp(type, "ldouble"))) {
 		usage(progname);
 		/* NEVER REACHED */
 	}
