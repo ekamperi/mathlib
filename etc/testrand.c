@@ -73,7 +73,7 @@ main(int argc, char *argv[])
 			do {
 				fx = random_float(FP_NORMAL);
 			} while (fx < min || fx > max);
-			printf("%.8e\n", fx);
+			printf("% .8e\n", fx);
 		}
 	}
 
@@ -82,7 +82,7 @@ main(int argc, char *argv[])
 			do {
 				dx = random_double(FP_NORMAL);
 			} while(dx < min || dx > max);
-			printf("%.16e\n", dx);
+			printf("% .16e\n", dx);
 		}
 	}
 
@@ -92,7 +92,7 @@ main(int argc, char *argv[])
 			do {
 				ldx = random_long_double(FP_NORMAL);
 			} while(ldx < min || ldx > max);
-			printf("%.32Le\n", ldx);
+			printf("% .32Le\n", ldx);
 		}
 	}
 
