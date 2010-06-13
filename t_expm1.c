@@ -101,7 +101,7 @@ ATF_TC_HEAD(test_expm13, tc)
 {
   atf_tc_set_md_var(tc,
 		    "descr",
-		    "Check for undexpm1low");
+		    "Check for overflow");
 }
 ATF_TC_BODY(test_expm13, tc)
 {
@@ -115,8 +115,8 @@ ATF_TC_BODY(test_expm13, tc)
 	ATF_REQUIRE(haserrexcept || haserrno);
 
 	/*
-	 * For IEEE Std 754-1985 double, 1024 <= x implies expm1(x) has
-	 * overflowed. The value x < -1022 implies expm1(x) has underflowed.
+	 * For IEEE Std 754-1985 double, 709.8 < x implies expm1(x) has
+	 * overflowed.
 	 */
 	N = get_config_var_as_long(tc, "iterations");
 	ATF_REQUIRE(N > 0);
