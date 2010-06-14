@@ -2,7 +2,6 @@
 
 #include <atf-c.h>
 #include <errno.h>
-#include <float.h>	/* DBL_MIN */
 #include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -21,6 +20,7 @@ struct t1entry {
 	long double x;       /* Input */
 	long double y;       /* exp output */
 } t1table[] = {
+
 };
 
 ATF_TC(test_exp1);
@@ -32,17 +32,25 @@ ATF_TC_HEAD(test_exp1, tc)
 }
 ATF_TC_BODY(test_exp1, tc)
 {
-	float fy;
 	size_t i, N;
 
-	N = sizeof(t1ftable) / sizeof(t1ftable[0]);
-	for (i = 0; i < N; i++) {
-		ATF_CHECK(fpcmp_equal(expf(t1ftable[i].x), t1ftable[i].y));
-		if (!fpcmp_equal(expf(t1ftable[i].x), t1ftable[i].y)) {
-			printf("%.16e\t%.16e\n", expf(t1ftable[i].x), t1ftable[i].y);
-			fflush(NULL);
-		}
-	}
+	/* double */
+	N = sizeof(t1dtable) / sizeof(t1dtable[0]);
+	ATF_REQUIRE(N > 0);
+
+	for (i = 0; i < N; i++)
+		ATF_CHECK(fpcmp_equal(
+			    exp(t1dtable[i].x),
+				t1dtable[i].y));
+
+	/* long double */
+        N = sizeof(t1ldtable) / sizeof(t1ldtable[0]);
+        ATF_REQUIRE(N > 0);
+
+        for (i = 0; i < N; i++)
+		ATF_CHECK(fpcmp_equal(
+			    exp(t1ldtable[i].x),
+				t1ldtable[i].y));
 }
 
 /*
