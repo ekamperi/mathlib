@@ -50,7 +50,7 @@ ATF_TC_BODY(test_tgamma1, tc)
 
 	N = sizeof(ttable) / sizeof(ttable[0]);
 	for (i = 0; i < N; i++)
-		ATF_CHECK(FPCMP_EQUAL(tgamma(ttable[i].x), ttable[i].y));
+		ATF_CHECK(fpcmp_equal(tgamma(ttable[i].x), ttable[i].y));
 }
 
 /*
@@ -99,7 +99,7 @@ ATF_TC_BODY(test_tgamma2, tc)
 		if (raised_exceptions(FE_ALL_EXCEPT) || set_errno())
 			continue;
 
-		ATF_PASS_OR_BREAK(FPCMP_EQUAL(g1, z*g0));
+		ATF_PASS_OR_BREAK(fpcmp_equal(g1, z*g0));
 		++cnt;
 	}
 	ATF_CHECK(cnt > i/2);

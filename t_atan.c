@@ -61,7 +61,7 @@ ATF_TC_BODY(test_atan1, tc)
 
 	N = sizeof(ttable) / sizeof(ttable[0]);
 	for (i = 0; i < N; i++) {
-		ATF_CHECK(FPCMP_EQUAL(atan(ttable[i].x), ttable[i].y));
+		ATF_CHECK(fpcmp_equal(atan(ttable[i].x), ttable[i].y));
 	}
 }
 
@@ -169,7 +169,7 @@ ATF_TC_BODY(test_atan3, tc)
 		/* Ready to go */
 		oval = atan(t3table[i].x);
 		if (t3table[i].check & CHK_REG) {
-			ATF_CHECK(FPCMP_EQUAL(oval, t3table[i].y));
+			ATF_CHECK(fpcmp_equal(oval, t3table[i].y));
 		}
 		if (t3table[i].check & CHK_ZERO) {
 			ATF_CHECK(fpclassify(oval) == FP_ZERO);

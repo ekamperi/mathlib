@@ -44,57 +44,59 @@ LIB=-L/usr/opt/lib -lm -latf-c
 foo: foo.c subr_atf.c
 	$(CC99) $(CCFLAGS) $(INCLUDE) foo.c subr_atf.c -o foo $(LIB)
 
-t_acos: t_acos.c subr_atf.c subr_fpcmp.h
+t_acos: t_acos.c subr_atf.c subr_fpcmp.c
 	$(CC99) $(CCFLAGS) $(INCLUDE) 				\
-		t_acos.c subr_atf.c				\
+		t_acos.c subr_atf.c subr_fpcmp.c		\
 	-o t_acos 						\
 	$(LIB)
 
-t_acosh: t_acosh.c subr_fpcmp.h
+t_acosh: t_acosh.c subr_fpcmp.c
 	$(CC99) $(CCFLAGS) $(INCLUDE)				\
-		t_acosh.c					\
+		t_acosh.c subr_fpcmp.c				\
 	-o t_acosh						\
 	$(LIB)
 
-t_asin: t_asin.c subr_atf.c subr_fpcmp.h
+t_asin: t_asin.c subr_atf.c subr_fpcmp.c
 	$(CC99) $(CCFLAGS) $(INCLUDE) 				\
-		t_asin.c subr_atf.c				\
+		t_asin.c subr_atf.c subr_fpcmp.c		\
 	-o t_asin 						\
 	$(LIB)
 
-t_asinh: t_asinh.c subr_fpcmp.h
+t_asinh: t_asinh.c subr_fpcmp.c
 	$(CC99) $(CCFLAGS) $(INCLUDE)				\
-		t_asinh.c					\
+		t_asinh.c subr_fpcmp.c				\
 	-o t_asinh						\
 	$(LIB)
 
-t_atan: t_atan.c subr_atf.c subr_fpcmp.h
+t_atan: t_atan.c subr_atf.c subr_fpcmp.c
 	$(CC99) $(CCFLAGS) $(INCLUDE)				\
-		t_atan.c subr_atf.c				\
+		t_atan.c subr_atf.c subr_fpcmp.c		\
 	-o t_atan						\
 	$(LIB)
 
-t_atan2: t_atan2.c subr_atf.c
-	$(CC99) $(INCLUDE)					\
-		t_atan2.c subr_atf.c				\
+t_atan2: t_atan2.c subr_atf.c subr_fpcmp.c
+	$(CC99) $(CCFLAGS) $(INCLUDE)				\
+		t_atan2.c subr_atf.c subr_fpcmp.c		\
 	-o t_atan2						\
 	$(LIB)
 
-t_atanh: t_atanh.c subr_atf.c subr_errhandling.c subr_fpcmp.h
+t_atanh: t_atanh.c subr_atf.c subr_errhandling.c subr_fpcmp.c
 	$(CC99) $(INCLUDE)					\
-		t_atanh.c subr_atf.c subr_errhandling.c		\
+		t_atanh.c					\
+		subr_atf.c subr_errhandling.c subr_fpcmp.c	\
 	-o t_atanh						\
 	$(LIB)
 
-t_cbrt: t_cbrt.c subr_atf.c
+t_cbrt: t_cbrt.c subr_atf.c subr_fpcmp.c
 	$(CC99) $(CCFLAGS) $(INCLUDE)				\
-		t_cbrt.c subr_atf.c				\
+		t_cbrt.c subr_atf.c subr_fpcmp.c		\
 	-o t_cbrt						\
 	 $(LIB)
 
-t_ceil: t_ceil.c subr_atf.c subr_random.c
+t_ceil: t_ceil.c subr_atf.c subr_fpcmp.c subr_random.c
 	$(CC99) $(CCFLAGS) $(INCLUDE)				\
-		t_ceil.c subr_atf.c subr_random.c		\
+		t_ceil.c					\
+		 subr_atf.c subr_fpcmp.c subr_random.c		\
 	-o t_ceil						\
 	 $(LIB)
 
@@ -110,38 +112,43 @@ t_copysign: t_copysign.c subr_atf.c subr_random.c
 	-o t_copysign						\
 	$(LIB)
 
-t_cos: t_cos.c subr_atf.c subr_errhandling.c subr_random.c
+t_cos: t_cos.c subr_atf.c subr_errhandling.c subr_fpcmp.c subr_random.c
 	$(CC99) $(CCFLAGS) $(INCLUDE)				\
 		t_cos.c						\
-		subr_atf.c subr_errhandling.c subr_random.c	\
+		subr_atf.c subr_errhandling.c subr_fpcmp.c	\
+		subr_random.c					\
 	-o t_cos						\
 	$(LIB)
 
-t_erf: t_erf.c subr_atf.c subr_errhandling.c subr_random.c
+t_erf: t_erf.c subr_atf.c subr_errhandling.c subr_fpcmp.c subr_random.c
 	$(CC99) $(CCFLAGS) $(INCLUDE)				\
 		t_erf.c						\
-		subr_atf.c subr_errhandling.c subr_random.c	\
+		subr_atf.c subr_errhandling.c subr_fpcmp.c	\
+		subr_random.c					\
 	-o t_erf						\
 	$(LIB)
 
-t_exp: t_exp.c subr_atf.c subr_errhandling.c subr_random.c
+t_exp: t_exp.c t_exp.h subr_atf.c subr_errhandling.c subr_fpcmp.c subr_random.c
 	$(CC99) $(CCFLAGS) $(INCLUDE)                           \
 		t_exp.c                                         \
-		subr_atf.c subr_errhandling.c subr_random.c     \
+		subr_atf.c subr_errhandling.c subr_fpcmp.c	\
+		subr_random.c     				\
 	-o t_exp						\
 	$(LIB)
 
-t_exp2: t_exp2.c subr_atf.c subr_errhandling.c subr_random.c
+t_exp2: t_exp2.c subr_atf.c subr_errhandling.c subr_fpcmp.c subr_random.c
 	$(CC99) $(CCFLAGS) $(INCLUDE)				\
 		t_exp2.c					\
-		subr_atf.c subr_errhandling.c subr_random.c	\
+		subr_atf.c subr_errhandling.c subr_fpcmp.c	\
+		subr_random.c					\
 	-o t_exp2						\
 	$(LIB)
 
-t_expm1: t_expm1.c subr_atf.c subr_errhandling.c subr_random.c
+t_expm1: t_expm1.c subr_atf.c subr_errhandling.c subr_fpcmp.c subr_random.c
 	$(CC99) $(CCFLAGS) $(INCLUDE)				\
 		t_expm1.c					\
-		subr_atf.c subr_errhandling.c subr_random.c	\
+		subr_atf.c subr_errhandling.c subr_fpcmp.c	\
+		subr_random.c					\
 	-o t_expm1						\
 	$(LIB)
 
@@ -157,9 +164,9 @@ t_float: t_float.c
 	-o t_float 						\
 	$(LIB)
 
-t_floor: t_floor.c subr_atf.c subr_random.c
+t_floor: t_floor.c subr_atf.c subr_fpcmp.c subr_random.c
 	$(CC99) $(CCFLAGS) $(INCLUDE)				\
-		t_floor.c subr_atf.c subr_random.c		\
+		t_floor.c subr_atf.c subr_fpcmp.c subr_random.c	\
 	-o t_floor						\
 	$(LIB)
 
@@ -175,15 +182,15 @@ t_fpmacros: t_fpmacros.c
 	-o t_fpmacros 						\
 	$(LIB)
 
-t_hypot: t_hypot.c subr_errhandling.c
+t_hypot: t_hypot.c subr_errhandling.c subr_fpcmp.c
 	$(CC99) $(CCFLAGS) $(INCLUDE) 				\
-		t_hypot.c subr_errhandling.c			\
+		t_hypot.c subr_errhandling.c subr_fpcmp.c	\
 	-o t_hypot		 				\
 	$(LIB)
 
-t_ldexp: t_ldexp.c
+t_ldexp: t_ldexp.c subr_fpcmp.c
 	$(CC99) $(CCFLAGS) $(INCLUDE) 				\
-		t_ldexp.c					\
+		t_ldexp.c subr_fpcmp.c				\
 	-o t_ldexp 						\
 	$(LIB)
 
@@ -205,40 +212,44 @@ t_signbit: t_signbit.c subr_atf.c subr_random.c
 	-o t_signbit						\
 	$(LIB)
 
-t_sin: t_sin.c subr_atf.c subr_errhandling.c subr_random.c
+t_sin: t_sin.c subr_atf.c subr_errhandling.c subr_fpcmp.c subr_random.c
 	$(CC99) $(CCFLAGS) $(INCLUDE)				\
 		t_sin.c						\
-	 subr_atf.c subr_errhandling.c subr_random.c		\
+		subr_atf.c subr_errhandling.c subr_fpcmp.c	\
+		subr_random.c					\
 	-o t_sin						\
 	$(LIB)
 
-t_sqrt: t_sqrt.c
+t_sqrt: t_sqrt.c subr_fpcmp.c
 	$(CC99) $(CCFLAGS) $(INCLUDE)				\
-		t_sqrt.c					\
+		t_sqrt.c subr_fpcmp.c				\
 	-o t_sqrt						\
 	$(LIB)
 
-t_tanh: t_tanh.c subr_atf.c subr_random.c
+t_tanh: t_tanh.c subr_atf.c subr_fpcmp.c subr_random.c
 	$(CC99) $(CCFLAGS) $(INCLUDE)				\
-		t_tanh.c subr_atf.c subr_random.c		\
+		t_tanh.c subr_atf.c subr_fpcmp.c subr_random.c	\
 	-o t_tanh						\
 	 $(LIB)
 
-t_tgamma: t_tgamma.c subr_atf.c subr_random.c subr_errhandling.c
+t_tgamma: t_tgamma.c subr_atf.c subr_random.c subr_errhandling.c subr_fpcmp.c
 	$(CC99) $(CCFLAGS) $(INCLUDE) 				\
-		t_tgamma.c subr_atf.c subr_random.c subr_errhandling.c	\
+		t_tgamma.c					\
+		subr_atf.c subr_errhandling.c subr_fpcmp.c	\
+		subr_random.c					\
 	-o t_tgamma						\
 	$(LIB)
 
-t_trig_ident: t_trig_ident.c subr_atf.c subr_random.c
+t_trig_ident: t_trig_ident.c subr_atf.c subr_fpcmp.c subr_random.c
 	$(CC99) $(CCFLAGS) $(INCLUDE) 				\
-		t_trig_ident.c subr_atf.c subr_random.c		\
+		t_trig_ident.c subr_atf.c subr_fpcmp.c 		\
+		subr_random.c					\
 	-o t_trig_ident						\
 	$(LIB)
 
-t_trunc: t_trunc.c subr_atf.c subr_random.c
+t_trunc: t_trunc.c subr_atf.c subr_fpcmp.c subr_random.c
 	$(CC99) $(CCFLAGS) $(INCLUDE)				\
-		t_trunc.c subr_atf.c subr_random.c 		\
+		t_trunc.c subr_atf.c subr_fpcmp.c subr_random.c \
 	-o t_trunc						\
 	$(LIB)
 

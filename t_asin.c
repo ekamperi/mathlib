@@ -55,7 +55,7 @@ ATF_TC_BODY(test_asin1, tc)
 		ATF_REQUIRE(ttable[i].x >= -1.0 && ttable[i].x <= 1.0);
 
 		/* Actual check */
-		ATF_CHECK(FPCMP_EQUAL(acos(ttable[i].x), ttable[i].y));
+		ATF_CHECK(fpcmp_equal(acos(ttable[i].x), ttable[i].y));
 	}
 }
 

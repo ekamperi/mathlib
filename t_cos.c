@@ -32,7 +32,7 @@ ATF_TC_BODY(test_cos1, tc)
 
 	N = sizeof(ttable) / sizeof(ttable[0]);
 	for (i = 0; i < N; i++)
-		ATF_CHECK(FPCMP_EQUAL(cos(ttable[i].x), ttable[i].y));
+		ATF_CHECK(fpcmp_equal(cos(ttable[i].x), ttable[i].y));
 }
 
 /*

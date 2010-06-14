@@ -32,7 +32,7 @@ ATF_TC_BODY(test_sin1, tc)
 
 	N = sizeof(ttable) / sizeof(ttable[0]);
 	for (i = 0; i < N; i++)
-		ATF_CHECK(FPCMP_EQUAL(sin(ttable[i].x), ttable[i].y));
+		ATF_CHECK(fpcmp_equal(sin(ttable[i].x), ttable[i].y));
 }
 
 /*

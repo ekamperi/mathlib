@@ -33,8 +33,8 @@ ATF_TC_BODY(test_symmetry, tc)
 	ATF_FOR_LOOP(i, N, i++) {
 		x = random_double(FP_NORMAL);
 
-		ATF_PASS_OR_BREAK(FPCMP_EQUAL(sin(-x), -sin(x)));
-		ATF_PASS_OR_BREAK(FPCMP_EQUAL(cos(-x),  cos(x)));
+		ATF_PASS_OR_BREAK(fpcmp_equal(sin(-x), -sin(x)));
+		ATF_PASS_OR_BREAK(fpcmp_equal(cos(-x),  cos(x)));
 	}
 }
 
@@ -220,32 +220,32 @@ ATF_TC_BODY(test_power_reduction, tc)
 		/* sin^2(x) = 0.5(1 - cos(2x)) */
 		e1 = sin(x) * sin(x);
 		e2 = 0.5 * (1 - cos(2*x));
-		ATF_PASS_OR_BREAK(FPCMP_EQUAL(e1, e2));
+		ATF_PASS_OR_BREAK(fpcmp_equal(e1, e2));
 
 		/* cos^2(x) = 0.5(1 + cos(2x)) */
 		e1 = cos(x) * cos(x);
 		e2 = 0.5 * (1 + cos(2*x));
-		ATF_PASS_OR_BREAK(FPCMP_EQUAL(e1, e2));
+		ATF_PASS_OR_BREAK(fpcmp_equal(e1, e2));
 
 		/* sin^2(x)*cos^2(x) = 0.125(1-cos(4x)) */
 		e1 = sin(x)*sin(x) * cos(x)*cos(x);
 		e2 = 0.125*(1-cos(4*x));
-		ATF_PASS_OR_BREAK(FPCMP_EQUAL(e1, e2));
+		ATF_PASS_OR_BREAK(fpcmp_equal(e1, e2));
 
 		/* sin^3(x) = 0.25(3sin(x) - sin(3x)) */
 		e1 = sin(x) * sin(x) * sin(x);
 		e2 = 0.25 * (3*sin(x) - sin(3*x));
-		ATF_PASS_OR_BREAK(FPCMP_EQUAL(e1, e2));
+		ATF_PASS_OR_BREAK(fpcmp_equal(e1, e2));
 
 		/* cos^3(x) = 0.25(3cos(x) + cos(3x)) */
 		e1 = cos(x) * cos(x) * cos(x);
 		e2 = 0.25 * (3*cos(x) + cos(3*x));
-		ATF_PASS_OR_BREAK(FPCMP_EQUAL(e1, e2));
+		ATF_PASS_OR_BREAK(fpcmp_equal(e1, e2));
 
 		/* sin^3(x)*cos^3(x) = 0.03125(3sin(2x) - sin(6x)) */
 		e1 = sin(x)*sin(x)*sin(x) * cos(x)*cos(x)*cos(x);
 		e2 = 0.03125 * (3*sin(2*x) - sin(6*x));
-		ATF_PASS_OR_BREAK(FPCMP_EQUAL(e1, e2));
+		ATF_PASS_OR_BREAK(fpcmp_equal(e1, e2));
 	}
 }
 
