@@ -104,7 +104,7 @@ main(int argc, char *argv[])
 			ldupper =  LDBL_MAX;
 		} else {
 			ldlower = min;
-			ldlower = max;
+			ldupper = max;
 		}
 		gen_ldouble(fname, total, ldlower, ldupper);
 	}
