@@ -22,6 +22,10 @@ static int prof_updateenv_getenv(size_t iterations);
 /* Constants and macros */
 #define ITERATIONS (1 * 1000 * 1000)
 
+/*
+ * They are esentially the same, but we still define them as if
+ * they were different, for conceptual consistency and clarity.
+ */
 #define	MARK_START(tv1)					\
 	assert(gettimeofday(tv1, NULL) == 0);
 
