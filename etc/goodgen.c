@@ -138,8 +138,10 @@ gen_double(const char *fname, size_t total, double lower, double upper)
                 mpfr_set_d(mp_x,       x, GMP_RNDN);
                 mpfr_set_d(mp_exact, 0.0, GMP_RNDN);
 
+		/* Compute exact value */
 		f->f_mpfr(mp_exact, mp_x, GMP_RNDN);
 
+		/* Extract exact value */
 		exact = mpfr_get_d(mp_exact, GMP_RNDN);
 
 		printf("x = % .16e\t%s = % .16e\n", x, fname, exact);
@@ -177,11 +179,13 @@ gen_ldouble(const char *fname, size_t total,
                 mpfr_set_ld(mp_x,       x, GMP_RNDN);
                 mpfr_set_ld(mp_exact, 0.0, GMP_RNDN);
 
+		/* Compute exact value */
                 f->f_mpfr(mp_exact, mp_x, GMP_RNDN);
 
+                /* Extract exact value */
                 exact = mpfr_get_ld(mp_exact, GMP_RNDN);
 
-                printf("x = % .35Le\t%s = % .35Le\n", x, fname, exact);
+                printf("x = % .35Le\n%s = % .35Le\n", x, fname, exact);
         }
 
         /* Free resources */
