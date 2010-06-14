@@ -119,6 +119,7 @@ gen_double(const char *fname, size_t total, double lower, double upper)
         mpfr_t mp_x, mp_exact;
 	double x, exact;
 	size_t i;
+        const mpfr_rnd_t tonearest = GMP_RNDN;
 
 	assert(fname);
 	f = getdomfunc(fname);
@@ -135,14 +136,14 @@ gen_double(const char *fname, size_t total, double lower, double upper)
 		} while (x < lower || x > upper);
 
 		/* Set the mpfr variables */
-                mpfr_set_d(mp_x,       x, GMP_RNDN);
-                mpfr_set_d(mp_exact, 0.0, GMP_RNDN);
+                mpfr_set_d(mp_x, x, tonearest);
+                mpfr_set_d(mp_exact, 0.0, tonearest);
 
 		/* Compute exact value */
-		f->f_mpfr(mp_exact, mp_x, GMP_RNDN);
+		f->f_mpfr(mp_exact, mp_x, tonearest);
 
 		/* Extract exact value */
-		exact = mpfr_get_d(mp_exact, GMP_RNDN);
+		exact = mpfr_get_d(mp_exact, tonearest);
 
 		printf("x = % .16e\t%s = % .16e\n", x, fname, exact);
 	}
@@ -160,6 +161,7 @@ gen_ldouble(const char *fname, size_t total,
         mpfr_t mp_x, mp_exact;
         long double x, exact;
         size_t i;
+	const mpfr_rnd_t tonearest = GMP_RNDN;
 
         assert(fname);
         f = getdomfunc(fname);
@@ -176,14 +178,14 @@ gen_ldouble(const char *fname, size_t total,
                 } while (x < lower || x > upper);
 
                 /* Set the mpfr variables */
-                mpfr_set_ld(mp_x,       x, GMP_RNDN);
-                mpfr_set_ld(mp_exact, 0.0, GMP_RNDN);
+                mpfr_set_ld(mp_x, x, tonearest);
+                mpfr_set_ld(mp_exact, 0.0, tonearest);
 
 		/* Compute exact value */
-                f->f_mpfr(mp_exact, mp_x, GMP_RNDN);
+                f->f_mpfr(mp_exact, mp_x, tonearest);
 
                 /* Extract exact value */
-                exact = mpfr_get_ld(mp_exact, GMP_RNDN);
+                exact = mpfr_get_ld(mp_exact, tonearest);
 
                 printf("x = % .35Le\n%s = % .35Le\n", x, fname, exact);
         }
