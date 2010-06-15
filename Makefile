@@ -1,275 +1,91 @@
-all:	t_acos		\
-	t_acosh		\
-	t_asin		\
-	t_asinh		\
-	t_atan		\
-	t_atan2		\
-	t_atanh		\
-	t_cbrt		\
-	t_ceil		\
-	t_constants	\
-	t_copysign	\
-	t_cos		\
-	t_erf		\
-	t_exp		\
-	t_exp2		\
-	t_expm1		\
-	t_float		\
-	t_floor		\
-	t_fmax		\
-	t_fpclassify	\
-	t_fpmacros	\
-	t_mac		\
-	t_tgamma	\
-	t_hypot		\
-	t_ldexp		\
-	t_nextafter	\
-	t_signbit	\
-	t_sin		\
-	t_sqrt		\
-	t_trig_ident	\
-	t_tanh		\
-	t_trunc		\
-	t_types		\
-
 CC99=gcc -std=c99
-CCFLAGS=-Wall -W -Wformat-nonliteral -Wcast-align -Wpointer-arith 		\
-	-Wbad-function-cast -Wmissing-prototypes -Wstrict-prototypes 		\
-	-Wmissing-declarations -Winline -Wundef -Wnested-externs -Wcast-qual 	\
-	-Wshadow -Wwrite-strings -Wno-unused-parameter 				\
-	-Wswitch -Wbad-function-cast -g
-INCLUDE=-I/usr/opt/include
-LIB=-L/usr/opt/lib -lm -latf-c
+INCLUDE=-I./include -I/usr/opt/include -L/usr/opt/lib
+CFLAGS=-Wall -W -Wformat-nonliteral -Wcast-align -Wpointer-arith             \
+	-Wbad-function-cast -Wmissing-prototypes -Wstrict-prototypes         \
+	-Wmissing-declarations -Winline -Wundef -Wnested-externs -Wcast-qual \
+	-Wshadow -Wwrite-strings -Wno-unused-parameter                       \
+	-Wswitch -Wbad-function-cast -g $(INCLUDE)
+LIBS=-lm -latf-c
 
-foo: foo.c subr_atf.c
-	$(CC99) $(CCFLAGS) $(INCLUDE) foo.c subr_atf.c -o foo $(LIB)
 
-t_acos: t_acos.c subr_atf.c subr_fpcmp.c
-	$(CC99) $(CCFLAGS) $(INCLUDE) 				\
-		t_acos.c subr_atf.c subr_fpcmp.c		\
-	-o t_acos 						\
-	$(LIB)
+obj/%.o: %.c
+	$(CC99) -c -o $@ $< $(CFLAGS)
 
-t_acosh: t_acosh.c subr_fpcmp.c
-	$(CC99) $(CCFLAGS) $(INCLUDE)				\
-		t_acosh.c subr_fpcmp.c				\
-	-o t_acosh						\
-	$(LIB)
 
-t_asin: t_asin.c subr_atf.c subr_fpcmp.c
-	$(CC99) $(CCFLAGS) $(INCLUDE) 				\
-		t_asin.c subr_atf.c subr_fpcmp.c		\
-	-o t_asin 						\
-	$(LIB)
+all:	t_acos t_acosh t_asin t_asinh t_atan t_atan2 t_atanh t_cbrt t_ceil \
+	t_constants t_copysign t_cos t_erf t_exp t_exp2 t_expm1 t_float    \
+	t_floor t_fmax t_fpclassify t_fpmacros t_mac t_tgamma t_hypot      \
+	t_ldexp t_nextafter t_signbit t_sin t_sqrt t_trig_ident t_tanh     \
+	t_trunc t_types
 
-t_asinh: t_asinh.c subr_fpcmp.c
-	$(CC99) $(CCFLAGS) $(INCLUDE)				\
-		t_asinh.c subr_fpcmp.c				\
-	-o t_asinh						\
-	$(LIB)
 
-t_atan: t_atan.c subr_atf.c subr_fpcmp.c
-	$(CC99) $(CCFLAGS) $(INCLUDE)				\
-		t_atan.c subr_atf.c subr_fpcmp.c		\
-	-o t_atan						\
-	$(LIB)
+DEPS_T_ACOS = obj/t_acos.o obj/subr_atf.o obj/subr_fpcmp.o
+t_acos: $(DEPS_T_ACOS)
+	$(CC99) -o t_acos $(DEPS_T_ACOS) $(CFLAGS) $(LIBS)
 
-t_atan2: t_atan2.c subr_atf.c subr_fpcmp.c
-	$(CC99) $(CCFLAGS) $(INCLUDE)				\
-		t_atan2.c subr_atf.c subr_fpcmp.c		\
-	-o t_atan2						\
-	$(LIB)
 
-t_atanh: t_atanh.c subr_atf.c subr_errhandling.c subr_fpcmp.c
-	$(CC99) $(INCLUDE)					\
-		t_atanh.c					\
-		subr_atf.c subr_errhandling.c subr_fpcmp.c	\
-	-o t_atanh						\
-	$(LIB)
+DEPS_T_ACOSH = obj/t_acosh.o obj/subr_fpcmp.o
+t_acosh: $(DEPS_T_ACOSH)
+	$(CC99) -o t_acosh $(DEPS_T_ACOSH) $(CFLAGS) $(LIBS)
 
-t_cbrt: t_cbrt.c subr_atf.c subr_fpcmp.c
-	$(CC99) $(CCFLAGS) $(INCLUDE)				\
-		t_cbrt.c subr_atf.c subr_fpcmp.c		\
-	-o t_cbrt						\
-	 $(LIB)
 
-t_ceil: t_ceil.c subr_atf.c subr_fpcmp.c subr_random.c
-	$(CC99) $(CCFLAGS) $(INCLUDE)				\
-		t_ceil.c					\
-		 subr_atf.c subr_fpcmp.c subr_random.c		\
-	-o t_ceil						\
-	 $(LIB)
+DEPS_T_ASIN = obj/t_asin.o obj/subr_atf.o obj/subr_fpcmp.o
+t_asin: $(DEPS_T_ASIN)
+	$(CC99) -o t_asin $(DEPS_T_ASIN) $(CFLAGS) $(LIBS)
 
-t_constants: t_constants.c
-	$(CC99) $(CCFLAGS) $(INCLUDE) 				\
-		t_constants.c					\
-	-o t_constants						\
-	$(LIB)
 
-t_copysign: t_copysign.c subr_atf.c subr_random.c
-	$(CC99) $(CCFLAGS) $(INCLUDE) 				\
-		t_copysign.c subr_atf.c subr_random.c		\
-	-o t_copysign						\
-	$(LIB)
+DEPS_T_ASINH = obj/t_asinh.o obj/subr_fpcmp.o
+t_asinh: $(DEPS_T_ASINH)
+	$(CC99) -o t_asinh $(DEPS_T_ASINH) $(CFLAGS) $(LIBS)
 
-t_cos: t_cos.c subr_atf.c subr_errhandling.c subr_fpcmp.c subr_random.c
-	$(CC99) $(CCFLAGS) $(INCLUDE)				\
-		t_cos.c						\
-		subr_atf.c subr_errhandling.c subr_fpcmp.c	\
-		subr_random.c					\
-	-o t_cos						\
-	$(LIB)
 
-t_erf: t_erf.c subr_atf.c subr_errhandling.c subr_fpcmp.c subr_random.c
-	$(CC99) $(CCFLAGS) $(INCLUDE)				\
-		t_erf.c						\
-		subr_atf.c subr_errhandling.c subr_fpcmp.c	\
-		subr_random.c					\
-	-o t_erf						\
-	$(LIB)
+DEPS_T_ATAN = obj/t_atan.o obj/subr_atf.o obj/subr_fpcmp.o
+t_atan:	$(DEPS_T_ATAN)
+	$(CC99) -o t_atan $(DEPS_T_ATAN) $(CFLAGS) $(LIBS)
 
-t_exp: t_exp.c t_exp.h subr_atf.c subr_errhandling.c subr_fpcmp.c subr_random.c
-	$(CC99) $(CCFLAGS) $(INCLUDE)                           \
-		t_exp.c                                         \
-		subr_atf.c subr_errhandling.c subr_fpcmp.c	\
-		subr_random.c     				\
-	-o t_exp						\
-	$(LIB)
 
-t_exp2: t_exp2.c subr_atf.c subr_errhandling.c subr_fpcmp.c subr_random.c
-	$(CC99) $(CCFLAGS) $(INCLUDE)				\
-		t_exp2.c					\
-		subr_atf.c subr_errhandling.c subr_fpcmp.c	\
-		subr_random.c					\
-	-o t_exp2						\
-	$(LIB)
+DEPS_T_ATAN2 = obj/t_atan2.o obj/subr_atf.o obj/subr_fpcmp.o
+t_atan2: $(DEPS_T_ATAN2)
+	$(CC99) -o t_atan2 $(DEPS_T_ATAN2) $(CFLAGS) $(LIBS)
 
-t_expm1: t_expm1.c subr_atf.c subr_errhandling.c subr_fpcmp.c subr_random.c
-	$(CC99) $(CCFLAGS) $(INCLUDE)				\
-		t_expm1.c					\
-		subr_atf.c subr_errhandling.c subr_fpcmp.c	\
-		subr_random.c					\
-	-o t_expm1						\
-	$(LIB)
 
-t_fmax: t_fmax.c subr_atf.c subr_random.c
-	$(CC99) $(CCFLAGS) $(INCLUDE)				\
-		t_fmax.c subr_atf.c subr_random.c		\
-	-o t_fmax 						\
-	$(LIB)
+DEPS_T_ATANH = obj/t_atanh.o obj/subr_atf.o obj/subr_errhandling.o obj/subr_fpcmp.o
+t_atanh: $(DEPS_T_ATANH)
+	$(CC99) -o t_atanh $(DEPS_T_ATANH) $(CFLAGS) $(LIBS)
 
-t_float: t_float.c
-	$(CC99) $(CCFLAGS) $(INCLUDE) 				\
-		t_float.c					\
-	-o t_float 						\
-	$(LIB)
 
-t_floor: t_floor.c subr_atf.c subr_fpcmp.c subr_random.c
-	$(CC99) $(CCFLAGS) $(INCLUDE)				\
-		t_floor.c subr_atf.c subr_fpcmp.c subr_random.c	\
-	-o t_floor						\
-	$(LIB)
+DEPS_T_CBRT = obj/t_cbrt.o obj/subr_atf.o obj/subr_fpcmp.o
+t_cbrt: $(DEPS_T_CBRT)
+	$(CC99) -o t_cbrt $(DEPS_T_CBRT) $(CFLAGS) $(LIBS)
 
-t_fpclassify: t_fpclassify.c
-	$(CC99) $(CCFLAGS) $(INCLUDE) 				\
-		t_fpclassify.c					\
-	-o t_fpclassify			 			\
-	$(LIB)
 
-t_fpmacros: t_fpmacros.c
-	$(CC99) $(CCFLAGS) $(INCLUDE) 				\
-		t_fpmacros.c					\
-	-o t_fpmacros 						\
-	$(LIB)
+DEPS_T_CEIL = obj/t_ceil.o obj/subr_atf.o obj/subr_fpcmp.o obj/subr_random.o
+t_ceil: $(DEPS_T_CEIL)
+	$(CC99) -o t_ceil $(DEPS_T_CEIL) $(CFLAGS) $(LIBS)
 
-t_hypot: t_hypot.c subr_errhandling.c subr_fpcmp.c
-	$(CC99) $(CCFLAGS) $(INCLUDE) 				\
-		t_hypot.c subr_errhandling.c subr_fpcmp.c	\
-	-o t_hypot		 				\
-	$(LIB)
 
-t_ldexp: t_ldexp.c subr_fpcmp.c
-	$(CC99) $(CCFLAGS) $(INCLUDE) 				\
-		t_ldexp.c subr_fpcmp.c				\
-	-o t_ldexp 						\
-	$(LIB)
+DEPS_T_CONSTANTS = obj/t_constants.o
+t_constants: $(DEPS_T_CONSTANTS)
+	$(CC99) -o t_constants $(DEPS_T_CONSTANTS) $(CFLAGS) $(LIBS)
 
-t_mac: t_mac.c subr_atf.c subr_random.c subr_errhandling.c
-	$(CC99) $(CCFLAGS) $(INCLUDE) 				\
-		t_mac.c subr_atf.c subr_random.c subr_errhandling.c 	\
-	-o t_mac						\
-	$(LIB)
 
-t_nextafter: t_nextafter.c subr_atf.c subr_random.c subr_errhandling.c
-	$(CC99) $(CCFLAGS) $(INCLUDE)						\
-		t_nextafter.c subr_atf.c subr_errhandling.c subr_random.c	\
-	 -o t_nextafter								\
-	$(LIB)
+DEPS_T_COPYSIGN = obj/t_copysign.o obj/subr_atf.o obj/subr_random.o
+t_copysign: $(DEPS_T_COPYSIGN)
+	$(CC99) -o t_copysign $(DEPS_T_COPYSIGN) $(CFLAGS) $(LIBS)
 
-t_signbit: t_signbit.c subr_atf.c subr_random.c
-	$(CC99) $(CCFLAGS) $(INCLUDE)				\
-		t_signbit.c subr_atf.c subr_random.c		\
-	-o t_signbit						\
-	$(LIB)
 
-t_sin: t_sin.c subr_atf.c subr_errhandling.c subr_fpcmp.c subr_random.c
-	$(CC99) $(CCFLAGS) $(INCLUDE)				\
-		t_sin.c						\
-		subr_atf.c subr_errhandling.c subr_fpcmp.c	\
-		subr_random.c					\
-	-o t_sin						\
-	$(LIB)
+DEPS_T_COS = obj/t_cos.o obj/subr_atf.o obj/subr_errhandling.o	\
+	     obj/subr_fpcmp.o obj/subr_random.o
+t_cos: $(DEPS_T_COS)
+	$(CC99) -o t_cos $(DEPS_T_COS) $(CFLAGS) $(LIBS)
 
-t_sqrt: t_sqrt.c subr_fpcmp.c
-	$(CC99) $(CCFLAGS) $(INCLUDE)				\
-		t_sqrt.c subr_fpcmp.c				\
-	-o t_sqrt						\
-	$(LIB)
 
-t_tanh: t_tanh.c subr_atf.c subr_fpcmp.c subr_random.c
-	$(CC99) $(CCFLAGS) $(INCLUDE)				\
-		t_tanh.c subr_atf.c subr_fpcmp.c subr_random.c	\
-	-o t_tanh						\
-	 $(LIB)
+DEPS_T_ERF = obj/t_erf.o obj/subr_atf.o obj/subr_errhandling.o  \
+             obj/subr_fpcmp.o obj/subr_random.o
+t_erf: $(DEPS_T_ERF)
+	$(CC99) -o t_erf $(DEPS_T_ERF) $(CFLAGS) $(LIBS)
 
-t_tgamma: t_tgamma.c subr_atf.c subr_random.c subr_errhandling.c subr_fpcmp.c
-	$(CC99) $(CCFLAGS) $(INCLUDE) 				\
-		t_tgamma.c					\
-		subr_atf.c subr_errhandling.c subr_fpcmp.c	\
-		subr_random.c					\
-	-o t_tgamma						\
-	$(LIB)
 
-t_trig_ident: t_trig_ident.c subr_atf.c subr_fpcmp.c subr_random.c
-	$(CC99) $(CCFLAGS) $(INCLUDE) 				\
-		t_trig_ident.c subr_atf.c subr_fpcmp.c 		\
-		subr_random.c					\
-	-o t_trig_ident						\
-	$(LIB)
-
-t_trunc: t_trunc.c subr_atf.c subr_fpcmp.c subr_random.c
-	$(CC99) $(CCFLAGS) $(INCLUDE)				\
-		t_trunc.c subr_atf.c subr_fpcmp.c subr_random.c \
-	-o t_trunc						\
-	$(LIB)
-
-t_types: t_types.c
-	$(CC99) $(CCFLAGS) $(INCLUDE) 				\
-		t_types.c					\
-	-o t_types						\
-	$(LIB)
-
+.PHONY: clean
 clean:
-	git clean -f
-
-run:
-	atf-run . fenv | atf-report
-
-run-xml:
-	rm -f tmp.xml tmp2.xml tmp3.xml
-	rm -f tmp.html tmp2.html
-	atf-run . fenv | atf-report -o xml:tmp.xml
-	cat tmp.xml | col > tmp2.xml
-	sed 's/http:\/\/www.NetBSD.org\/XML\/atf/\./' tmp2.xml > tmp3.xml
-	xsltproc ./tests-results.xsl tmp3.xml > tmp.html
-	sed 's/tests-results.css/\.\.\/\.\.\/\.\.\/\.\.\/css\/tests-results.css/' tmp.html > tmp2.html
+	rm -f obj/*.o *~ core
