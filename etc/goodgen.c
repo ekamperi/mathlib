@@ -1,3 +1,7 @@
+/*
+ * The purpose of this utility is to generate C arrays of exact (x, $func(x))
+ * pairs for consumption by the rest of the test cases.
+ */
 #define _XOPEN_SOURCE 600
 
 #include <assert.h>
@@ -202,7 +206,11 @@ usage(const char *progname)
 	    "usage: %s fname fptype -t total -m min -M max\n",
 	    progname);
 	fprintf(stderr,
-	    "\tIf min == max, then all possible range is assumed,\n"
+		"\t`fname' is the function name, as declared in math.h\n");
+	fprintf(stderr,
+		"\t`fptype' is one of `float', `double' or `ldouble'\n");
+	fprintf(stderr,
+	    "\tIf `min'equals `max', then all possible range is assumed,\n"
 	    "\te.g. [-DBL_MAX, DBL_MAX]\n");
 
 	exit(EXIT_FAILURE);
