@@ -100,6 +100,31 @@ t_exp: $(DEPS_T_EXP)
 	$(CC99) -o t_erf $(DEPS_T_EXP) $(CFLAGS) $(LIBS)
 
 
+_DEPS_T_EXP2 = t_exp2.o subr_atf.o subr_errhandling.o  \
+	       subr_fpcmp.o subr_random.o
+ DEPS_T_EXP2 = $(_DEPS_T_EXP2:%=obj/%)
+t_exp2: $(DEPS_T_EXP2)
+	$(CC99) -o t_exp2 $(DEPS_T_EXP2) $(CFLAGS) $(LIBS)
+
+
+_DEPS_T_EXPM1 = t_expm1.o subr_atf.o subr_errhandling.o  \
+		subr_fpcmp.o subr_random.o
+ DEPS_T_EXPM1 = $(_DEPS_T_EXPM1:%=obj/%)
+t_expm1: $(DEPS_T_EXPM1)
+	$(CC99) -o t_erf $(DEPS_T_EXPM1) $(CFLAGS) $(LIBS)
+
+
+_DEPS_T_FMAX = t_fmax.o subr_atf.o subr_random.o
+ DEPS_T_FMAX = $(_DEPS_T_FMAX:%=obj/%)
+t_fmax: $(DEPS_T_FMAX)
+	$(CC99) -o t_fmax $(DEPS_T_FMAX) $(CFLAGS) $(LIBS)
+
+_DEPS_T_FLOAT = t_float.o
+ DEPS_T_FLOAT = $(_DEPS_T_FLOAT:%=obj/%)
+t_float: $(DEPS_T_FLOAT)
+	$(CC99) -o t_float $(DEPS_T_FLOAT) $(CFLAGS) $(LIBS)
+
+
 .PHONY: clean
 clean:
 	rm -f obj/*.o *~ core
