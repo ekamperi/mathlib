@@ -122,7 +122,7 @@ gen_double(const char *fname, size_t total, double lower, double upper)
         const mpfr_rnd_t tonearest = GMP_RNDN;
 
 	assert(fname);
-	f = getdomfunc(fname);
+	f = getfuncbyname(fname);
 	assert(f);
 	assert(f->f_narg == 1 || f->f_narg == 2);
 
@@ -164,7 +164,7 @@ gen_ldouble(const char *fname, size_t total,
 	const mpfr_rnd_t tonearest = GMP_RNDN;
 
         assert(fname);
-        f = getdomfunc(fname);
+        f = getfuncbyname(fname);
         assert(f);
         assert(f->f_narg == 1 || f->f_narg == 2);
 
