@@ -9,9 +9,9 @@ CCFLAGS=-Wall -W -Wformat-nonliteral -Wcast-align -Wpointer-arith 		\
 INCLUDE=-I/usr/include/gmp -I/usr/include/mpfr
 LIB=-lm -lmpfr
 
-goodgen: goodgen.c ../subr_random.c
+goodgen: goodgen.c ../ulps/gen.c ../subr_random.c
 	$(CC99) $(CCFLAGS) $(INCLUDE)				\
-		goodgen.c ../subr_random.c			\
+		goodgen.c ../ulps/gen.c ../subr_random.c	\
 	-o goodgen						\
 	$(LIB)
 
