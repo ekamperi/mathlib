@@ -39,7 +39,7 @@ calculp(const char *fname)
 	size_t i, cnt = 0;
 	const struct fentry *f;
 
-	f = getdomfunc(fname);
+	f = getfuncbyname(fname);
 	assert(f);
 	assert(f->f_narg == 1 || f->f_narg == 2);
 
