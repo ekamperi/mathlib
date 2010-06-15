@@ -12,6 +12,6 @@ struct fentry {
 	int (*f_mpfr)();
 };
 
-const struct fentry *getdomfunc(const char *fname);
+const struct fentry *getfunctionbyname(const char *fname);
 
 #endif	/* !__GEN_H__ */
