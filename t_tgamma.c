@@ -147,7 +147,6 @@ ATF_TC_BODY(test_tgamma3, tc)
 #endif
 }
 
-
 /*
  * Test case 4 -- Pole error
  */
