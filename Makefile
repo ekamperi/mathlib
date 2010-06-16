@@ -1,6 +1,10 @@
 CC99=gcc -std=c99
-INCLUDE=-I./include -I/usr/opt/include -L/usr/opt/lib
-CFLAGS=-Wall -W -g $(INCLUDE)
+INCLUDE=-Iinclude -I/usr/opt/include -L/usr/opt/lib
+CFLAGS=-Wall -W -Wformat-nonliteral -Wcast-align -Wpointer-arith 		\
+	-Wbad-function-cast -Wmissing-prototypes -Wstrict-prototypes 		\
+	-Wmissing-declarations -Winline -Wundef -Wnested-externs -Wcast-qual 	\
+	-Wshadow -Wwrite-strings -Wno-unused-parameter 				\
+	-Wswitch -Wbad-function-cast -g $(INCLUDE)
 LIBS=-lm -latf-c
 
 obj/%.o: %.c
