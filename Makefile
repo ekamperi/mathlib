@@ -1,6 +1,6 @@
 CC99=gcc -std=c99
 INCLUDE=-I./include -I/usr/opt/include -L/usr/opt/lib
-CFLAGS=-Wall -g $(INCLUDE)
+CFLAGS=-Wall -W -g $(INCLUDE)
 LIBS=-lm -latf-c
 
 obj/%.o: %.c
@@ -74,7 +74,7 @@ t_constants: $(DEPS_T_CONSTANTS)
 
 
 _DEPS_T_COPYSIGN = t_copysign.o subr_atf.o subr_random.o
- DEPS_T_COPYSIGNH = $(_DEPS_T_COPYSIGN:%=obj/%)
+ DEPS_T_COPYSIGN = $(_DEPS_T_COPYSIGN:%=obj/%)
 t_copysign: $(DEPS_T_COPYSIGN)
 	$(CC99) -o t_copysign $(DEPS_T_COPYSIGN) $(CFLAGS) $(LIBS)
 
@@ -119,12 +119,112 @@ _DEPS_T_FMAX = t_fmax.o subr_atf.o subr_random.o
 t_fmax: $(DEPS_T_FMAX)
 	$(CC99) -o t_fmax $(DEPS_T_FMAX) $(CFLAGS) $(LIBS)
 
+
 _DEPS_T_FLOAT = t_float.o
  DEPS_T_FLOAT = $(_DEPS_T_FLOAT:%=obj/%)
 t_float: $(DEPS_T_FLOAT)
 	$(CC99) -o t_float $(DEPS_T_FLOAT) $(CFLAGS) $(LIBS)
 
 
+_DEPS_T_FLOOR = t_floor.o subr_atf.o subr_fpcmp.o subr_random.o
+ DEPS_T_FLOOR = $(_DEPS_T_FLOOR:%=obj/%)
+t_floor: $(DEPS_T_FLOOR)
+	$(CC99) -o t_floor $(DEPS_T_FLOOR) $(CFLAGS) $(LIBS)
+
+
+_DEPS_T_FPCLASSIFY = t_fpclassify.o
+ DEPS_T_FPCLASSIFY = $(_DEPS_T_FPCLASSIFY:%=obj/%)
+t_fpclassify: $(DEPS_T_FPCLASSIFY)
+	$(CC99) -o t_fpclassify $(DEPS_T_FPCLASSIFY) $(CFLAGS) $(LIBS)
+
+
+_DEPS_T_FPMACROS = t_fpmacros.o
+ DEPS_T_FPMACROS = $(_DEPS_T_FPMACROS:%=obj/%)
+t_fpmacros: $(DEPS_T_FPMACROS)
+	$(CC99) -o t_fpmacros $(DEPS_T_FPMACROS) $(CFLAGS) $(LIBS)
+
+
+_DEPS_T_HYPOT = t_hypot.o subr_errhandling.o subr_fpcmp.o
+ DEPS_T_HYPOT = $(_DEPS_T_HYPOT:%=obj/%)
+t_hypot: $(DEPS_T_HYPOT)
+	$(CC99) -o t_hypot $(DEPS_T_HYPOT) $(CFLAGS) $(LIBS)
+
+
+_DEPS_T_LDEXP = t_ldexp.o subr_fpcmp.o
+ DEPS_T_LDEXP = $(_DEPS_T_LDEXP:%=obj/%)
+t_ldexp: $(DEPS_T_LDEXP)
+	$(CC99)	-o t_ldexp $(DEPS_T_LDEXP) $(CFLAGS) $(LIBS)
+
+
+_DEPS_T_MAC = t_mac.o subr_atf.o subr_errhandling.o subr_random.o
+ DEPS_T_MAC = $(_DEPS_T_MAC:%=obj/%)
+t_mac: $(DEPS_T_MAC)
+	$(CC99) -o t_mac $(DEPS_T_MAC) $(CFLAGS) $(LIBS)
+
+
+_DEPS_T_NEXTAFTER = t_nextafter.o subr_atf.o subr_errhandling.o subr_random.o
+ DEPS_T_NEXTAFTER = $(_DEPS_T_NEXTAFTER:%=obj/%)
+t_nextafter: $(DEPS_T_NEXTAFTER)
+	$(CC99) -o t_nextafter $(DEPS_T_NEXTAFTER) $(CFLAGS) $(LIBS)
+
+
+_DEPS_T_SIGNBIT = t_signbit.o subr_atf.o subr_random.o
+ DEPS_T_SIGNBIT = $(_DEPS_T_SIGNBIT:%=obj/%)
+t_signbit: $(DEPS_T_SIGNBIT)
+	$(CC99) -o t_signbit $(DEPS_T_SIGNBIT) $(CFLAGS) $(LIBS)
+
+
+_DEPS_T_SIN = t_sin.o subr_atf.o subr_errhandling.o subr_fpcmp.o subr_random.o
+ DEPS_T_SIN = $(_DEPS_T_SIN:%=obj/%)
+t_sin: $(DEPS_T_SIN)
+	$(CC99) -o t_sin $(DEPS_T_SIN) $(CFLAGS) $(LIBS)
+
+
+_DEPS_T_SQRT = t_sqrt.o subr_atf.o subr_errhandling.o subr_fpcmp.o subr_random.o
+ DEPS_T_SQRT = $(_DEPS_T_SQRT:%=obj/%)
+t_sqrt: $(DEPS_T_SQRT)
+	$(CC99) -o t_sqrt $(DEPS_T_SQRT) $(CFLAGS) $(LIBS)
+
+
+_DEPS_T_TANH = t_tanh.o subr_atf.o subr_fpcmp.o subr_random.o
+ DEPS_T_TANH = $(_DEPS_T_TANH:%=obj/%)
+t_tanh: $(DEPS_T_TANH)
+	$(CC99) -o t_tanh $(DEPS_T_TANH) $(CFLAGS) $(LIBS)
+
+
+_DEPS_T_TGAMMA = t_tgamma.o subr_atf.o subr_errhandling.o subr_fpcmp.o subr_random.o
+ DEPS_T_TGAMMA = $(_DEPS_T_TGAMMA:%=obj/%)
+t_tgamma: $(DEPS_T_TGAMMA)
+	$(CC99) -o t_tgamma $(DEPS_T_TGAMMA) $(CFLAGS) $(LIBS)
+
+
+_DEPS_T_TRIG_IDENT = t_trig_ident.o subr_atf.o subr_fpcmp.o subr_random.o
+ DEPS_T_TRIG_IDENT = $(_DEPS_T_TRIG_IDENT:%=obj/%)
+t_trig_ident: $(DEPS_T_TRIG_IDENT)
+	$(CC99) -o t_trig_ident.o $(DEPS_T_TRIG_IDENT) $(CFLAGS) $(LIBS)
+
+
+_DEPS_T_TRUNC = t_tgamma.o subr_atf.o subr_errhandling.o subr_fpcmp.o subr_random.o
+ DEPS_T_TRUNC = $(_DEPS_T_TRUNC:%=obj/%)
+t_trunc: $(DEPS_T_TRUNC)
+	$(CC99) -o t_trunc $(DEPS_T_TRUNC) $(CFLAGS) $(LIBS)
+
+
+
+_DEPS_T_TYPES = t_types.o
+ DEPS_T_TYPES = $(_DEPS_T_TYPES:%=obj/%)
+t_types: $(DEPS_T_TYPES)
+	$(CC99) -o t_trunc $(DEPS_T_TYPES) $(CFLAGS) $(LIBS)
+
+
+.PHONY: run
+run:
+	atf-run | atf-report
+
 .PHONY: clean
 clean:
 	rm -f obj/*.o *~ core
+
+.PHONY: git-clean
+git-clean:
+	git clean -fd > /dev/null
