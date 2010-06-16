@@ -205,7 +205,7 @@ t_tgamma: $(DEPS_T_TGAMMA)
 _DEPS_T_TRIG_IDENT = t_trig_ident.o subr_atf.o subr_fpcmp.o subr_random.o
  DEPS_T_TRIG_IDENT = $(_DEPS_T_TRIG_IDENT:%=obj/%)
 t_trig_ident: $(DEPS_T_TRIG_IDENT)
-	$(CC99) -o t_trig_ident.o $(DEPS_T_TRIG_IDENT) $(CFLAGS) $(LIBS)
+	$(CC99) -o t_trig_ident $(DEPS_T_TRIG_IDENT) $(CFLAGS) $(LIBS)
 
 
 _DEPS_T_TRUNC = t_tgamma.o subr_atf.o subr_errhandling.o subr_fpcmp.o subr_random.o
