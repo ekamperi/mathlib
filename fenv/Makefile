@@ -1,100 +1,102 @@
-all:	t_feclearexcept		\
-	t_fegetround		\
-	t_fegetexceptflag	\
-	t_feholdexcept		\
-	t_fenv			\
-	t_feraiseexcept		\
-	t_fesetenv		\
-	t_fesetexceptflag	\
-	t_fesetround		\
-	t_fexcept		\
-	t_fe_dfl_env		\
-	t_thread
-
 CC99=gcc -std=c99
-CCFLAGS=-Wall -W -Wformat-nonliteral -Wcast-align -Wpointer-arith 		\
+INCLUDE=-I../include -I/usr/opt/include -L/usr/opt/lib
+CFLAGS=-Wall -W -Wformat-nonliteral -Wcast-align -Wpointer-arith 		\
 	-Wbad-function-cast -Wmissing-prototypes -Wstrict-prototypes 		\
-	-Wmissing-declarations -Winline -Wundef -Wnested-externs -Wcast-qual 	\
-	-Wshadow -Wwrite-strings -Wno-unused-parameter 				\
-	-Wswitch -Wbad-function-cast -g
-INCLUDE=-I/usr/opt/include
-LIB=-L/usr/opt/lib -lm -latf-c
+	-Wmissing-declarations -Winline -Wundef -Wnested-externs -Wcast-qual	\
+	-Wshadow -Wwrite-strings -Wno-unused-parameter				\
+	-Wswitch -Wbad-function-cast -g $(INCLUDE)
+LIBS=-lm -latf-c
 
-t_feclearexcept: t_feclearexcept.c
-	$(CC99) $(CCFLAGS) $(INCLUDE)				\
-		t_feclearexcept.c				\
-	-o t_feclearexcept					\
-	$(LIB)
+# For ../subr_*.c
+VPATH = ../
 
-t_fegetround: t_fegetround.c
-	$(CC99) $(CCFLAGS) $(INCLUDE) 				\
-		t_fegetround.c					\
-	-o t_fegetround						\
-	$(LIB)
+obj/%.o: %.c
+	$(CC99) -c -o $@ $< $(CFLAGS)
 
-t_fegetexceptflag: t_fegetexceptflag.c
-	$(CC99) $(CCFLAGS) $(INCLUDE)				\
-		t_fegetexceptflag.c ../subr_combinatorics.c	\
-	-o t_fegetexceptflag					\
-	$(LIB)
-
-t_feholdexcept: t_feholdexcept.c
-	$(CC99) $(CCFLAGS) $(INCLUDE)				\
-		t_feholdexcept.c				\
-	-o t_feholdexcept					\
-	$(LIB)
-
-t_fenv: t_fenv.c
-	$(CC99) $(CCFLAGS) $(INCLUDE)				\
-		t_fenv.c					\
-	-o t_fenv						\
-	 $(LIB)
-
-t_feraiseexcept: t_feraiseexcept.c
-	$(CC99) $(CCFLAGS) $(INCLUDE)				\
-		t_feraiseexcept.c ../subr_combinatorics.c	\
-	-o t_feraiseexcept					\
-	$(LIB)
-
-t_fesetenv: t_fesetenv.c
-	$(CC99) $(CCFLAGS) $(INCLUDE)				\
-		t_fesetenv.c					\
-	-o t_fesetenv						\
-	$(LIB)
-
-t_fesetexceptflag: t_fesetexceptflag.c
-	$(CC99) $(CCFLAGS) $(INCLUDE)				\
-	t_fesetexceptflag.c ../subr_combinatorics.c		\
-		-o t_fesetexceptflag				\
-	$(LIB)
-
-t_fesetround: t_fesetround.c
-	$(CC99) $(CCFLAGS) $(INCLUDE)				\
-		t_fesetround.c					\
-	-o t_fesetround						\
-	$(LIB)
-
-t_fexcept: t_fexcept.c
-	$(CC99) $(CCFLAGS) $(INCLUDE)				\
-		t_fexcept.c					\
-	-o t_fexcept						\
-	$(LIB)
-
-t_fe_dfl_env: t_fe_dfl_env.c
-	$(CC99) $(CCFLAGS) $(INCLUDE)				\
-		t_fe_dfl_env.c					\
-	-o t_fe_dfl_env						\
-	$(LIB)
+.PHONY: all
+all:	t_feclearexcept t_fegetround t_fegetexceptflag t_fenv t_feraiseexcept \
+	t_fesetenv t_fesetexceptflag
 
 
-t_thread: t_thread.c
-	$(CC99) $(CCFLAGS) $(INCLUDE)				\
-		t_thread.c					\
-	-o t_thread						\
-	$(LIB) -lpthread
+_DEPS_T_FECLEAREXCEPT = t_feclearexcept.o
+ DEPS_T_FECLEAREXCEPT = $(_DEPS_T_FECLEAREXCEPT:%=obj/%)
+t_feclearexcept: $(DEPS_T_FECLEAREXCEPT)
+	$(CC99) -o t_feclearexcept $(DEPS_T_FECLEAREXCEPT) $(CFLAGS) $(LIBS)
 
-clean:
-	git clean -f
 
+_DEPS_T_FEGETROUND = t_fegetround.o
+ DEPS_T_FEGETROUND = $(_DEPS_T_FEGETROUND:%=obj/%)
+t_fegetround: $(DEPS_T_FEGETROUND)
+	$(CC99) -o t_fegetround $(DEPS_T_FEGETROUND) $(CFLAGS) $(LIBS)
+
+
+_DEPS_T_FEGETEXCEPTFLAG = t_fegetexceptflag.o subr_combinatorics.o
+ DEPS_T_FEGETEXCEPTFLAG = $(_DEPS_T_FEGETEXCEPTFLAG:%=obj/%)
+t_fegetexceptflag: $(DEPS_T_FEGETEXCEPTFLAG)
+	$(CC99) -o t_fegetexceptflag $(DEPS_T_FEGETEXCEPTFLAG) $(CFLAGS) $(LIBS)
+
+
+_DEPS_T_FEHOLDEXCEPT = t_feholdexcept.o
+ DEPS_T_FEHOLDEXCEPT = $(_DEPS_T_FEHOLDEXCEPT:%=obj/%)
+t_feholdexcept: $(DEPS_T_FEHOLDEXCEPT)
+	$(CC99) -o t_feholdexcept $(DEPS_T_FEHOLDEXCEPT) $(CFLAGS) $(LIBS)
+
+
+_DEPS_T_FENV = t_fenv.o
+ DEPS_T_FENV = $(_DEPS_T_FENV:%=obj/%)
+t_fenv: $(DEPS_T_FENV)
+	$(CC99) -o t_feholdexcept $(DEPS_T_FENV) $(CFLAGS) $(LIBS)
+
+
+_DEPS_T_FERAISEEXCEPT = t_feraiseexcept.o subr_combinatorics.o
+ DEPS_T_FERAISEEXCEPT = $(_DEPS_T_FERAISEEXCEPT:%=obj/%)
+t_feraiseexcept: $(DEPS_T_FERAISEEXCEPT)
+	$(CC99) -o t_feraiseexcept $(DEPS_T_FERAISEEXCEPT) $(CFLAGS) $(LIBS)
+
+
+_DEPS_T_FESETENV = t_fesetenv.o subr_combinatorics.o
+ DEPS_T_FESETENV = $(_DEPS_T_FESETENV:%=obj/%)
+t_fesetenv: $(DEPS_T_FESETENV)
+	$(CC99) -o t_fesetenv $(DEPS_T_FESETENV) $(CFLAGS) $(LIBS)
+
+
+_DEPS_T_FESETEXCEPTFLAG = t_fesetexceptflag.o subr_combinatorics.o
+ DEPS_T_FESETEXCEPTFLAG = $(_DEPS_T_FESETEXCEPTFLAG:%=obj/%)
+t_fesetexceptflag: $(DEPS_T_FESETEXCEPTFLAG)
+	$(CC99) -o t_fesetexceptflag $(DEPS_T_FESETEXCEPTFLAG) $(CFLAGS) $(LIBS)
+
+
+_DEPS_T_FESETROUND = t_fesetround.o
+ DEPS_T_FESETROUND = $(_DEPS_T_FESETROUND:%=obj/%)
+t_fesetround: $(DEPS_T_FESETROUND)
+	$(CC99) -o t_fesetround $(DEPS_T_FESETROUND) $(CFLAGS) $(LIBS)
+
+
+_DEPS_T_FEXCEPT = t_fexcept.o
+ DEPS_T_FEXCEPT = $(_DEPS_T_FEXCEPT:%=obj/%)
+t_fexcept: $(DEPS_T_FEXCEPT)
+	$(CC99) -o t_fexcept $(DEPS_T_FEXCEPT) $(CFLAGS) $(LIBS)
+
+
+_DEPS_T_FE_DFL_ENV = t_fe_dfl_env.o
+ DEPS_T_FE_DFL_ENV = $(_DEPS_T_FE_DFL_ENV:%=obj/%)
+t_fe_dfl_env: $(DEPS_T_FE_DFL_ENV)
+	$(CC99) -o t_fe_dfl_env $(DEPS_T_FE_DFL_ENV) $(CFLAGS) $(LIBS)
+
+
+_DEPS_T_THREAD = t_thread.o
+ DEPS_T_THREAD = $(_DEPS_T_THREAD:%=obj/%)
+t_thread: $(DEPS_T_THREAD)
+	$(CC99) -o t_thread $(DEPS_T_THREAD) $(CFLAGS) $(LIBS)
+
+.PHONY: run
 run:
 	atf-run | atf-report
+
+.PHONY: clean
+clean:
+	@rm -f obj/*.o *~ core
+
+.PHONY: git-clean
+git-clean:
+	@git clean -fd > /dev/null

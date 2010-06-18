@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "subr_combinatorics.h"
+#include "include/subr_combinatorics.h"
 
 /*
  * Returns the m-th subset of a set of size `nelms'.

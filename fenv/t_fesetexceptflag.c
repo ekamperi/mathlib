@@ -5,7 +5,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "../subr_combinatorics.h"
+#include "subr_combinatorics.h"
 
 /*
  * Each FE_* symbol shall expand to an _integer constant_ expression,
