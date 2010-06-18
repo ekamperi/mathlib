@@ -224,10 +224,27 @@ t_types: $(DEPS_T_TYPES)
 run:
 	atf-run | atf-report
 
+.PHONY: run-html
+run-html:
+	@echo "*** This may take awhile, depending on the value of       ***"
+	@echo "*** 'iterations' configuration variable, in your Atffile. ***"
+	@echo
+	@rm -f tmp.xml tmp2.xml tmp3.xml
+	@rm -f tmp.html tmp2.html
+	atf-run . fenv | atf-report -o xml:tmp.xml
+	@cat tmp.xml | col > tmp2.xml
+	@sed 's/http:\/\/www.NetBSD.org\/XML\/atf/\./' tmp2.xml > tmp3.xml
+	@xsltproc ./tests-results.xsl tmp3.xml > tmp.html
+	@sed 's/tests-results.css/\.\.\/\.\.\/\.\.\/\.\.\/css\/tests-results.css/' tmp.html > results.html
+	@rm -f tmp.xml tmp2.xml tmp3.xml
+	@rm -f tmp.html
+
 .PHONY: clean
 clean:
-	rm -f obj/*.o *~ core
+	@rm -f obj/*.o *~ core
+	@rm -f tmp.xml tmp2.xml tmp3.xml
+	@rm -f tmp.html results.html
 
 .PHONY: git-clean
 git-clean:
-	git clean -fd > /dev/null
+	@git clean -fd > /dev/null
