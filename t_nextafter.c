@@ -103,30 +103,34 @@ ATF_TC_HEAD(test_nextafter3, tc)
 }
 ATF_TC_BODY(test_nextafter3, tc)
 {
-	double x;
+	float fx;
+	double dx;
+	long double ldx;
 	long i, N;
 
 	N = get_config_var_as_long(tc, "iterations");
 	ATF_REQUIRE(N > 0);
 
 	ATF_FOR_LOOP(i, N, i++) {
-		x = random_float(FP_NORMAL);
+		fx = random_float(FP_NORMAL);
+		dx = random_double(FP_NORMAL);
+		ldx = random_long_double(FP_NORMAL);
 
 		/* If x == y, y (of the type x) shall be returned */
-		ATF_PASS_OR_BREAK(nextafter(x, x) == x);
+		ATF_PASS_OR_BREAK(nextafterf(fx, fx) == fx);
+		ATF_PASS_OR_BREAK(nextafter(dx, dx) == dx);
+		ATF_PASS_OR_BREAK(nextafterl(ldx, ldx) == ldx);
 
-		/*
-		 * If x or y is NaN, a NaN shall be returned
-		 *
-		 * As always do the typical cross-check.
-		 * If NAN is defined/supported, so should the FP_NAN symbol.
-		 */
+		/* If x or y is NaN, a NaN shall be returned */
 #ifdef	NAN
-		ATF_PASS_OR_BREAK(isnan(nextafter(NAN, x)));
-		ATF_PASS_OR_BREAK(fpclassify(nextafter(NAN, x)) == FP_NAN);
+		ATF_PASS_OR_BREAK(isnan(nextafterf(NAN, fx)));
+		ATF_PASS_OR_BREAK(isnan(nextafterf(fx, NAN)));
 
-		ATF_PASS_OR_BREAK(isnan(nextafter(x, NAN)));
-		ATF_PASS_OR_BREAK(fpclassify(nextafter(x, NAN)) == FP_NAN);
+                ATF_PASS_OR_BREAK(isnan(nextafter(NAN, dx)));
+                ATF_PASS_OR_BREAK(isnan(nextafter(dx, NAN)));
+
+                ATF_PASS_OR_BREAK(isnan(nextafterl(NAN, ldx)));
+                ATF_PASS_OR_BREAK(isnan(nextafterl(ldx, NAN)));
 #endif
 	}
 }
@@ -163,38 +167,37 @@ ATF_TC_BODY(test_nextafter4, tc)
 	 * and +-HUGE_VALL (with the same sign as x) shall be returned as
 	 * appropriate for the return type of the function.
 	 */
-	clear_exceptions();
+#ifdef	INFINITY
+	/* double */
 	errno = 0;
+	clear_exceptions();
+
 	ATF_CHECK(nextafter(DBL_MAX, +INFINITY) == HUGE_VAL);
 	ATF_CHECK(signbit(nextafter(DBL_MAX, +INFINITY)) == 0);
-	if (haserrexcept) {
-		ATF_CHECK(fetestexcept(FE_OVERFLOW));
-	}
-	if (haserrno) {
-		ATF_CHECK(errno == ERANGE);
-	}
 
-	clear_exceptions();
+        ATF_CHECK(iserrno_equalto(ERANGE));
+	ATF_CHECK(raised_exceptions(MY_FE_OVERFLOW));
+
+	/* float */
 	errno = 0;
+	clear_exceptions();
+
 	ATF_CHECK(nextafterf(FLT_MAX, +INFINITY) == HUGE_VALF);
 	ATF_CHECK(signbit(nextafterf(FLT_MAX, +INFINITY)) == 0);
-	if (haserrexcept) {
-		ATF_CHECK(fetestexcept(FE_OVERFLOW));
-	}
-	if (haserrno) {
-		ATF_CHECK(errno == ERANGE);
-	}
 
-	clear_exceptions();
+        ATF_CHECK(iserrno_equalto(ERANGE));
+	ATF_CHECK(raised_exceptions(MY_FE_OVERFLOW));
+
+	/* long double */
 	errno = 0;
+	clear_exceptions();
+
 	ATF_CHECK(nextafterl(LDBL_MAX, +INFINITY) == HUGE_VALL);
 	ATF_CHECK(signbit(nextafterl(LDBL_MAX, +INFINITY)) == 0);
-	if (haserrexcept) {
-		ATF_CHECK(fetestexcept(FE_OVERFLOW));
-	}
-	if (haserrno) {
-		ATF_CHECK(errno == ERANGE);
-	}
+
+        ATF_CHECK(iserrno_equalto(ERANGE));
+	ATF_CHECK(raised_exceptions(MY_FE_OVERFLOW));
+#endif	/* INFINITY */
 }
 
 /* Add test cases to test program */
