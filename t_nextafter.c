@@ -126,11 +126,11 @@ ATF_TC_BODY(test_nextafter3, tc)
 		ATF_PASS_OR_BREAK(isnan(nextafterf(NAN, fx)));
 		ATF_PASS_OR_BREAK(isnan(nextafterf(fx, NAN)));
 
-                ATF_PASS_OR_BREAK(isnan(nextafter(NAN, dx)));
-                ATF_PASS_OR_BREAK(isnan(nextafter(dx, NAN)));
+		ATF_PASS_OR_BREAK(isnan(nextafter(NAN, dx)));
+		ATF_PASS_OR_BREAK(isnan(nextafter(dx, NAN)));
 
-                ATF_PASS_OR_BREAK(isnan(nextafterl(NAN, ldx)));
-                ATF_PASS_OR_BREAK(isnan(nextafterl(ldx, NAN)));
+		ATF_PASS_OR_BREAK(isnan(nextafterl(NAN, ldx)));
+		ATF_PASS_OR_BREAK(isnan(nextafterl(ldx, NAN)));
 #endif
 	}
 }
@@ -175,7 +175,7 @@ ATF_TC_BODY(test_nextafter4, tc)
 	ATF_CHECK(nextafter(DBL_MAX, +INFINITY) == HUGE_VAL);
 	ATF_CHECK(signbit(nextafter(DBL_MAX, +INFINITY)) == 0);
 
-        ATF_CHECK(iserrno_equalto(ERANGE));
+	ATF_CHECK(iserrno_equalto(ERANGE));
 	ATF_CHECK(raised_exceptions(MY_FE_OVERFLOW));
 
 	/* float */
@@ -185,7 +185,7 @@ ATF_TC_BODY(test_nextafter4, tc)
 	ATF_CHECK(nextafterf(FLT_MAX, +INFINITY) == HUGE_VALF);
 	ATF_CHECK(signbit(nextafterf(FLT_MAX, +INFINITY)) == 0);
 
-        ATF_CHECK(iserrno_equalto(ERANGE));
+	ATF_CHECK(iserrno_equalto(ERANGE));
 	ATF_CHECK(raised_exceptions(MY_FE_OVERFLOW));
 
 	/* long double */
@@ -195,7 +195,7 @@ ATF_TC_BODY(test_nextafter4, tc)
 	ATF_CHECK(nextafterl(LDBL_MAX, +INFINITY) == HUGE_VALL);
 	ATF_CHECK(signbit(nextafterl(LDBL_MAX, +INFINITY)) == 0);
 
-        ATF_CHECK(iserrno_equalto(ERANGE));
+	ATF_CHECK(iserrno_equalto(ERANGE));
 	ATF_CHECK(raised_exceptions(MY_FE_OVERFLOW));
 #endif	/* INFINITY */
 }
