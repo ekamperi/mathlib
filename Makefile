@@ -214,7 +214,6 @@ t_trunc: $(DEPS_T_TRUNC)
 	$(CC99) -o t_trunc $(DEPS_T_TRUNC) $(CFLAGS) $(LIBS)
 
 
-
 _DEPS_T_TYPES = t_types.o
  DEPS_T_TYPES = $(_DEPS_T_TYPES:%=obj/%)
 t_types: $(DEPS_T_TYPES)
