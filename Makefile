@@ -118,7 +118,7 @@ t_expm1: $(DEPS_T_EXPM1)
 	$(CC99) -o t_erf $(DEPS_T_EXPM1) $(CFLAGS) $(LIBS)
 
 
-_DEPS_T_FMAX = t_fmax.o subr_atf.o subr_random.o
+_DEPS_T_FMAX = t_fmax.o subr_atf.o subr_fpcmp.o subr_random.o
  DEPS_T_FMAX = $(_DEPS_T_FMAX:%=obj/%)
 t_fmax: $(DEPS_T_FMAX)
 	$(CC99) -o t_fmax $(DEPS_T_FMAX) $(CFLAGS) $(LIBS)
