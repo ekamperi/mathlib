@@ -5,6 +5,7 @@
 #include <time.h>
 
 #include "subr_atf.h"
+#include "subr_fpcmp.h"
 #include "subr_random.h"
 
 /*
@@ -67,38 +68,32 @@ ATF_TC_BODY(test_fmax1, tc)
 /*
  * Test case 2 -- Edge cases
  */
-#define CHK_ZERO        (1 << 0)
-#define CHK_NAN         (1 << 1)
-#define CHK_INF		(1 << 2)
-#define CHK_SIGN	(1 << 3)
-
 struct t2entry {
 	double x;       /* Input */
 	double y;       /* Input */
 	double z;	/* fmax() output */
-	int check;
 } t2table[] = {
 #ifdef	NAN
 	/*
-	 * If just one argument is a NaN, the other argument shall be
-	 * returned.
+	 * If just one argument is a NaN, the other argument
+	 * shall be returned.
 	 */
-	{ NAN, +0.0, +0.0, CHK_ZERO | CHK_SIGN },
-	{ NAN, -0.0, -0.0, CHK_ZERO | CHK_SIGN },
+	{ NAN, +0.0, +0.0 },
+	{ NAN, -0.0, -0.0 },
 
-	{ +0.0, NAN, +0.0, CHK_ZERO | CHK_SIGN },
-	{ -0.0, NAN, -0.0, CHK_ZERO | CHK_SIGN },
+	{ +0.0, NAN, +0.0 },
+	{ -0.0, NAN, -0.0 },
 
 #ifdef	INFINITY
-	{ NAN, +INFINITY, +INFINITY, CHK_INF | CHK_SIGN },
-	{ NAN, -INFINITY, -INFINITY, CHK_INF | CHK_SIGN },
+	{ NAN, +INFINITY, +INFINITY },
+	{ NAN, -INFINITY, -INFINITY },
 
-	{ +INFINITY, NAN, +INFINITY, CHK_INF | CHK_SIGN },
-	{ -INFINITY, NAN, -INFINITY, CHK_INF | CHK_SIGN },
+	{ +INFINITY, NAN, +INFINITY },
+	{ -INFINITY, NAN, -INFINITY },
 #endif	/* INFINITY */
 
 	/* If x and y are NaN, a NaN shall be returned */
-	{ NAN, NAN, NAN, CHK_NAN }
+	{ NAN, NAN, NAN }
 #endif	/* NAN */
 };
 
@@ -115,49 +110,11 @@ ATF_TC_BODY(test_fmax2, tc)
 	double oval;	/* fmax() output value */
 
 	N = sizeof(t2table) / sizeof(t2table[0]);
+	ATF_REQUIRE(N > 0);
+
 	for (i = 0; i < N; i++) {
-		/* Make sure that only allowed checks are set */
-		ATF_REQUIRE((t2table[i].check
-			& ~(CHK_ZERO | CHK_NAN | CHK_INF | CHK_SIGN)) == 0);
-
-		/* Don't allow conflicting types to be set */
-		ATF_REQUIRE((t2table[i].check & (CHK_ZERO | CHK_INF))
-		    != (CHK_ZERO | CHK_INF));
-		ATF_REQUIRE((t2table[i].check & (CHK_ZERO | CHK_NAN))
-		    != (CHK_ZERO | CHK_NAN));
-		ATF_REQUIRE((t2table[i].check & (CHK_NAN | CHK_INF))
-		    != (CHK_NAN | CHK_INF));
-
-		/* Ready to go */
 		oval = fmax(t2table[i].x, t2table[i].y);
-		if (t2table[i].check & CHK_ZERO) {
-			ATF_CHECK(fpclassify(oval) == FP_ZERO);
-		}
-		if (t2table[i].check & CHK_NAN) {
-			/*
-			 * Grab the opportunity to cross-check the results and
-			 * at the same time cross-check the functions with
-			 * respect to each other.
-			 */
-			ATF_CHECK(isnan(oval));
-			ATF_CHECK(fpclassify(oval) == FP_NAN);
-		}
-		if (t2table[i].check & CHK_INF) {
-			/*
-			 * Grab the opportunity to cross-check the results and
-			 * at the same time cross-check the functions with
-			 * respect to each other.
-			 */
-			ATF_CHECK(isinf(oval));
-			ATF_CHECK(!isfinite(oval));
-			ATF_CHECK(fpclassify(oval) == FP_INFINITE);
-		}
-		if (t2table[i].check & CHK_SIGN) {
-			ATF_CHECK(signbit(oval) == signbit(t2table[i].z));
-		}
-		if (t2table[i].check & CHK_SIGN) {
-			ATF_CHECK(signbit(oval) == signbit(t2table[i].z));
-		}
+		ATF_CHECK(fpcmp_equal(oval, t2table[i].z));
 	}
 }
 
