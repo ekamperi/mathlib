@@ -12,7 +12,7 @@ obj/%.o: %.c
 
 
 all:	t_acos t_acosh t_asin t_asinh t_atan t_atan2 t_atanh t_cbrt t_ceil \
-	t_constants t_copysign t_cos t_erf t_exp t_exp2 t_expm1 t_float    \
+	t_constants t_copysign t_cos t_erf t_exp t_exp2 t_expm1 t_fabs t_float \
 	t_floor t_fmax t_fpclassify t_fpmacros t_mac t_tgamma t_hypot      \
 	t_ldexp t_nextafter t_signbit t_sin t_sqrt t_trig_ident t_tanh     \
 	t_trunc t_types
@@ -116,6 +116,12 @@ _DEPS_T_EXPM1 = t_expm1.o subr_atf.o subr_errhandling.o  \
  DEPS_T_EXPM1 = $(_DEPS_T_EXPM1:%=obj/%)
 t_expm1: $(DEPS_T_EXPM1)
 	$(CC99) -o t_erf $(DEPS_T_EXPM1) $(CFLAGS) $(LIBS)
+
+
+_DEPS_T_FABS = t_fabs.o subr_fpcmp.o
+ DEPS_T_FABS = $(_DEPS_T_FABS:%=obj/%)
+t_fabs: $(DEPS_T_FABS)
+	$(CC99) -o t_fabs $(DEPS_T_FABS) $(CFLAGS) $(LIBS)
 
 
 _DEPS_T_FMAX = t_fmax.o subr_atf.o subr_fpcmp.o subr_random.o
