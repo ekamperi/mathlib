@@ -132,7 +132,7 @@ ATF_TC_BODY(test_sqrt3, tc)
 		/* float */
 		do {
 			fx = random_float(FP_NORMAL);
-		} while (fx >= -0);
+		} while (fx >= -0.0);
 
 		errno = 0;
 		clear_exceptions();
@@ -146,7 +146,7 @@ ATF_TC_BODY(test_sqrt3, tc)
 		/* double */
 		do {
 			dx = random_double(FP_NORMAL);
-		} while (dx >= -0);
+		} while (dx >= -0.0);
 
 		errno = 0;
 		clear_exceptions();
@@ -161,7 +161,7 @@ ATF_TC_BODY(test_sqrt3, tc)
 		/* long double */
 		do {
 			ldx = random_float(FP_NORMAL);
-		} while (ldx >= -0);
+		} while (ldx >= -0.0);
 
 		errno = 0;
 		clear_exceptions();
