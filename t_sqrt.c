@@ -219,6 +219,8 @@ ATF_TC_BODY(test_sqrt4, tc)
 	double dy;
 	long double ldy;
 	size_t i, N;
+	int haserrexcept;
+	int haserrno;
 
 	N = sizeof(t4table[i]) / sizeof(t4table[0]);
 	ATF_REQUIRE(N > 0);
