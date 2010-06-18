@@ -60,9 +60,8 @@ ATF_TC_BODY(test_atan1, tc)
 	size_t i, N;
 
 	N = sizeof(ttable) / sizeof(ttable[0]);
-	for (i = 0; i < N; i++) {
+	for (i = 0; i < N; i++)
 		ATF_CHECK(fpcmp_equal(atan(ttable[i].x), ttable[i].y));
-	}
 }
 
 /*
@@ -92,52 +91,46 @@ ATF_TC_BODY(test_atan2, tc)
 	N = get_config_var_as_long(tc, "iterations");
 	ATF_REQUIRE(N > 0);
 
-	for (i = 0; i < N; i++) {
+	ATF_FOR_LOOP(i, N, i++) {
 		x = -1.0 + rand() / ((RAND_MAX / 2.0) + 1.0);
 
-		ATF_CHECK(atan(x) >= -M_PI_2 -0.1);
-		ATF_CHECK(atan(x) <=  M_PI_2 +0.1);
+		ATF_PASS_OR_BREAK(atan(x) >= -M_PI_2 -0.1);
+		ATF_PASS_OR_BREAK(atan(x) <=  M_PI_2 +0.1);
 	}
 }
 
 /*
  * Test case 3 -- Edge cases
  */
-#define CHK_REG         (1 << 0)
-#define CHK_ZERO        (1 << 1)
-#define CHK_NAN         (1 << 2)
-#define CHK_SIGN        (1 << 3)
-
 struct t3entry {
 	double x;       /* Input */
 	double y;       /* atan output */
-	int check;
 } t3table[] = {
 	/* If x is NaN, a NaN shall be returned */
 #ifdef NAN
-	{ NAN, NAN, CHK_NAN },
+	{ NAN, NAN },
 #endif
 
 	/* If x is +-0, x shall be returned */
-	{ +0.0, +0.0, CHK_ZERO | CHK_SIGN },
-	{ -0.0, -0.0, CHK_ZERO | CHK_SIGN },
+	{ +0.0, +0.0 },
+	{ -0.0, -0.0 },
 
 	/* If x is +-Inf, +-pi/2 shall be returned */
 #ifdef  INFINITY
-	{  INFINITY,  M_PI_2, CHK_REG },
-	{ -INFINITY, -M_PI_2, CHK_REG },
+	{  INFINITY,  M_PI_2 },
+	{ -INFINITY, -M_PI_2 },
 #endif
 #ifdef	HUGE_VAL
-	{  HUGE_VAL,  M_PI_2, CHK_REG },
-	{ -HUGE_VAL, -M_PI_2, CHK_REG },
+	{  HUGE_VAL,  M_PI_2 },
+	{ -HUGE_VAL, -M_PI_2 },
 #endif
 #ifdef	HUGE_VALF
-	{  HUGE_VALF,  M_PI_2, CHK_REG },
-	{ -HUGE_VALF, -M_PI_2, CHK_REG },
+	{  HUGE_VALF,  M_PI_2 },
+	{ -HUGE_VALF, -M_PI_2 },
 #endif
 #ifdef	HUGE_VALL
-	{  HUGE_VALL,  M_PI_2, CHK_REG },
-	{ -HUGE_VALL, -M_PI_2, CHK_REG },
+	{  HUGE_VALL,  M_PI_2 },
+	{ -HUGE_VALL, -M_PI_2 },
 #endif
 };
 
@@ -154,29 +147,20 @@ ATF_TC_BODY(test_atan3, tc)
 	double oval;    /* output value */
 
 	N = sizeof(t3table) / sizeof(t3table[0]);
+	ATF_REQUIRE(N > 0);
+
 	for (i = 0; i < N; i++) {
-		/* Make sure that only allowed checks are set */
-		ATF_REQUIRE((t3table[i].check
-			& ~(CHK_REG | CHK_ZERO | CHK_NAN | CHK_SIGN)) == 0);
+		ATF_CHECK(fpcmp_equalf(
+			    atanf((float)t3table[i].x),
+					 t3table[i].y));
 
-		/* Don't allow conflicting types to be set */
-		ATF_REQUIRE((t3table[i].check & (CHK_REG | CHK_NAN))
-		    != (CHK_REG | CHK_NAN));
-		ATF_REQUIRE((t3table[i].check & (CHK_ZERO | CHK_NAN))
-		    != (CHK_ZERO | CHK_NAN));
+                ATF_CHECK(fpcmp_equal(
+			    atan((double)t3table[i].x),
+					 t3table[i].y));
 
-
-		/* Ready to go */
-		oval = atan(t3table[i].x);
-		if (t3table[i].check & CHK_REG) {
-			ATF_CHECK(fpcmp_equal(oval, t3table[i].y));
-		}
-		if (t3table[i].check & CHK_ZERO) {
-			ATF_CHECK(fpclassify(oval) == FP_ZERO);
-		}
-		if (t3table[i].check & CHK_SIGN) {
-			ATF_CHECK(signbit(oval) == signbit(t3table[i].y));
-		}
+                ATF_CHECK(fpcmp_equal(
+			    atanl(t3table[i].x),
+				  t3table[i].y));
 	}
 
 	/*
