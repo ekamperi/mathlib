@@ -1,7 +1,9 @@
 #include <atf-c.h>
+#include <errno.h>
 #include <math.h>
 
 #include "subr_atf.h"
+#include "subr_errhandling.h"
 #include "subr_fpcmp.h"
 #include "subr_random.h"
 
@@ -10,6 +12,7 @@
  */
 struct t1entry {
 	long double x;	/* Input */
+	long double y;	/* Input */
 	long double z;	/* fdim output */
 } t1table[] = {
 };
@@ -71,11 +74,90 @@ ATF_TC_BODY(test_fdim2, tc)
 #endif
 }
 
+/*
+ * Test case 3 -- Overflow/Underflow
+ */
+long double t3table[] = {
+#ifdef	INFINITY
+	INFINITY,
+#endif
+#ifdef	HUGE_VAL
+	HUGE_VAL,
+#endif
+#ifdef	HUGE_VALF
+	/*HUGE_VALF,*/
+#endif
+#ifdef	HUGE_VALL
+	/*HUGE_VALL*/
+#endif
+};
+
+ATF_TC(test_fdim3);
+ATF_TC_HEAD(test_fdim3, tc)
+{
+	atf_tc_set_md_var(tc,
+	    "descr",
+	    "Deliberate overflow/underflow");
+}
+ATF_TC_BODY(test_fdim3, tc)
+{
+	float fy;
+	double dy;
+	long double ldy;
+	size_t i, N;
+	int haserrexcept;
+	int haserrno;
+
+	/* We need at least one way to detect errors */
+        query_errhandling(&haserrexcept, &haserrno);
+        ATF_REQUIRE(haserrexcept || haserrno);
+
+	/*
+	 * If x-y is positive and overflows, a range error shall occur and
+	 * fdim(), fdimf(), and fdiml() shall return the value of the macro
+	 * HUGE_VAL, HUGE_VALF, and HUGE_VALL, respectively.
+	 */
+	N = sizeof(t3table) / sizeof(t3table[0]);
+	ATF_REQUIRE(N > 0);
+
+	for (i = 0; i < N; i++) {
+		/* float */
+		errno = 0;
+		clear_exceptions();
+#ifdef	HUGE_VALF
+		fy = fdimf((float)t3table[i], 0.0);
+#endif
+		ATF_CHECK(iserrno_equalto(ERANGE));
+		ATF_CHECK(raised_exceptions(MY_FE_OVERFLOW));
+
+		/* double */
+                errno = 0;
+                clear_exceptions();
+		dy = fdim((double)t3table[i], 0.0);
+#ifdef	HUGE_VAL
+		ATF_CHECK(fpcmp_equal(dy, HUGE_VAL));
+#endif
+		ATF_CHECK(iserrno_equalto(ERANGE));
+                ATF_CHECK(raised_exceptions(MY_FE_OVERFLOW));
+
+		/* long double */
+		errno = 0;
+		clear_exceptions();
+                ldy = fdiml(t3table[i], 0.0);
+#ifdef	HUGE_VALL
+		ATF_CHECK(fpcmp_equall(ldy, HUGE_VAL));
+#endif
+		ATF_CHECK(iserrno_equalto(ERANGE));
+                ATF_CHECK(raised_exceptions(MY_FE_OVERFLOW));
+	}
+}
+
 /* Add test cases to test program */
 ATF_TP_ADD_TCS(tp)
 {
 	ATF_TP_ADD_TC(tp, test_fdim1);
 	ATF_TP_ADD_TC(tp, test_fdim2);
+	ATF_TP_ADD_TC(tp, test_fdim3);
 
 	return atf_no_error();
 }
