@@ -104,9 +104,9 @@ ATF_TC_BODY(test_fdim3, tc)
 	float fy;
 	double dy;
 	long double ldy;
-	size_t i, N;
 	int haserrexcept;
 	int haserrno;
+	size_t i, N;
 
 	/* We need at least one way to detect errors */
         query_errhandling(&haserrexcept, &haserrno);
