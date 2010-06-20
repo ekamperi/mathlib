@@ -11,7 +11,7 @@
 #include <mpfr.h>
 #include "gen.h"
 
-#include "../subr_random.h"
+#include "subr_random.h"
 
 #define NITERATIONS	100000
 
