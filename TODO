@@ -1,1 +1,7 @@
 * Initialize random number generator in tests which call random_$TYPE()
+* static-fy all non-exported symbols in *.c
+* Allow ulps to be calculated on a per-function basis
+* Allow ulps to be calculated for float and long versions as well
+* Add profiling capabilities for all math.h functions
+* Add profiling capabilities for all complex.h functions
+* Add good (x, $f(x)) pairs for all test cases
