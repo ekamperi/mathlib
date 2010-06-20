@@ -130,6 +130,12 @@ t_fdim: $(DEPS_T_FDIM)
 	$(CC99) -o t_fdim $(DEPS_T_FDIM) $(CFLAGS) $(LIBS)
 
 
+_DEPS_T_FMA = t_fma.o subr_atf.o subr_errhandling.o subr_fpcmp.o subr_random.o
+ DEPS_T_FMA = $(_DEPS_T_FMA:%=obj/%)
+t_fma: $(DEPS_T_FMA)
+	$(CC99) -o t_fma $(DEPS_T_FMA) $(CFLAGS) $(LIBS)
+
+
 _DEPS_T_FMAX = t_fmax.o subr_atf.o subr_fpcmp.o subr_random.o
  DEPS_T_FMAX = $(_DEPS_T_FMAX:%=obj/%)
 t_fmax: $(DEPS_T_FMAX)
