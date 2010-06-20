@@ -124,8 +124,9 @@ ATF_TC_BODY(test_fdim3, tc)
 		/* float */
 		errno = 0;
 		clear_exceptions();
-#ifdef	HUGE_VALF
 		fy = fdimf((float)t3table[i], 0.0);
+#ifdef	HUGE_VALF
+		ATF_CHECK(fpcmp_equalf(fy, HUGE_VALF));
 #endif
 		ATF_CHECK(iserrno_equalto(ERANGE));
 		ATF_CHECK(raised_exceptions(MY_FE_OVERFLOW));
