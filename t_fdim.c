@@ -109,8 +109,8 @@ ATF_TC_BODY(test_fdim3, tc)
 	size_t i, N;
 
 	/* We need at least one way to detect errors */
-        query_errhandling(&haserrexcept, &haserrno);
-        ATF_REQUIRE(haserrexcept || haserrno);
+	query_errhandling(&haserrexcept, &haserrno);
+	ATF_REQUIRE(haserrexcept || haserrno);
 
 	/*
 	 * If x-y is positive and overflows, a range error shall occur and
@@ -131,24 +131,24 @@ ATF_TC_BODY(test_fdim3, tc)
 		ATF_CHECK(raised_exceptions(MY_FE_OVERFLOW));
 
 		/* double */
-                errno = 0;
-                clear_exceptions();
+		errno = 0;
+		clear_exceptions();
 		dy = fdim((double)t3table[i], 0.0);
 #ifdef	HUGE_VAL
 		ATF_CHECK(fpcmp_equal(dy, HUGE_VAL));
 #endif
 		ATF_CHECK(iserrno_equalto(ERANGE));
-                ATF_CHECK(raised_exceptions(MY_FE_OVERFLOW));
+		ATF_CHECK(raised_exceptions(MY_FE_OVERFLOW));
 
 		/* long double */
 		errno = 0;
 		clear_exceptions();
-                ldy = fdiml(t3table[i], 0.0);
+		ldy = fdiml(t3table[i], 0.0);
 #ifdef	HUGE_VALL
 		ATF_CHECK(fpcmp_equall(ldy, HUGE_VAL));
 #endif
 		ATF_CHECK(iserrno_equalto(ERANGE));
-                ATF_CHECK(raised_exceptions(MY_FE_OVERFLOW));
+		ATF_CHECK(raised_exceptions(MY_FE_OVERFLOW));
 	}
 }
 
