@@ -11,9 +11,10 @@ do {									\
 	atf_tc_fail_check(__FILE__, __LINE__, fmt, ##__VA_ARGS__);	\
 } while(0)
 
+/* Hacky, ugly, fragile. But it gets the job done */
 #define ATF_PASS_OR_BREAK(x)			\
 do {						\
-	__cond = (x);				\
+	__cond = __cond ? (x) : 0;		\
 	if (!__cond)				\
 		ATF_PRINT_ERRMSG(#x);		\
 } while(0)
