@@ -124,7 +124,7 @@ t_fabs: $(DEPS_T_FABS)
 	$(CC99) -o t_fabs $(DEPS_T_FABS) $(CFLAGS) $(LIBS)
 
 
-_DEPS_T_FDIM = t_fdim.o subr_atf.o subr_fpcmp.o subr_random.o
+_DEPS_T_FDIM = t_fdim.o subr_atf.o subr_errhandling.o subr_fpcmp.o subr_random.o
  DEPS_T_FDIM = $(_DEPS_T_FDIM:%=obj/%)
 t_fdim: $(DEPS_T_FDIM)
 	$(CC99) -o t_fdim $(DEPS_T_FDIM) $(CFLAGS) $(LIBS)
