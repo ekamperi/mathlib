@@ -12,6 +12,9 @@ struct fentry {
 	int (*f_mpfr)();
 };
 
+extern const struct fentry ftable[];
+extern const int fsize;
+
 const struct fentry *getfunctionbyname(const char *fname);
 
 #endif	/* !__GEN_H__ */

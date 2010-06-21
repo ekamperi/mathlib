@@ -15,9 +15,6 @@
 
 #define NITERATIONS	100000
 
-extern const struct fentry *ftable;
-extern const size_t fsize;
-
 struct ulp {
 	double ulp_max;
 	double ulp_min;
@@ -154,8 +151,10 @@ main(int argc, char *argv[])
 	argc--;
 
 	if (argc == 0 || (argc == 1 && !strcmp(argv[0], "all"))) {
+		argv++;
+		argc--;
+
 		all = 1;
-		printf("YES\n");
 	}
 
 	/* Initialize random number generator */
@@ -174,7 +173,7 @@ main(int argc, char *argv[])
 			printf("function: %-8s "
 			    "max ulp: %.4f  min ulp: %.4f  avg ulp: %.4f  "
 			    "[skipped = %5u]\n",
-			    argv[i], u.ulp_max, u.ulp_min, u.ulp_avg,
+			    target, u.ulp_max, u.ulp_min, u.ulp_avg,
 			    u.ulp_skipped);
 		} else {
 			fprintf(stderr, "function: %s not found\n", argv[i]);

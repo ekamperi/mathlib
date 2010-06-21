@@ -389,10 +389,9 @@ const int fsize = sizeof(ftable) / sizeof(ftable[0]);
 const struct fentry *
 getfunctionbyname(const char *fname)
 {
-	size_t i;
+	int i;
 
 	assert(fname);
-	printf("%s\n", fname);
 
 	for (i = 0; i < fsize; i++) {
 		if (strcmp(fname, ftable[i].f_name) == 0) {
