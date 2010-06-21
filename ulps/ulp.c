@@ -33,6 +33,7 @@ getfunctionulp(const char *fname, struct ulp *u)
 	mpfr_t mp_rop, mp_x, mp_y;
 	double x, y, computed, exact, _u;
 	size_t i;
+	const mpfr_rnd_t tonearest = GMP_RNDN;
 	const struct fentry *f;
 
 	f = getfunctionbyname(fname);
@@ -68,18 +69,18 @@ getfunctionulp(const char *fname, struct ulp *u)
 		}
 
 		/* Copy arguments to mpfr variables */
-		mpfr_set_d(mp_x, x, GMP_RNDD);
+		mpfr_set_d(mp_x, x, tonearest);
 		if (f->f_narg == 2){
-			mpfr_set_d(mp_y, y, GMP_RNDD);
+			mpfr_set_d(mp_y, y, tonearest);
 		}
 
 		/* Ready to call the mpfr*() */
 		if(f->f_narg == 1) {
-			f->f_mpfr(mp_rop, mp_x, GMP_RNDD);
+			f->f_mpfr(mp_rop, mp_x, tonearest);
 		} else {
-			f->f_mpfr(mp_rop, mp_x, mp_y, GMP_RNDD);
+			f->f_mpfr(mp_rop, mp_x, mp_y, tonearest);
 		}
-		exact = mpfr_get_d(mp_rop, GMP_RNDD);
+		exact = mpfr_get_d(mp_rop, tonearest);
 		if (fpclassify(exact) == FP_NAN) {
 			printf("%s\n", fname);
 			if (f->f_narg == 1)
