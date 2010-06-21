@@ -384,7 +384,7 @@ ftable[] = {
 };
 
 const struct fentry *
-getfuncbyname(const char *fname)
+getfunctionbyname(const char *fname)
 {
 	size_t i, N;
 

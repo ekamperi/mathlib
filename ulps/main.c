@@ -5,7 +5,6 @@
 #include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <time.h>
 
 #include <gmp.h>
 #include <mpfr.h>
@@ -15,8 +14,15 @@
 
 #define NITERATIONS	100000
 
+struct ulp {
+	double ulp_max;
+	double ulp_min;
+	double ulp_avg;
+	size_t ulp_skipped;
+};
+
 static double
-ulp(double computed, double exact)
+calculp(double computed, double exact)
 {
 	double xbefore, xafter;
 	double ulps;
@@ -30,18 +36,21 @@ ulp(double computed, double exact)
 	return (ulps);
 }
 
-static void
-calculp(const char *fname)
+static int
+getfunctionulp(const char *fname, struct ulp *u)
 {
 	mpfr_t mp_rop, mp_x, mp_y;
-	double x, y, computed, exact;
-	double maxulp, minulp, avgulp, u;
-	size_t i, cnt = 0;
+	double x, y, computed, exact, _u;
+	size_t i;
 	const struct fentry *f;
 
-	f = getfuncbyname(fname);
-	assert(f);
+	f = getfunctionbyname(fname);
+	if (f == NULL)
+		return -1;
+
+	/* Some sanity checks */
 	assert(f->f_narg == 1 || f->f_narg == 2);
+	assert(u);
 
 	/* Initialize high precision variables */
 	mpfr_init2(mp_rop, 100);
@@ -51,9 +60,11 @@ calculp(const char *fname)
 	x = 0.0;
 	y = 0.0;
 
-	maxulp = -DBL_MAX;
-	minulp =  DBL_MAX;
-	avgulp = 0.0;
+	u->ulp_max = -DBL_MAX;
+	u->ulp_min = DBL_MAX;
+	u->ulp_avg = 0.0;
+	u->ulp_skipped = 0;
+
 	for (i = 0; i < NITERATIONS; i++) {
 		/* Generate random arguments */
 		do {
@@ -92,6 +103,7 @@ calculp(const char *fname)
 		} else {
 			computed = f->f_libm(x, y);
 		}
+
 		if (fpclassify(computed) == FP_NAN) {
 			printf("%s\n", fname);
 			if (f->f_narg == 1)
@@ -100,61 +112,58 @@ calculp(const char *fname)
 				printf("%f %f\n\n", x, y);
 		}
 
-		/* Update statistics */
-		if (fpclassify(computed) != FP_NORMAL
-		    || fpclassify(exact) != FP_NORMAL) {
-			cnt++;
+		/* Skip bogus results */
+		if (fpclassify(computed) != FP_NORMAL ||
+		    fpclassify(exact) != FP_NORMAL) {
+			u->ulp_skipped++;
 			continue;
 		}
 
-		u = ulp(computed, exact);
+		_u = calculp(computed, exact);
 
-		if (u > maxulp)
-			maxulp = u;
-		if (u < minulp)
-			minulp = u;
-		avgulp += u;
+		if (_u > u->ulp_max)
+			u->ulp_max = _u;
+		if (_u < u->ulp_min)
+			u->ulp_min = _u;
+		u->ulp_avg += _u;
 	}
-	avgulp /= (i - cnt);
-
-	printf("function: %-8s max ulp: %.4f  min ulp: %.4f  avg ulp: %.4f\n",
-	    f->f_name, maxulp, minulp, avgulp);
+	u->ulp_avg /= (i - u->ulp_skipped);
 
 	/* Free resources */
 	mpfr_clear(mp_rop);
 	mpfr_clear(mp_x);
 	mpfr_clear(mp_y);
+
+	/* Success */
+	return 0;
 }
 
 int
-main (void)
+main(int argc, char *argv[])
 {
-	srand48(time(NULL));
+	struct ulp u;
+	int i, rv;
 
-	calculp("acos");
-	calculp("acosh");
-	calculp("asin");
-	calculp("asinh");
-	calculp("atan");
-	calculp("atan2");
-	calculp("sin");
-	calculp("cos");
-	calculp("cosh");
-	calculp("exp");
-	calculp("exp2");
-	calculp("erfc");
-	calculp("hypot");
-	calculp("log");
-	calculp("log1p");
-	calculp("log10");
-	calculp("log2");
-	calculp("rint");
-	calculp("sinh");
-	calculp("sqrt");
-	/* pow() */
-	calculp("y0");
-	calculp("y1");
-	calculp("yn");
+	/* Skip program name */
+	argv++;
+	argc--;
 
-	return 0;
+	/* Initialize random number generator */
+	init_randgen();
+
+	for (i = 0; i < argc; i++) {
+		rv = getfunctionulp(argv[i], &u);
+		if (rv != -1) {
+			printf("function: %-8s "
+			    "max ulp: %.4f  min ulp: %.4f  avg ulp: %.4f  "
+			    "[skipped = %5u]\n",
+			    argv[i], u.ulp_max, u.ulp_min, u.ulp_avg,
+			    u.ulp_skipped);
+		} else {
+			fprintf(stderr, "function: %s not found\n", argv[i]);
+			continue;
+		}
+	}
+
+	return EXIT_SUCCESS;
 }
