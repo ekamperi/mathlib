@@ -397,14 +397,3 @@ getfunctionbyname(const char *fname)
 
 	return (NULL);
 }
-
-#if 0
-int
-main(void)
-{
-	printf("%d\n",
-	    (*ftable[2].f_u.fp2)(-100, 200.1));
-
-	return 0;
-}
-#endif
