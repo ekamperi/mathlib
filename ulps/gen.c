@@ -41,6 +41,12 @@ dom_atan(double x)
 }
 
 static int
+dom_atanh(double x)
+{
+	return (x > -1.0 && x < 1.0);
+}
+
+static int
 dom_cosh(double x)
 {
 	return 1;
@@ -210,6 +216,15 @@ ftable[] = {
 		.f_libm = atan2,
 		.f_mpfr = mpfr_atan2,
 		.f_u.fp1 = dom_atan
+	},
+
+	/* atanh() */
+	{
+		.f_name = "atanh",
+		.f_narg = 1,
+		.f_libm = atanh,
+		.f_mpfr = mpfr_atanh,
+		.f_u.fp1 = dom_atanh
 	},
 
 	/* sin() */
