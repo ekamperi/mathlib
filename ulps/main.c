@@ -43,8 +43,8 @@ main(int argc, char *argv[])
 			printf("[%2u/%2u] function: %-8s "
 			    "max ulp: %.4f  min ulp: %.4f  avg ulp: %.4f  "
 			    "[skipped = %5u]\n",
-			    i, total, target, u.ulp_max, u.ulp_min, u.ulp_avg,
-			    u.ulp_skipped);
+			    i+1, total, target,
+			    u.ulp_max, u.ulp_min, u.ulp_avg, u.ulp_skipped);
 		} else {
 			fprintf(stderr, "function: %s not found\n", argv[i]);
 			continue;
