@@ -1,5 +1,6 @@
 #define _XOPEN_SOURCE 600
 
+#include <assert.h>
 #include <math.h>
 #include <stdio.h>
 #include <string.h>
@@ -383,13 +384,17 @@ ftable[] = {
         }
 };
 
+const int fsize = sizeof(ftable) / sizeof(ftable[0]);
+
 const struct fentry *
 getfunctionbyname(const char *fname)
 {
-	size_t i, N;
+	size_t i;
 
-	N = sizeof(ftable) / sizeof(ftable[i]);
-	for (i = 0; i < N; i++) {
+	assert(fname);
+	printf("%s\n", fname);
+
+	for (i = 0; i < fsize; i++) {
 		if (strcmp(fname, ftable[i].f_name) == 0) {
 			return (&ftable[i]);
 		}

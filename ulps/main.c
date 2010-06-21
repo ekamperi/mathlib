@@ -5,6 +5,7 @@
 #include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 #include <gmp.h>
 #include <mpfr.h>
@@ -13,6 +14,9 @@
 #include "subr_random.h"
 
 #define NITERATIONS	100000
+
+extern const struct fentry *ftable;
+extern const size_t fsize;
 
 struct ulp {
 	double ulp_max;
@@ -142,17 +146,30 @@ int
 main(int argc, char *argv[])
 {
 	struct ulp u;
-	int i, rv;
+	int i, rv, total, all = 0;
+	const char *target;
 
 	/* Skip program name */
 	argv++;
 	argc--;
 
+	if (argc == 0 || (argc == 1 && !strcmp(argv[0], "all"))) {
+		all = 1;
+		printf("YES\n");
+	}
+
 	/* Initialize random number generator */
 	init_randgen();
 
-	for (i = 0; i < argc; i++) {
-		rv = getfunctionulp(argv[i], &u);
+	/*
+	 * Are we going to process all functions or
+	 * only those explicitly given by user?
+	 */
+	total = all ? fsize : argc;
+
+	for (i = 0; i < total; i++) {
+		target = all ? ftable[i].f_name : argv[i];
+		rv = getfunctionulp(target, &u);
 		if (rv != -1) {
 			printf("function: %-8s "
 			    "max ulp: %.4f  min ulp: %.4f  avg ulp: %.4f  "
