@@ -109,7 +109,7 @@ ATF_TC_HEAD(test_fma3, tc)
 {
 	atf_tc_set_md_var(tc,
 	    "descr",
-	    "Check what happens when");
+	    "Check what happens when x*y=+/-Inf, z=-/+Inf");
 }
 ATF_TC_BODY(test_fma3, tc)
 {
@@ -140,8 +140,8 @@ ATF_TC_BODY(test_fma3, tc)
 
 		errno = 0;
 		clear_exceptions();
-		dw = fmaf(dx, dy, signbit(dy) ? dy : -dy);
-#ifdef  NAN
+		dw = fma(dx, dy, signbit(dy) ? dy : -dy);
+#ifdef	NAN
 		ATF_CHECK(isnan(dw));
 #endif
 		ATF_CHECK(iserrno_equalto(EDOM));
@@ -193,7 +193,7 @@ ATF_TC_HEAD(test_fma4, tc)
 {
 	atf_tc_set_md_var(tc,
 	    "descr",
-	    "Check what happens when");
+	    "Check what happens when x=Inf/0, y=0/Inf, z=not NAN");
 }
 ATF_TC_BODY(test_fma4, tc)
 {
@@ -252,7 +252,7 @@ ATF_TC_HEAD(test_fma5, tc)
 {
 	atf_tc_set_md_var(tc,
 	    "descr",
-	    "Check what happens when");
+	    "Check what happens when x=Inf/0, y=0/Inf, z=NAN");
 }
 ATF_TC_BODY(test_fma5, tc)
 {
@@ -303,9 +303,9 @@ ATF_TC_BODY(test_fma5, tc)
 ATF_TC(test_fma6);
 ATF_TC_HEAD(test_fma6, tc)
 {
-        atf_tc_set_md_var(tc,
-            "descr",
-	    "Check what happens when");
+	atf_tc_set_md_var(tc,
+	    "descr",
+	    "Check what happens when x*y != 0*Inf nor Inf*0 and z=NAN");
 }
 ATF_TC_BODY(test_fma6, tc)
 {
