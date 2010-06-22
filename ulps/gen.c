@@ -47,13 +47,31 @@ dom_atanh(double x)
 }
 
 static int
+dom_cbrt(double x)
+{
+	return 1;
+}
+
+static int
+dom_ceil(double x)
+{
+	return 1;
+}
+
+static int
 dom_cosh(double x)
 {
 	return 1;
 }
 
 static int
-dom_erfc(double x)
+dom_erf(double x)
+{
+	return 1;
+}
+
+static int
+dom_floor(double x)
 {
 	return 1;
 }
@@ -90,6 +108,12 @@ dom_expm1(double x)
 
 static int
 dom_exp2(double x)
+{
+	return 1;
+}
+
+static int
+dom_fabs(double x)
 {
 	return 1;
 }
@@ -236,6 +260,24 @@ ftable[] = {
 		.f_u.fp1 = dom_sin
 	},
 
+	/* cbrt() */
+	{
+		.f_name = "cbrt",
+		.f_narg = 1,
+		.f_libm = cbrt,
+		.f_mpfr = mpfr_cbrt,
+		.f_u.fp1 = dom_cbrt
+	},
+
+	/* ceil() */
+	{
+		.f_name = "ceil",
+		.f_narg = 1,
+		.f_libm = ceil,
+		.f_mpfr = mpfr_ceil,
+		.f_u.fp1 = dom_ceil
+	},
+
 	/* cos() */
 	{
 		.f_name = "cos",
@@ -281,13 +323,40 @@ ftable[] = {
                 .f_u.fp1 = dom_exp2
 	},
 
+	/* erf() */
+	{
+		.f_name = "erf",
+		.f_narg = 1,
+		.f_libm = erf,
+		.f_mpfr = mpfr_erf,
+		.f_u.fp1 = dom_erf
+	},
+
 	/* erfc() */
 	{
 		.f_name = "erfc",
 		.f_narg = 1,
 		.f_libm = erfc,
 		.f_mpfr = mpfr_erfc,
-		.f_u.fp1 = dom_erfc
+		.f_u.fp1 = dom_erf
+	},
+
+	/* fabs() */
+	{
+		.f_name = "fabs",
+		.f_narg = 1,
+		.f_libm = fabs,
+		.f_mpfr = mpfr_abs,
+		.f_u.fp1 = dom_fabs
+	},
+
+	/* floor() */
+	{
+		.f_name = "floor",
+		.f_narg = 1,
+		.f_libm = floor,
+		.f_mpfr = mpfr_floor,
+		.f_u.fp1 = dom_floor
 	},
 
 	/* hypot() */
