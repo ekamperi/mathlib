@@ -15,8 +15,8 @@
 #include <gmp.h>
 #include <mpfr.h>
 
-#include "../ulps/gen.h"
-#include "../subr_random.h"
+#include "gen.h"
+#include "subr_random.h"
 
 /* Function prototypes */
 static void gen_double(const char *fname, size_t total, double lower,

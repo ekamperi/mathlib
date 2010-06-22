@@ -6,7 +6,7 @@
 #include <string.h>
 #include <unistd.h>
 
-#include "../subr_random.h"
+#include "subr_random.h"
 
 static void usage(const char *progname);
 

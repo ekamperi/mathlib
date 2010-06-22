@@ -6,7 +6,7 @@ CCFLAGS=-Wall -W -Wformat-nonliteral -Wcast-align -Wpointer-arith 		\
 	-Wmissing-declarations -Winline -Wundef -Wnested-externs -Wcast-qual 	\
 	-Wshadow -Wwrite-strings -Wno-unused-parameter 				\
 	-Wswitch -Wbad-function-cast -g
-INCLUDE=-I/usr/include/gmp -I/usr/include/mpfr
+INCLUDE=-I../include -I../include/ulps -I/usr/include/gmp -I/usr/include/mpfr
 LIB=-lm -lmpfr
 
 goodgen: goodgen.c ../ulps/gen.c ../subr_random.c
@@ -14,6 +14,9 @@ goodgen: goodgen.c ../ulps/gen.c ../subr_random.c
 		goodgen.c ../ulps/gen.c ../subr_random.c	\
 	-o goodgen						\
 	$(LIB)
+
+proffenv: proffenv.c
+	$(CC99) $(CCFLAGS) $(INCLUDE) proffenv.c -o proffenv $(LIB)
 
 testrand: testrand.c ../subr_random.c
 	$(CC99) $(CCFLAGS) $(INCLUDE)				\
