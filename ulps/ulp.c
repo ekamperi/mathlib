@@ -11,7 +11,7 @@
 #include "subr_random.h"
 #include "ulp.h"
 
-#define	NITERATIONS	50
+#define	NITERATIONS	(50*1000)
 
 static double
 calculp(double computed, double exact)
@@ -59,6 +59,8 @@ getfunctionulp(const char *fname, struct ulp *u)
 	u->ulp_skipped = 0;
 
 	for (i = 0; i < NITERATIONS; i++) {
+		if (i %  100 == 0)
+			printf("Percentage complete: %2.2f\r", (100.0 * i)/NITERATIONS);
 		/* Generate random arguments */
 		if (f->f_narg == 1) {
 			do {
