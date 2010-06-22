@@ -452,7 +452,7 @@ ftable[] = {
 		.f_narg = 1,
 		.f_libm = tgamma,
 		.f_mpfr = mpfr_gamma,
-		.f_u.fp12 = dom_tgamma
+		.f_u.fp1 = dom_tgamma
 	},
 
 	/* y0() */
