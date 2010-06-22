@@ -2,6 +2,7 @@
 #include <float.h>
 #include <math.h>
 #include <stdio.h>
+#include <string.h>
 
 #include <gmp.h>
 #include <mpfr.h>
@@ -10,7 +11,7 @@
 #include "subr_random.h"
 #include "ulp.h"
 
-#define	NITERATIONS	10
+#define	NITERATIONS	50
 
 static double
 calculp(double computed, double exact)
@@ -59,13 +60,21 @@ getfunctionulp(const char *fname, struct ulp *u)
 
 	for (i = 0; i < NITERATIONS; i++) {
 		/* Generate random arguments */
-		do {
-			x = random_double(FP_NORMAL);
-		} while (!f->f_u.fp1(x));
+		if (f->f_narg == 1) {
+			do {
+				x = random_double(FP_NORMAL);
+			} while (!f->f_u.fp1(x));
+		}
 		if (f->f_narg == 2) {
 			do {
+				x = random_double(FP_NORMAL);
 				y = random_double(FP_NORMAL);
 			} while (!f->f_u.fp2(x, y));
+		}
+
+		/* Hack, yikes */
+		if (!strcmp(f->f_name, "yn")) {
+			x = 1.0;
 		}
 
 		/* Copy arguments to mpfr variables */

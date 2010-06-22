@@ -163,9 +163,7 @@ dom_sqrt(double x)
 static int
 dom_pow(double x, double y)
 {
-	/* return (x >= 0.0 || (floor(y) == y)); */
-	return ((x >= 0.0 || (floor(y) == y)) &&
-	    (x > 1.0 && x < 1E5) && (y > 0.0 && y < 1E5));
+	return (x >= 0.0 || (floor(y) == y));
 }
 
 static int
@@ -183,14 +181,16 @@ dom_y0(double x)
 static int
 dom_y1(double x)
 {
-	return (x > 0.0);
+	return (x > 1.0 && x < 1E5);
 }
 
+#if 0
 static int
-dom_yn(double x)
+dom_yn(double x, double y)
 {
-	return (x > 0.0);
+	return (y > 0.0 && y < 1E10);
 }
+#endif
 
 const struct fentry
 ftable[] = {
@@ -472,15 +472,16 @@ ftable[] = {
 		.f_mpfr = mpfr_y1,
                 .f_u.fp1 = dom_y1
         },
-
+#if 0
 	/* yn() */
 	{
 		.f_name = "yn",
-                .f_narg = 1,
+                .f_narg = 2,
                 .f_libm = yn,
 		.f_mpfr = mpfr_yn,
-                .f_u.fp1 = dom_yn
+                .f_u.fp2 = dom_yn
         }
+#endif
 };
 
 const int fsize = sizeof(ftable) / sizeof(ftable[0]);
