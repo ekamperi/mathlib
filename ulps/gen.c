@@ -169,6 +169,12 @@ dom_pow(double x, double y)
 }
 
 static int
+dom_tgamma(double x)
+{
+	return (x > 0.0 || (floor(x) != x));
+}
+
+static int
 dom_y0(double x)
 {
 	return (x > 0.0);
@@ -438,6 +444,15 @@ ftable[] = {
 		.f_libm = pow,
 		.f_mpfr = mpfr_pow,
 		.f_u.fp2 = dom_pow
+	},
+
+	/* tgamma() */
+	{
+		.f_name = "tgamma",
+		.f_narg = 1,
+		.f_libm = tgamma,
+		.f_mpfr = mpfr_gamma,
+		.f_u.fp12 = dom_tgamma
 	},
 
 	/* y0() */
