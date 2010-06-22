@@ -169,8 +169,6 @@ dom_pow(double x, double y)
 static int
 dom_tgamma(double x)
 {
-	printf("%.16e\n", x);
-	fflush(NULL);
 	return (x > 0.0 || (floor(x) != x));
 }
 

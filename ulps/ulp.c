@@ -11,7 +11,7 @@
 #include "subr_random.h"
 #include "ulp.h"
 
-#define	NITERATIONS	10000
+#define	NITERATIONS	50
 
 static double
 calculp(double computed, double exact)
@@ -71,8 +71,6 @@ getfunctionulp(const char *fname, struct ulp *u)
 				y = random_double(FP_NORMAL);
 			} while (!f->f_u.fp2(x, y));
 		}
-		printf("rand OK\n");
-		fflush(NULL);
 
 		/* Hack, yikes */
 		if (!strcmp(f->f_name, "yn")) {
@@ -86,8 +84,6 @@ getfunctionulp(const char *fname, struct ulp *u)
 		}
 
 		/* Ready to call the mpfr*() */
-		printf("Entering mpfr\n");
-		fflush(NULL);
 		if(f->f_narg == 1) {
 			f->f_mpfr(mp_rop, mp_x, tonearest);
 		} else {
@@ -103,8 +99,6 @@ getfunctionulp(const char *fname, struct ulp *u)
 		}
 
 		/* Ready to call the libm*() */
-		printf("Entering libm\n");
-		fflush(NULL);
 		if (f->f_narg == 1) {
 			computed = f->f_libm(x);
 		} else {
