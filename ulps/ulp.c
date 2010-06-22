@@ -110,9 +110,9 @@ getfunctionulp(const char *fname, struct ulp *u)
 		if (fpclassify(computed) == FP_NAN) {
 			printf("%s\n", fname);
 			if (f->f_narg == 1)
-				printf("%f\n\n", x);
+				printf("%.16e\n\n", x);
 			else
-				printf("%f %f\n\n", x, y);
+				printf("%.16e %.16e\n\n", x, y);
 		}
 
 		/* Skip bogus results */
