@@ -3467,6 +3467,8 @@ $as_echo "no" >&6; }
 fi
 
 
+LDFLAGS="$LDFLAGS -L/usr/pkg/lib"
+
 
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking for cos in -lm" >&5
 $as_echo_n "checking for cos in -lm... " >&6; }

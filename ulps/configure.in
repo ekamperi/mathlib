@@ -6,6 +6,8 @@ AC_PROG_CC dnl for AM_PROG_GTK only
 AC_PROG_INSTALL
 AC_PROG_MAKE_SET
 
+LDFLAGS="$LDFLAGS -L/usr/pkg/lib"
+
 AC_CHECK_LIB(m,cos,,AC_MSG_ERROR(requires lm))
 AC_CHECK_LIB(mpfr,mpfr_init,,AC_MSG_ERROR(requires mpfr))
 
