@@ -1,3 +1,5 @@
+#define _XOPEN_SOURCE 600
+
 #include <assert.h>
 #include <float.h>
 #include <math.h>
@@ -11,7 +13,7 @@
 #include "subr_random.h"
 #include "ulp.h"
 
-#define	NITERATIONS	(50*1000)
+#define	NITERATIONS	(50*50*1000)
 
 static double
 calculp(double computed, double exact)

@@ -1,0 +1,34 @@
+AC_INIT(main.c)
+AM_INIT_AUTOMAKE(ulp,0.0.1)
+AM_CONFIG_HEADER(config.h)
+
+AC_PROG_CC dnl for AM_PROG_GTK only
+AC_PROG_INSTALL
+AC_PROG_MAKE_SET
+
+AC_CHECK_LIB(m,cos,,AC_MSG_ERROR(requires lm))
+AC_CHECK_LIB(mpfr,mpfr_init,,AC_MSG_ERROR(requires mpfr))
+
+AC_HEADER_STDC
+
+AC_CHECK_FUNCS(acos acosh asin asinh atan atanh cbrt ceil cosh erf floor hypot)
+AC_CHECK_FUNCS(sin cos exp expm1 exp2 fabs log log1p log10 log2 rint sinh)
+AC_CHECK_FUNCS(sqrt pow tgamma y0 y1 yn)
+
+# Get MPFR include path
+AC_ARG_WITH([mpfr-include-path],
+  [AS_HELP_STRING([--with-mpfr-include-path],
+    [location of the MPFR headers, defaults to /usr/include/mpfr])],
+  [MPFR_CFLAGS="-I$withval"],
+  [MPFR_CFLAGS='-I/usr/include/mpfr'])
+AC_SUBST([MPFR_CFLAGS])
+
+# Get MPFR library path
+AC_ARG_WITH([mpfr-lib-path],
+  [AS_HELP_STRING([--with-mpfr-lib-path],
+    [location of the MPFR libraries, defaults to -lmpfr])],
+  [MPFR_LIBS="-L$withval -lmpfr"],
+  [MPFR_LIBS='-lmpfr'])
+AC_SUBST([MPFR_LIBS])
+
+AC_OUTPUT(Makefile)
