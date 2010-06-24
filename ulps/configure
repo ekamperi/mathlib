@@ -3515,6 +3515,9 @@ fi
 # in some non-standard path.
 LDFLAGS="$LDFLAGS -L/usr/pkg/lib"
 
+# And this is for Linux, FreeBSD and so on.
+LDFLAGS="$LDFLAGS -L/usr/local/lib"
+
 
 
 { $as_echo "$as_me:$LINENO: checking for cos in -lm" >&5
