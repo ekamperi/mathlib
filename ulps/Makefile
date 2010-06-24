@@ -8,12 +8,19 @@ CCFLAGS=-Wall -W -Wformat-nonliteral -Wcast-align -Wpointer-arith \
 INCLUDE=-I../include -I/usr/include/gmp -I/usr/include/mpfr -I/usr/pkg/include
 LIBS=-lm -lmpfr -L/usr/local/lib -L/usr/pkg/lib
 
-SOURCES=main.c gen.c ulp.c ../subr_random.c
+VPATH = ../
+SOURCES=main.c gen.c ulp.c subr_random.c
 
 all: $(SOURCES)
 	@test -f config.h || \
 		(echo "You need to run autoreconf && ./configure first"; exit 1)
 	$(CC99) $(SOURCES) -o ulps $(CCFLAGS) $(INCLUDE) $(LIBS)
+
+# Hacky; create tar to ../ or else it will be included in the final tar
+dist:
+	@tar czfv ../ulp-0.1.tar.gz \
+		  ../subr_random.c ../include/subr_random.h .
+	@mv ../ulp-0.1.tar.gz .
 
 git-clean:
 	git clean -f -d
