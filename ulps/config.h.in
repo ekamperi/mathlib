@@ -1,4 +1,4 @@
-/* config.h.in.  Generated from configure.in by autoheader.  */
+/* config.h.in.  Generated from configure.ac by autoheader.  */
 
 /* Define to 1 if you have the `acos' function. */
 #undef HAVE_ACOS
@@ -45,11 +45,17 @@
 /* Define to 1 if you have the `fabs' function. */
 #undef HAVE_FABS
 
+/* Define to 1 if you have the <float.h> header file. */
+#undef HAVE_FLOAT_H
+
 /* Define to 1 if you have the `floor' function. */
 #undef HAVE_FLOOR
 
 /* Define to 1 if you have the `hypot' function. */
 #undef HAVE_HYPOT
+
+/* Define to 1 if you have the <inttypes.h> header file. */
+#undef HAVE_INTTYPES_H
 
 /* Define to 1 if you have the `m' library (-lm). */
 #undef HAVE_LIBM
@@ -69,6 +75,9 @@
 /* Define to 1 if you have the `log2' function. */
 #undef HAVE_LOG2
 
+/* Define to 1 if you have the <memory.h> header file. */
+#undef HAVE_MEMORY_H
+
 /* Define to 1 if you have the `pow' function. */
 #undef HAVE_POW
 
@@ -84,8 +93,29 @@
 /* Define to 1 if you have the `sqrt' function. */
 #undef HAVE_SQRT
 
+/* Define to 1 if you have the <stdint.h> header file. */
+#undef HAVE_STDINT_H
+
+/* Define to 1 if you have the <stdlib.h> header file. */
+#undef HAVE_STDLIB_H
+
+/* Define to 1 if you have the <strings.h> header file. */
+#undef HAVE_STRINGS_H
+
+/* Define to 1 if you have the <string.h> header file. */
+#undef HAVE_STRING_H
+
+/* Define to 1 if you have the <sys/stat.h> header file. */
+#undef HAVE_SYS_STAT_H
+
+/* Define to 1 if you have the <sys/types.h> header file. */
+#undef HAVE_SYS_TYPES_H
+
 /* Define to 1 if you have the `tgamma' function. */
 #undef HAVE_TGAMMA
+
+/* Define to 1 if you have the <unistd.h> header file. */
+#undef HAVE_UNISTD_H
 
 /* Define to 1 if you have the `y0' function. */
 #undef HAVE_Y0
@@ -119,3 +149,6 @@
 
 /* Version number of package */
 #undef VERSION
+
+/* Define to `unsigned int' if <sys/types.h> does not define. */
+#undef size_t
