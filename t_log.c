@@ -8,7 +8,6 @@
 
 #include <atf-c.h>
 #include <errno.h>
-#include <float.h>	/* for DBL_MAX */
 #include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
