@@ -11,6 +11,9 @@ AC_PROG_MAKE_SET
 # in some non-standard path.
 LDFLAGS="$LDFLAGS -L/usr/pkg/lib"
 
+# And this is for Linux, FreeBSD and so on.
+LDFLAGS="$LDFLAGS -L/usr/local/lib"
+
 AC_CHECK_LIB(m,cos,,AC_MSG_ERROR(requires lm))
 AC_CHECK_LIB(mpfr,mpfr_init,,AC_MSG_ERROR(requires mpfr))
 
