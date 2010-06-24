@@ -14,7 +14,7 @@ obj/%.o: %.c
 all:	t_acos t_acosh t_asin t_asinh t_atan t_atan2 t_atanh t_cbrt t_ceil \
 	t_constants t_copysign t_cos t_erf t_exp t_exp2 t_expm1 t_fabs t_fdim t_float \
 	t_floor t_fmax t_fpclassify t_fpmacros t_mac t_tgamma t_hypot      \
-	t_ldexp t_nextafter t_signbit t_sin t_sqrt t_trig_ident t_tanh     \
+	t_log t_ldexp t_nextafter t_signbit t_sin t_sqrt t_trig_ident t_tanh     \
 	t_trunc t_types
 
 _DEPS_T_ACOS = t_acos.o subr_atf.o subr_fpcmp.o
@@ -176,6 +176,12 @@ _DEPS_T_LDEXP = t_ldexp.o subr_fpcmp.o
  DEPS_T_LDEXP = $(_DEPS_T_LDEXP:%=obj/%)
 t_ldexp: $(DEPS_T_LDEXP)
 	$(CC99)	-o t_ldexp $(DEPS_T_LDEXP) $(CFLAGS) $(LIBS)
+
+
+_DEPS_T_LOG = t_log.o subr_atf.o subr_errhandling.o subr_fpcmp.o subr_random.o
+ DEPS_T_LOG = $(_DEPS_T_LOG:%=obj/%)
+t_log: $(DEPS_T_LOG)
+	$(CC99) -o t_log $(DEPS_T_LOG) $(CFLAGS) $(LIBS)
 
 
 _DEPS_T_MAC = t_mac.o subr_atf.o subr_errhandling.o subr_random.o
