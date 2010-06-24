@@ -18,9 +18,11 @@ all: $(SOURCES)
 
 # Hacky; create tar to ../ or else it will be included in the final tar
 dist:
-	@tar czfv ../ulp-0.1.tar.gz \
-		  ../subr_random.c ../include/subr_random.h .
-	@mv ../ulp-0.1.tar.gz .
+	autoreconf && ./configure >/dev/null
+	cp ../subr_random.c .
+	cp ../include/subr_random.h .
+	tar czfv ../ulp-0.1.tar.gz .
+	mv ../ulp-0.1.tar.gz .
 
 git-clean:
 	git clean -f -d
