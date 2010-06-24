@@ -34,5 +34,37 @@ AC_CHECK_FUNCS([acos acosh asin asinh atan atanh cbrt ceil cosh erf floor hypot]
 AC_CHECK_FUNCS([sin cos exp expm1 exp2 fabs log log1p log10 log2 rint sinh])
 AC_CHECK_FUNCS([sqrt pow tgamma y0 y1 yn])
 
+# Get GMP include path
+AC_ARG_WITH([gmp-include-path],
+  [AS_HELP_STRING([--with-gmp-include-path],
+    [location of the GMP headers, defaults to /usr/include/gmp])],
+  [GMP_CFLAGS="-I$withval"],
+  [GMP_CFLAGS='-I/usr/include/gmp'])
+AC_SUBST([GMP_CFLAGS])
+
+# Get GMP library path
+AC_ARG_WITH([gmp-lib-path],
+  [AS_HELP_STRING([--with-gmp-lib-path],
+    [location of the GMP libraries, defaults to -lmpfr])],
+  [MPFR_LIBS="-L$withval -lmpfr"],
+  [MPFR_LIBS='-lgmp'])
+AC_SUBST([GMP_LIBS])
+
+# Get MPFR include path
+AC_ARG_WITH([mpfr-include-path],
+  [AS_HELP_STRING([--with-mpfr-include-path],
+    [location of the MPFR headers, defaults to /usr/include/mpfr])],
+  [MPFR_CFLAGS="-I$withval"],
+  [MPFR_CFLAGS='-I/usr/include/mpfr'])
+AC_SUBST([MPFR_CFLAGS])
+
+# Get MPFR library path
+AC_ARG_WITH([mpfr-lib-path],
+  [AS_HELP_STRING([--with-mpfr-lib-path],
+    [location of the MPFR libraries, defaults to -lmpfr])],
+  [MPFR_LIBS="-L$withval -lmpfr"],
+  [MPFR_LIBS='-lmpfr'])
+AC_SUBST([MPFR_LIBS])
+
 AC_CONFIG_FILES([Makefile])
 AC_OUTPUT
