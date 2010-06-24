@@ -1,11 +1,14 @@
 AC_INIT(main.c)
 AM_INIT_AUTOMAKE(ulp,0.0.1)
-AM_CONFIG_HEADER(config.h)
+AC_CONFIG_HEADERS(config.h)
 
-AC_PROG_CC dnl for AM_PROG_GTK only
+AC_PROG_CC
 AC_PROG_INSTALL
 AC_PROG_MAKE_SET
 
+# This is for NetBSD (pkgsrc in general), otherwise AC_CHECK_LIB()
+# will fail to report an existing library as such, if it is located
+# in some non-standard path.
 LDFLAGS="$LDFLAGS -L/usr/pkg/lib"
 
 AC_CHECK_LIB(m,cos,,AC_MSG_ERROR(requires lm))
@@ -16,6 +19,22 @@ AC_HEADER_STDC
 AC_CHECK_FUNCS(acos acosh asin asinh atan atanh cbrt ceil cosh erf floor hypot)
 AC_CHECK_FUNCS(sin cos exp expm1 exp2 fabs log log1p log10 log2 rint sinh)
 AC_CHECK_FUNCS(sqrt pow tgamma y0 y1 yn)
+
+# Get GMP include path
+AC_ARG_WITH([gmp-include-path],
+  [AS_HELP_STRING([--with-gmp-include-path],
+    [location of the GMP headers, defaults to /usr/include/gmp])],
+  [GMP_CFLAGS="-I$withval"],
+  [GMP_CFLAGS='-I/usr/include/gmp'])
+AC_SUBST([GMP_CFLAGS])
+
+# Get GMP library path
+AC_ARG_WITH([gmp-lib-path],
+  [AS_HELP_STRING([--with-gmp-lib-path],
+    [location of the GMP libraries, defaults to -lmpfr])],
+  [MPFR_LIBS="-L$withval -lmpfr"],
+  [MPFR_LIBS='-lgmp'])
+AC_SUBST([GMP_LIBS])
 
 # Get MPFR include path
 AC_ARG_WITH([mpfr-include-path],
