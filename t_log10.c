@@ -141,9 +141,9 @@ ATF_TC_BODY(test_log103, tc)
 	float fx, fy;
 	double dx, dy;
 	long double ldx, ldy;
-        int haserrexcept;
-        int haserrno;
-        long i, N;
+	int haserrexcept;
+	int haserrno;
+	long i, N;
 
 	/*
 	 * First try with negative infinities
@@ -190,44 +190,44 @@ ATF_TC_BODY(test_log103, tc)
 	ATF_REQUIRE(N > 0);
 
 	ATF_FOR_LOOP(i, N, i++) {
-                /* float */
+		/* float */
 		do {
 			fx = random_float(FP_NORMAL);
 		} while (fx >= 0.0);
-                errno = 0;
-                clear_exceptions();
-                fy = log10f((float)t5table[i]);
+		errno = 0;
+		clear_exceptions();
+		fy = log10f((float)t5table[i]);
 #ifdef  NAN
-                ATF_PASS_OR_BREAK(isnan(fy));
+		ATF_PASS_OR_BREAK(isnan(fy));
 #endif
-                ATF_PASS_OR_BREAK(iserrno_equalto(EDOM));
+		ATF_PASS_OR_BREAK(iserrno_equalto(EDOM));
 		ATF_PASS_OR_BREAK(raised_exceptions(MY_FE_INVALID));
 
-                /* double */
+		/* double */
 		do {
 			dx = random_double(FP_NORMAL);
 		} while (dx >= 0.0);
 		errno = 0;
 		clear_exceptions();
-                dy = log10((double)t5table[i]);
+		dy = log10((double)t5table[i]);
 #ifdef  NAN
-                ATF_PASS_OR_BREAK(isnan(dy));
+		ATF_PASS_OR_BREAK(isnan(dy));
 #endif
-                ATF_PASS_OR_BREAK(iserrno_equalto(EDOM));
-                ATF_PASS_OR_BREAK(raised_exceptions(MY_FE_INVALID));
+		ATF_PASS_OR_BREAK(iserrno_equalto(EDOM));
+		ATF_PASS_OR_BREAK(raised_exceptions(MY_FE_INVALID));
 
-                /* long double */
+		/* long double */
 		do {
 			ldx = random_long_double(FP_NORMAL);
 		} while (ldx >= 0.0);
-                errno = 0;
+		errno = 0;
 		clear_exceptions();
-                ldy = log10l(t5table[i]);
+		ldy = log10l(t5table[i]);
 #ifdef  NAN
-                ATF_PASS_OR_BREAK(isnan(ldy));
+		ATF_PASS_OR_BREAK(isnan(ldy));
 #endif
 		ATF_PASS_OR_BREAK(iserrno_equalto(EDOM));
-                ATF_PASS_OR_BREAK(raised_exceptions(MY_FE_INVALID));
+		ATF_PASS_OR_BREAK(raised_exceptions(MY_FE_INVALID));
 	}
 
 	/*
@@ -270,23 +270,23 @@ ATF_TC_BODY(test_log104, tc)
 #ifdef	INFINITY
 	ATF_CHECK(fpcmp_equalf(log10f(INFINITY), INFINITY));
 	ATF_CHECK(fpcmp_equal(log10(INFINITY), INFINITY));
-	ATF_CHECK(fpcmp_equal(log10l(INFINITY), INFINITY));
+	ATF_CHECK(fpcmp_equall(log10l(INFINITY), INFINITY));
 #endif
 #ifdef  HUGE_VAL
-        ATF_CHECK(fpcmp_equalf(log10f(HUGE_VAL), HUGE_VAL));
-        ATF_CHECK(fpcmp_equal(log10(HUGE_VAL), HUGE_VAL));
-        ATF_CHECK(fpcmp_equal(log10l(HUGE_VAL), HUGE_VAL));
+	ATF_CHECK(fpcmp_equalf(log10f(HUGE_VAL), HUGE_VAL));
+	ATF_CHECK(fpcmp_equal(log10(HUGE_VAL), HUGE_VAL));
+	ATF_CHECK(fpcmp_equall(log10l(HUGE_VAL), HUGE_VAL));
 #endif
 #ifdef	HUGE_VALF
-        ATF_CHECK(fpcmp_equalf(log10f(HUGE_VALF), HUGE_VALF));
-        ATF_CHECK(fpcmp_equal(log10(HUGE_VALF), HUGE_VALF));
-        ATF_CHECK(fpcmp_equal(log10l(HUGE_VALF), HUGE_VALF));
+	ATF_CHECK(fpcmp_equalf(log10f(HUGE_VALF), HUGE_VALF));
+	ATF_CHECK(fpcmp_equal(log10(HUGE_VALF), HUGE_VALF));
+	ATF_CHECK(fpcmp_equall(log10l(HUGE_VALF), HUGE_VALF));
 #endif
 #ifdef  HUGE_VALL
-        ATF_CHECK(fpcmp_equalf(log10f(HUGE_VALL), HUGE_VALL));
-        ATF_CHECK(fpcmp_equal(log10(HUGE_VALL), HUGE_VALL));
-        ATF_CHECK(fpcmp_equal(log10l(HUGE_VALL), HUGE_VALL));
-#endif	
+	ATF_CHECK(fpcmp_equalf(log10f(HUGE_VALL), HUGE_VALL));
+	ATF_CHECK(fpcmp_equal(log10(HUGE_VALL), HUGE_VALL));
+	ATF_CHECK(fpcmp_equall(log10l(HUGE_VALL), HUGE_VALL));
+#endif
 }
 
 /* Add test cases to test program */
