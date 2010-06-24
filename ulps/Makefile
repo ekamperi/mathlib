@@ -11,4 +11,6 @@ LIB=-lm -lmpfr
 SOURCES=main.c gen.c ulp.c ../subr_random.c
 
 all: $(SOURCES)
+	@test -f config.h || \
+		(echo "You need to run autoreconf && ./configure first"; exit 1)
 	$(CC99) $(SOURCES) -o ulps $(CCFLAGS) $(INCLUDE) $(LIB)
