@@ -45,7 +45,7 @@ ATF_TC_BODY(test_log101, tc)
  * If x is +-0, a pole error shall occur and log10(), log10f(), and log10l() shall
  * return -HUGE_VAL, -HUGE_VALF, and -HUGE_VALL, respectively.
  */
-static long t4table[] = { +0.0, -0.0 };
+static long t2table[] = { +0.0, -0.0 };
 
 ATF_TC(test_log102);
 ATF_TC_HEAD(test_log102, tc)
@@ -67,7 +67,7 @@ ATF_TC_BODY(test_log102, tc)
 		/* float */
 		errno = 0;
 		clear_exceptions();
-		fy = log10f((float)t4table[i]);
+		fy = log10f((float)t2table[i]);
 #ifdef  HUGE_VALF
 		ATF_CHECK(fy == -HUGE_VALF);
 #endif
@@ -77,7 +77,7 @@ ATF_TC_BODY(test_log102, tc)
 		/* double */
 		errno = 0;
 		clear_exceptions();
-		dy = log10((double)t4table[i]);
+		dy = log10((double)t2table[i]);
 #ifdef	HUGE_VAL
 		ATF_CHECK(dy == -HUGE_VAL);
 #endif
@@ -87,7 +87,7 @@ ATF_TC_BODY(test_log102, tc)
 		/* long double */
 		errno = 0;
 		clear_exceptions();
-		ldy = log10l(t4table[i]);
+		ldy = log10l(t2table[i]);
 #ifdef  HUGE_VALL
 		ATF_CHECK(ldy == -HUGE_VALL);
 #endif
@@ -108,13 +108,13 @@ ATF_TC_BODY(test_log102, tc)
 }
 
 /*
- * Test case 5 -- Domain error
+ * Test case 3 -- Domain error
  *
  * For finite values of x that are less than 0, or if x is -Inf, a domain error
  * shall occur, and either a NaN (if supported), or an implementation-defined
  * value shall be returned.
  */
-static long double t5table[] = {
+static long double t3table[] = {
 #ifdef	INFINITY
 	-INFINITY,
 #endif
@@ -148,14 +148,14 @@ ATF_TC_BODY(test_log103, tc)
 	/*
 	 * First try with negative infinities
 	 */
-	N = sizeof(t5table) / sizeof(t5table[0]);
+	N = sizeof(t3table) / sizeof(t3table[0]);
 	ATF_REQUIRE(N > 0);
 
 	for (i = 0; i < N; i++) {
 		/* float */
 		errno = 0;
 		clear_exceptions();
-		fy = log10f((float)t5table[i]);
+		fy = log10f((float)t3table[i]);
 #ifdef	NAN
 		ATF_CHECK(isnan(fy));
 #endif
@@ -165,7 +165,7 @@ ATF_TC_BODY(test_log103, tc)
 		/* double */
 		errno = 0;
 		clear_exceptions();
-		dy = log10((double)t5table[i]);
+		dy = log10((double)t3table[i]);
 #ifdef	NAN
 		ATF_CHECK(isnan(dy));
 #endif
@@ -175,7 +175,7 @@ ATF_TC_BODY(test_log103, tc)
 		/* long double */
 		errno = 0;
 		clear_exceptions();
-		ldy = log10l(t5table[i]);
+		ldy = log10l(t3table[i]);
 #ifdef  NAN
 		ATF_CHECK(isnan(ldy));
 #endif
@@ -196,7 +196,7 @@ ATF_TC_BODY(test_log103, tc)
 		} while (fx >= 0.0);
 		errno = 0;
 		clear_exceptions();
-		fy = log10f((float)t5table[i]);
+		fy = log10f((float)t3table[i]);
 #ifdef  NAN
 		ATF_PASS_OR_BREAK(isnan(fy));
 #endif
@@ -209,7 +209,7 @@ ATF_TC_BODY(test_log103, tc)
 		} while (dx >= 0.0);
 		errno = 0;
 		clear_exceptions();
-		dy = log10((double)t5table[i]);
+		dy = log10((double)t3table[i]);
 #ifdef  NAN
 		ATF_PASS_OR_BREAK(isnan(dy));
 #endif
@@ -222,7 +222,7 @@ ATF_TC_BODY(test_log103, tc)
 		} while (ldx >= 0.0);
 		errno = 0;
 		clear_exceptions();
-		ldy = log10l(t5table[i]);
+		ldy = log10l(t3table[i]);
 #ifdef  NAN
 		ATF_PASS_OR_BREAK(isnan(ldy));
 #endif
