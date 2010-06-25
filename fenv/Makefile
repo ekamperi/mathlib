@@ -11,6 +11,7 @@ LIBS=-lm -latf-c
 VPATH = ../
 
 obj/%.o: %.c
+	mkdir -p obj
 	$(CC99) -c -o $@ $< $(CFLAGS)
 
 .PHONY: all
@@ -95,8 +96,8 @@ run:
 
 .PHONY: clean
 clean:
-	@rm -f obj/*.o *~ core
+	rm -f obj/*.o *~ core
 
 .PHONY: git-clean
 git-clean:
-	@git clean -fd > /dev/null
+	git clean -fd > /dev/null
