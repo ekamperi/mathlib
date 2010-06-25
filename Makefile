@@ -269,7 +269,8 @@ run:
 .PHONY: run-html
 run-html:
 	@echo "*** This may take awhile, depending on the value of       ***"
-	@echo "*** 'iterations' configuration variable, in your Atffile. ***"
+	@echo "*** 'iterations' configuration variable, in your Atffile  ***"
+	@echo "*** and the speed of your computer                        ***"
 	@echo
 	@rm -f tmp.xml tmp2.xml tmp3.xml
 	@rm -f tmp.html tmp2.html
@@ -283,10 +284,10 @@ run-html:
 
 .PHONY: clean
 clean:
-	@rm -f obj/*.o *~ core
+	rm -f obj/*.o *~ core
 	@rm -f tmp.xml tmp2.xml tmp3.xml
 	@rm -f tmp.html results.html
 
 .PHONY: git-clean
 git-clean:
-	@git clean -fd > /dev/null
+	git clean -fd > /dev/null
