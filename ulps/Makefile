@@ -21,7 +21,7 @@ ulpsobj/%.o: %.c
 	$(CC99) -c -o $@ $< $(CCFLAGS) $(INCLUDE)
 
 _DEPS = main.o gen.o ulp.o subr_random.o
- DEPS = $(_DEPS:%=ulpsobj/%)
+ DEPS = $(_DEPS:%=$(OBJDIR)/%)
 ulpcalc: $(DEPS)
 	$(CC99) -o ulps $(DEPS) $(CCFLAGS) $(INCLUDE) $(LIBS)
 
@@ -36,7 +36,7 @@ dist:
 
 .PHONY: clean
 clean:
-	rm -f ulpsobj/*.o *~ core
+	rm -f $(OBJDIR)/*.o *~ core
 
 .PHONY: git-clean
 git-clean:
