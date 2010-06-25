@@ -8,17 +8,21 @@ CCFLAGS=-Wall -W -Wformat-nonliteral -Wcast-align -Wpointer-arith \
 INCLUDE=-I../include -I/usr/include/gmp -I/usr/include/mpfr -I/usr/pkg/include
 LIBS=-lm -lmpfr -L/usr/local/lib -L/usr/pkg/lib
 
+# Don't use 'obj' or funny things will happen with VPATH set to ../
+OBJDIR = ulpsobj
+
 # For ../subr_*.c
 VPATH=../
 
-obj/%.o: %.c
+ulpsobj/%.o: %.c
+	@test -f config.h || \
+		(echo "You need to run autoreconf && ./configure first"; exit 1)
+	mkdir -p $(OBJDIR)
 	$(CC99) -c -o $@ $< $(CCFLAGS) $(INCLUDE)
 
 _DEPS = main.o gen.o ulp.o subr_random.o
- DEPS = $(_DEPS:%=obj/%)
+ DEPS = $(_DEPS:%=ulpsobj/%)
 ulpcalc: $(DEPS)
-	@test -f config.h || \
-		(echo "You need to run autoreconf && ./configure first"; exit 1)
 	$(CC99) -o ulps $(DEPS) $(CCFLAGS) $(INCLUDE) $(LIBS)
 
 # Hacky; create tar to ../ or else it will be included in the final tar
@@ -32,7 +36,7 @@ dist:
 
 .PHONY: clean
 clean:
-	rm -f obj/*.o *~ core
+	rm -f ulpsobj/*.o *~ core
 
 .PHONY: git-clean
 git-clean:
