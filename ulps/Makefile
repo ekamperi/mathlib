@@ -14,7 +14,7 @@ OBJDIR = ulpsobj
 # For ../subr_*.c
 VPATH=../
 
-ulpsobj/%.o: %.c
+$(OBJDIR)/%.o: %.c
 	@test -f config.h || \
 		(echo "You need to run autoreconf && ./configure first"; exit 1)
 	mkdir -p $(OBJDIR)
