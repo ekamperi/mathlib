@@ -9,7 +9,8 @@
 #include "subr_atf.h"
 #include "subr_fpcmp.h"
 
-struct tentry {
+static const struct
+tentry {
 	double x;       /* Input */
 	double y;       /* asin output */
 } ttable[] = {
@@ -95,9 +96,19 @@ ATF_TC_BODY(test_asin2, tc)
 		/* Sanity check */
 		ATF_REQUIRE(x >= -1.0 && x <= 1.0);
 
-		/* Actual checks */
-		ATF_PASS_OR_BREAK(asin(x) >= -M_PI_2);
-		ATF_PASS_OR_BREAK(asin(x) <=  M_PI_2);
+		/* float */
+		fy = asinf(x);
+		ATF_PASS_OR_BREAK(fy >= -M_PI_2 && fy <= M_PI_2);
+
+		/* double */
+		dy = asin(x);
+		ATF_PASS_OR_BREAK(dy >= -M_PI_2 && dy <= M_PI_2);
+
+		/* long double */
+#ifdef	HAVE_ASINL
+		ldy = asinl(x);
+		ATF_PASS_OR_BREAK(ldy >= -M_PI_2 && ldy <= M_PI_2);
+#endif
 	}
 }
 
@@ -113,17 +124,24 @@ ATF_TC_HEAD(test_asin3, tc)
 }
 ATF_TC_BODY(test_asin3, tc)
 {
-#ifdef	NAN
 	/* If x is NaN, a NaN shall be returned */
-	ATF_CHECK(fpclassify(asin(NAN)) == FP_NAN);
+	ATF_CHECK_IFNAN(asinf(NAN));
+        ATF_CHECK_IFNAN(asin(NAN));
+#ifdef	HAVE_ASINL
+        ATF_CHECK_IFNAN(asinl(NAN));
 #endif
 
 	/* If x is +-0, x shall be returned */
-	ATF_CHECK(fpclassify(asin(+0.0)) == FP_ZERO);
-	ATF_CHECK(signbit(asin(+0.0)) == 0);
+	ATF_CHECK(fpcmp_equalf(asinf( 0.0),  0.0));
+        ATF_CHECK(fpcmp_equalf(asinf(-0.0), -0.0));
 
-	ATF_CHECK(fpclassify(asin(-0.0)) == FP_ZERO);
-	ATF_CHECK(signbit(asin(-0.0)) != 0);
+        ATF_CHECK(fpcmp_equal(asin( 0.0),  0.0));
+        ATF_CHECK(fpcmp_equal(asin(-0.0), -0.0));
+
+#ifdef	HAVE_ASINL
+        ATF_CHECK(fpcmp_equall(asinl( 0.0),  0.0));
+        ATF_CHECK(fpcmp_equall(asinl(-0.0), -0.0));
+#endif
 }
 
 /* Add test cases to test program */
