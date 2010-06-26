@@ -1,12 +1,11 @@
 #include <atf-c.h>
 #include <math.h>
-#include <stdio.h>
-#include <stdlib.h>
 
 /*
  * Test case 1 -- float version
  */
-struct t1entry {
+static const struct
+t1entry {
 	float x;	/* Input */
 	int class;	/* fpclassify() output */
 } t1table[] = {
@@ -42,19 +41,19 @@ ATF_TC_HEAD(test_fpclassify_float, tc)
 ATF_TC_BODY(test_fpclassify_float, tc)
 {
 	size_t i, N;
-	int oval;	/* output value */
 
 	N = sizeof(t1table) / sizeof(t1table[0]);
-	for (i = 0; i < N; i++) {
-		oval = fpclassify(t1table[i].x);
-		ATF_CHECK(oval == t1table[i].class);
-	}
+	ATF_REQUIRE(N > 0);
+
+	for (i = 0; i < N; i++)
+		ATF_CHECK(fpclassify(t1table[i].x) == t1table[i].class);
 }
 
 /*
  * Test case 2 -- double version
  */
-struct t2entry {
+static const struct
+t2entry {
 	double x;	/* Input */
 	int class;	/* fpclassify() output */
 } t2table[] = {
@@ -96,19 +95,19 @@ ATF_TC_HEAD(test_fpclassify_double, tc)
 ATF_TC_BODY(test_fpclassify_double, tc)
 {
 	size_t i, N;
-	int oval;	/* output value */
 
 	N = sizeof(t2table) / sizeof(t2table[0]);
-	for (i = 0; i < N; i++) {
-		oval = fpclassify(t2table[i].x);
-		ATF_CHECK(oval == t2table[i].class);
-	}
+	ATF_REQUIRE(N > 0);
+
+	for (i = 0; i < N; i++)
+		ATF_CHECK(fpclassify(t2table[i].x) == t2table[i].class);
 }
 
 /*
  * Test case 3 -- long double version
  */
-struct t3entry {
+static const struct
+t3entry {
 	long double x;	/* Input */
 	int class;	/* fpclassify() output */
 } t3table[] = {
@@ -148,13 +147,12 @@ ATF_TC_HEAD(test_fpclassify_long_double, tc)
 ATF_TC_BODY(test_fpclassify_long_double, tc)
 {
 	size_t i, N;
-	int oval;	/* output value */
 
 	N = sizeof(t3table) / sizeof(t3table[0]);
-	for (i = 0; i < N; i++) {
-		oval = fpclassify(t3table[i].x);
-		ATF_CHECK(oval == t3table[i].class);
-	}
+	ATF_REQUIRE(N > 0);
+
+	for (i = 0; i < N; i++)
+		ATF_CHECK(fpclassify(t3table[i].x) == t3table[i].class);
 }
 
 /* Add test cases to test program */
