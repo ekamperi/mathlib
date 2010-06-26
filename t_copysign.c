@@ -9,7 +9,8 @@
 #include "subr_atf.h"
 #include "subr_random.h"
 
-struct tentry {
+static struct const
+tentry {
 	double x;       /* Input */
 	double y;       /* copysign output */
 } ttable[] = {
