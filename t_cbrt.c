@@ -1,14 +1,15 @@
 #include <atf-c.h>
 #include <math.h>
 #include <stdio.h>
-#include <stdlib.h>
 
+#include "config.h"
 #include "subr_fpcmp.h"
 
 /*
  * Test case 1 -- Basic functionality
  */
-struct tentry {
+static const struct
+tentry {
 	double x;       /* Input */
 	double y;       /* cbrt output */
 } ttable[] = {
@@ -38,6 +39,39 @@ ATF_TC_BODY(test_cbrt1, tc)
 /*
  * Test case 2 -- Edge cases
  */
+static const struct
+t2entry {
+	long double x;
+	long double y;
+} t2table[] = {
+	/* If x is NaN, a NaN shall be returned */
+#ifdef	NAN
+	{ NAN, NAN },
+#endif
+
+	/* If x is +-0, x shall be returned */
+	{  0.0,  0.0 },
+	{ -0.0, -0.0 },
+
+	/* If x is +-Inf, x shall be returned */
+#ifdef	INFINITY
+	{  INFINITY,  INFINITY },
+	{ -INFINITY, -INFINITY },
+#endif
+#ifdef	HUGE_VAL
+	{  HUGE_VAL,  HUGE_VAL },
+	{ -HUGE_VAL, -HUGE_VAL },
+#endif
+#ifdef	HUGE_VALF
+	{  HUGE_VALF,  HUGE_VALF },
+	{ -HUGE_VALF, -HUGE_VALF },
+#endif
+#ifdef	HUGE_VALL
+	{  HUGE_VALL,  HUGE_VALL },
+	{ -HUGE_VALL, -HUGE_VALL }
+#endif
+};
+
 ATF_TC(test_cbrt2);
 ATF_TC_HEAD(test_cbrt2, tc)
 {
@@ -47,32 +81,29 @@ ATF_TC_HEAD(test_cbrt2, tc)
 }
 ATF_TC_BODY(test_cbrt2, tc)
 {
-	double x;
+	size_t i, N;
 
-#ifdef	NAN
-	/* If x is NaN, a NaN shall be returned */
-	ATF_CHECK(fpclassify(cbrt(NAN)) == FP_NAN);
+	N = sizeof(t2table) / sizeof(t2table[0]);
+	ATF_REQUIRE(N > 0);
+
+	for (i = 0; i < N; i++) {
+		/* float */
+		ATF_CHECK(fpcmp_equalf(
+			    cbrtf((float)t2table[i].x),
+				  (float)t2table[i].y));
+
+		/* double */
+		ATF_CHECK(fpcmp_equalf(
+			    cbrtf((double)t2table[i].x),
+				  (double)t2table[i].y));
+
+		/* long double */
+#ifdef	HAVE_CBRTL
+		ATF_CHECK(fpcmp_equalf(
+			    cbrtf(t2table[i].x),
+				  t2table[i].y));
 #endif
-
-	/* If x is +-0, x shall be returned */
-	x = +0.0;
-	ATF_CHECK(fpclassify(cbrt(x)) == FP_ZERO);
-	ATF_CHECK(signbit(cbrt(x)) == 0);
-
-	x = -0.0;
-	ATF_CHECK(fpclassify(cbrt(x)) == FP_ZERO);
-	ATF_CHECK(signbit(cbrt(x)) != 0);
-
-#ifdef	INFINITY
-	/* If x is +-Inf, x shall be returned */
-	x = INFINITY;
-	ATF_CHECK(fpclassify(cbrt(x)) == FP_INFINITE);
-	ATF_CHECK(signbit(cbrt(x)) == 0);
-
-	x = -INFINITY;
-	ATF_CHECK(fpclassify(cbrt(x)) == FP_INFINITE);
-	ATF_CHECK(signbit(cbrt(x)) != 0);
-#endif
+	}
 }
 
 /* Add test cases to test program */
