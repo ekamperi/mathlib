@@ -85,12 +85,10 @@ ATF_TC_HEAD(test_cos3, tc)
 }
 ATF_TC_BODY(test_cos3, tc)
 {
-#ifdef	NAN
 	/* If x is NaN, a NaN shall be returned */
-	ATF_CHECK(fpcmp_equal(cos(NAN), NAN));
-	ATF_CHECK(fpcmp_equal(cosf(NAN), NAN));
-	ATF_CHECK(fpcmp_equal(cosl(NAN), NAN));
-#endif
+	ATF_CHECK_IFNAN(cos(NAN));
+	ATF_CHECK_IFNAN(cosf(NAN));
+	ATF_CHECK_IFNAN(cosl(NAN));
 
 	/* If x is +-0, x shall be returned */
 	ATF_CHECK(fpcmp_equal(cos( 0.0), 1.0));
@@ -152,9 +150,7 @@ ATF_TC_BODY(test_cos4, tc)
 		fy = cosf((float)t4table[i]);
 		ATF_CHECK(iserrno_equalto(EDOM));
 		ATF_CHECK(raised_exceptions(MY_FE_INVALID));
-#ifdef	NAN
-		ATF_CHECK(isnan(fy));
-#endif
+		ATF_CHECK_IFNAN(fy);
 
 		/* double */
 		errno = 0;
@@ -162,9 +158,7 @@ ATF_TC_BODY(test_cos4, tc)
 		dy = cos((double)t4table[i]);
                 ATF_CHECK(iserrno_equalto(EDOM));
                 ATF_CHECK(raised_exceptions(MY_FE_INVALID));
-#ifdef	NAN
-		ATF_CHECK(isnan(dy));
-#endif
+		ATF_CHECK_IFNAN(dy);
 
 		/* long double */
 		errno = 0;
@@ -172,9 +166,7 @@ ATF_TC_BODY(test_cos4, tc)
 		ldy = cosl(t4table[i]);
 		ATF_CHECK(iserrno_equalto(EDOM));
 		ATF_CHECK(raised_exceptions(MY_FE_INVALID));
-#ifdef	NAN
-		ATF_CHECK(isnan(ldy));
-#endif
+		ATF_CHECK_IFNAN(ldy);
 	}
 
 	/*

@@ -1,96 +1,26 @@
 #define _XOPEN_SOURCE 600
 
 #include <atf-c.h>
+#include <errno.h>
 #include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <time.h>
 
+#include "config.h"
+#include "subr_atf.h"
+#include "subr_errhandling.h"
 #include "subr_fpcmp.h"
-
-struct tentry {
-	double x;       /* Input */
-	double y;       /* acosh output */
-} ttable[] = {
-	{ 555.76450397066722183249517388062134,
-	  7.0134910216845678801314644063508552 },
-	{ 781.22311705936985248300098141671637,
-	  7.3540075612260647452045996650920720 },
-	{ 989.06997716804130224223886996548420,
-	  7.5899120096018770038259686735293258 },
-	{ 645138.91040697164627257579661292454,
-	  14.0703681181215968088326562026713025},
-	{ 771272.92220526202898277684979911530,
-	  14.2489447551692143761065560299447522 },
-	{ 841960.75597331351020002489859546938,
-	  14.3366358645901611565813413474090371 },
-	{ 3.9878900226032044443984119107727809E8,
-	  20.4970901991512077937866135229139336 },
-	{ 7.2271719647760120451059741181398258E8,
-	  21.0916757312963585585201105226859055 },
-	{ 8.7052721748521881579408545030938206E8,
-	  21.27775676374019431338960860375944980 },
-	{ 7.6533074808978200977595260918221361E10,
-	  25.7541360153464834046138003949864746 },
-	{ 1.0476763345033838642018762340890078E11,
-	  26.06815790056933173435501342835440291 },
-	{ 6.7275524495717021754056234013492974E11,
-	  27.9277946033775481086591626200699159 },
-	{ 8.8506237871596247195358832115345947E11,
-	  28.2020711444551919811446187557044861 },
-	{ 5.4035871079674920122422878094351575E14,
-	  34.6164014947642492062118864698843430 },
-	{ 7.5884791827348809094839616959955105E14,
-	  34.95596968262596126587447530079036435 },
-	{ 9.3981781207169159320971337540041751E14,
-	  35.16985433602260280365056957079331144 },
-	{ 2.2528928707284380186158723127839511E17,
-	  40.64930887216820780801174544578085394 },
-	{ 2.6822662823486626500808702030715361E17,
-	  40.82375582638182434562554988025347683 },
-	{ 7.6561913204305311796830457747584010E17,
-	  41.87260840490405373741037231014237497 },
-	{ 2.5997333751858222687400201832445503E20,
-	  47.70025793220443617069217993119119024 },
-	{ 3.0680167637685283492293893916068700E20,
-	  47.8658803880015171489896589476330384 },
-	{ 3.5781956846215625454214883418213572E20,
-	  48.0197077150943673209316697665798279 },
-	{ 1.4350938828528774825662129101598439E23,
-	  54.01383459008540608013755731979540007},
-	{ 6.4252974213502371259462519982935757E23,
-	  55.5128472403936094872769973289471619},
-	{ 7.8005069477624090760175553892898490E23,
-	  55.7067930443094418528883773799682514 },
-	{ 5.0726631750318560141824170586892001E26,
-	  62.18422555916778777518841141978661124 },
-	{ 6.1395754508086671639108646864961765E26,
-	  62.3751151933541356465212994903337428 },
-	{ 9.8975082462019578135187835054590233E26,
-	  62.85264263156302131673130055372015251 },
-	{ 3.6346652892458697009184929075617615E29,
-	  68.75863190414574943794430581241003633 },
-	{ 4.0204942765166881930528298085440428E29,
-	  68.8595197268173175026392103339404932 },
-	{ 6.2044741466302902354316992196719162E29,
-	  69.2933855457371296869018862169177385 },
-	{ 5.3735787769025239853116127243705585E32,
-	  76.0573642818201641218725297882468917 },
-	{ 6.5905740360686697798779989113546075E32,
-	  76.2615106082326547256724669246702886 },
-	{ 9.5884209391284350331918436618021989E32,
-	  76.6364263746821085814104301865967659 },
-	{ 3.4335477857831148042702891044996531E36,
-	  84.8198045948409855467678746789177753 },
-	{ 3.6452853916820439744908415962245757E36,
-	  84.8796451874989426611555729205602677 },
-	{ 9.6919325378316527126491012181352243E36,
-	  85.8575043706722240536604684241039149 }
-};
 
 /*
  * Test case 1 -- Basic functionality
  */
+static const struct
+t1entry {
+	long double x;	/* Input */
+	long double y;	/* acosh output */
+} t1table[] = {
+};
+
 ATF_TC(test_acosh1);
 ATF_TC_HEAD(test_acosh1, tc)
 {
@@ -102,18 +32,19 @@ ATF_TC_BODY(test_acosh1, tc)
 {
 	size_t i, N;
 
-	N = sizeof(ttable) / sizeof(ttable[0]);
+	N = sizeof(t1table) / sizeof(t1table[0]);
 	for (i = 0; i < N; i++) {
-		ATF_CHECK(fpcmp_equal(acosh(ttable[i].x), ttable[i].y));
+		ATF_CHECK(fpcmp_equal(acosh(t1table[i].x), t1table[i].y));
 	}
 }
 
 /*
  * Test case 2 -- Edge cases
  */
-struct t2entry {
-	double x;       /* Input */
-	double y;       /* acosh output */
+static const struct
+t2entry {
+	long double x;       /* Input */
+	long double y;       /* acosh output */
 } t2table[] = {
 	/* If x is NaN, a NaN shall be returned */
 #ifdef	NAN
@@ -148,12 +79,82 @@ ATF_TC_HEAD(test_acosh2, tc)
 ATF_TC_BODY(test_acosh2, tc)
 {
 	size_t i, N;
-	double oval;    /* output value */
 
 	N = sizeof(t2table) / sizeof(t2table[0]);
+	ATF_REQUIRE(N > 0);
+
 	for (i = 0; i < N; i++) {
-		oval = acosh(t2table[i].x);
-		ATF_CHECK(fpcmp_equal(oval, t2table[i].y));
+		/* float */
+		ATF_CHECK(fpcmp_equalf(
+			    acoshf((float)t2table[i].x),
+				   (float)t2table[i].y));
+
+		/* double */
+		ATF_CHECK(fpcmp_equal(
+			    acosh((double)t2table[i].x),
+				  (double)t2table[i].y));
+
+		/* long double */
+#ifdef	HAVE_ACOSHL
+		ATF_CHECK(fpcmp_equall(
+			    acoshl(t2table[i].x),
+				   t2table[i].y));
+#endif
+	}
+}
+
+/*
+ * Test case 3
+ *
+ * If x is -Inf, a domain error shall occur, and either a NaN (if supported),
+ * or an implementation-defined value shall be returned.
+ */
+ATF_TC(test_acosh3);
+ATF_TC_HEAD(test_acosh3, tc)
+{
+	atf_tc_set_md_var(tc,
+	    "descr",
+	    "Check some edge cases");
+}
+ATF_TC_BODY(test_acosh3, tc)
+{
+	float fy;
+	double dy;
+	long double ldy;
+	size_t i, N;
+
+	/* We are re-using t2table[] data, but we keep only the infinities */
+	N = sizeof(t2table) / sizeof(t2table[0]);
+	ATF_REQUIRE(N > 0);
+
+	for (i = 0; i < N; i++) {
+		if (isinf(t2table[i].x)) {
+			/* float */
+			errno = 0;
+			clear_exceptions();
+			fy = acoshf((float)t2table[i].x);
+			ATF_CHECK_IFNAN(fy);
+			ATF_CHECK(iserrno_equalto(EDOM));
+			ATF_CHECK(raised_exceptions(MY_FE_INVALID));
+
+			/* double */
+			errno = 0;
+			clear_exceptions();
+			dy = acosh((double)t2table[i].x);
+			ATF_CHECK_IFNAN(dy);
+			ATF_CHECK(iserrno_equalto(EDOM));
+			ATF_CHECK(raised_exceptions(MY_FE_INVALID));
+
+			/* long double */
+#ifdef	HAVE_ACOSHL
+			errno = 0;
+			clear_exceptions();
+			ldy = acoshl(t2table[i].x);
+			ATF_CHECK_IFNAN(ldy);
+			ATF_CHECK(iserrno_equalto(EDOM));
+			ATF_CHECK(raised_exceptions(MY_FE_INVALID));
+#endif
+		}
 	}
 }
 
@@ -162,6 +163,7 @@ ATF_TP_ADD_TCS(tp)
 {
 	ATF_TP_ADD_TC(tp, test_acosh1);
 	ATF_TP_ADD_TC(tp, test_acosh2);
+	ATF_TP_ADD_TC(tp, test_acosh3);
 
 	return atf_no_error();
 }
