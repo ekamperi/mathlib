@@ -38,9 +38,9 @@ for (i = 0; i < (end) && __cond; incr)
  * and the argument was indeed NaN. This effectively disables the check.
  */
 #ifdef	NAN
-#define ATF_CHECK_IFNAN(x) ATF_CHECK(isnan(x))
+#define ATF_CHECK_IFNAN(x)	ATF_CHECK(isnan(x))
 #else
-#define	ATF_CHECK_IFNAN(x) 1
+#define ATF_CHECK_IFNAN(x)	1
 #endif
 
 #endif	/* ! __SUBR_ATF_H__ */
