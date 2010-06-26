@@ -88,13 +88,11 @@ ATF_TC_HEAD(test_sin3, tc)
 }
 ATF_TC_BODY(test_sin3, tc)
 {
-#ifdef	NAN
 	/* If x is NaN, a NaN shall be returned */
-	ATF_CHECK(fpcmp_equal(sin(NAN), NAN));
-	ATF_CHECK(fpcmp_equal(sinf(NAN), NAN));
+	ATF_CHECK_IFNAN(sin(NAN));
+	ATF_CHECK_IFNAN(sinf(NAN));
 #ifdef	HAVE_SINL
-	ATF_CHECK(fpcmp_equal(sinl(NAN), NAN));
-#endif
+	ATF_CHECK_IFNAN(sinl(NAN));
 #endif
 
 	/* If x is +-0, x shall be returned */
@@ -160,9 +158,7 @@ ATF_TC_BODY(test_sin4, tc)
                 fy = sinf((float)t4table[i]);
                 ATF_CHECK(iserrno_equalto(EDOM));
                 ATF_CHECK(raised_exceptions(MY_FE_INVALID));
-#ifdef  NAN
-                ATF_CHECK(isnan(fy));
-#endif
+                ATF_CHECK_IFNAN(fy);
 
                 /* double */
                 errno = 0;
@@ -170,9 +166,7 @@ ATF_TC_BODY(test_sin4, tc)
                 dy = sin((double)t4table[i]);
                 ATF_CHECK(iserrno_equalto(EDOM));
                 ATF_CHECK(raised_exceptions(MY_FE_INVALID));
-#ifdef  NAN
-                ATF_CHECK(isnan(dy));
-#endif
+                ATF_CHECK_IFNAN(dy);
 
                 /* long double */
 #ifdef	HAVE_SINL
@@ -181,9 +175,7 @@ ATF_TC_BODY(test_sin4, tc)
                 ldy = sinl(t4table[i]);
                 ATF_CHECK(iserrno_equalto(EDOM));
                 ATF_CHECK(raised_exceptions(MY_FE_INVALID));
-#ifdef  NAN
-                ATF_CHECK(isnan(ldy));
-#endif
+                ATF_CHECK_IFNAN(ldy);
 #endif	/* HAVE_SINL */
         }
 
