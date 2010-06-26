@@ -9,7 +9,7 @@ ATF_TC_HEAD(test_float, tc)
 {
 	atf_tc_set_md_var(tc,
 	    "descr",
-	    "Test availibility of <float.h> constants");
+	    "Test availability of <float.h> constants");
 }
 ATF_TC_BODY(test_float, tc)
 {
