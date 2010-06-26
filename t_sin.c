@@ -5,6 +5,7 @@
 #include <math.h>
 #include <stdio.h>
 
+#include "config.h"
 #include "subr_atf.h"
 #include "subr_errhandling.h"
 #include "subr_fpcmp.h"
@@ -67,9 +68,11 @@ ATF_TC_BODY(test_sin2, tc)
 		ATF_PASS_OR_BREAK(dy >= -1.0 && dy <= 1.0);
 
 		/* long double */
+#ifdef	HAVE_SINL
 		ldx = random_long_double(FP_NORMAL);
 		ldy = sinl(ldx);
 		ATF_PASS_OR_BREAK(ldy >= -1.0 && ldy <= 1.0);
+#endif
 	}
 }
 
@@ -89,7 +92,9 @@ ATF_TC_BODY(test_sin3, tc)
 	/* If x is NaN, a NaN shall be returned */
 	ATF_CHECK(fpcmp_equal(sin(NAN), NAN));
 	ATF_CHECK(fpcmp_equal(sinf(NAN), NAN));
+#ifdef	HAVE_SINL
 	ATF_CHECK(fpcmp_equal(sinl(NAN), NAN));
+#endif
 #endif
 
 	/* If x is +-0, x shall be returned */
@@ -99,8 +104,10 @@ ATF_TC_BODY(test_sin3, tc)
 	ATF_CHECK(fpcmp_equal(sinf( 0.0),  0.0));
 	ATF_CHECK(fpcmp_equal(sinf(-0.0), -0.0));
 
+#ifdef	HAVE_SINL
 	ATF_CHECK(fpcmp_equal(sinl( 0.0),  0.0));
 	ATF_CHECK(fpcmp_equal(sinl(-0.0), -0.0));
+#endif
 }
 
 
