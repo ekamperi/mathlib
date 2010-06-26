@@ -4,10 +4,8 @@
 #include <errno.h>
 #include <float.h>	/* DBL_MIN */
 #include <math.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <time.h>
 
+#include "config.h"
 #include "subr_atf.h"
 #include "subr_errhandling.h"
 #include "subr_fpcmp.h"
@@ -21,7 +19,8 @@
 /*
  * Test case 1 -- Basic functionality
  */
-struct t1entry {
+static const struct
+t1entry {
 	long double x;       /* Input */
 	long double y;       /* erf output */
 } t1table[] = {
@@ -80,24 +79,30 @@ ATF_TC_BODY(test_erf1, tc)
 
 	N = sizeof(t1table) / sizeof(t1table[0]);
 	for (i = 0; i < N; i++) {
-		ATF_CHECK(fpcmp_equal(
+		/* float */
+		ATF_CHECK(fpcmp_equalf(
 			    erff((float)t1table[i].x),
 				 (float)t1table[i].y));
 
+		/* double */
 		ATF_CHECK(fpcmp_equal(
 			    erf((double)t1table[i].x),
 				(double)t1table[i].y));
 
-		ATF_CHECK(fpcmp_equal(
+		/* long double */
+#ifdef	HAVE_ERFL
+		ATF_CHECK(fpcmp_equall(
 			    erfl(t1table[i].x),
 				 t1table[i].y));
+#endif
 	}
 }
 
 /*
  * Test case 2 -- Edge cases
  */
-struct t2entry {
+static const struct
+t2entry {
 	long double x;	/* Input */
 	long double y;	/* erf output */
 } t2table[] = {
@@ -144,17 +149,22 @@ ATF_TC_BODY(test_erf2, tc)
 	ATF_REQUIRE(N > 0);
 
 	for (i = 0; i < N; i++) {
-		ATF_CHECK(fpcmp_equal(
+		/* float */
+		ATF_CHECK(fpcmp_equalf(
 			    erff((float)t2table[i].x),
-			    t2table[i].y));
+				 (float)t2table[i].y));
 
+		/* double */
 		ATF_CHECK(fpcmp_equal(
 			    erf((double)t2table[i].x),
-			    t2table[i].y));
+				(double)t2table[i].y));
 
-		ATF_CHECK(fpcmp_equal(
+		/* long double */
+#ifdef	HAVE_ERFL
+		ATF_CHECK(fpcmp_equall(
 			    erfl(t2table[i].x),
-			    t2table[i].y));
+				 t2table[i].y));
+#endif
 	}
 }
 
@@ -208,6 +218,7 @@ ATF_TC_BODY(test_erf3, tc)
 		ATF_CHECK(!raised_exceptions(MY_FE_ALL_EXCEPT));
 
 		/* long double */
+#ifdef	HAVE_ERFL
 		do {
 			ldx = random_long_double(FP_NORMAL);
 		} while (fabsf(ldx) < DBL_MIN * (sqrt(M_PI)/2));
@@ -216,13 +227,14 @@ ATF_TC_BODY(test_erf3, tc)
 		(void)erfl(ldx);
 		ATF_CHECK(iserrno_equalto(0));
 		ATF_CHECK(!raised_exceptions(MY_FE_ALL_EXCEPT));
+#endif
 	}
 
 	/* Ok, couldn't resist */
 	/* float */
 	errno = 0;
 	clear_exceptions();
-	erff(0.5 * DBL_MIN);
+	(void)erff(0.5 * DBL_MIN);
 	ATF_CHECK(errno == 0 || errno == ERANGE);
 	ATF_CHECK(!raised_exceptions(MY_FE_ALL_EXCEPT) ||
 		  raised_exceptions(MY_FE_UNDERFLOW));
@@ -230,18 +242,20 @@ ATF_TC_BODY(test_erf3, tc)
 	/* double */
 	errno = 0;
         clear_exceptions();
-        erf(0.5 * DBL_MIN);
+        (void)erf(0.5 * DBL_MIN);
         ATF_CHECK(errno == 0 || errno == ERANGE);
         ATF_CHECK(!raised_exceptions(MY_FE_ALL_EXCEPT) ||
                   raised_exceptions(MY_FE_UNDERFLOW));
 
 	/* long double */
+#ifdef	HAVE_ERFL
 	errno = 0;
         clear_exceptions();
-        erfl(0.5 * DBL_MIN);
+        (void)erfl(0.5 * DBL_MIN);
         ATF_CHECK(errno == 0 || errno == ERANGE);
         ATF_CHECK(!raised_exceptions(MY_FE_ALL_EXCEPT) ||
                   raised_exceptions(MY_FE_UNDERFLOW));
+#endif
 }
 
 /* Add test cases to test program */
