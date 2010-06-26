@@ -23,7 +23,7 @@ do {									\
  *
  * Also, we only print an error message if the current expression (x)
  * is false, not if some past one (__cond) were. Otherwise, the latter
- * would print twice the same error.
+ * would print spurious errors.
  */
 #define ATF_PASS_OR_BREAK(x)			\
 do {						\
