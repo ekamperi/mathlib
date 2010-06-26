@@ -13,7 +13,8 @@
 /*
  * Test case 1 -- Basic functionality
  */
-struct tentry {
+static const struct
+tentry {
         long double x;       /* Input */
         long double y;       /* cos output */
 } ttable[] = {
@@ -88,7 +89,9 @@ ATF_TC_BODY(test_cos3, tc)
 	/* If x is NaN, a NaN shall be returned */
 	ATF_CHECK_IFNAN(cos(NAN));
 	ATF_CHECK_IFNAN(cosf(NAN));
+#ifdef	HAVE_COSL
 	ATF_CHECK_IFNAN(cosl(NAN));
+#endif
 
 	/* If x is +-0, x shall be returned */
 	ATF_CHECK(fpcmp_equal(cos( 0.0), 1.0));
@@ -97,14 +100,17 @@ ATF_TC_BODY(test_cos3, tc)
 	ATF_CHECK(fpcmp_equal(cosf( 0.0), 1.0));
 	ATF_CHECK(fpcmp_equal(cosf(-0.0), 1.0));
 
+#ifdef	HAVE_COSL
 	ATF_CHECK(fpcmp_equal(cosl( 0.0), 1.0));
 	ATF_CHECK(fpcmp_equal(cosl(-0.0), 1.0));
+#endif
 }
 
 /*
  * Test case 4 -- Error conditions
  */
-long double t4table[] = {
+static const long double
+t4table[] = {
 #ifdef	INFINITY
 	INFINITY,
 #endif
