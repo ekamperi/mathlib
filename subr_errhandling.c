@@ -41,6 +41,10 @@ clear_errno(void)
  * instead of:
  * if (haserrexcept)
  *	ATF_CHECK(raised_exceptions(FE_INVALID));
+ *
+ * but we CAN'T write:
+ * ATF_CHECK(!raised_exceptions(FE_INVALID)), as this will fail if host doesn't
+ * support floating-point exceptions.
  */
 int
 raised_exceptions(int excepts)
