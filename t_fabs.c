@@ -1,13 +1,15 @@
 #include <atf-c.h>
 #include <math.h>
 
+#include "config.h"
 #include "subr_atf.h"
 #include "subr_fpcmp.h"
 
 /*
  * Test case 1 -- Basic functionality
  */
-struct t1entry {
+static const struct
+t1entry {
 	double x;       /* Input */
 	double z;	/* fabs output */
 } t1table[] = {
@@ -32,7 +34,8 @@ ATF_TC_BODY(test_fabs1, tc)
 /*
  * Test case 2 -- Edge cases
  */
-struct t2entry {
+static const struct
+t2entry {
 	long double x;		/* Input */
 	long double y;		/* fabs() output */
 } t2table[] = {
@@ -79,17 +82,22 @@ ATF_TC_BODY(test_fabs2, tc)
 	ATF_REQUIRE(N > 0);
 
 	for (i = 0; i < N; i++) {
+		/* float */
 		ATF_CHECK(fpcmp_equalf(
 			    fabsf((float)t2table[i].x),
 				  (float)t2table[i].y));
 
+		/* double */
                 ATF_CHECK(fpcmp_equal(
 			    fabs((double)t2table[i].x),
 				 (double)t2table[i].y));
 
+		/* long double */
+#ifdef	HAVE_FABSL
                 ATF_CHECK(fpcmp_equall(
 			    fabsl(t2table[i].x),
 				 t2table[i].y));
+#endif
 	}
 }
 
