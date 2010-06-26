@@ -77,6 +77,9 @@ ATF_TC_HEAD(test_atan2, tc)
 }
 ATF_TC_BODY(test_atan2, tc)
 {
+	float fy;
+	double dy;
+	long double ldy;
 	double x;
 	long i, N;
 
@@ -95,17 +98,29 @@ ATF_TC_BODY(test_atan2, tc)
 	ATF_FOR_LOOP(i, N, i++) {
 		x = -1.0 + rand() / ((RAND_MAX / 2.0) + 1.0);
 
-		ATF_PASS_OR_BREAK(atan(x) >= -M_PI_2 -0.1);
-		ATF_PASS_OR_BREAK(atan(x) <=  M_PI_2 +0.1);
+		/* float */
+		fy = atanf(x);
+		ATF_PASS_OR_BREAK(fy >= -M_PI_2 && fy <= M_PI_2);
+
+		/* double */
+		dy = atan(x);
+		ATF_PASS_OR_BREAK(dy >= -M_PI_2 && dy <= M_PI_2);
+
+		/* long double */
+#ifdef	HAVE_ATANL
+		ldy = atanl(x);
+		ATF_PASS_OR_BREAK(ldy >= -M_PI_2 && ldy <= M_PI_2);
+#endif
 	}
 }
 
 /*
  * Test case 3 -- Edge cases
  */
-struct t3entry {
-	double x;       /* Input */
-	double y;       /* atan output */
+static const struct
+t3entry {
+	long double x;	/* Input */
+	long double y;	/* atan output */
 } t3table[] = {
 	/* If x is NaN, a NaN shall be returned */
 #ifdef NAN
@@ -145,20 +160,22 @@ ATF_TC_HEAD(test_atan3, tc)
 ATF_TC_BODY(test_atan3, tc)
 {
 	size_t i, N;
-	double oval;    /* output value */
 
 	N = sizeof(t3table) / sizeof(t3table[0]);
 	ATF_REQUIRE(N > 0);
 
 	for (i = 0; i < N; i++) {
+		/* float */
 		ATF_CHECK(fpcmp_equalf(
 			    atanf((float)t3table[i].x),
 					 t3table[i].y));
 
+		/* double */
                 ATF_CHECK(fpcmp_equal(
 			    atan((double)t3table[i].x),
 					 t3table[i].y));
 
+		/* long double */
 #ifdef	HAVE_ATANL
                 ATF_CHECK(fpcmp_equall(
 			    atanl(t3table[i].x),
