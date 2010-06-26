@@ -2,6 +2,7 @@
 #include <errno.h>
 #include <math.h>
 
+#include "config.h"
 #include "subr_atf.h"
 #include "subr_errhandling.h"
 #include "subr_fpcmp.h"
@@ -10,7 +11,7 @@
 /*
  * Test case 1 -- Basic functionality
  */
-static struct
+static const struct
 t1entry {
 	long double x;	/* Input */
 	long double y;	/* Input */
@@ -87,7 +88,7 @@ ATF_TC_BODY(test_fma2, tc)
  * with the opposite sign, a domain error shall occur, and either a NaN (if
  * supported), or an implementation-defined value shall be returned.
  */
-static long double
+static const long double
 t3table[] =
 {
 #ifdef	INFINITY
@@ -115,6 +116,7 @@ ATF_TC_BODY(test_fma3, tc)
 {
 	float fx, fy, fw;
 	double dx, dy, dw;
+	long double ldx, ldy, ldw;
 	size_t i, N;
 
 	N = sizeof(t3table) / sizeof(t3table[0]);
@@ -128,9 +130,7 @@ ATF_TC_BODY(test_fma3, tc)
 		errno = 0;
 		clear_exceptions();
 		fw = fmaf(fx, fy, signbit(fy) ? fy : -fy);
-#ifdef	NAN
-		ATF_CHECK(isnan(fw));
-#endif
+		ATF_CHECK_IFNAN(fw);
 		ATF_CHECK(iserrno_equalto(EDOM));
 		ATF_CHECK(raised_exceptions(MY_FE_INVALID));
 
@@ -141,11 +141,22 @@ ATF_TC_BODY(test_fma3, tc)
 		errno = 0;
 		clear_exceptions();
 		dw = fma(dx, dy, signbit(dy) ? dy : -dy);
-#ifdef	NAN
-		ATF_CHECK(isnan(dw));
-#endif
+		ATF_CHECK_IFNAN(dw);
 		ATF_CHECK(iserrno_equalto(EDOM));
 		ATF_CHECK(raised_exceptions(MY_FE_INVALID));
+
+		/* long double */
+#ifdef	HAVE_FMAL
+		ldx = random_long_double(FP_NORMAL);
+		ldy = t3table[i];
+
+		errno = 0;
+		clear_exceptions();
+		ldw = fmal(ldx, ldy, signbit(ldy) ? ldy : -ldy);
+		ATF_CHECK_IFNAN(ldw);
+		ATF_CHECK(iserrno_equalto(EDOM));
+		ATF_CHECK(raised_exceptions(MY_FE_INVALID));
+#endif
 	}
 }
 
@@ -156,7 +167,7 @@ ATF_TC_BODY(test_fma3, tc)
  * a domain error shall occur, and either a NaN (if supported), or an
  * implementation-defined value shall be returned.
  */
-static struct
+static const struct
 t4entry {
 	long double x;
 	long double y;
@@ -209,35 +220,34 @@ ATF_TC_BODY(test_fma4, tc)
 		/* float */
 		errno = 0;
 		clear_exceptions();
-		fw = fmaf((float)t4table[i].x, (float)t4table[i].y,
-		    random_float(FP_NORMAL));
-#ifdef	NAN
-		ATF_CHECK(isnan(fw));
-#endif
+		fw = fmaf((float)t4table[i].x,
+			  (float)t4table[i].y,
+			  random_float(FP_NORMAL));
+		ATF_CHECK_IFNAN(fw);
 		ATF_CHECK(iserrno_equalto(EDOM));
 		ATF_CHECK(raised_exceptions(MY_FE_INVALID));
 
 		/* double */
 		errno = 0;
 		clear_exceptions();
-		dw = fma((double)t4table[i].x, (double)t4table[i].y,
-		    random_double(FP_NORMAL));
-#ifdef  NAN
-		ATF_CHECK(isnan(dw));
-#endif
+		dw = fma((double)t4table[i].x,
+			 (double)t4table[i].y,
+			 random_double(FP_NORMAL));
+		ATF_CHECK_IFNAN(dw);
 		ATF_CHECK(iserrno_equalto(EDOM));
 		ATF_CHECK(raised_exceptions(MY_FE_INVALID));
 
 		/* long double */
+#ifdef	HAVE_FMAL
 		errno = 0;
 		clear_exceptions();
-		ldw = fmal(t4table[i].x, t4table[i].y,
-		    random_long_double(FP_NORMAL));
-#ifdef  NAN
-		ATF_CHECK(isnan(ldw));
-#endif
+		ldw = fmal(t4table[i].x,
+			   t4table[i].y,
+			   random_long_double(FP_NORMAL));
+		ATF_CHECK_IFNAN(ldw);
 		ATF_CHECK(iserrno_equalto(EDOM));
 		ATF_CHECK(raised_exceptions(MY_FE_INVALID));
+#endif
 	}
 }
 
@@ -291,6 +301,21 @@ ATF_TC_BODY(test_fma5, tc)
 		if (raised_exceptions(MY_FE_ALL_EXCEPT)) {
 			ATF_CHECK(raised_exceptions(MY_FE_INVALID));
 		}
+
+		/* long double */
+#ifdef	HAVE_FMAL
+		errno = 0;
+		clear_exceptions();
+		dw = fmal(t4table[i].x, t4table[i].y, NAN);
+		ATF_CHECK(isnan(dw));
+		/* domain error is optional */
+		if (errno) {
+			ATF_CHECK(iserrno_equalto(EDOM));
+		}
+		if (raised_exceptions(MY_FE_ALL_EXCEPT)) {
+			ATF_CHECK(raised_exceptions(MY_FE_INVALID));
+		}
+#endif	/* HAVE_FMAL */
 	}
 #endif
 }
@@ -330,9 +355,11 @@ ATF_TC_BODY(test_fma6, tc)
 		ATF_CHECK(isnan(fma(dx, dy, NAN)));
 
 		/* long double */
+#ifdef	HAVE_FMAL
 		ldx = random_long_double(FP_NORMAL);
 		ldy = random_long_double(FP_NORMAL);
 		ATF_CHECK(isnan(fmal(ldx, ldy, NAN)));
+#endif	/* HAVE_FMAL */
 	}
 #endif
 }
