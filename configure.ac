@@ -26,6 +26,8 @@ AC_CHECK_FUNCS([acoshl acosl asinhl asinl atan2l atanhl atanl cbrtl ceill])
 AC_CHECK_FUNCS([copysignl coshl cosl erfcl erfl exp2l expl expm1l fabsl fdiml])
 AC_CHECK_FUNCS([floorl fmal fmaxl fminl fmodl frexpl hypotl ilogbl ldexpl])
 AC_CHECK_FUNCS([lgammal llrintl llroundl log10l log1pl log2l logbl logl lrintl])
-AC_CHECK_FUNCS([lroundl modfl nanl nearbyintl nextafterl])
+AC_CHECK_FUNCS([lroundl modfl nanl nearbyintl nextafterl nexttowardl powl])
+AC_CHECK_FUNCS([remainderl remquol rintl roundl scalblnl scalbnl sinhl sinl])
+AC_CHECK_FUNCS([sqrtl tanhl tanl tgammal truncl])
 
 AC_OUTPUT
