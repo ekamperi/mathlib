@@ -4,13 +4,13 @@
 #include <float.h>
 #include <math.h>
 #include <stdio.h>
-#include <stdlib.h>
 
 #include "subr_atf.h"
 #include "subr_fpcmp.h"
 #include "subr_random.h"
 
-struct tentry {
+static const struct
+tentry {
 	double x;       /* Input */
 	double y;       /* ceil output */
 } ttable[] = {
@@ -82,7 +82,8 @@ ATF_TC_BODY(test_ceil2, tc)
 /*
  * Test case 3 -- Edge cases
  */
-struct t3entry {
+static const struct
+t3entry {
 	long double x;
 	long double y;
 } t3table[] = {
@@ -94,7 +95,7 @@ struct t3entry {
 	{ 0.0,  0.0 },
 	{-0.0, -0.0 },
 
-#ifdef	IFINITIY
+#ifdef	INFINITIY
 	{  INFINITY,  INFINITY },
 	{ -INFINITY, -INFINITY },
 #endif
@@ -126,8 +127,22 @@ ATF_TC_BODY(test_ceil3, tc)
 	N = sizeof(t3table) / sizeof(t3table[0]);
 	ATF_REQUIRE(N > 0);
 
-	for (i = 0; i < N; i++)
-		ATF_CHECK(fpcmp_equal(ceil(t3table[i].x), t3table[i].y));
+	for (i = 0; i < N; i++) {
+		/* float */
+		ATF_CHECK(fpcmp_equalf(
+			    ceilf((float)t3table[i].x),
+				  (float)t3table[i].y));
+
+		/* double */
+		ATF_CHECK(fpcmp_equal(
+			    ceil((double)t3table[i].x),
+				 (double)t3table[i].y));
+
+		/* long double */
+		ATF_CHECK(fpcmp_equall(
+			    ceill(t3table[i].x),
+				  t3table[i].y));
+	}
 }
 
 /*
