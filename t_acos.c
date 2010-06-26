@@ -9,7 +9,8 @@
 #include "subr_atf.h"
 #include "subr_fpcmp.h"
 
-struct tentry {
+static const struct
+tentry {
 	double x;       /* Input */
 	double y;       /* acos output */
 } ttable[] = {
@@ -71,6 +72,9 @@ ATF_TC_HEAD(test_acos2, tc)
 }
 ATF_TC_BODY(test_acos2, tc)
 {
+	float fy;
+	double dy;
+	long double ldy;
 	double x;
 	long i, N;
 
@@ -95,9 +99,19 @@ ATF_TC_BODY(test_acos2, tc)
 		/* Sanity check */
 		ATF_REQUIRE(x >= -1.0 && x <= 1.0);
 
-		/* Actual checks */
-		ATF_PASS_OR_BREAK(acos(x) >= 0.0);
-		ATF_PASS_OR_BREAK(acos(x) <= M_PI);
+		/* float */
+		fy = acosf(x);
+		ATF_PASS_OR_BREAK(fy >= 0.0 && fy <= M_PI);
+
+		/* double */
+		dy = acos(x);
+		ATF_PASS_OR_BREAK(dy >= 0.0 && dy <= M_PI);
+
+		/* long double */
+#ifdef	HAVE_ACOSL
+		ldy = acosl(x);
+		ATF_PASS_OR_BREAK(ldy >= 0.0 && ldy <= M_PI);
+#endif
 	}
 }
 
@@ -113,14 +127,19 @@ ATF_TC_HEAD(test_acos3, tc)
 }
 ATF_TC_BODY(test_acos3, tc)
 {
-#ifdef	NAN
 	/* If x is NaN, a NaN shall be returned */
-	ATF_CHECK(fpclassify(acos(NAN)) == FP_NAN);
+	ATF_CHECK_IFNAN(acosf(NAN));
+	ATF_CHECK_IFNAN(acos(NAN));
+#ifdef	HAVE_ACOSL
+	ATF_CHECK_IFNAN(acosl(NAN));
 #endif
 
 	/* If x is +1, +0 shall be returned */
-	ATF_CHECK(fpclassify(acos(1.0)) == FP_ZERO);
-	ATF_CHECK(signbit(acos(1.0)) == 0);
+	ATF_CHECK(fpcmp_equalf(acosf(1.0), 0.0));
+	ATF_CHECK(fpcmp_equal(acos(1.0), 0.0));
+#ifdef	HAVE_ACOSL
+	ATF_CHECK(fpcmp_equall(acosl(1.0), 0.0));
+#endif
 }
 
 /* Add test cases to test program */
