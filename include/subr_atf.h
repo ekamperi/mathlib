@@ -20,11 +20,15 @@ do {									\
  *	ATF_PASS_OR_BREAK(... false ...);
  *	ATF_PASS_OR_BREAK(... true  ...);
  * }
+ *
+ * Also, we only print an error message if the current expression (x)
+ * is false, not if some past one (__cond) were. Otherwise, the latter
+ * would print twice the same error.
  */
 #define ATF_PASS_OR_BREAK(x)			\
 do {						\
 	__cond = __cond ? (x) : 0;		\
-	if (!__cond)				\
+	if (!(x))				\
 		ATF_PRINT_ERRMSG(#x);		\
 } while(0)
 
