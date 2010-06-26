@@ -72,6 +72,9 @@ ATF_TC_HEAD(test_asin2, tc)
 }
 ATF_TC_BODY(test_asin2, tc)
 {
+	float fy;
+	double dy;
+	long double ldy;
 	double x;
 	long i, N;
 
