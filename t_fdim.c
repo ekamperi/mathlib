@@ -2,6 +2,7 @@
 #include <errno.h>
 #include <math.h>
 
+#include "config.h"
 #include "subr_atf.h"
 #include "subr_errhandling.h"
 #include "subr_fpcmp.h"
@@ -10,7 +11,8 @@
 /*
  * Test case 1 -- Basic functionality
  */
-struct t1entry {
+static const struct
+t1entry {
 	long double x;	/* Input */
 	long double y;	/* Input */
 	long double z;	/* fdim output */
@@ -77,7 +79,8 @@ ATF_TC_BODY(test_fdim2, tc)
 /*
  * Test case 3 -- Overflow/Underflow
  */
-long double t3table[] = {
+static const long double
+t3table[] = {
 #ifdef	INFINITY
 	INFINITY,
 #endif
@@ -85,10 +88,10 @@ long double t3table[] = {
 	HUGE_VAL,
 #endif
 #ifdef	HUGE_VALF
-	/*HUGE_VALF,*/
+	HUGE_VALF,
 #endif
 #ifdef	HUGE_VALL
-	/*HUGE_VALL*/
+	HUGE_VALL
 #endif
 };
 
@@ -142,14 +145,16 @@ ATF_TC_BODY(test_fdim3, tc)
 		ATF_CHECK(raised_exceptions(MY_FE_OVERFLOW));
 
 		/* long double */
+#ifdef	HAVE_FDIML
 		errno = 0;
 		clear_exceptions();
 		ldy = fdiml(t3table[i], 0.0);
 #ifdef	HUGE_VALL
-		ATF_CHECK(fpcmp_equall(ldy, HUGE_VAL));
+		ATF_CHECK(fpcmp_equall(ldy, HUGE_VALL));
 #endif
 		ATF_CHECK(iserrno_equalto(ERANGE));
 		ATF_CHECK(raised_exceptions(MY_FE_OVERFLOW));
+#endif	/* HAVE_FDIML */
 	}
 }
 
