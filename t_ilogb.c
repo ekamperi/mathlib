@@ -218,14 +218,14 @@ ATF_TC_BODY(test_ilogb3, tc)
  * {INT_MIN} shall be returned and a domain error
  * shall occur.
  */
-ATF_TC(test_ilogb3);
-ATF_TC_HEAD(test_ilogb3, tc)
+ATF_TC(test_ilogb4);
+ATF_TC_HEAD(test_ilogb4, tc)
 {
 	atf_tc_set_md_var(tc,
 	    "descr",
 	    "Domain errors");
 }
-ATF_TC_BODY(test_ilogb3, tc)
+ATF_TC_BODY(test_ilogb4, tc)
 {
 	float fx;
 	double dx;
