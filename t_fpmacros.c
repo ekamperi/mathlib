@@ -1,13 +1,5 @@
-/*
- * Compile with:
- * gcc t_str.c -o t_str `pkg-config --cflags --libs atf-c`
- */
-
-#include <math.h>
-#include <stdio.h>
-#include <string.h>
-
 #include <atf-c.h>
+#include <math.h>
 
 /* Test case 1 -- various macros availibility */
 ATF_TC(test_macros_avail);
