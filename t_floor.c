@@ -3,14 +3,14 @@
 #include <atf-c.h>
 #include <float.h>
 #include <math.h>
-#include <stdio.h>
-#include <stdlib.h>
 
+#include "config.h"
 #include "subr_atf.h"
 #include "subr_fpcmp.h"
 #include "subr_random.h"
 
-struct tentry {
+static const struct
+tentry {
 	double x;       /* Input */
 	double y;       /* floor output */
 } ttable[] = {
@@ -71,20 +71,23 @@ ATF_TC_BODY(test_floor2, tc)
 		ATF_PASS_OR_BREAK(floor(dy) == dy);
 
 		/* long double */
+#ifdef	HAVE_FLOORL
 		ldx = random_long_double(FP_NORMAL);
 		ldy = floorl(ldx);
 		ATF_PASS_OR_BREAK(ldy <= ldx);
 		ATF_PASS_OR_BREAK(floorl(ldy) == ldy);
 		ATF_PASS_OR_BREAK(floorl(ldy) == ldy);
+#endif
 	}
 }
 
 /*
  * Test case 3 -- Edge cases
  */
-struct t3entry {
-	long double x;
-	long double y;
+static const struct
+t3entry {
+	long double x;	/* Input */
+	long double y;	/* floor() output */
 } t3table[] = {
 	/* If x is NaN, a NaN shall be returned */
 #ifdef	NAN
@@ -94,7 +97,7 @@ struct t3entry {
 	{ 0.0,  0.0 },
 	{-0.0, -0.0 },
 
-#ifdef	IFINITIY
+#ifdef	INFINITIY
 	{  INFINITY,  INFINITY },
 	{ -INFINITY, -INFINITY },
 #endif
@@ -126,8 +129,24 @@ ATF_TC_BODY(test_floor3, tc)
 	N = sizeof(t3table) / sizeof(t3table[0]);
 	ATF_REQUIRE(N > 0);
 
-	for (i = 0; i < N; i++)
-		ATF_CHECK(fpcmp_equal(floor(t3table[i].x), t3table[i].y));
+	for (i = 0; i < N; i++) {
+		/* float */
+		ATF_CHECK(fpcmp_equalf(
+			    floorf((float)t3table[i].x),
+				   (float)t3table[i].y));
+
+		/* double */
+		ATF_CHECK(fpcmp_equalf(
+			    floor((double)t3table[i].x),
+				  (double)t3table[i].y));
+
+		/* long double */
+#ifdef	HAVE_FLOORL
+		ATF_CHECK(fpcmp_equall(
+			    floorl(t3table[i].x),
+				   t3table[i].y));
+#endif
+	}
 }
 
 /*
