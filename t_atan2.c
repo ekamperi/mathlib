@@ -8,6 +8,7 @@
 #include <stdlib.h>
 #include <time.h>
 
+#include "config.h"
 #include "subr_atf.h"
 #include "subr_fpcmp.h"
 
@@ -114,10 +115,11 @@ ATF_TC_BODY(test_atan22, tc)
 /*
  * Test case 3 -- Edge cases
  */
-struct t3entry {
-	double y;       /* Input */
-	double x;
-	double z;       /* atan2 output */
+static const struct
+t3entry {
+	long double y;       /* Input */
+	long double x;
+	long double z;       /* atan2 output */
 } t3table[] = {
 	/* If y is +-0 and x is < 0, +-Pi shall be returned */
 	{ +0.0, -1E-5, M_PI },
@@ -225,25 +227,25 @@ struct t3entry {
 
 	/* If y is +-Inf and x is -Inf, +-3Pi/4 shall be returned */
 	{ +INFINITY, -INFINITY,  3*M_PI/4 },
-        { +INFINITY, -INFINITY,  3*M_PI/4 },
-        { +INFINITY, -INFINITY,  3*M_PI/4 },
-        { +INFINITY, -INFINITY,  3*M_PI/4 },
+	{ +INFINITY, -INFINITY,  3*M_PI/4 },
+	{ +INFINITY, -INFINITY,  3*M_PI/4 },
+	{ +INFINITY, -INFINITY,  3*M_PI/4 },
 
-        { -INFINITY, -INFINITY, -3*M_PI/4 },
-        { -INFINITY, -INFINITY, -3*M_PI/4 },
-        { -INFINITY, -INFINITY, -3*M_PI/4 },
-        { -INFINITY, -INFINITY, -3*M_PI/4 },
+	{ -INFINITY, -INFINITY, -3*M_PI/4 },
+	{ -INFINITY, -INFINITY, -3*M_PI/4 },
+	{ -INFINITY, -INFINITY, -3*M_PI/4 },
+	{ -INFINITY, -INFINITY, -3*M_PI/4 },
 
 	/* If y is +-Inf and x is +Inf, +-Pi/4 shall be returned */
-        { +INFINITY, INFINITY,  M_PI/4 },
-        { +INFINITY, INFINITY,  M_PI/4 },
-        { +INFINITY, INFINITY,  M_PI/4 },
-        { +INFINITY, INFINITY,  M_PI/4 },
+	{ +INFINITY, INFINITY,  M_PI/4 },
+	{ +INFINITY, INFINITY,  M_PI/4 },
+	{ +INFINITY, INFINITY,  M_PI/4 },
+	{ +INFINITY, INFINITY,  M_PI/4 },
 
-        { -INFINITY, INFINITY, -M_PI/4 },
-        { -INFINITY, INFINITY, -M_PI/4 },
-        { -INFINITY, INFINITY, -M_PI/4 },
-        { -INFINITY, INFINITY, -M_PI/4 },
+	{ -INFINITY, INFINITY, -M_PI/4 },
+	{ -INFINITY, INFINITY, -M_PI/4 },
+	{ -INFINITY, INFINITY, -M_PI/4 },
+	{ -INFINITY, INFINITY, -M_PI/4 },
 #endif	/* INFINITY */
 
 };
@@ -257,19 +259,39 @@ ATF_TC_HEAD(test_atan23, tc)
 }
 ATF_TC_BODY(test_atan23, tc)
 {
+	float fz;
+	double dz;
+	long double ldz;
 	size_t i, N;
-	double oval;	/* output value */
 
 	N = sizeof(t3table) / sizeof(t3table[0]);
+	ATF_REQUIRE(N > 0);
+
 	for (i = 0; i < N; i++) {
 		/* Mind that y comes before x */
-		oval = atan2(t3table[i].y, t3table[i].x);
-		ATF_CHECK(fpcmp_equal(oval, t3table[i].z));
+		/* float */
+		fz = atan2f((float)t3table[i].y,
+			    (float)t3table[i].x);
+		ATF_CHECK(fpcmp_equalf(fz, (float)t3table[i].z));
+
+		/* double */
+		dz = atan2((double)t3table[i].y,
+			   (double)t3table[i].x);
+		ATF_CHECK(fpcmp_equal(dz, (double)t3table[i].z));
+
+		/* long double */
+#ifdef	HAVE_ATAN2L
+		ldz = atan2l(t3table[i].y,
+			     t3table[i].x);
+		ATF_CHECK(fpcmp_equall(ldz, t3table[i].z));
+#endif
 	}
 }
 
 /*
  * Test case 4 -- Edge case on errno
+ *
+ * XXX: Check for any raised exceptions as well
  */
 ATF_TC(test_atan24);
 ATF_TC_HEAD(test_atan24, tc)
@@ -280,10 +302,23 @@ ATF_TC_HEAD(test_atan24, tc)
 }
 ATF_TC_BODY(test_atan24, tc)
 {
+	/* float */
+	errno = 0; atan2f(+0.0, +0.0); ATF_CHECK(errno != EDOM);
+	errno = 0; atan2f(+0.0, -0.0); ATF_CHECK(errno != EDOM);
+	errno = 0; atan2f(-0.0, +0.0); ATF_CHECK(errno != EDOM);
+	errno = 0; atan2f(-0.0, -0.0); ATF_CHECK(errno != EDOM);
+
+	/* double */
 	errno = 0; atan2(+0.0, +0.0); ATF_CHECK(errno != EDOM);
 	errno = 0; atan2(+0.0, -0.0); ATF_CHECK(errno != EDOM);
 	errno = 0; atan2(-0.0, +0.0); ATF_CHECK(errno != EDOM);
 	errno = 0; atan2(-0.0, -0.0); ATF_CHECK(errno != EDOM);
+
+	/* long double */
+	errno = 0; atan2l(+0.0, +0.0); ATF_CHECK(errno != EDOM);
+	errno = 0; atan2l(+0.0, -0.0); ATF_CHECK(errno != EDOM);
+	errno = 0; atan2l(-0.0, +0.0); ATF_CHECK(errno != EDOM);
+	errno = 0; atan2l(-0.0, -0.0); ATF_CHECK(errno != EDOM);
 }
 
 /* Add test cases to test program */
