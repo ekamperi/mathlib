@@ -4,6 +4,7 @@
 #include <errno.h>
 #include <math.h>
 
+#include "config.h"
 #include "subr_atf.h"
 #include "subr_errhandling.h"
 #include "subr_fpcmp.h"
@@ -99,9 +100,9 @@ ATF_TC_BODY(test_exp22, tc)
 ATF_TC(test_exp23);
 ATF_TC_HEAD(test_exp23, tc)
 {
-  atf_tc_set_md_var(tc,
-		    "descr",
-		    "Check for under/overflow");
+	atf_tc_set_md_var(tc,
+	    "descr",
+	    "Check for under/overflow");
 }
 ATF_TC_BODY(test_exp23, tc)
 {

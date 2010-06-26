@@ -133,9 +133,9 @@ ATF_TC_BODY(test_exp2, tc)
 ATF_TC(test_exp3);
 ATF_TC_HEAD(test_exp3, tc)
 {
-  atf_tc_set_md_var(tc,
-		    "descr",
-		    "Check for under/overflow");
+	atf_tc_set_md_var(tc,
+	    "descr",
+	    "Check for under/overflow");
 }
 ATF_TC_BODY(test_exp3, tc)
 {

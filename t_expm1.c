@@ -3,9 +3,8 @@
 #include <atf-c.h>
 #include <errno.h>
 #include <math.h>
-#include <stdio.h>
-#include <stdlib.h>
 
+#include "config.h"
 #include "subr_atf.h"
 #include "subr_errhandling.h"
 #include "subr_fpcmp.h"
@@ -14,7 +13,8 @@
 /*
  * Test case 1 -- Basic functionality
  */
-struct t1entry {
+static const struct
+t1entry {
 	long double x;       /* Input */
 	long double y;       /* expm1 output */
 } t1table[] = {
@@ -82,26 +82,31 @@ ATF_TC_BODY(test_expm12, tc)
 	ATF_REQUIRE(N > 0);
 
 	for (i = 0; i < N; i++) {
+		/* float */
 		ATF_CHECK(fpcmp_equal(
 			    expm1f((float)t2table[i].x),
-			    t2table[i].y));
+				   (float)t2table[i].y));
 
+		/* double */
 		ATF_CHECK(fpcmp_equal(
 			    expm1((double)t2table[i].x),
-			    t2table[i].y));
+				  (double)t2table[i].y));
 
+		/* long double */
+#ifdef	HAVE_EXPM1
 		ATF_CHECK(fpcmp_equal(
 			    expm1l(t2table[i].x),
-			    t2table[i].y));
+				   t2table[i].y));
+#endif
 	}
 }
 
 ATF_TC(test_expm13);
 ATF_TC_HEAD(test_expm13, tc)
 {
-  atf_tc_set_md_var(tc,
-		    "descr",
-		    "Check for overflow");
+	atf_tc_set_md_var(tc,
+	    "descr",
+	    "Check for overflow");
 }
 ATF_TC_BODY(test_expm13, tc)
 {
