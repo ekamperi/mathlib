@@ -4,6 +4,7 @@
 #include <errno.h>
 #include <math.h>
 
+#include "config.h"
 #include "subr_atf.h"
 #include "subr_errhandling.h"
 #include "subr_fpcmp.h"
