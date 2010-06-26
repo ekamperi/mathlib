@@ -157,7 +157,7 @@ ATF_TC_BODY(test_sin4, tc)
                 /* float */
                 errno = 0;
                 clear_exceptions();
-                fy = cosf((float)t4table[i]);
+                fy = sinf((float)t4table[i]);
                 ATF_CHECK(iserrno_equalto(EDOM));
                 ATF_CHECK(raised_exceptions(MY_FE_INVALID));
 #ifdef  NAN
@@ -167,7 +167,7 @@ ATF_TC_BODY(test_sin4, tc)
                 /* double */
                 errno = 0;
                 clear_exceptions();
-                dy = cos((double)t4table[i]);
+                dy = sin((double)t4table[i]);
                 ATF_CHECK(iserrno_equalto(EDOM));
                 ATF_CHECK(raised_exceptions(MY_FE_INVALID));
 #ifdef  NAN
@@ -175,14 +175,16 @@ ATF_TC_BODY(test_sin4, tc)
 #endif
 
                 /* long double */
+#ifdef	HAVE_SINL
                 errno = 0;
                 clear_exceptions();
-                ldy = cosl(t4table[i]);
+                ldy = sinl(t4table[i]);
                 ATF_CHECK(iserrno_equalto(EDOM));
                 ATF_CHECK(raised_exceptions(MY_FE_INVALID));
 #ifdef  NAN
                 ATF_CHECK(isnan(ldy));
 #endif
+#endif	/* HAVE_SINL */
         }
 
         /*
