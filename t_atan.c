@@ -6,6 +6,7 @@
 #include <stdlib.h>
 #include <time.h>
 
+#include "config.h"
 #include "subr_atf.h"
 #include "subr_fpcmp.h"
 
@@ -158,9 +159,11 @@ ATF_TC_BODY(test_atan3, tc)
 			    atan((double)t3table[i].x),
 					 t3table[i].y));
 
-                ATF_CHECK(fpcmp_equal(
+#ifdef	HAVE_ATANL
+                ATF_CHECK(fpcmp_equall(
 			    atanl(t3table[i].x),
 				  t3table[i].y));
+#endif
 	}
 
 	/*
