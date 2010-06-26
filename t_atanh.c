@@ -73,8 +73,6 @@ ATF_TC_BODY(test_atanh2, tc)
 /*
  * Test case 3 -- Errors
  */
-#define	NAN_IF_AVAIL 1
-
 static const struct
 t3entry {
 	long double x;
