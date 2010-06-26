@@ -71,7 +71,7 @@ t_ceil: $(DEPS_T_CEIL)
 	$(CC99) -o t_ceil $(DEPS_T_CEIL) $(CFLAGS) $(LIBS)
 
 
-_DEPS_T_CONSTANTS = t_constants.o
+_DEPS_T_CONSTANTS = t_constants.o subr_fpcmp.o
  DEPS_T_CONSTANTS = $(_DEPS_T_CONSTANTS:%=obj/%)
 t_constants: $(DEPS_T_CONSTANTS)
 	$(CC99) -o t_constants $(DEPS_T_CONSTANTS) $(CFLAGS) $(LIBS)

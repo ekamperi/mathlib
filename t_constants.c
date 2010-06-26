@@ -1,13 +1,11 @@
 #define	_XOPEN_SOURCE 600
 
+#include <atf-c.h>
 #include <limits.h>
 #include <math.h>
 #include <stdio.h>
-#include <string.h>
 
-#include <atf-c.h>
-
-#define	MYCMP(x, y)	fabs(((x) - (y)) < 1E-20)
+#include "subr_fpcmp.h"
 
 /* Test case 1 -- various constants availibility */
 ATF_TC(test_const_avail);
@@ -15,7 +13,7 @@ ATF_TC_HEAD(test_const_avail, tc)
 {
 	atf_tc_set_md_var(tc,
 	    "descr",
-	    "Test availibility of various math constants");
+	    "Test availability of various math constants");
 }
 ATF_TC_BODY(test_const_avail, tc)
 {
@@ -24,7 +22,7 @@ ATF_TC_BODY(test_const_avail, tc)
 	/* Value of e */
 	isdefined = 0;
 #ifdef	M_E
-	ATF_CHECK(MYCMP(M_E, 2.71828182845904523536));
+	ATF_CHECK(fpcmp_equal(M_E, 2.71828182845904523536));
 	isdefined = 1;
 #endif
 	ATF_CHECK(isdefined == 1);
@@ -32,7 +30,7 @@ ATF_TC_BODY(test_const_avail, tc)
 	/* Value of log2e */
 	isdefined = 0;
 #ifdef  M_LOG2E
-	ATF_CHECK(MYCMP(M_LOG2E, 1.44269504088896340736));
+	ATF_CHECK(fpcmp_equal(M_LOG2E, 1.44269504088896340736));
 	isdefined = 1;
 #endif
 	ATF_CHECK(isdefined == 1);
@@ -40,7 +38,7 @@ ATF_TC_BODY(test_const_avail, tc)
 	/* Value of log10e */
 	isdefined = 0;
 #ifdef  M_LOG10E
-	ATF_CHECK(MYCMP(M_LOG10E, 0.434294481903251827651));
+	ATF_CHECK(fpcmp_equal(M_LOG10E, 0.434294481903251827651));
 	isdefined = 1;
 #endif
 	ATF_CHECK(isdefined == 1);
@@ -48,7 +46,7 @@ ATF_TC_BODY(test_const_avail, tc)
 	/* Value of loge2 */
 	isdefined = 0;
 #ifdef  M_LN2
-	ATF_CHECK(MYCMP(M_LN2, 0.693147180559945309417));
+	ATF_CHECK(fpcmp_equal(M_LN2, 0.693147180559945309417));
 	isdefined = 1;
 #endif
 	ATF_CHECK(isdefined == 1);
@@ -56,7 +54,7 @@ ATF_TC_BODY(test_const_avail, tc)
 	/* Value of loge10 */
 	isdefined = 0;
 #ifdef  M_LN10
-	ATF_CHECK(MYCMP(M_LN2, 2.30258509299404568402));
+	ATF_CHECK(fpcmp_equal(M_LN2, 2.30258509299404568402));
 	isdefined = 1;
 #endif
 	ATF_CHECK(isdefined == 1);
@@ -64,7 +62,7 @@ ATF_TC_BODY(test_const_avail, tc)
 	/* Value of pi */
 	isdefined = 0;
 #ifdef  M_PI
-	ATF_CHECK(MYCMP(M_PI, 3.141592653589793238462643));
+	ATF_CHECK(fpcmp_equal(M_PI, 3.141592653589793238462643));
 	isdefined = 1;
 #endif
 	ATF_CHECK(isdefined == 1);
@@ -72,7 +70,7 @@ ATF_TC_BODY(test_const_avail, tc)
 	/* Value of pi/2 */
 	isdefined = 0;
 #ifdef  M_PI_2
-	ATF_CHECK(MYCMP(M_PI_2, 1.57079632679489661923));
+	ATF_CHECK(fpcmp_equal(M_PI_2, 1.57079632679489661923));
 	isdefined = 1;
 #endif
 	ATF_CHECK(isdefined == 1);
@@ -80,7 +78,7 @@ ATF_TC_BODY(test_const_avail, tc)
 	/* Value of pi/4 */
 	isdefined = 0;
 #ifdef  M_PI_4
-	ATF_CHECK(MYCMP(M_PI_4, 0.785398163397448309616));
+	ATF_CHECK(fpcmp_equal(M_PI_4, 0.785398163397448309616));
 	isdefined = 1;
 #endif
 	ATF_CHECK(isdefined == 1);
@@ -88,7 +86,7 @@ ATF_TC_BODY(test_const_avail, tc)
 	/* Value of 1/pi */
 	isdefined = 0;
 #ifdef  M_1_PI
-		ATF_CHECK(MYCMP(M_1_PI, 0.318309886183790671538));
+		ATF_CHECK(fpcmp_equal(M_1_PI, 0.318309886183790671538));
 	isdefined = 1;
 #endif
 	ATF_CHECK(isdefined == 1);
@@ -96,7 +94,7 @@ ATF_TC_BODY(test_const_avail, tc)
 	/* Value of 2/pi */
 	isdefined = 0;
 #ifdef  M_2_PI
-	ATF_CHECK(MYCMP(M_2_PI, 0.636619772367581343076));
+	ATF_CHECK(fpcmp_equal(M_2_PI, 0.636619772367581343076));
 	isdefined = 1;
 #endif
 	ATF_CHECK(isdefined == 1);
@@ -104,7 +102,7 @@ ATF_TC_BODY(test_const_avail, tc)
 	/* Value of 2/sqrt(pi) */
 	isdefined = 0;
 #ifdef  M_2_SQRTPI
-	ATF_CHECK(MYCMP(M_2_SQRTPI, 1.12837916709551257390));
+	ATF_CHECK(fpcmp_equal(M_2_SQRTPI, 1.12837916709551257390));
 	isdefined = 1;
 #endif
 	ATF_CHECK(isdefined == 1);
@@ -112,7 +110,7 @@ ATF_TC_BODY(test_const_avail, tc)
 	/* Value of sqrt(2) */
 	isdefined = 0;
 #ifdef  M_SQRT2
-	ATF_CHECK(MYCMP(M_SQRT2, 1.41421356237309504880));
+	ATF_CHECK(fpcmp_equal(M_SQRT2, 1.41421356237309504880));
 	isdefined = 1;
 #endif
 	ATF_CHECK(isdefined == 1);
@@ -120,7 +118,7 @@ ATF_TC_BODY(test_const_avail, tc)
 	/* Value of 1/sqrt(2) */
 	isdefined = 0;
 #ifdef  M_SQRT1_2
-	ATF_CHECK(MYCMP(M_SQRT1_2, 0.707106781186547524401));
+	ATF_CHECK(fpcmp_equal(M_SQRT1_2, 0.707106781186547524401));
 	isdefined = 1;
 #endif
 	ATF_CHECK(isdefined == 1);
@@ -181,9 +179,9 @@ ATF_TC_BODY(test_math_errhandling, tc)
 {
 #if defined(math_errhandling) && (defined(MATH_ERRNO) || defined(MATH_ERREXCEPT))
 	ATF_CHECK(sizeof(math_errhandling) == sizeof(int));
-	ATF_CHECK(math_errhandling == MATH_ERRNO ||
-	    math_errhandling == MATH_ERREXCEPT	 ||
-	    math_errhandling == (MATH_ERRNO | MATH_ERREXCEPT));
+	ATF_CHECK(math_errhandling == MATH_ERRNO
+	       || math_errhandling == MATH_ERREXCEPT
+	       || math_errhandling == (MATH_ERRNO | MATH_ERREXCEPT));
 #endif
 }
 
