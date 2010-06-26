@@ -3,8 +3,6 @@
 #include <atf-c.h>
 #include <errno.h>
 #include <math.h>
-#include <stdio.h>
-#include <stdlib.h>
 
 #include "subr_atf.h"
 #include "subr_errhandling.h"
@@ -14,7 +12,8 @@
 /*
  * Test case 1 -- Basic functionality
  */
-struct t1entry {
+static const struct
+t1entry {
 	long double x;       /* Input */
 	long double y;       /* exp2 output */
 } t1table[] = {
@@ -34,7 +33,8 @@ ATF_TC_BODY(test_exp21, tc)
 /*
  * Test case 2 -- Edge cases
  */
-struct t2entry {
+static const struct
+t2entry {
 	long double x;	/* Input */
 	long double y;	/* exp2 output */
 } t2table[] = {
@@ -77,17 +77,22 @@ ATF_TC_BODY(test_exp22, tc)
 	ATF_REQUIRE(N > 0);
 
 	for (i = 0; i < N; i++) {
-		ATF_CHECK(fpcmp_equal(
+		/* float */
+		ATF_CHECK(fpcmp_equalf(
 			    exp2f((float)t2table[i].x),
-			    t2table[i].y));
+				  (float)t2table[i].y));
 
+		/* double */
 		ATF_CHECK(fpcmp_equal(
 			    exp2((double)t2table[i].x),
-			    t2table[i].y));
+				 (double)t2table[i].y));
 
+		/* long double */
+#ifdef	HAVE_EXP2L
 		ATF_CHECK(fpcmp_equal(
 			    exp2l(t2table[i].x),
-			    t2table[i].y));
+				  t2table[i].y));
+#endif
 	}
 }
 
@@ -96,7 +101,7 @@ ATF_TC_HEAD(test_exp23, tc)
 {
   atf_tc_set_md_var(tc,
 		    "descr",
-		    "Check for undexp2low");
+		    "Check for under/overflow");
 }
 ATF_TC_BODY(test_exp23, tc)
 {
