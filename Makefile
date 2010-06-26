@@ -23,7 +23,7 @@ t_acos: $(DEPS_T_ACOS)
 	$(CC99) -o t_acos $(DEPS_T_ACOS) $(CFLAGS) $(LIBS)
 
 
-_DEPS_T_ACOSH = t_acosh.o subr_fpcmp.o
+_DEPS_T_ACOSH = t_acosh.o subr_errhandling.o subr_fpcmp.o
  DEPS_T_ACOSH = $(_DEPS_T_ACOSH:%=obj/%)
 t_acosh: $(DEPS_T_ACOSH)
 	$(CC99) -o t_acosh $(DEPS_T_ACOSH) $(CFLAGS) $(LIBS)
