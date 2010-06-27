@@ -4,21 +4,18 @@
 #include <errno.h>
 #include <float.h>
 #include <math.h>
-#include <stdio.h>
-#include <stdlib.h>
 
 #include "config.h"
+#include "subr_atf.h"
 #include "subr_errhandling.h"
 #include "subr_fpcmp.h"
+#include "subr_random.h"
 
-#ifdef  HAS_MATH_ERREXCEPT
-#include <fenv.h>
-#endif  /* HAS_MATH_ERREXCEPT */
-
-struct tentry {
-	double x;	/* Input */
-	double y;	/* Input */
-	double z;       /* hypot() output */
+static const struct
+t1entry {
+	long double x;	/* Input */
+	long double y;	/* Input */
+	long double z;	/* hypot() output */
 } t1table[] = {
 };
 
@@ -38,7 +35,6 @@ ATF_TC_BODY(test_hypot1, tc)
 	size_t i, N;
 
 	N = sizeof(t1table) / sizeof(t1table[0]);
-	/*ATF_REQUIRE(N > 0);*/
 
 	for (i = 0; i < N; i++) {
 		ATF_CHECK(fpcmp_equal(
@@ -50,9 +46,9 @@ ATF_TC_BODY(test_hypot1, tc)
  * Test case 2 -- Edge cases
  */
 struct t2entry {
-	double x;       /* Input */
-	double y;	/* Input */
-	double z;       /* hypot() output */
+	long double x;	/* Input */
+	long double y;	/* Input */
+	long double z;	/* hypot() output */
 } t2table[] = {
 #ifdef	INFINITY
 	/* If x is +-Inf, +Inf shall be returned */
@@ -112,14 +108,30 @@ ATF_TC_HEAD(test_hypot2, tc)
 ATF_TC_BODY(test_hypot2, tc)
 {
 	size_t i, N;
-	double oval;	/* output value */
 
 	N = sizeof(t2table) / sizeof(t2table[0]);
 	ATF_REQUIRE(N > 0);
 
 	for (i = 0; i < N; i++) {
-		oval = hypot(t2table[i].x, t2table[i].y);
-		ATF_CHECK(fpcmp_equal(oval, t2table[i].z));
+		/* float */
+		ATF_CHECK(fpcmp_equalf(
+			    hypotf((float)t2table[i].x,
+				   (float)t2table[i].y),
+			    (float)t2table[i].z));
+
+		/* double */
+		ATF_CHECK(fpcmp_equal(
+			    hypot((double)t2table[i].x,
+				  (double)t2table[i].y),
+			    (double)t2table[i].z));
+
+		/* long double */
+#ifdef	HAVE_HYPOTL
+		ATF_CHECK(fpcmp_equall(
+			    hypotl(t2table[i].x,
+				   t2table[i].y),
+			    t2table[i].z));
+#endif
 	}
 }
 
@@ -131,63 +143,35 @@ ATF_TC_HEAD(test_hypot3, tc)
 {
 	atf_tc_set_md_var(tc,
 	    "descr",
-	    "hypot() doesn't overlow in intermediate steps");
+	    "hypot() doesn't overflow in intermediate steps");
 }
 ATF_TC_BODY(test_hypot3, tc)
 {
-	int hasfp = 0;		/* Whether exceptions are supported */
-	int haserrno = 0;	/* Whether errno is supported */
+	int haserrexcept;
+	int haserrno;
 
-	/*
-	 * POSIX requires that at least one of the error reporting mechanisms
-	 * is supported.
-	 */
-	query_errhandling(&hasfp, &haserrno);
-	ATF_REQUIRE(hasfp || haserrno);
+	/* We can't proceed if there's no way to detect errors */
+	query_errhandling(&haserrexcept, &haserrno);
+	ATF_REQUIRE(haserrexcept || haserrno);
 
+	/* This should NOT overflow */
 	volatile double x, y;
-	x =  DBL_MAX / M_SQRT2;
-	y =  DBL_MAX / M_SQRT2;
+	x = DBL_MAX / M_SQRT2;
+	y = DBL_MAX / M_SQRT2;
 
-	if (hasfp) {
-		int ex;
-
-		/* Clear the overflow exception */
-		ATF_REQUIRE(feclearexcept(FE_OVERFLOW) == 0);
-		(void)hypot(x, y);
-
-		/* ... and check if it was raised */
-		ex = fetestexcept(FE_OVERFLOW);
-		ATF_CHECK((ex & FE_OVERFLOW) == 0);
-	}
-
-	if (haserrno) {
-		errno = 0;
-		(void)hypot(x, y);
-		ATF_CHECK(errno == 0);
-	}
+	errno = 0;
+	clear_exceptions();
+	(void)hypot(x, y);
+	ATF_CHECK(iserrno_equalto(0));
+	ATF_CHECK(!raised_exceptions(MY_FE_OVERFLOW));	/* XXX */
 
 	/* This should indeed overflow */
 	x = DBL_MAX;
 	y = DBL_MAX;
 
-	if (hasfp) {
-		int ex;
-
-		/* Clean all the exceptions */
-		ATF_REQUIRE(feclearexcept(FE_ALL_EXCEPT) == 0);
-		(void)hypot(x, y);
-
-		/* ... and check if it was raised */
-		ex = fetestexcept(FE_OVERFLOW);
-		ATF_CHECK((ex & FE_OVERFLOW) == FE_OVERFLOW );
-	}
-
-	if (haserrno) {
-		errno = 0;
-		(void)hypot(x, y);
-		ATF_CHECK(errno == 0);
-	}
+	clear_exceptions();
+	(void)hypot(x, y);
+	ATF_CHECK(raised_exceptions(MY_FE_OVERFLOW));
 }
 
 /*
@@ -196,43 +180,28 @@ ATF_TC_BODY(test_hypot3, tc)
 ATF_TC(test_hypot4);
 ATF_TC_HEAD(test_hypot4, tc)
 {
-  atf_tc_set_md_var(tc,
-		    "descr",
-		    "hypot() doesn't underflow in intermediate steps");
+	atf_tc_set_md_var(tc,
+	    "descr",
+	    "hypot() doesn't underflow in intermediate steps");
 }
 ATF_TC_BODY(test_hypot4, tc)
 {
-	int hasfp = 0;          /* Whether exceptions are supported */
-	int haserrno = 0;       /* Whether errno is supported */
+	int haserrexcept;
+	int haserrno;
 
-	/*
-	 * POSIX requires that at least one of the error reporting mechanisms
-	 * is supported.
-	 */
-	query_errhandling(&hasfp, &haserrno);
-	ATF_REQUIRE(hasfp || haserrno);
+	/* We can't proceed if there's no way to detect errors */
+	query_errhandling(&haserrexcept, &haserrno);
+	ATF_REQUIRE(haserrexcept || haserrno);
 
 	volatile double x, y;
 	x = DBL_MIN;
 	y = DBL_MIN;
 
-	if (hasfp) {
-		int ex;
-
-		/* Clear the underflow exception */
-		ATF_REQUIRE(feclearexcept(FE_UNDERFLOW) == 0);
-		(void)hypot(x, y);
-
-		/* ... and check if it was raised */
-		ex = fetestexcept(FE_UNDERFLOW);
-		ATF_CHECK((ex & FE_UNDERFLOW) == 0);
-	}
-
-	if (haserrno) {
-		errno = 0;
-		(void)hypot(x, y);
-		ATF_CHECK(errno == 0);
-	}
+	errno = 0;
+	clear_exceptions();
+	(void)hypot(x, y);
+	ATF_CHECK(iserrno_equalto(0));
+	ATF_CHECK(!raised_exceptions(MY_FE_UNDERFLOW));
 }
 
 /*
@@ -247,9 +216,48 @@ ATF_TC_HEAD(test_hypot5, tc)
 }
 ATF_TC_BODY(test_hypot5, tc)
 {
-	/* hypot(x,y), hypot(y,x), and hypot(x, -y) are equivalent */
+	float fx, fy;
+	double dx, dy;
+	long double ldx, ldy;
+	long i, N;
 
-	/* hypot(x, +-0) is equivalent to fabs(x) */
+	N = get_config_var_as_long(tc, "iterations");
+	ATF_REQUIRE(N > 0);
+
+	/*
+	 * hypot(x,y), hypot(y,x), and hypot(x, -y) are equivalent
+	 * hypot(x, +-0) is equivalent to fabs(x)
+	 */
+	ATF_FOR_LOOP(i, N, i++) {
+		/* float */
+		fx = random_float(FP_NORMAL);
+		fy = random_float(FP_NORMAL);
+		ATF_CHECK(hypotf(fx,  fy) == hypotf(fy, fx));
+		ATF_CHECK(hypotf(fx, -fy) == hypotf(fy, fx));
+
+		ATF_CHECK(hypotf(fx,  0.0) == fabs(fx));
+		ATF_CHECK(hypotf(fx, -0.0) == fabs(fx));
+
+		/* double */
+		dx = random_double(FP_NORMAL);
+		dy = random_double(FP_NORMAL);
+		ATF_CHECK(hypot(dx,  dy) == hypot(dy, dx));
+		ATF_CHECK(hypot(dx, -dy) == hypot(dy, dx));
+
+		ATF_CHECK(hypot(dx,  0.0) == fabs(dx));
+		ATF_CHECK(hypot(dx, -0.0) == fabs(dx));
+
+		/* long double */
+#ifdef	HAVE_HYPOTL
+		ldx = random_long_double(FP_NORMAL);
+		ldy = random_long_double(FP_NORMAL);
+		ATF_CHECK(hypotl(ldx,  ldy) == hypotl(ldy, ldx));
+		ATF_CHECK(hypotl(ldx, -ldy) == hypotl(ldy, ldx));
+
+		ATF_CHECK(hypotl(ldx,  0.0) == fabsl(ldx));
+		ATF_CHECK(hypotl(ldx, -0.0) == fabsl(ldx));
+#endif
+	}
 }
 
 /* Add test cases to test program */

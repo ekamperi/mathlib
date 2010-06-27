@@ -172,7 +172,7 @@ t_ilogb: $(DEPS_T_ILOGB)
 	$(CC99) -o t_ilogb $(DEPS_T_ILOGB) $(CFLAGS) $(LIBS)
 
 
-_DEPS_T_HYPOT = t_hypot.o subr_errhandling.o subr_fpcmp.o
+_DEPS_T_HYPOT = t_hypot.o subr_atf.o subr_errhandling.o subr_fpcmp.o subr_random.o
  DEPS_T_HYPOT = $(_DEPS_T_HYPOT:%=obj/%)
 t_hypot: $(DEPS_T_HYPOT)
 	$(CC99) -o t_hypot $(DEPS_T_HYPOT) $(CFLAGS) $(LIBS)
