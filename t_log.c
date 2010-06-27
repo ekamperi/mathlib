@@ -1,19 +1,16 @@
 #define _XOPEN_SOURCE 600
 
+#include <atf-c.h>
+#include <errno.h>
+#include <math.h>
+
 #include "config.h"
 #include "subr_atf.h"
 #include "subr_errhandling.h"
 #include "subr_fpcmp.h"
 #include "subr_random.h"
 
-#include <atf-c.h>
-#include <errno.h>
-#include <math.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <fenv.h>
-
-static struct
+static const struct
 tentry {
 	long double x;       /* Input */
 	long double y;       /* log() output */
@@ -45,7 +42,7 @@ ATF_TC_BODY(test_log1, tc)
  * If x is +-0, a pole error shall occur and log(), logf(), and logl() shall
  * return -HUGE_VAL, -HUGE_VALF, and -HUGE_VALL, respectively.
  */
-static long t2table[] = { +0.0, -0.0 };
+static const long t2table[] = { +0.0, -0.0 };
 
 ATF_TC(test_log2);
 ATF_TC_HEAD(test_log2, tc)
@@ -85,6 +82,7 @@ ATF_TC_BODY(test_log2, tc)
 		ATF_CHECK(raised_exceptions(FE_DIVBYZERO));
 
 		/* long double */
+#ifdef	HAVE_LOGL
 		errno = 0;
 		clear_exceptions();
 		ldy = logl(t2table[i]);
@@ -93,6 +91,7 @@ ATF_TC_BODY(test_log2, tc)
 #endif
 		ATF_CHECK(iserrno_equalto(ERANGE));
 		ATF_CHECK(raised_exceptions(FE_DIVBYZERO));
+#endif	/* HAVE_LOGL */
 	}
 
 	/*
@@ -114,7 +113,8 @@ ATF_TC_BODY(test_log2, tc)
  * shall occur, and either a NaN (if supported), or an implementation-defined
  * value shall be returned.
  */
-static long double t3table[] = {
+static const long double
+t3table[] = {
 #ifdef	INFINITY
 	-INFINITY,
 #endif
@@ -156,9 +156,7 @@ ATF_TC_BODY(test_log3, tc)
 		errno = 0;
 		clear_exceptions();
 		fy = logf((float)t3table[i]);
-#ifdef	NAN
-		ATF_CHECK(isnan(fy));
-#endif
+		ATF_CHECK_IFNAN(fy);
 		ATF_CHECK(iserrno_equalto(EDOM));
 		ATF_CHECK(raised_exceptions(MY_FE_INVALID));
 
@@ -166,21 +164,19 @@ ATF_TC_BODY(test_log3, tc)
 		errno = 0;
 		clear_exceptions();
 		dy = log((double)t3table[i]);
-#ifdef	NAN
-		ATF_CHECK(isnan(dy));
-#endif
+		ATF_CHECK_IFNAN(dy);
 		ATF_CHECK(iserrno_equalto(EDOM));
 		ATF_CHECK(raised_exceptions(MY_FE_INVALID));
 
 		/* long double */
+#ifdef	HAVE_LOGL
 		errno = 0;
 		clear_exceptions();
 		ldy = logl(t3table[i]);
-#ifdef  NAN
-		ATF_CHECK(isnan(ldy));
-#endif
+		ATF_CHECK_IFNAN(ldy);
 		ATF_CHECK(iserrno_equalto(EDOM));
 		ATF_CHECK(raised_exceptions(MY_FE_INVALID));
+#endif
 	}
 
 	/*
@@ -217,6 +213,7 @@ ATF_TC_BODY(test_log3, tc)
 		ATF_PASS_OR_BREAK(raised_exceptions(MY_FE_INVALID));
 
 		/* long double */
+#ifdef	HAVE_LOGL
 		do {
 			ldx = random_long_double(FP_NORMAL);
 		} while (ldx >= 0.0);
@@ -228,6 +225,7 @@ ATF_TC_BODY(test_log3, tc)
 #endif
 		ATF_PASS_OR_BREAK(iserrno_equalto(EDOM));
 		ATF_PASS_OR_BREAK(raised_exceptions(MY_FE_INVALID));
+#endif	/* HAVE_LOG10 */
 	}
 
 	/*
@@ -255,37 +253,46 @@ ATF_TC_HEAD(test_log4, tc)
 ATF_TC_BODY(test_log4, tc)
 {
 	/* If x is NaN, a NaN shall be returned */
-#ifdef	NAN
-	ATF_CHECK(isnan(logf(NAN)));
-	ATF_CHECK(isnan(log(NAN)));
-	ATF_CHECK(isnan(logl(NAN)));
-#endif
+	ATF_CHECK_IFNAN(logf(NAN));
+	ATF_CHECK_IFNAN(log(NAN));
+	ATF_CHECK_IFNAN(logl(NAN));
 
 	/* If x is 1, +0 shall be returned */
 	ATF_CHECK(fpcmp_equalf(logf(1.0), 0.0));
-	ATF_CHECK(fpcmp_equal(log(1.0), 0.0));
+	ATF_CHECK(fpcmp_equal (log (1.0), 0.0));
 	ATF_CHECK(fpcmp_equall(logl(1.0), 0.0));
 
 	/* If x is +Inf, x shall be returned */
 #ifdef	INFINITY
 	ATF_CHECK(fpcmp_equalf(logf(INFINITY), INFINITY));
-	ATF_CHECK(fpcmp_equal(log(INFINITY), INFINITY));
+	ATF_CHECK(fpcmp_equal (log (INFINITY), INFINITY));
+#ifdef	HAVE_LOGL
 	ATF_CHECK(fpcmp_equall(logl(INFINITY), INFINITY));
+#endif	/* HAVE_LOGL */
 #endif
+
 #ifdef  HUGE_VAL
 	ATF_CHECK(fpcmp_equalf(logf(HUGE_VAL), HUGE_VAL));
-	ATF_CHECK(fpcmp_equal(log(HUGE_VAL), HUGE_VAL));
+	ATF_CHECK(fpcmp_equal( log (HUGE_VAL), HUGE_VAL));
+#ifdef	HAVE_LOGL
 	ATF_CHECK(fpcmp_equall(logl(HUGE_VAL), HUGE_VAL));
+#endif  /* HAVE_LOGL */
 #endif
+
 #ifdef	HUGE_VALF
 	ATF_CHECK(fpcmp_equalf(logf(HUGE_VALF), HUGE_VALF));
-	ATF_CHECK(fpcmp_equal(log(HUGE_VALF), HUGE_VALF));
+	ATF_CHECK(fpcmp_equal( log( HUGE_VALF), HUGE_VALF));
+#ifdef	HAVE_LOGL
 	ATF_CHECK(fpcmp_equall(logl(HUGE_VALF), HUGE_VALF));
+#endif  /* HAVE_LOGL */
 #endif
+
 #ifdef  HUGE_VALL
 	ATF_CHECK(fpcmp_equalf(logf(HUGE_VALL), HUGE_VALL));
-	ATF_CHECK(fpcmp_equal(log(HUGE_VALL), HUGE_VALL));
+	ATF_CHECK(fpcmp_equal( log( HUGE_VALL), HUGE_VALL));
+#ifdef	HAVE_LOGLL
 	ATF_CHECK(fpcmp_equall(logl(HUGE_VALL), HUGE_VALL));
+#endif  /* HAVE_LOGL */
 #endif
 }
 
