@@ -232,30 +232,30 @@ ATF_TC_BODY(test_hypot5, tc)
 		/* float */
 		fx = random_float(FP_NORMAL);
 		fy = random_float(FP_NORMAL);
-		ATF_CHECK(hypotf(fx,  fy) == hypotf(fy, fx));
-		ATF_CHECK(hypotf(fx, -fy) == hypotf(fy, fx));
+		ATF_PASS_OR_BREAK(hypotf(fx,  fy) == hypotf(fy, fx));
+		ATF_PASS_OR_BREAK(hypotf(fx, -fy) == hypotf(fy, fx));
 
-		ATF_CHECK(hypotf(fx,  0.0) == fabs(fx));
-		ATF_CHECK(hypotf(fx, -0.0) == fabs(fx));
+		ATF_PASS_OR_BREAK(hypotf(fx,  0.0) == fabs(fx));
+		ATF_PASS_OR_BREAK(hypotf(fx, -0.0) == fabs(fx));
 
 		/* double */
 		dx = random_double(FP_NORMAL);
 		dy = random_double(FP_NORMAL);
-		ATF_CHECK(hypot(dx,  dy) == hypot(dy, dx));
-		ATF_CHECK(hypot(dx, -dy) == hypot(dy, dx));
+		ATF_PASS_OR_BREAK(hypot(dx,  dy) == hypot(dy, dx));
+		ATF_PASS_OR_BREAK(hypot(dx, -dy) == hypot(dy, dx));
 
-		ATF_CHECK(hypot(dx,  0.0) == fabs(dx));
-		ATF_CHECK(hypot(dx, -0.0) == fabs(dx));
+		ATF_PASS_OR_BREAK(hypot(dx,  0.0) == fabs(dx));
+		ATF_PASS_OR_BREAK(hypot(dx, -0.0) == fabs(dx));
 
 		/* long double */
 #ifdef	HAVE_HYPOTL
 		ldx = random_long_double(FP_NORMAL);
 		ldy = random_long_double(FP_NORMAL);
-		ATF_CHECK(hypotl(ldx,  ldy) == hypotl(ldy, ldx));
-		ATF_CHECK(hypotl(ldx, -ldy) == hypotl(ldy, ldx));
+		ATF_PASS_OR_BREAK(hypotl(ldx,  ldy) == hypotl(ldy, ldx));
+		ATF_PASS_OR_BREAK(hypotl(ldx, -ldy) == hypotl(ldy, ldx));
 
-		ATF_CHECK(hypotl(ldx,  0.0) == fabsl(ldx));
-		ATF_CHECK(hypotl(ldx, -0.0) == fabsl(ldx));
+		ATF_PASS_OR_BREAK(hypotl(ldx,  0.0) == fabsl(ldx));
+		ATF_PASS_OR_BREAK(hypotl(ldx, -0.0) == fabsl(ldx));
 #endif
 	}
 }
