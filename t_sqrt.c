@@ -1,15 +1,15 @@
 #include <atf-c.h>
 #include <errno.h>
 #include <math.h>
-#include <stdio.h>
-#include <stdlib.h>
 
+#include "config.h"
 #include "subr_atf.h"
 #include "subr_errhandling.h"
 #include "subr_fpcmp.h"
 #include "subr_random.h"
 
-struct tentry {
+static const struct
+tentry {
 	double x;       /* Input */
 	double y;       /* sqrt output */
 } ttable[] = {
@@ -42,7 +42,8 @@ ATF_TC_BODY(test_sqrt1, tc)
 /*
  * Test case 2 -- Edge cases
  */
-struct t2entry {
+static const struct
+t2entry {
 	long double x;
 	long double y;
 } t2table[] = {
@@ -85,6 +86,7 @@ ATF_TC_BODY(test_sqrt2, tc)
 	size_t i, N;
 
 	N = sizeof(t2table) / sizeof(t2table[0]);
+	ATF_REQUIRE(N > 0);
 
 	for (i = 0; i < N; i++) {
 		/* float */
@@ -96,8 +98,10 @@ ATF_TC_BODY(test_sqrt2, tc)
 		ATF_CHECK(fpcmp_equal(dy, (double)t2table[i].y));
 
 		/* long double */
+#ifdef	HAVE_SQRTL
 		ldy = sqrtl(t2table[i].x);
 		ATF_CHECK(fpcmp_equal(ldy, t2table[i].y));
+#endif
 	}
 }
 
@@ -116,9 +120,9 @@ ATF_TC_BODY(test_sqrt3, tc)
 	float fx, fy;
 	double dx, dy;
 	long double ldx, ldy;
-	long i, N;
 	int haserrexcept;
 	int haserrno;
+	long i, N;
 
 	/*
 	 * For finite values of x < -0, a domain error shall occur, and either
@@ -137,9 +141,7 @@ ATF_TC_BODY(test_sqrt3, tc)
 		errno = 0;
 		clear_exceptions();
 		fy = sqrtf(fx);
-#ifdef	NAN
-		ATF_CHECK(isnan(fy));
-#endif
+		ATF_CHECK_IFNAN(fy);
 		ATF_CHECK(iserrno_equalto(EDOM));
 		ATF_CHECK(raised_exceptions(MY_FE_INVALID));
 
@@ -151,14 +153,13 @@ ATF_TC_BODY(test_sqrt3, tc)
 		errno = 0;
 		clear_exceptions();
 		dy = sqrt(fx);
-#ifdef	NAN
-		ATF_CHECK(isnan(dy));
-#endif
+		ATF_CHECK_IFNAN(dy);
 		ATF_CHECK(iserrno_equalto(EDOM));
 		ATF_CHECK(raised_exceptions(MY_FE_INVALID));
 
 
 		/* long double */
+#ifdef	HAVE_SQRTL
 		do {
 			ldx = random_float(FP_NORMAL);
 		} while (ldx >= -0.0);
@@ -166,11 +167,10 @@ ATF_TC_BODY(test_sqrt3, tc)
 		errno = 0;
 		clear_exceptions();
 		ldy = sqrtl(ldx);
-#ifdef	NAN
-		ATF_CHECK(isnan(ldy));
-#endif
+		ATF_CHECK_IFNAN(ldy);
 		ATF_CHECK(iserrno_equalto(EDOM));
 		ATF_CHECK(raised_exceptions(MY_FE_INVALID));
+#endif
 	}
 
 	/*
@@ -191,7 +191,8 @@ ATF_TC_BODY(test_sqrt3, tc)
  * If x is -Inf, a domain error shall occur, and either a NaN (if supported),
  * or an implementation-defined value shall be returned.
  */
-long double t4table[] = {
+static const long double
+t4table[] = {
 #ifdef	INFINITY
 	-INFINITY,
 #endif
@@ -218,11 +219,11 @@ ATF_TC_BODY(test_sqrt4, tc)
 	float fy;
 	double dy;
 	long double ldy;
-	size_t i, N;
 	int haserrexcept;
 	int haserrno;
+	size_t i, N;
 
-	N = sizeof(t4table[i]) / sizeof(t4table[0]);
+	N = sizeof(t4table) / sizeof(t4table[0]);
 	ATF_REQUIRE(N > 0);
 
 	for (i = 0; i < N; i++) {
@@ -230,9 +231,7 @@ ATF_TC_BODY(test_sqrt4, tc)
 		errno = 0;
 		clear_exceptions();
 		fy = sqrtf((float)t4table[i]);
-#ifdef	NAN
-		ATF_CHECK(isnan(fy));
-#endif
+		ATF_CHECK_IFNAN(fy);
 		ATF_CHECK(iserrno_equalto(EDOM));
 		ATF_CHECK(raised_exceptions(MY_FE_INVALID));
 
@@ -240,21 +239,19 @@ ATF_TC_BODY(test_sqrt4, tc)
 		errno = 0;
 		clear_exceptions();
 		dy = sqrt((double)t4table[i]);
-#ifdef	NAN
-		ATF_CHECK(isnan(dy));
-#endif
+		ATF_CHECK_IFNAN(dy);
 		ATF_CHECK(iserrno_equalto(EDOM));
 		ATF_CHECK(raised_exceptions(MY_FE_INVALID));
 
 		/* long double */
+#ifdef	HAVE_SQRTL
 		errno = 0;
 		clear_exceptions();
 		ldy = sqrtl(t4table[i]);
-#ifdef	NAN
-		ATF_CHECK(isnan(ldy));
-#endif
+		ATF_CHECK_IFNAN(ldy);
 		ATF_CHECK(iserrno_equalto(EDOM));
 		ATF_CHECK(raised_exceptions(MY_FE_INVALID));
+#endif
 	}
 
 	/*
