@@ -1,24 +1,19 @@
 #define _XOPEN_SOURCE 600
 
+#include <atf-c.h>
+#include <errno.h>
+#include <float.h>	/* for DBL_MAX */
+#include <math.h>
+#include <time.h>
+
 #include "config.h"
 #include "subr_atf.h"
 #include "subr_errhandling.h"
 #include "subr_fpcmp.h"
 #include "subr_random.h"
 
-#include <atf-c.h>
-#include <errno.h>
-#include <float.h>	/* for DBL_MAX */
-#include <math.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <time.h>
-
-#ifdef  HAS_MATH_ERREXCEPT
-#include <fenv.h>
-#endif  /* HAS_MATH_ERREXCEPT */
-
-struct tentry {
+static const struct
+tentry {
 	double x;       /* Input */
 	double y;       /* tgamma() output */
 } ttable[] = {
@@ -66,14 +61,13 @@ ATF_TC_HEAD(test_tgamma2, tc)
 ATF_TC_BODY(test_tgamma2, tc)
 {
 	long i, N, cnt;
+	int haserrexcept;
+	int haserrno;
 
 	/*
 	 * We can't proceed if there's no way to detect errors,
 	 * especially overflows.
 	 */
-	int haserrexcept;
-	int haserrno;
-
 	query_errhandling(&haserrexcept, &haserrno);
 	ATF_REQUIRE(haserrexcept || haserrno);
 
@@ -85,9 +79,8 @@ ATF_TC_BODY(test_tgamma2, tc)
 
 	cnt = 0;
 	ATF_FOR_LOOP(i, N, i++) {
-		/* Initialize error handling */
+		errno = 0;
 		clear_exceptions();
-		clear_errno();
 
 		double z, g0, g1;
 		z = random_double(FP_NORMAL);
@@ -96,7 +89,7 @@ ATF_TC_BODY(test_tgamma2, tc)
 		g1 = tgamma(z+1);
 
 		/* If there was an error, just skip this value */
-		if (raised_exceptions(FE_ALL_EXCEPT) || set_errno())
+		if (raised_exceptions(MY_FE_ALL_EXCEPT) || errno)
 			continue;
 
 		ATF_PASS_OR_BREAK(fpcmp_equal(g1, z*g0));
@@ -118,32 +111,43 @@ ATF_TC_HEAD(test_tgamma3, tc)
 ATF_TC_BODY(test_tgamma3, tc)
 {
 	/* If x is NaN, a NaN shall be returned */
-#ifdef	NAN
-	ATF_CHECK(isnan(tgamma(NAN)));
-	ATF_CHECK(isnan(tgammaf(NAN)));
-	ATF_CHECK(isnan(tgammal(NAN)));
-#endif
+	ATF_CHECK_IFNAN(tgamma(NAN));
+	ATF_CHECK_IFNAN(tgammaf(NAN));
+#ifdef	HAVE_TGAMMAL
+	ATF_CHECK_IFNAN(tgammal(NAN));
+#endif	/* HAVE_TGAMMAL */
 
 	/* If x is +Inf, x shall be returned */
 #ifdef	INFINITY
 	ATF_CHECK(isinf(tgamma(INFINITY)));
 	ATF_CHECK(isinf(tgammaf(INFINITY)));
+#ifdef	HAVE_TGAMMAL
 	ATF_CHECK(isinf(tgammal(INFINITY)));
+#endif  /* HAVE_TGAMMAL */
 #endif
+
 #ifdef	HUGE_VAL
 	ATF_CHECK(isinf(tgamma(HUGE_VAL)));
 	ATF_CHECK(isinf(tgammaf(HUGE_VAL)));
+#ifdef	HAVE_TGAMMAL
 	ATF_CHECK(isinf(tgammal(HUGE_VAL)));
+#endif  /* HAVE_TGAMMAL */
 #endif
+
 #ifdef	HUGE_VALF
 	ATF_CHECK(isinf(tgamma(HUGE_VALF)));
 	ATF_CHECK(isinf(tgammaf(HUGE_VAL)));
+#ifdef	HAVE_TGAMMAL
 	ATF_CHECK(isinf(tgammal(HUGE_VALL)));
+#endif  /* HAVE_TGAMMAL */
 #endif
+
 #ifdef	HUGE_VALL
 	ATF_CHECK(isinf(tgamma(HUGE_VALL)));
 	ATF_CHECK(isinf(tgammaf(HUGE_VALF)));
+#ifdef	HAVE_TGAMMAL
 	ATF_CHECK(isinf(tgammal(HUGE_VALL)));
+#endif  /* HAVE_TGAMMAL */
 #endif
 }
 
@@ -161,12 +165,12 @@ ATF_TC_HEAD(test_tgamma4, tc)
 }
 ATF_TC_BODY(test_tgamma4, tc)
 {
-	int haserrexcept;
-	int haserrno;
-	int i;
 	float fy;
 	double dy;
 	long double ldy;
+        int haserrexcept;
+	int haserrno;
+        int i;
 
 	for (i = 0; i < 2; i++ ) {
 		/* float */
@@ -190,6 +194,7 @@ ATF_TC_BODY(test_tgamma4, tc)
 		ATF_CHECK(raised_exceptions(FE_DIVBYZERO));
 
 		/* long double */
+#ifdef	HAVE_TGAMMAL
 		errno = 0;
 		clear_exceptions();
 		ldy = tgammal(t4table[i]);
@@ -198,6 +203,7 @@ ATF_TC_BODY(test_tgamma4, tc)
 #endif
 		ATF_CHECK(iserrno_equalto(ERANGE));
 		ATF_CHECK(raised_exceptions(FE_DIVBYZERO));
+#endif	/* HAVE_TGAMMAL */
 	}
 
 	/*
@@ -215,7 +221,8 @@ ATF_TC_BODY(test_tgamma4, tc)
 /*
  * Test case 5 -- Domain error
  */
-long double t5table[] = {
+static const long double
+t5table[] = {
 #ifdef	INFINITY
 	-INFINITY,
 #endif
@@ -254,9 +261,7 @@ ATF_TC_BODY(test_tgamma5, tc)
 		errno = 0;
 		clear_exceptions();
 		fy = tgammaf((float)t5table[i]);
-#ifdef	NAN
-		ATF_CHECK(isnan(fy));
-#endif
+		ATF_CHECK_IFNAN(fy);
 		ATF_CHECK(iserrno_equalto(EDOM));
 		ATF_CHECK(raised_exceptions(MY_FE_INVALID));
 
@@ -264,9 +269,7 @@ ATF_TC_BODY(test_tgamma5, tc)
 		errno = 0;
 		clear_exceptions();
 		dy = tgamma((double)t5table[i]);
-#ifdef	NAN
-		ATF_CHECK(isnan(dy));
-#endif
+		ATF_CHECK_IFNAN(dy);
 		ATF_CHECK(iserrno_equalto(EDOM));
 		ATF_CHECK(raised_exceptions(MY_FE_INVALID));
 
@@ -274,9 +277,7 @@ ATF_TC_BODY(test_tgamma5, tc)
 		errno = 0;
 		clear_exceptions();
 		ldy = tgammal(t5table[i]);
-#ifdef  NAN
-		ATF_CHECK(isnan(ldy));
-#endif
+		ATF_CHECK_IFNAN(ldy);
 		ATF_CHECK(iserrno_equalto(EDOM));
 		ATF_CHECK(raised_exceptions(MY_FE_INVALID));
 	}
