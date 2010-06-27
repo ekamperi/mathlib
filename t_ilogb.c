@@ -1,18 +1,17 @@
 #define _XOPEN_SOURCE 600
 
+#include <atf-c.h>
+#include <errno.h>
+#include <limits.h>
+#include <math.h>
+
+#include "config.h"
 #include "subr_atf.h"
 #include "subr_errhandling.h"
 #include "subr_fpcmp.h"
 #include "subr_random.h"
 
-#include <atf-c.h>
-#include <errno.h>
-#include <limits.h>
-#include <math.h>
-#include <stdio.h>
-#include <stdlib.h>
-
-static struct
+static const struct
 tentry {
 	long double x;       /* Input */
 	long double y;       /* ilogb() output */
@@ -42,7 +41,7 @@ ATF_TC_BODY(test_ilogb1, tc)
  * Test case 2 -- Domain error
  *
  */
-static struct
+static const struct
 t2entry {
 	long double x;
 	long double y;
@@ -121,6 +120,7 @@ ATF_TC_BODY(test_ilogb2, tc)
 		ATF_CHECK(raised_exceptions(MY_FE_INVALID));
 
 		/* long double */
+#ifdef	HAVE_ILOGBL
 		errno = 0;
 		clear_exceptions();
 		ATF_CHECK(fpcmp_equall(
@@ -128,6 +128,7 @@ ATF_TC_BODY(test_ilogb2, tc)
 				   t2table[i].y));
 		ATF_CHECK(iserrno_equalto(EDOM));
 		ATF_CHECK(raised_exceptions(MY_FE_INVALID));
+#endif
 	}
 
 	/*
@@ -259,6 +260,7 @@ ATF_TC_BODY(test_ilogb4, tc)
 		ATF_PASS_OR_BREAK(raised_exceptions(MY_FE_INVALID));
 
 		/* long double */
+#ifdef	HAVE_ILOGBL
 		do {
 			ldx = random_long_double(FP_NORMAL);
 		} while (ldx >= INT_MIN);
@@ -267,6 +269,7 @@ ATF_TC_BODY(test_ilogb4, tc)
 		ATF_PASS_OR_BREAK(fpcmp_equall(ilogbl(ldx), INT_MIN));
 		ATF_PASS_OR_BREAK(iserrno_equalto(EDOM));
 		ATF_PASS_OR_BREAK(raised_exceptions(MY_FE_INVALID));
+#endif
 	}
 
 	/*
