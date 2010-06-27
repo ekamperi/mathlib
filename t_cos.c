@@ -68,9 +68,11 @@ ATF_TC_BODY(test_cos2, tc)
 		ATF_PASS_OR_BREAK(dy >= -1.0 && dy <= 1.0);
 
 		/* long double */
+#ifdef	HAVE_COSL
 		ldx = random_long_double(FP_NORMAL);
 		ldy = cosl(ldx);
 		ATF_PASS_OR_BREAK(ldy >= -1.0 && ldy <= 1.0);
+#endif
 	}
 }
 
@@ -93,7 +95,7 @@ ATF_TC_BODY(test_cos3, tc)
 	ATF_CHECK_IFNAN(cosl(NAN));
 #endif
 
-	/* If x is +-0, x shall be returned */
+	/* If x is +-0, the value 1.0 shall be returned */
 	ATF_CHECK(fpcmp_equal(cos( 0.0), 1.0));
 	ATF_CHECK(fpcmp_equal(cos(-0.0), 1.0));
 
@@ -167,12 +169,14 @@ ATF_TC_BODY(test_cos4, tc)
 		ATF_CHECK_IFNAN(dy);
 
 		/* long double */
+#ifdef	HAVE_COSL
 		errno = 0;
 		clear_exceptions();
 		ldy = cosl(t4table[i]);
 		ATF_CHECK(iserrno_equalto(EDOM));
 		ATF_CHECK(raised_exceptions(MY_FE_INVALID));
 		ATF_CHECK_IFNAN(ldy);
+#endif
 	}
 
 	/*
