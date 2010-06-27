@@ -1,27 +1,21 @@
 #define _XOPEN_SOURCE 600
 
-#include "config.h"
-#include "subr_errhandling.h"
-#include "subr_random.h"
-
 #include <atf-c.h>
 #include <errno.h>
 #include <float.h>
 #include <math.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <time.h>
 
-#ifdef  HAS_MATH_ERREXCEPT
-#include <fenv.h>
-#endif  /* HAS_MATH_ERREXCEPT */
 
+#include "config.h"
 #include "subr_atf.h"
+#include "subr_errhandling.h"
+#include "subr_random.h"
 
 /*
  * Test case 1 -- Basic functionality
  */
-struct tentry {
+static const struct
+tentry {
 	double x;       /* Input */
 	double y;       /* Input */
 	double z;       /* nextafter() output */
@@ -119,7 +113,9 @@ ATF_TC_BODY(test_nextafter3, tc)
 		/* If x == y, y (of the type x) shall be returned */
 		ATF_PASS_OR_BREAK(nextafterf(fx, fx) == fx);
 		ATF_PASS_OR_BREAK(nextafter(dx, dx) == dx);
+#ifdef	HAVE_NEXTAFTERL
 		ATF_PASS_OR_BREAK(nextafterl(ldx, ldx) == ldx);
+#endif
 
 		/* If x or y is NaN, a NaN shall be returned */
 #ifdef	NAN
@@ -129,8 +125,10 @@ ATF_TC_BODY(test_nextafter3, tc)
 		ATF_PASS_OR_BREAK(isnan(nextafter(NAN, dx)));
 		ATF_PASS_OR_BREAK(isnan(nextafter(dx, NAN)));
 
+#ifdef	HAVE_NEXTAFTERL
 		ATF_PASS_OR_BREAK(isnan(nextafterl(NAN, ldx)));
 		ATF_PASS_OR_BREAK(isnan(nextafterl(ldx, NAN)));
+#endif	/* HAVE_NEXTAFTERL */
 #endif
 	}
 }
@@ -151,13 +149,10 @@ ATF_TC_HEAD(test_nextafter4, tc)
 }
 ATF_TC_BODY(test_nextafter4, tc)
 {
-	/*
-	 * We can't proceed if there's no way to detect errors,
-	 * especially overflows.
-	 */
-	int haserrexcept;
-	int haserrno;
+        int haserrexcept;
+        int haserrno;
 
+	/* We can't proceed if there's no way to detect errors */
 	query_errhandling(&haserrexcept, &haserrno);
 	ATF_REQUIRE(haserrexcept || haserrno);
 
@@ -189,6 +184,7 @@ ATF_TC_BODY(test_nextafter4, tc)
 	ATF_CHECK(raised_exceptions(MY_FE_OVERFLOW));
 
 	/* long double */
+#if	HAVE_NEXTAFTERL
 	errno = 0;
 	clear_exceptions();
 
@@ -197,6 +193,7 @@ ATF_TC_BODY(test_nextafter4, tc)
 
 	ATF_CHECK(iserrno_equalto(ERANGE));
 	ATF_CHECK(raised_exceptions(MY_FE_OVERFLOW));
+#endif	/* HAVE_NEXTAFTERL */
 #endif	/* INFINITY */
 }
 
