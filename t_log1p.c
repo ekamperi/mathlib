@@ -208,6 +208,7 @@ ATF_TC_BODY(test_log1p3, tc)
 		ATF_PASS_OR_BREAK(raised_exceptions(MY_FE_INVALID));
 
 		/* long double */
+#ifdef	HAVE_LOG1PL
 		do {
 			ldx = random_long_double(FP_NORMAL);
 		} while (ldx >= 0.0);
@@ -219,6 +220,7 @@ ATF_TC_BODY(test_log1p3, tc)
 #endif
 		ATF_PASS_OR_BREAK(iserrno_equalto(EDOM));
 		ATF_PASS_OR_BREAK(raised_exceptions(MY_FE_INVALID));
+#endif	/* HAVE_LOG1PL */
 	}
 
 	/*
