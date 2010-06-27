@@ -1,19 +1,16 @@
 #define _XOPEN_SOURCE 600
 
+#include <atf-c.h>
+#include <errno.h>
+#include <math.h>
+
 #include "config.h"
 #include "subr_atf.h"
 #include "subr_errhandling.h"
 #include "subr_fpcmp.h"
 #include "subr_random.h"
 
-#include <atf-c.h>
-#include <errno.h>
-#include <math.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <fenv.h>
-
-static struct
+static const struct
 tentry {
 	long double x;       /* Input */
 	long double y;       /* log1p() output */
@@ -81,6 +78,7 @@ ATF_TC_BODY(test_log1p2, tc)
 	ATF_CHECK(raised_exceptions(FE_DIVBYZERO));
 
 	/* long double */
+#ifdef	HAVE_LOG1PL
 	errno = 0;
 	clear_exceptions();
 	ldy = log1pl((long double)-1.0);
@@ -89,6 +87,7 @@ ATF_TC_BODY(test_log1p2, tc)
 #endif
 	ATF_CHECK(iserrno_equalto(ERANGE));
 	ATF_CHECK(raised_exceptions(FE_DIVBYZERO));
+#endif	/* HAVE_LOG1PL */
 
 	/*
 	 * Revenge is a Dish Best Served Cold :)
@@ -109,7 +108,8 @@ ATF_TC_BODY(test_log1p2, tc)
  * shall occur, and either a NaN (if supported), or an implementation-defined
  * value shall be returned.
  */
-static long double t3table[] = {
+static const long double
+t3table[] = {
 #ifdef	INFINITY
 	-INFINITY,
 #endif
@@ -151,9 +151,7 @@ ATF_TC_BODY(test_log1p3, tc)
 		errno = 0;
 		clear_exceptions();
 		fy = log1pf((float)t3table[i]);
-#ifdef	NAN
-		ATF_CHECK(isnan(fy));
-#endif
+		ATF_CHECK_IFNAN(fy);
 		ATF_CHECK(iserrno_equalto(EDOM));
 		ATF_CHECK(raised_exceptions(MY_FE_INVALID));
 
@@ -161,21 +159,19 @@ ATF_TC_BODY(test_log1p3, tc)
 		errno = 0;
 		clear_exceptions();
 		dy = log1p((double)t3table[i]);
-#ifdef	NAN
-		ATF_CHECK(isnan(dy));
-#endif
+		ATF_CHECK_IFNAN(dy);
 		ATF_CHECK(iserrno_equalto(EDOM));
 		ATF_CHECK(raised_exceptions(MY_FE_INVALID));
 
 		/* long double */
+#ifdef	HAVE_LOG1PL
 		errno = 0;
 		clear_exceptions();
 		ldy = log1pl(t3table[i]);
-#ifdef  NAN
-		ATF_CHECK(isnan(ldy));
-#endif
+		ATF_CHECK_IFNAN(ldy);
 		ATF_CHECK(iserrno_equalto(EDOM));
 		ATF_CHECK(raised_exceptions(MY_FE_INVALID));
+#endif
 	}
 
 	/*
@@ -240,7 +236,7 @@ ATF_TC_BODY(test_log1p3, tc)
 /*
  * Test case 4 -- Edge cases
  */
-static struct
+static const struct
 t4entry {
 	long double x;
 	long double y;
@@ -283,14 +279,22 @@ ATF_TC_BODY(test_log1p4, tc)
 	ATF_REQUIRE(N > 0);
 
 	for (i = 0; i < N; i++) {
-		ATF_CHECK(fpcmp_equalf(log1pf(t4table[i].x),
-			(float)t4table[i].y));
+		/* float */
+		ATF_CHECK(fpcmp_equalf(
+			    log1pf((float)t4table[i].x),
+				   (float)t4table[i].y));
 
-		ATF_CHECK(fpcmp_equal(log1p(t4table[i].x),
-			(double)t4table[i].y));
+		/* double */
+		ATF_CHECK(fpcmp_equal(
+			    log1p((double)t4table[i].x),
+				  (double)t4table[i].y));
 
-		ATF_CHECK(fpcmp_equall(log1pl(t4table[i].x),
-			t4table[i].y));
+		/* long double */
+#ifdef	HAVE_LOG1PL
+		ATF_CHECK(fpcmp_equall(
+			    log1pl(t4table[i].x),
+				   t4table[i].y));
+#endif
 	}
 }
 
