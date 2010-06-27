@@ -4,13 +4,12 @@
 #include <assert.h>
 #include <errno.h>
 #include <math.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <time.h>
 
+#include "config.h"
 #include "subr_fpcmp.h"
 
-struct tentry {
+static const struct
+tentry {
 	double x;	/* Input */
 	double exp;	/* Input */
 	double z;       /* ldexp() output */
@@ -42,9 +41,9 @@ ATF_TC_BODY(test_ldexp1, tc)
  * Test case 2 -- Edge cases
  */
 struct t2entry {
-	double x;       /* Input */
-	double exp;	/* Input */
-	double z;       /* ldexp() output */
+	long double x;		/* Input */
+	long double exp;	/* Input */
+	long double z;		/* ldexp() output */
 } t2table[] = {
 	/* If x is NaN, a NaN shall be returned */
 #ifdef	NAN
@@ -75,13 +74,13 @@ struct t2entry {
 	{ -0.0, 1E50, -0.0 },
 
 #ifdef	INFINITY
-	{ +INFINITY,    0, INFINITY },
-	{ +INFINITY,    1, INFINITY },
-	{ +INFINITY,    2, INFINITY },
-	{ +INFINITY,   10, INFINITY },
-	{ +INFINITY,  100, INFINITY },
-	{ +INFINITY, 1000, INFINITY },
-	{ +INFINITY, 1E50, INFINITY },
+	{  INFINITY,    0, INFINITY },
+	{  INFINITY,    1, INFINITY },
+	{  INFINITY,    2, INFINITY },
+	{  INFINITY,   10, INFINITY },
+	{  INFINITY,  100, INFINITY },
+	{  INFINITY, 1000, INFINITY },
+	{  INFINITY, 1E50, INFINITY },
 
 	{ -INFINITY,    0, -INFINITY },
 	{ -INFINITY,    1, -INFINITY },
@@ -91,6 +90,58 @@ struct t2entry {
 	{ -INFINITY, 1000, -INFINITY },
 	{ -INFINITY, 1E50, -INFINITY },
 #endif	/* INFINITY */
+#ifdef	HUGE_VAL
+	{  HUGE_VAL,    0, HUGE_VAL },
+	{  HUGE_VAL,    1, HUGE_VAL },
+	{  HUGE_VAL,    2, HUGE_VAL },
+	{  HUGE_VAL,   10, HUGE_VAL },
+	{  HUGE_VAL,  100, HUGE_VAL },
+	{  HUGE_VAL, 1000, HUGE_VAL },
+	{  HUGE_VAL, 1E50, HUGE_VAL },
+
+	{ -HUGE_VAL,    0, -HUGE_VAL },
+	{ -HUGE_VAL,    1, -HUGE_VAL },
+	{ -HUGE_VAL,    2, -HUGE_VAL },
+	{ -HUGE_VAL,   10, -HUGE_VAL },
+	{ -HUGE_VAL,  100, -HUGE_VAL },
+	{ -HUGE_VAL, 1000, -HUGE_VAL },
+	{ -HUGE_VAL, 1E50, -HUGE_VAL },
+#endif	/* HUGE_VAL */
+#ifdef	HUGE_VALF
+	{  HUGE_VALF,    0, HUGE_VALF },
+	{  HUGE_VALF,    1, HUGE_VALF },
+	{  HUGE_VALF,    2, HUGE_VALF },
+	{  HUGE_VALF,   10, HUGE_VALF },
+	{  HUGE_VALF,  100, HUGE_VALF },
+	{  HUGE_VALF, 1000, HUGE_VALF },
+	{  HUGE_VALF, 1E50, HUGE_VALF },
+
+	{ -HUGE_VALF,    0, -HUGE_VALF },
+	{ -HUGE_VALF,    1, -HUGE_VALF },
+	{ -HUGE_VALF,    2, -HUGE_VALF },
+	{ -HUGE_VALF,   10, -HUGE_VALF },
+	{ -HUGE_VALF,  100, -HUGE_VALF },
+	{ -HUGE_VALF, 1000, -HUGE_VALF },
+	{ -HUGE_VALF, 1E50, -HUGE_VALF },
+#endif	/* HUGE_VALF */
+#ifdef	HUGE_VALL
+	{  HUGE_VALL,    0, HUGE_VALL },
+	{  HUGE_VALL,    1, HUGE_VALL },
+	{  HUGE_VALL,    2, HUGE_VALL },
+	{  HUGE_VALL,   10, HUGE_VALL },
+	{  HUGE_VALL,  100, HUGE_VALL },
+	{  HUGE_VALL, 1000, HUGE_VALL },
+	{  HUGE_VALL, 1E50, HUGE_VALL },
+
+	{ -HUGE_VALL,    0, -HUGE_VALL },
+	{ -HUGE_VALL,    1, -HUGE_VALL },
+	{ -HUGE_VALL,    2, -HUGE_VALL },
+	{ -HUGE_VALL,   10, -HUGE_VALL },
+	{ -HUGE_VALL,  100, -HUGE_VALL },
+	{ -HUGE_VALL, 1000, -HUGE_VALL },
+	{ -HUGE_VALL, 1E50, -HUGE_VALL },
+#endif	/* HUGE_VALL */
+
 
 	/* If exp is 0, x shall be returned */
 	{   0.0, 0,    0.0 },
@@ -122,15 +173,31 @@ ATF_TC_HEAD(test_ldexp2, tc)
 }
 ATF_TC_BODY(test_ldexp2, tc)
 {
-	double oval;	/* output value */
 	size_t i, N;
 
 	N = sizeof(t2table) / sizeof(t2table[0]);
+	ATF_REQUIRE(N > 0);
 
 	for (i = 0; i < N; i++) {
-		/* Ready to go */
-		oval = ldexp(t2table[i].x, t2table[i].exp);
-		ATF_CHECK(fpcmp_equal(oval, t2table[i].z));
+		/* float */
+		ATF_CHECK(fpcmp_equalf(
+			    ldexpf((float)t2table[i].x,
+				   (float)t2table[i].exp),
+			    t2table[i].z));
+
+		/* double */
+		ATF_CHECK(fpcmp_equal(
+                            ldexp((double)t2table[i].x,
+				  (double)t2table[i].exp),
+			    t2table[i].z));
+
+		/* long double */
+#ifdef	HAVE_LDEXPL
+		ATF_CHECK(fpcmp_equall(
+                            ldexpl(t2table[i].x,
+				   t2table[i].exp),
+			    t2table[i].z));
+#endif
 	}
 }
 
