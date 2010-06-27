@@ -6,9 +6,9 @@
 #include <errno.h>
 #include <math.h>
 
-#ifdef  HAS_MATH_ERREXCEPT
+#ifdef  HAVE_FENV_H
 #include <fenv.h>
-#endif  /* HAS_MATH_ERREXCEPT */
+#endif
 
 void
 clear_exceptions(void)
