@@ -1,19 +1,16 @@
 #define _XOPEN_SOURCE 600
 
+#include <atf-c.h>
+#include <errno.h>
+#include <math.h>
+
 #include "config.h"
 #include "subr_atf.h"
 #include "subr_errhandling.h"
 #include "subr_fpcmp.h"
 #include "subr_random.h"
 
-#include <atf-c.h>
-#include <errno.h>
-#include <math.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <fenv.h>
-
-static struct
+static const struct
 tentry {
 	long double x;       /* Input */
 	long double y;       /* log2() output */
@@ -85,6 +82,7 @@ ATF_TC_BODY(test_log22, tc)
 		ATF_CHECK(raised_exceptions(FE_DIVBYZERO));
 
 		/* long double */
+#ifdef	HAVE_LOG2L
 		errno = 0;
 		clear_exceptions();
 		ldy = log2l(t2table[i]);
@@ -93,6 +91,7 @@ ATF_TC_BODY(test_log22, tc)
 #endif
 		ATF_CHECK(iserrno_equalto(ERANGE));
 		ATF_CHECK(raised_exceptions(FE_DIVBYZERO));
+#endif	/* HAVE_LOG2L */
 	}
 
 	/*
@@ -114,7 +113,8 @@ ATF_TC_BODY(test_log22, tc)
  * shall occur, and either a NaN (if supported), or an implementation-defined
  * value shall be returned.
  */
-static long double t3table[] = {
+static long double
+t3table[] = {
 #ifdef	INFINITY
 	-INFINITY,
 #endif
@@ -156,9 +156,7 @@ ATF_TC_BODY(test_log23, tc)
 		errno = 0;
 		clear_exceptions();
 		fy = log2f((float)t3table[i]);
-#ifdef	NAN
-		ATF_CHECK(isnan(fy));
-#endif
+		ATF_CHECK_IFNAN(fy);
 		ATF_CHECK(iserrno_equalto(EDOM));
 		ATF_CHECK(raised_exceptions(MY_FE_INVALID));
 
@@ -166,21 +164,19 @@ ATF_TC_BODY(test_log23, tc)
 		errno = 0;
 		clear_exceptions();
 		dy = log2((double)t3table[i]);
-#ifdef	NAN
-		ATF_CHECK(isnan(dy));
-#endif
+		ATF_CHECK_IFNAN(dy);
 		ATF_CHECK(iserrno_equalto(EDOM));
 		ATF_CHECK(raised_exceptions(MY_FE_INVALID));
 
 		/* long double */
+#ifdef	HAVE_LOG2L
 		errno = 0;
 		clear_exceptions();
 		ldy = log2l(t3table[i]);
-#ifdef  NAN
-		ATF_CHECK(isnan(ldy));
-#endif
+		ATF_CHECK_IFNAN(ldy);
 		ATF_CHECK(iserrno_equalto(EDOM));
 		ATF_CHECK(raised_exceptions(MY_FE_INVALID));
+#endif
 	}
 
 	/*
@@ -217,6 +213,7 @@ ATF_TC_BODY(test_log23, tc)
 		ATF_PASS_OR_BREAK(raised_exceptions(MY_FE_INVALID));
 
 		/* long double */
+#ifdef	HAVE_LOG2L
 		do {
 			ldx = random_long_double(FP_NORMAL);
 		} while (ldx >= 0.0);
@@ -228,6 +225,7 @@ ATF_TC_BODY(test_log23, tc)
 #endif
 		ATF_PASS_OR_BREAK(iserrno_equalto(EDOM));
 		ATF_PASS_OR_BREAK(raised_exceptions(MY_FE_INVALID));
+#endif	/* HAVE_LOG2L */
 	}
 
 	/*
@@ -255,37 +253,46 @@ ATF_TC_HEAD(test_log24, tc)
 ATF_TC_BODY(test_log24, tc)
 {
 	/* If x is NaN, a NaN shall be returned */
-#ifdef	NAN
-	ATF_CHECK(isnan(log2f(NAN)));
-	ATF_CHECK(isnan(log2(NAN)));
-	ATF_CHECK(isnan(log2l(NAN)));
-#endif
+	ATF_CHECK_IFNAN(log2f(NAN));
+	ATF_CHECK_IFNAN(log2(NAN));
+	ATF_CHECK_IFNAN(log2l(NAN));
 
 	/* If x is 1, +0 shall be returned */
 	ATF_CHECK(fpcmp_equalf(log2f(1.0), 0.0));
-	ATF_CHECK(fpcmp_equal(log2(1.0), 0.0));
+	ATF_CHECK(fpcmp_equal (log2 (1.0), 0.0));
 	ATF_CHECK(fpcmp_equall(log2l(1.0), 0.0));
 
 	/* If x is +Inf, x shall be returned */
 #ifdef	INFINITY
 	ATF_CHECK(fpcmp_equalf(log2f(INFINITY), INFINITY));
-	ATF_CHECK(fpcmp_equal(log2(INFINITY), INFINITY));
+	ATF_CHECK(fpcmp_equal (log2 (INFINITY), INFINITY));
+#ifdef	HAVE_LOG2L
 	ATF_CHECK(fpcmp_equall(log2l(INFINITY), INFINITY));
+#endif	/* HAVE_LOG2L */
 #endif
+
 #ifdef  HUGE_VAL
 	ATF_CHECK(fpcmp_equalf(log2f(HUGE_VAL), HUGE_VAL));
-	ATF_CHECK(fpcmp_equal(log2(HUGE_VAL), HUGE_VAL));
+	ATF_CHECK(fpcmp_equal (log2 (HUGE_VAL), HUGE_VAL));
+#ifdef	HAVE_LOG2L
 	ATF_CHECK(fpcmp_equall(log2l(HUGE_VAL), HUGE_VAL));
+#endif  /* HAVE_LOG2L */
 #endif
+
 #ifdef	HUGE_VALF
 	ATF_CHECK(fpcmp_equalf(log2f(HUGE_VALF), HUGE_VALF));
-	ATF_CHECK(fpcmp_equal(log2(HUGE_VALF), HUGE_VALF));
+	ATF_CHECK(fpcmp_equal (log2 (HUGE_VALF), HUGE_VALF));
+#ifdef	HAVE_LOG2L
 	ATF_CHECK(fpcmp_equall(log2l(HUGE_VALF), HUGE_VALF));
+#endif  /* HAVE_LOG2L */
 #endif
+
 #ifdef  HUGE_VALL
 	ATF_CHECK(fpcmp_equalf(log2f(HUGE_VALL), HUGE_VALL));
-	ATF_CHECK(fpcmp_equal(log2(HUGE_VALL), HUGE_VALL));
+	ATF_CHECK(fpcmp_equal( log2 (HUGE_VALL), HUGE_VALL));
+#ifdef	HAVE_LOG2L
 	ATF_CHECK(fpcmp_equall(log2l(HUGE_VALL), HUGE_VALL));
+#endif  /* HAVE_LOG2L */
 #endif
 }
 
