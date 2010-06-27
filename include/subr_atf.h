@@ -29,7 +29,7 @@ do {									\
 do {						\
 	__cond = __cond ? (x) : 0;		\
 	if (!(x))				\
-		ATF_PRINT_ERRMSG(#x);		\
+		ATF_PRINT_ERRMSG(#x " not met");\
 } while(0)
 
 /* We can have only one such loop within a function */
