@@ -1,11 +1,11 @@
 #include <atf-c.h>
 #include <math.h>
-#include <stdio.h>
 
 #include "subr_atf.h"
 #include "subr_random.h"
 
-struct tentry {
+static const struct
+tentry {
 	long double x;       /* Input */
 	long double y;       /* signbit output */
 } ttable[] = {
