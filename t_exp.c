@@ -2,6 +2,7 @@
 
 #include <atf-c.h>
 #include <errno.h>
+#include <stdio.h>
 #include <math.h>
 
 #include "config.h"

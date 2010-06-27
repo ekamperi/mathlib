@@ -2,14 +2,11 @@
 
 #include <atf-c.h>
 #include <math.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <time.h>
 
 #include "subr_atf.h"
 #include "subr_random.h"
 
-static struct const
+static const struct
 tentry {
 	double x;       /* Input */
 	double y;       /* copysign output */
