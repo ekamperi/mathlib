@@ -1,14 +1,7 @@
 #include <atf-c.h>
 #include <math.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <time.h>
 
 #include "config.h"
-
-#ifdef  HAS_MATH_ERREXCEPT
-#include <fenv.h>
-#endif  /* HAS_MATH_ERREXCEPT */
 
 #include "subr_atf.h"
 #include "subr_errhandling.h"
@@ -47,7 +40,6 @@ ATF_TC_BODY(test_fpclassify, tc)
 	ATF_CHECK(fpclassify((long double)NAN) == FP_NAN);
 #endif
 
-
 	/* FP_NORMAL */
 	ATF_CHECK(fpclassify((float)1) == FP_NORMAL);
 	ATF_CHECK(fpclassify((double)1) == FP_NORMAL);
@@ -55,7 +47,6 @@ ATF_TC_BODY(test_fpclassify, tc)
 
 
 	/* FP_SUBNORMAL */
-
 
 	/* FP_ZERO */
 	ATF_CHECK(fpclassify((float)0.0) == FP_ZERO);
@@ -146,12 +137,15 @@ ATF_TC_BODY(test_isnormal, tc)
 	ATF_REQUIRE(N > 0);
 
 	ATF_FOR_LOOP(i, N, i++) {
+		/* float */
 		fx = random_float(FP_NORMAL);
 		ATF_PASS_OR_BREAK(isnormal(fx));
 
+		/* double */
 		dy = random_double(FP_NORMAL);
 		ATF_PASS_OR_BREAK(isnormal(dy));
 
+		/* long double */
 		ldz = random_long_double(FP_NORMAL);
 		ATF_PASS_OR_BREAK(isnormal(ldz));
 	}
@@ -178,7 +172,7 @@ ATF_TC_BODY(test_signbit, tc)
 	ATF_REQUIRE(N > 0);
 
 	ATF_FOR_LOOP(i, N, i++) {
-		/* Float */
+		/* float */
 		do {
 			fx = random_float(FP_NORMAL);
 		} while (fx < 0.0);
@@ -189,7 +183,7 @@ ATF_TC_BODY(test_signbit, tc)
 		} while (fx > 0.0);
 		ATF_PASS_OR_BREAK(signbit(fx) != 0);
 
-		/* Double */
+		/* double */
 		do {
 			dy = random_double(FP_NORMAL);
 		} while (dy < 0.0);
@@ -200,7 +194,7 @@ ATF_TC_BODY(test_signbit, tc)
 		} while (dy > 0.0);
 		ATF_PASS_OR_BREAK(signbit(dy) != 0);
 
-		/* Long double */
+		/* long double */
 		do {
 			ldz = random_long_double(FP_NORMAL);
 		} while (ldz < 0.0);
@@ -213,16 +207,16 @@ ATF_TC_BODY(test_signbit, tc)
 	}
 
 	/* Also check some special cases */
-	ATF_CHECK(signbit(+0.0) == 0);
+	ATF_CHECK(signbit( 0.0) == 0);
 	ATF_CHECK(signbit(-0.0) != 0);
 
-	ATF_CHECK(signbit(HUGE_VAL) == 0);
+	ATF_CHECK(signbit( HUGE_VAL) == 0);
 	ATF_CHECK(signbit(-HUGE_VAL) != 0);
 
-	ATF_CHECK(signbit(HUGE_VALF) == 0);
+	ATF_CHECK(signbit( HUGE_VALF) == 0);
 	ATF_CHECK(signbit(-HUGE_VALF) != 0);
 
-	ATF_CHECK(signbit(HUGE_VALL) == 0);
+	ATF_CHECK(signbit( HUGE_VALL) == 0);
 	ATF_CHECK(signbit(-HUGE_VALL) != 0);
 
 	/* XXX: Should we require signbit(INFINITY) == 0 ? */
@@ -234,9 +228,9 @@ ATF_TC_BODY(test_signbit, tc)
 ATF_TC(test_isgreater);
 ATF_TC_HEAD(test_isgreater, tc)
 {
-  atf_tc_set_md_var(tc,
-		    "descr",
-		    "isgreater()");
+	atf_tc_set_md_var(tc,
+	    "descr",
+	    "isgreater()");
 }
 ATF_TC_BODY(test_isgreater, tc)
 {
@@ -249,7 +243,7 @@ ATF_TC_BODY(test_isgreater, tc)
 	ATF_REQUIRE(N > 0);
 
 	ATF_FOR_LOOP(i, N, i++) {
-		/* Float */
+		/* float */
 		fx = random_float(FP_NORMAL);
 		fy = random_float(FP_NORMAL);
 		if (fx > fy) {
@@ -269,7 +263,7 @@ ATF_TC_BODY(test_isgreater, tc)
 			ATF_PASS_OR_BREAK(!islessgreater(fy, fx));
 		}
 
-		/* Double */
+		/* double */
 		dx = random_double(FP_NORMAL);
 		dy = random_double(FP_NORMAL);
 		if (dx > dy) {
@@ -289,7 +283,7 @@ ATF_TC_BODY(test_isgreater, tc)
 			ATF_PASS_OR_BREAK(!islessgreater(fy, fx));
 		}
 
-		/* Long double */
+		/* long double */
 		ldx = random_long_double(FP_NORMAL);
 		ldy = random_long_double(FP_NORMAL);
 		if (ldx > ldy) {
