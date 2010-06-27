@@ -274,12 +274,14 @@ ATF_TC_BODY(test_tgamma5, tc)
 		ATF_CHECK(raised_exceptions(MY_FE_INVALID));
 
 		/* long double */
+#ifdef	HAVE_TGAMMAL
 		errno = 0;
 		clear_exceptions();
 		ldy = tgammal(t5table[i]);
 		ATF_CHECK_IFNAN(ldy);
 		ATF_CHECK(iserrno_equalto(EDOM));
 		ATF_CHECK(raised_exceptions(MY_FE_INVALID));
+#endif
 	}
 
 	/*
