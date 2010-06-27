@@ -1,14 +1,13 @@
 #include <atf-c.h>
 #include <math.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <time.h>
 
+#include "config.h"
 #include "subr_atf.h"
 #include "subr_fpcmp.h"
 #include "subr_random.h"
 
-struct tentry {
+static const struct
+tentry {
 	double y;	/* Input */
 	double x;	/* tanh() output */
 } ttable[] = {
@@ -65,16 +64,19 @@ ATF_TC_BODY(test_tanh2, tc)
 		ATF_PASS_OR_BREAK(dy >= -1.0 && dy <= 1.0);
 
 		/* long double */
+#ifdef	HAVE_TANHL
 		ldx = random_long_double(FP_NORMAL);
 		ldy = tanhl(FP_NORMAL);
 		ATF_PASS_OR_BREAK(ldy >= -1.0 && ldy <= 1.0);
+#endif
 	}
 }
 
 /*
  * Test case 3 -- Edge cases
  */
-struct t3entry {
+static const struct
+t3entry {
 	long double x;	/* Input */
 	long double y;	/* tanh() output */
 } t3table[] = {
@@ -123,6 +125,8 @@ ATF_TC_HEAD(test_tanh3, tc)
 	size_t i, N;
 
 	N = sizeof(t3table) / sizeof(t3table[0]);
+	ATF_REQUIRE(N > 0);
+
 	for (i = 0; i < N; i++) {
 		/* float */
 		fy = tanhf(t3table[i].x);
@@ -133,8 +137,10 @@ ATF_TC_HEAD(test_tanh3, tc)
 		ATF_CHECK(fpcmp_equal(fy, t3table[i].y));
 
 		/* long double */
+#ifdef	HAVE_TANHL
 		ldy = tanhl(t3table[i].y);
 		ATF_CHECK(fpcmp_equal(ldy, t3table[i].y));
+#endif
 	}
 }
 
