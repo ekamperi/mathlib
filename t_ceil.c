@@ -71,11 +71,13 @@ ATF_TC_BODY(test_ceil2, tc)
 		ATF_PASS_OR_BREAK(ceil(dy) == dy);
 
 		/* long double */
+#ifdef	HAVE_CEILL
 		ldx = random_long_double(FP_NORMAL);
 		ldy = ceill(ldx);
 		ATF_PASS_OR_BREAK(ldy >= ldx);
 		ATF_PASS_OR_BREAK(floorl(ldy) == ldy);
 		ATF_PASS_OR_BREAK(ceill(ldy) == ldy);
+#endif
 	}
 }
 
@@ -139,9 +141,11 @@ ATF_TC_BODY(test_ceil3, tc)
 				 (double)t3table[i].y));
 
 		/* long double */
+#ifdef	HAVE_CEILL
 		ATF_CHECK(fpcmp_equall(
 			    ceill(t3table[i].x),
 				  t3table[i].y));
+#endif
 	}
 }
 

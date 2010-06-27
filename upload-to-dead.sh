@@ -6,7 +6,7 @@ HOSTNAME="dead-to-the-world.duskware.de"
 REMOTEDIR=""
 
 echo ">>> Creating git archive with name $FILENAME"
-git archive --format=tar HEAD | gzip > "$FILENAME"
+git archive --format=tar --prefix=mathlib/ HEAD | gzip > "$FILENAME"
 echo "DONE"
 
 echo ">>> Uploading git archive to $USERNAME@$HOSTNAME:~/$REMOTEDIR"

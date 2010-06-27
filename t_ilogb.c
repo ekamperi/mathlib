@@ -190,6 +190,7 @@ ATF_TC_BODY(test_ilogb3, tc)
 		ATF_PASS_OR_BREAK(raised_exceptions(MY_FE_INVALID));
 
 		/* long double */
+#ifdef	HAVE_ILOGBL
 		do {
 			ldx = random_long_double(FP_NORMAL);
 		} while (ldx <= INT_MAX);
@@ -198,6 +199,7 @@ ATF_TC_BODY(test_ilogb3, tc)
 		ATF_PASS_OR_BREAK(fpcmp_equall(ilogbl(ldx), INT_MAX));
 		ATF_PASS_OR_BREAK(iserrno_equalto(EDOM));
 		ATF_PASS_OR_BREAK(raised_exceptions(MY_FE_INVALID));
+#endif
 	}
 
 	/*

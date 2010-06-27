@@ -315,10 +315,12 @@ ATF_TC_BODY(test_atan24, tc)
 	errno = 0; atan2(-0.0, -0.0); ATF_CHECK(errno != EDOM);
 
 	/* long double */
+#ifdef	HAVE_ATAN2L
 	errno = 0; atan2l(+0.0, +0.0); ATF_CHECK(errno != EDOM);
 	errno = 0; atan2l(+0.0, -0.0); ATF_CHECK(errno != EDOM);
 	errno = 0; atan2l(-0.0, +0.0); ATF_CHECK(errno != EDOM);
 	errno = 0; atan2l(-0.0, -0.0); ATF_CHECK(errno != EDOM);
+#endif
 }
 
 /* Add test cases to test program */

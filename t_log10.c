@@ -70,7 +70,7 @@ ATF_TC_BODY(test_log102, tc)
 		ATF_CHECK(fy == -HUGE_VALF);
 #endif
 		ATF_CHECK(iserrno_equalto(ERANGE));
-		ATF_CHECK(raised_exceptions(FE_DIVBYZERO));
+		ATF_CHECK(raised_exceptions(MY_FE_DIVBYZERO));
 
 		/* double */
 		errno = 0;
@@ -80,7 +80,7 @@ ATF_TC_BODY(test_log102, tc)
 		ATF_CHECK(dy == -HUGE_VAL);
 #endif
 		ATF_CHECK(iserrno_equalto(ERANGE));
-		ATF_CHECK(raised_exceptions(FE_DIVBYZERO));
+		ATF_CHECK(raised_exceptions(MY_FE_DIVBYZERO));
 
 		/* long double */
 #ifdef	HAVE_LOG10L
@@ -91,7 +91,7 @@ ATF_TC_BODY(test_log102, tc)
 		ATF_CHECK(ldy == -HUGE_VALL);
 #endif
 		ATF_CHECK(iserrno_equalto(ERANGE));
-		ATF_CHECK(raised_exceptions(FE_DIVBYZERO));
+		ATF_CHECK(raised_exceptions(MY_FE_DIVBYZERO));
 #endif	/* HAVE_LOG10L */
 	}
 

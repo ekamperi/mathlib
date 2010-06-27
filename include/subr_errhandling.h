@@ -3,9 +3,9 @@
 
 #include "config.h"
 
-#ifdef  HAS_MATH_ERREXCEPT
+#ifdef  HAVE_FENV_H
 #include <fenv.h>
-#endif  /* HAS_MATH_ERREXCEPT */
+#endif
 
 /* Floating point exception constant is missing. */
 #define FE_IS_MISSING	(-1)

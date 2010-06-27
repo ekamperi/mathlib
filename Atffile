@@ -1,6 +1,6 @@
 Content-Type: application/X-atf-atffile; version="1"
 
 prop: test-suite = general
-conf: iterations = 100
+conf: iterations = 100000
 
 tp-glob: t_*
