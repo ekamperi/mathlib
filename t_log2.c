@@ -255,12 +255,16 @@ ATF_TC_BODY(test_log24, tc)
 	/* If x is NaN, a NaN shall be returned */
 	ATF_CHECK_IFNAN(log2f(NAN));
 	ATF_CHECK_IFNAN(log2(NAN));
+#ifdef	HAVE_LOG2L
 	ATF_CHECK_IFNAN(log2l(NAN));
+#endif
 
 	/* If x is 1, +0 shall be returned */
 	ATF_CHECK(fpcmp_equalf(log2f(1.0), 0.0));
 	ATF_CHECK(fpcmp_equal (log2 (1.0), 0.0));
+#ifdef	HAVE_LOG2L
 	ATF_CHECK(fpcmp_equall(log2l(1.0), 0.0));
+#endif
 
 	/* If x is +Inf, x shall be returned */
 #ifdef	INFINITY
