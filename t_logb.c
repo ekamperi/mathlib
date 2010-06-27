@@ -1,19 +1,16 @@
 #define _XOPEN_SOURCE 600
 
+#include <atf-c.h>
+#include <errno.h>
+#include <math.h>
+
 #include "config.h"
 #include "subr_atf.h"
 #include "subr_errhandling.h"
 #include "subr_fpcmp.h"
 #include "subr_random.h"
 
-#include <atf-c.h>
-#include <errno.h>
-#include <math.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <fenv.h>
-
-static struct
+static const struct
 tentry {
 	long double x;       /* Input */
 	long double y;       /* logb() output */
@@ -45,7 +42,7 @@ ATF_TC_BODY(test_logb1, tc)
  * If x is +-0, a pole error shall occur and logb(), logbf(), and logbl() shall
  * return -HUGE_VAL, -HUGE_VALF, and -HUGE_VALL, respectively.
  */
-static long t2table[] = { +0.0, -0.0 };
+static const long t2table[] = { +0.0, -0.0 };
 
 ATF_TC(test_logb2);
 ATF_TC_HEAD(test_logb2, tc)
@@ -85,6 +82,7 @@ ATF_TC_BODY(test_logb2, tc)
 		ATF_CHECK(raised_exceptions(FE_DIVBYZERO));
 
 		/* long double */
+#ifdef	HAVE_LOGBL
 		errno = 0;
 		clear_exceptions();
 		ldy = logbl(t2table[i]);
@@ -93,6 +91,7 @@ ATF_TC_BODY(test_logb2, tc)
 #endif
 		ATF_CHECK(iserrno_equalto(ERANGE));
 		ATF_CHECK(raised_exceptions(FE_DIVBYZERO));
+#endif	/* HAVE_LOGBL */
 	}
 
 	/*
@@ -110,8 +109,8 @@ ATF_TC_BODY(test_logb2, tc)
 /*
  * Test case 3 -- Edge cases
  */
-static
-struct t3entry {
+static const struct
+t3entry {
 	long double x;
 	long double y;
 } t3table[] = {
@@ -152,17 +151,22 @@ ATF_TC_BODY(test_logb3, tc)
 	ATF_REQUIRE(N > 0);
 
 	for (i = 0; i < N; i++) {
+		/* float */
 		ATF_CHECK(fpcmp_equalf(
 			    logbf((float)t3table[i].x),
 				  (float)t3table[i].y));
 
+		/* double */
 		ATF_CHECK(fpcmp_equal(
 			    logb((double)t3table[i].x),
 				 (double)t3table[i].y));
 
+		/* long double */
+#ifdef	HAVE_LOGBL
 		ATF_CHECK(fpcmp_equall(
 			    logbl(t3table[i].x),
 				  t3table[i].y));
+#endif
 	}
 }
 
