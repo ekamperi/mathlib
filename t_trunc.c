@@ -1,8 +1,5 @@
 #include <atf-c.h>
 #include <math.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <time.h>
 
 #include "subr_atf.h"
 #include "subr_fpcmp.h"
@@ -11,7 +8,8 @@
 /*
  * Test case 1 -- Basic functionality
  */
-struct t1entry {
+static const struct
+t1entry {
 	double x;	/* Input */
 	double y;	/* Output */
 } t1table[] = {
@@ -80,18 +78,21 @@ ATF_TC_BODY(test_trunc2, tc)
 		ATF_PASS_OR_BREAK(fabs(dx) >= fabs(dy));
 
 		/* long double */
+#ifdef	HAVE_TRUNCL
 		ldx = random_long_double(FP_NORMAL);
 		ldy = truncl(dx);
 		ATF_PASS_OR_BREAK(floorl(dy) == dy);
 		ATF_PASS_OR_BREAK(ceill(dy) == dy);
 		ATF_PASS_OR_BREAK(fabsl(dx) >= fabsl(dy));
+#endif
 	}
 }
 
 /*
  * Test case 3 -- Edge cases
  */
-struct tentry {
+static const struct
+t3entry {
 	long double x;	/* Input */
 	long double y;	/* trunc() output */
 } t3table[] = {
@@ -103,6 +104,7 @@ struct tentry {
 	/* If x is +-0 or +-Inf, x shall be returned */
 	{  0.0,  0.0 },
 	{ -0.0, -0.0 },
+
 #ifdef	INFINITY
 	{  INFINITY,  INFINITY },
 	{ -INFINITY, -INFINITY },
@@ -136,6 +138,8 @@ ATF_TC_BODY(test_trunc3, tc)
 	size_t i, N;
 
 	N = sizeof(t3table) / sizeof(t3table[0]);
+	ATF_REQUIRE(N > 0);
+
 	for (i = 0; i < N; i++) {
 		/* float */
 		fy = truncf(t3table[i].x);
@@ -146,8 +150,10 @@ ATF_TC_BODY(test_trunc3, tc)
 		ATF_CHECK(fpcmp_equal(dy, (double)t3table[i].y));
 
 		/* long double */
+#ifdef	HAVE_TRUNCL
 		ldy = truncl(t3table[i].x);
 		ATF_CHECK(fpcmp_equal(ldy, t3table[i].y));
+#endif
 	}
 }
 
