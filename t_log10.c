@@ -271,6 +271,7 @@ ATF_TC_BODY(test_log104, tc)
 	ATF_CHECK(fpcmp_equall(log10l(INFINITY), INFINITY));
 #endif	/* HAVE_LOG10L */
 #endif
+
 #ifdef  HUGE_VAL
 	ATF_CHECK(fpcmp_equalf(log10f(HUGE_VAL), HUGE_VAL));
 	ATF_CHECK(fpcmp_equal (log10 (HUGE_VAL), HUGE_VAL));
@@ -278,6 +279,7 @@ ATF_TC_BODY(test_log104, tc)
 	ATF_CHECK(fpcmp_equall(log10l(HUGE_VAL), HUGE_VAL));
 #endif  /* HAVE_LOG10L */
 #endif
+
 #ifdef	HUGE_VALF
 	ATF_CHECK(fpcmp_equalf(log10f(HUGE_VALF), HUGE_VALF));
 	ATF_CHECK(fpcmp_equal( log10 (HUGE_VALF), HUGE_VALF));
@@ -285,6 +287,7 @@ ATF_TC_BODY(test_log104, tc)
 	ATF_CHECK(fpcmp_equall(log10l(HUGE_VALF), HUGE_VALF));
 #endif  /* HAVE_LOG10L */
 #endif
+
 #ifdef  HUGE_VALL
 	ATF_CHECK(fpcmp_equalf(log10f(HUGE_VALL), HUGE_VALL));
 	ATF_CHECK(fpcmp_equal (log10 (HUGE_VALL), HUGE_VALL));
