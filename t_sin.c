@@ -3,7 +3,6 @@
 #include <atf-c.h>
 #include <errno.h>
 #include <math.h>
-#include <stdio.h>
 
 #include "config.h"
 #include "subr_atf.h"
@@ -14,7 +13,8 @@
 /*
  * Test case 1 -- Basic functionality
  */
-struct tentry {
+static const struct
+tentry {
         long double x;       /* Input */
         long double y;       /* sin output */
 } ttable[] = {
