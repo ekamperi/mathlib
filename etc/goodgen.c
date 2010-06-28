@@ -259,10 +259,10 @@ gen_ldouble(const char *fname, size_t total,
 
 		/* Set the mpfr variables */
 		if (f->f_narg >= 1)
-			mpfr_set_d(mp_x, x, tonearest);
+			mpfr_set_ld(mp_x, x, tonearest);
 		if (f->f_narg == 2)
-			mpfr_set_d(mp_y, y, tonearest);
-		mpfr_set_d(mp_exact, 0.0, tonearest);
+			mpfr_set_ld(mp_y, y, tonearest);
+		mpfr_set_ld(mp_exact, 0.0, tonearest);
 
 		/* Compute exact value */
 		if (f->f_narg == 1)
@@ -271,7 +271,7 @@ gen_ldouble(const char *fname, size_t total,
 			f->f_mpfr(mp_exact, mp_x, mp_y, tonearest);
 
 		/* Extract exact value */
-		exact = mpfr_get_d(mp_exact, tonearest);
+		exact = mpfr_get_ld(mp_exact, tonearest);
 
 		if (f->f_narg == 1)
 			printf("\t{ % .35Le, % .35Le }", x, exact);
