@@ -2,20 +2,13 @@
 
 #include <atf-c.h>
 #include <math.h>
-#include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
 
 #include "config.h"
 #include "subr_atf.h"
 #include "subr_fpcmp.h"
-
-static const struct
-tentry {
-	long double x;       /* Input */
-	long double y;       /* atan output */
-} ttable[] = {
-};
+#include "t_atan.h"
 
 /*
  * Test case 1 -- Basic functionality
@@ -31,9 +24,23 @@ ATF_TC_BODY(test_atan1, tc)
 {
 	size_t i, N;
 
-	N = sizeof(ttable) / sizeof(ttable[0]);
+	/* double */
+	N = sizeof(t1dtable) / sizeof(t1dtable[0]);
+	ATF_REQUIRE(N > 0);
 	for (i = 0; i < N; i++)
-		ATF_CHECK(fpcmp_equal(atan(ttable[i].x), ttable[i].y));
+		ATF_CHECK(fpcmp_equal(
+			    atan(t1dtable[i].x),
+				 t1dtable[i].y));
+
+	/* long double */
+#ifdef	HAVE_ATANL
+	N = sizeof(t1ldtable) / sizeof(t1ldtable[0]);
+	ATF_REQUIRE(N > 0);
+	for (i = 0; i < N; i++)
+		ATF_CHECK(fpcmp_equall(
+			    atanl(t1ldtable[i].x),
+				  t1ldtable[i].y));
+#endif
 }
 
 /*
@@ -54,10 +61,11 @@ ATF_TC_BODY(test_atan2, tc)
 	double x;
 	long i, N;
 
-	N = sizeof(ttable) / sizeof(ttable[0]);
+	/* We are reusing table from test 1 */
+	N = sizeof(t1dtable) / sizeof(t1dtable[0]);
 	for (i = 0; i < N; i++) {
-		ATF_CHECK(atan(ttable[i].x) >= -M_PI_2 -0.1);
-		ATF_CHECK(atan(ttable[i].x) <=  M_PI_2 +0.1);
+		ATF_CHECK(atan(t1dtable[i].x) >= -M_PI_2 -0.1);
+		ATF_CHECK(atan(t1dtable[i].x) <=  M_PI_2 +0.1);
 	}
 
 	/* Try the same thing but with some random input */
@@ -142,13 +150,13 @@ ATF_TC_BODY(test_atan3, tc)
 					 t3table[i].y));
 
 		/* double */
-                ATF_CHECK(fpcmp_equal(
+		ATF_CHECK(fpcmp_equal(
 			    atan((double)t3table[i].x),
 					 t3table[i].y));
 
 		/* long double */
 #ifdef	HAVE_ATANL
-                ATF_CHECK(fpcmp_equall(
+		ATF_CHECK(fpcmp_equall(
 			    atanl(t3table[i].x),
 				  t3table[i].y));
 #endif
