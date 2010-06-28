@@ -7,6 +7,7 @@
 #define _XOPEN_SOURCE 600
 
 #include <assert.h>
+#include <ctype.h>
 #include <float.h>
 #include <math.h>
 #include <stdio.h>
@@ -28,6 +29,8 @@ static void gen_ldouble(const char *fname, size_t total, long double lower,
     long double upper);
 
 static void usage(const char *progname);
+static char *strtoupper(const char *str);
+
 
 int
 main(int argc, char *argv[])
@@ -85,7 +88,7 @@ main(int argc, char *argv[])
 	}
 
 	if (strcmp(type, "float") && strcmp(type, "double")
-	    && (strcmp(type, "ldouble"))) {
+	    && (strcmp(type, "ldouble") && strcmp(type, "all"))) {
 		usage(progname);
 		/* NEVER REACHED */
 	}
@@ -93,8 +96,14 @@ main(int argc, char *argv[])
 	/* Initialize random number generator */
 	init_randgen();
 
+	/* Print if guards */
+	char *FNAME = strtoupper(fname);
+	printf("#ifndef __T_%s_H__\n", FNAME);
+	printf("#define __T_%s_H__\n", FNAME);
+	printf("\n");
+
 	/* Ready to go */
-	if (!strcmp(type, "double")) {
+	if (!strcmp(type, "double") || !strcmp(type, "all")) {
 		if (min == 0 && max == 0) {
 			dlower = -DBL_MAX;
 			dupper =  DBL_MAX;
@@ -102,12 +111,15 @@ main(int argc, char *argv[])
 			dlower = min;
 			dupper = max;
 		}
-		printf("const double\nt1dtable[] = {\n");
+		printf("const struct\nt1dentry {\n"
+			    "\tdouble x;	/* Input */\n"
+			    "\tdouble y;	/* Output */\n"
+		    "} t1dtable[] = {\n");
 		gen_double(fname, total, dlower, dupper);
 		printf("};\n");
 	}
 
-	if (!strcmp(type, "ldouble")) {
+	if (!strcmp(type, "ldouble") || !strcmp(type, "all")) {
 		if (min == 0 && max == 0) {
 			ldlower = -LDBL_MAX;
 			ldupper =  LDBL_MAX;
@@ -115,10 +127,17 @@ main(int argc, char *argv[])
 			ldlower = min;
 			ldupper = max;
 		}
-		printf("const long double\nt1ldtable[] = {\n");
+                printf("const struct\nt1ldentry {\n"
+		    "\tlong double x;   /* Input */\n"
+		    "\tlong double y;   /* Output */\n"
+                    "} t1ldtable[] = {\n");
 		gen_ldouble(fname, total, ldlower, ldupper);
 		printf("};\n");
 	}
+
+	/* Close ifdef guard */
+	printf("#endif	/* __T_%s_H__ */\n", FNAME);
+	free(FNAME);
 
 	return (EXIT_SUCCESS);
 }
@@ -179,7 +198,7 @@ gen_double(const char *fname, size_t total, double lower, double upper)
 		exact = mpfr_get_d(mp_exact, tonearest);
 
 		if (f->f_narg == 1)
-			printf("\t{ % .16e, % .16e\n },", x, exact);
+			printf("\t{ % .16e, % .16e }", x, exact);
 		else
 			printf("\t{ % .16e,\n\t  % .16e,\n\t  % .16e }", x, y, exact);
 
@@ -196,7 +215,8 @@ gen_double(const char *fname, size_t total, double lower, double upper)
 }
 
 static void
-gen_ldouble(const char *fname, size_t total, long double lower, long double upper)
+gen_ldouble(const char *fname, size_t total,
+    long double lower, long double upper)
 {
 	const struct fentry *f;
 	mpfr_t mp_x, mp_y, mp_exact;
@@ -251,9 +271,9 @@ gen_ldouble(const char *fname, size_t total, long double lower, long double uppe
 		exact = mpfr_get_d(mp_exact, tonearest);
 
 		if (f->f_narg == 1)
-			printf("x = % .35Le\t%s = % .35Le\n", x, fname, exact);
+			printf("\t{ % .35Le, % .35Le }", x, exact);
 		else
-			printf("\t{ % .35Le,\n\t  % .35Le,\n\t  % .35Le }", x, y, exact);
+			printf("\t{ % .35Le, % .35Le,\n\t% .35Le }", x, y, exact);
 
 		if (i < total - 1)
 			printf(",\n");
@@ -282,4 +302,27 @@ usage(const char *progname)
 	    "\te.g. [-DBL_MAX, DBL_MAX]\n");
 
 	exit(EXIT_FAILURE);
+}
+
+/*
+ * The caller must free up the memory
+ */
+static char *
+strtoupper(const char *str)
+{
+	char *oldp, *newp, *newstr;
+
+	assert(str);
+
+	newstr = malloc(sizeof(str));
+	assert(newstr);
+
+	oldp = str;
+	newp = newstr;
+	do {
+		*newp = toupper(*oldp);
+		newp++;
+	} while(*oldp++);
+
+	return (newstr);
 }
