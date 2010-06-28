@@ -1,5 +1,7 @@
 #!/bin/sh
 
+set -e
+
 FILENAME=atf-soc2010.01-`date '+%d-%m-%y'`.tar.gz
 USERNAME="stathis"
 HOSTNAME="mac-beth.duskware.de"

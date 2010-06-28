@@ -1,5 +1,7 @@
 #!/bin/sh
 
+set -e
+
 KERNEL=$(uname -s)
 RELEASE=$(uname -r)
 MACHINE=$(uname -m)
