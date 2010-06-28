@@ -10,17 +10,11 @@
 #include "subr_atf.h"
 #include "subr_errhandling.h"
 #include "subr_fpcmp.h"
+#include "t_acosh.h"
 
 /*
  * Test case 1 -- Basic functionality
  */
-static const struct
-t1entry {
-	long double x;	/* Input */
-	long double y;	/* acosh output */
-} t1table[] = {
-};
-
 ATF_TC(test_acosh1);
 ATF_TC_HEAD(test_acosh1, tc)
 {
@@ -32,10 +26,19 @@ ATF_TC_BODY(test_acosh1, tc)
 {
 	size_t i, N;
 
-	N = sizeof(t1table) / sizeof(t1table[0]);
-	for (i = 0; i < N; i++) {
-		ATF_CHECK(fpcmp_equal(acosh(t1table[i].x), t1table[i].y));
-	}
+	/* double */
+	N = sizeof(t1dtable) / sizeof(t1dtable[0]);
+	for (i = 0; i < N; i++)
+		ATF_CHECK(fpcmp_equal(
+			    acosh(t1dtable[i].x),
+				  t1dtable[i].y));
+
+	/* long double */
+        N = sizeof(t1ldtable) / sizeof(t1ldtable[0]);
+        for (i = 0; i < N; i++)
+		ATF_CHECK(fpcmp_equall(
+			    acoshl(t1ldtable[i].x),
+				   t1ldtable[i].y));
 }
 
 /*
