@@ -19,7 +19,7 @@ fpcmp_equalf(float x, float y)
 {
 	__FPCMP_COMMON(x, y);
 
-	return ((fabsf(x - y) < (1E-5 * fmaxf(fabsf(x), fabsf(y)))));
+	return ((fabsf(x - y) < (1E-6 * fmaxf(fabsf(x), fabsf(y)))));
 }
 
 int
@@ -27,7 +27,7 @@ fpcmp_equal(double x, double y)
 {
 	__FPCMP_COMMON(x, y);
 
-	return ((fabs(x - y) < (1E-10 * fmax(fabs(x), fabs(y)))));
+	return ((fabs(x - y) < (1E-8 * fmax(fabs(x), fabs(y)))));
 }
 
 int
@@ -35,5 +35,5 @@ fpcmp_equall(long double x, long double y)
 {
 	__FPCMP_COMMON(x, y);
 
-	return ((fabsl(x - y) < (1E-20 * fmaxl(fabsl(x), fabsl(y)))));
+	return ((fabsl(x - y) < (1E-10 * fmaxl(fabsl(x), fabsl(y)))));
 }
