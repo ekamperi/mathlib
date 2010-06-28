@@ -4,8 +4,6 @@
 #include <errno.h>
 #include <float.h>	/* {DBL, FLT, LDBL}_EPSILON */
 #include <math.h>
-#include <stdio.h>
-#include <stdlib.h>
 
 #include "config.h"
 #include "subr_atf.h"
