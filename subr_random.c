@@ -39,6 +39,16 @@ isvalidfp(const uint32_t *y)
 	return 1;
 }
 
+/*
+ * Floating-point numbers are more dense the closer we get to zero, and
+ * more sparse as we head towards infinities. This has to do with how they
+ * are represented in machine format.
+ *
+ * That said, the following functions do NOT constitute a uniform distribution
+ * of floating-point numbers. They are biased towards zero. If you want
+ * equally distributed numbers, you may want drand48() or you should roll
+ * out your own  with rand().
+ */
 #define DECL(TYPE)							\
 TYPE									\
 random_##TYPE(int fpclass)						\
