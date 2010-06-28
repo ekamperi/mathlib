@@ -23,14 +23,17 @@
 #include "subr_random.h"
 
 /* Function prototypes */
-static void gen_double(const char *fname, size_t total, double lower,
+static void gen_float(const char *fname, size_t total,
+    float lower,
+    float upper);
+static void gen_double(const char *fname, size_t total,
+    double lower,
     double upper);
-static void gen_ldouble(const char *fname, size_t total, long double lower,
+static void gen_ldouble(const char *fname, size_t total,
+    long double lower,
     long double upper);
-
 static void usage(const char *progname);
 static char *strtoupper(const char *str);
-
 
 int
 main(int argc, char *argv[])
