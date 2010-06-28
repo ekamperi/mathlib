@@ -6,10 +6,13 @@ CCFLAGS=-Wall -W -Wformat-nonliteral -Wcast-align -Wpointer-arith 		\
 	-Wmissing-declarations -Winline -Wundef -Wnested-externs -Wcast-qual 	\
 	-Wshadow -Wwrite-strings -Wno-unused-parameter 				\
 	-Wswitch -Wbad-function-cast -g
-INCLUDE=-I../include -I../include/ulps -I/usr/include/gmp -I/usr/include/mpfr
+INCLUDE=-I../include -I../ulps -I/usr/include/gmp -I/usr/include/mpfr
 LIB=-lm -lmpfr
 
 goodgen: goodgen.c ../ulps/gen.c ../subr_random.c
+	@test -f ../ulps/config.h \
+	|| (echo "You should first run autoreconf && ./configure in ../ulps" \
+	&& exit 1)
 	$(CC99) $(CCFLAGS) $(INCLUDE)				\
 		goodgen.c ../ulps/gen.c ../subr_random.c	\
 	-o goodgen						\
