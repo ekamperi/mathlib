@@ -313,7 +313,8 @@ usage(const char *progname)
 static char *
 strtoupper(const char *str)
 {
-	char *oldp, *newp, *newstr;
+	const char *oldp;
+	char *newp, *newstr;
 
 	assert(str);
 
