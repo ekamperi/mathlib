@@ -37,15 +37,17 @@ ATF_TC_BODY(test_acos1, tc)
 	}
 
 	/* long double */
+#ifdef	HAVE_ACOSL
 	N = sizeof(t1ldtable) / sizeof(t1ldtable[0]);
 	for (i = 0; i < N; i++) {
 		/* Sanity check */
 		ATF_REQUIRE(t1ldtable[i].x >= -1.0 && t1ldtable[i].x <= 1.0);
 
 		/* Actual check */
-		ATF_CHECK(fpcmp_equal(
-			    acos(t1ldtable[i].x),
-				 t1ldtable[i].y));
+		ATF_CHECK(fpcmp_equall(
+			    acosl(t1ldtable[i].x),
+				  t1ldtable[i].y));
+#endif
 	}
 }
 
