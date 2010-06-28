@@ -2,18 +2,10 @@
 
 #include <atf-c.h>
 #include <math.h>
-#include <stdio.h>
-#include <stdlib.h>
 
 #include "config.h"
 #include "subr_fpcmp.h"
-
-static const struct
-tentry {
-	long double x;	/* Input */
-	long double y;	/* asinh output */
-} ttable[] = {
-};
+#include "t_asinh.h"
 
 /*
  * Test case 1 -- Basic functionality
@@ -29,10 +21,23 @@ ATF_TC_BODY(test_asinh1, tc)
 {
 	size_t i, N;
 
-	N = sizeof(ttable) / sizeof(ttable[0]);
-	for (i = 0; i < N; i++) {
-		ATF_CHECK(fpcmp_equal(asinh(ttable[i].x), ttable[i].y));
-	}
+	/* double */
+	N = sizeof(t1dtable) / sizeof(t1dtable[0]);
+	ATF_REQUIRE(N > 0);
+	for (i = 0; i < N; i++)
+		ATF_CHECK(fpcmp_equal(
+			    asinh(t1dtable[i].x),
+				  t1dtable[i].y));
+
+	/* long double */
+#ifdef	HAVE_ASINHL
+	N = sizeof(t1ldtable) / sizeof(t1ldtable[0]);
+	ATF_REQUIRE(N > 0);
+	for (i = 0; i < N; i++)
+		ATF_CHECK(fpcmp_equall(
+			    asinhl(t1ldtable[i].x),
+				   t1ldtable[i].y));
+#endif
 }
 
 /*
