@@ -32,11 +32,13 @@ ATF_TC_BODY(test_acosh1, tc)
 				  t1dtable[i].y));
 
 	/* long double */
+#ifdef	HAVE_ACOSHL
         N = sizeof(t1ldtable) / sizeof(t1ldtable[0]);
         for (i = 0; i < N; i++)
 		ATF_CHECK(fpcmp_equall(
 			    acoshl(t1ldtable[i].x),
 				   t1ldtable[i].y));
+#endif
 }
 
 /*
