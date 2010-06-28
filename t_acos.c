@@ -8,33 +8,7 @@
 #include "config.h"
 #include "subr_atf.h"
 #include "subr_fpcmp.h"
-
-static const struct
-tentry {
-	double x;       /* Input */
-	double y;       /* acos output */
-} ttable[] = {
-	{  0.4692869279377545,  1.0823132365133747 },
-	{ -0.11347486190157241, 1.6845161380609253 },
-	{  0.4647505724144434,  1.087443434912057  },
-	{ -0.6976324477513756,  2.3428839502471837 },
-	{ -0.2452115558455712,  1.8185342314424182 },
-	{  0.4589749043710669,  1.0939552758742006 },
-	{  0.6611969343774788,  0.8483832246938233 },
-	{ -0.9541427464713692,  2.8375792166185008 },
-	{ -0.2530558053894705,  1.8266338963621322 },
-	{ -0.7909187169003782,  2.4831052355172236 },
-	{  0.5757528726313965,  0.9572716712493159 },
-	{ -0.7155298261397389,  2.368178569675924  },
-	{  0.42990536464184537, 1.1264083681668051 },
-	{  0.3573656087378052,  1.2053506152655027 },
-	{  0.8352071602803219,  0.5822869499591871 },
-	{  0.6113005673267504,  0.9130933983404338 },
-	{ -0.2545812668769236,  1.8282110054372431 },
-	{  0.8354152061585842,  0.5819085315754063 },
-	{  0.6010496167223316,  0.9259825505608865 },
-	{ -0.04366697399123387, 1.6144771901052724 }
-};
+#include "t_acos.h"
 
 /*
  * Test case 1 -- Basic functionality
@@ -50,13 +24,28 @@ ATF_TC_BODY(test_acos1, tc)
 {
 	size_t i, N;
 
-	N = sizeof(ttable) / sizeof(ttable[0]);
+	/* double */
+	N = sizeof(t1dtable) / sizeof(t1dtable[0]);
 	for (i = 0; i < N; i++) {
 		/* Sanity check */
-		ATF_REQUIRE(ttable[i].x >= -1.0 && ttable[i].x <= 1.0);
+		ATF_REQUIRE(t1dtable[i].x >= -1.0 && t1dtable[i].x <= 1.0);
 
 		/* Actual check */
-		ATF_CHECK(fpcmp_equal(acos(ttable[i].x), ttable[i].y));
+		ATF_CHECK(fpcmp_equal(
+			    acos(t1dtable[i].x),
+				 t1dtable[i].y));
+	}
+
+	/* long double */
+	N = sizeof(t1ldtable) / sizeof(t1ldtable[0]);
+	for (i = 0; i < N; i++) {
+		/* Sanity check */
+		ATF_REQUIRE(t1ldtable[i].x >= -1.0 && t1ldtable[i].x <= 1.0);
+
+		/* Actual check */
+		ATF_CHECK(fpcmp_equal(
+			    acos(t1ldtable[i].x),
+				 t1ldtable[i].y));
 	}
 }
 
@@ -78,14 +67,14 @@ ATF_TC_BODY(test_acos2, tc)
 	double x;
 	long i, N;
 
-	N = sizeof(ttable) / sizeof(ttable[0]);
+	/* Reusing the table from test 1 */
+	N = sizeof(t1dtable) / sizeof(t1dtable[0]);
 	for (i = 0; i < N; i++) {
-		/* Sanity check */
-		ATF_REQUIRE(ttable[i].x >= -1.0 && ttable[i].x <= 1.0);
+		dy = acos(t1dtable[i].x);
+		ATF_CHECK(dy >= 0.0 && dy <= M_PI);
 
-		/* Actual checks */
-		ATF_CHECK(acos(ttable[i].x) >= 0.0);
-		ATF_CHECK(acos(ttable[i].x) <= M_PI);
+		ldy = acosl(t1dtable[i].x);
+		ATF_CHECK(ldy >= 0.0 && ldy <= M_PI);
 	}
 
 	/* Try the same thing but with some random input */
