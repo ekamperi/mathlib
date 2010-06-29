@@ -47,8 +47,8 @@ ATF_TC_BODY(test_asin1, tc)
                 ATF_CHECK(fpcmp_equall(
                             asinl(t1ldtable[i].x),
 				  t1ldtable[i].y));
-#endif
         }
+#endif
 }
 
 /*

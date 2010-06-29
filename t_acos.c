@@ -47,8 +47,8 @@ ATF_TC_BODY(test_acos1, tc)
 		ATF_CHECK(fpcmp_equall(
 			    acosl(t1ldtable[i].x),
 				  t1ldtable[i].y));
-#endif
 	}
+#endif
 }
 
 /*
@@ -75,8 +75,10 @@ ATF_TC_BODY(test_acos2, tc)
 		dy = acos(t1dtable[i].x);
 		ATF_CHECK(dy >= 0.0 && dy <= M_PI);
 
+#ifdef	HAVE_ACOSL
 		ldy = acosl(t1dtable[i].x);
 		ATF_CHECK(ldy >= 0.0 && ldy <= M_PI);
+#endif
 	}
 
 	/* Try the same thing but with some random input */
