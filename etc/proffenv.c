@@ -9,6 +9,7 @@ static int prof_clearexcept_all(size_t iterations);
 static int prof_clearexcept_random(size_t iterations);
 
 static int prof_getenv(size_t iterations);
+static int prof_holdexcept(size_t iterations);
 
 static int prof_raiseexcept(size_t iterations);
 
@@ -72,6 +73,10 @@ struct pentry {
 
 	{ "     fegetenv()              ",
 	  prof_getenv,
+	  ITERATIONS },
+
+	{ " feholdexcept()              ",
+	  prof_holdexcept,
 	  ITERATIONS },
 
         { "feraiseexcept()              ",
@@ -161,6 +166,23 @@ prof_getenv(size_t iterations)
 
 	for (i = 0; i < iterations; i++)
 		assert(fegetenv(&env) == 0);
+
+	MARK_END(&tv2);
+
+	return MSECS(tv1, tv2);
+}
+
+static int
+prof_holdexcept(size_t iterations)
+{
+	struct timeval tv1, tv2;
+	fenv_t env;
+	size_t i;
+
+	MARK_START(&tv1);
+
+	for (i = 0; i < iterations; i++)
+		assert(feholdexcept(&env) == 0);
 
 	MARK_END(&tv2);
 
