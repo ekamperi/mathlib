@@ -131,7 +131,7 @@ ATF_TC_BODY(test_exp23, tc)
 		clear_exceptions();
 		(void)exp2(dx);
 
-		ATF_CHECK(iserrno_equalto(ERANGE));
+		ATF_PASS_OR_BREAK(iserrno_equalto(ERANGE));
 		if (dx < 0.0)
 			ATF_PASS_OR_BREAK(raised_exceptions(MY_FE_UNDERFLOW));
 		else

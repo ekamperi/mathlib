@@ -156,7 +156,7 @@ ATF_TC_BODY(test_exp3, tc)
 	N = get_config_var_as_long(tc, "iterations");
 	ATF_REQUIRE(N > 0);
 
-	for (i = 0; i < N; i++) {
+	ATF_FOR_LOOP(i, N, i++) {
 		do {
 			dx = random_double(FP_NORMAL);
 		} while (dx > -708.4 && dx < 709.8);
@@ -165,11 +165,11 @@ ATF_TC_BODY(test_exp3, tc)
 		clear_exceptions();
 		(void)exp(dx);
 
-		ATF_CHECK(iserrno_equalto(ERANGE));
+		ATF_PASS_OR_BREAK(iserrno_equalto(ERANGE));
 		if (dx < 0.0)
-			ATF_CHECK(raised_exceptions(MY_FE_UNDERFLOW));
+			ATF_PASS_OR_BREAK(raised_exceptions(MY_FE_UNDERFLOW));
 		else
-			ATF_CHECK(raised_exceptions(MY_FE_OVERFLOW));
+			ATF_PASS_OR_BREAK(raised_exceptions(MY_FE_OVERFLOW));
 	}
 }
 
