@@ -20,7 +20,7 @@ all:	t_acos t_acosh t_asin t_asinh t_atan t_atan2 t_atanh t_cbrt t_ceil \
 	t_constants t_copysign t_cos t_erf t_exp t_exp2 t_expm1 t_fabs t_fdim \
 	t_float t_floor t_fmax t_fpclassify t_fpmacros t_ilogb t_mac t_tgamma \
 	t_hypot t_log t_log10 t_log1p t_log2 t_logb t_ldexp t_nextafter \
-	t_signbit t_sin t_sqrt t_trig_ident t_tanh t_trunc t_types
+	t_rint t_signbit t_sin t_sqrt t_trig_ident t_tanh t_trunc t_types
 
 _DEPS_T_ACOS = t_acos.o subr_atf.o subr_fpcmp.o
  DEPS_T_ACOS = $(_DEPS_T_ACOS:%=obj/%)
@@ -229,6 +229,12 @@ _DEPS_T_NEXTAFTER = t_nextafter.o subr_atf.o subr_errhandling.o subr_random.o
  DEPS_T_NEXTAFTER = $(_DEPS_T_NEXTAFTER:%=obj/%)
 t_nextafter: $(DEPS_T_NEXTAFTER)
 	$(CC99) -o t_nextafter $(DEPS_T_NEXTAFTER) $(CFLAGS) $(LIBS)
+
+
+_DEPS_T_RINT = t_rint.o subr_atf.o subr_errhandling.o subr_fpcmp.o subr_random.o
+ DEPS_T_RINT = $(_DEPS_T_RINT:%=obj/%)
+t_rint: $(DEPS_T_RINT)
+	$(CC99) -o t_rint $(DEPS_T_RINT) $(CFLAGS) $(LIBS)
 
 
 _DEPS_T_SIGNBIT = t_signbit.o subr_atf.o subr_random.o

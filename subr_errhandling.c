@@ -52,6 +52,21 @@ raised_exceptions(int excepts)
 	return (1);
 }
 
+int
+not_raised_exceptions(int excepts)
+{
+	int raised;
+
+#if defined(math_errhandling) && defined(MATH_ERREXCEPT)        \
+	&& (math_errhandling & MATH_ERREXCEPT)
+
+	raised = fetestexcept(excepts);
+	return ((raised & excepts) == 0);
+#endif
+
+	return (1);
+}
+
 /*
  * Checks if `errno' is equal to `error'.
  *
