@@ -162,6 +162,12 @@ dom_sqrt(double x)
 }
 
 static int
+dom_tan(double x)
+{
+	return (fabs(x - M_PI_2) > 1E-10);
+}
+
+static int
 dom_pow(double x, double y)
 {
 	return (x >= 0.0 || (floor(y) == y));
@@ -500,6 +506,17 @@ ftable[] = {
 		.f_libm = pow,
 		.f_mpfr = mpfr_pow,
 		.f_u.fp2 = dom_pow
+	},
+#endif
+
+	/* tan() */
+#ifdef	HAVE_TAN
+	{
+		.f_name = "tan",
+		.f_narg = 1,
+		.f_libm = tan,
+		.f_mpfr = mpfr_tan,
+		.f_u.fp1 = dom_tan
 	},
 #endif
 
