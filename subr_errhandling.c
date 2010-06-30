@@ -19,15 +19,6 @@ clear_exceptions(void)
 #endif
 }
 
-void
-clear_errno(void)
-{
-#if defined(math_errhandling) && defined(MATH_ERRNO)            \
-	&& (math_errhandling & MATH_ERRNO)
-	errno = 0;
-#endif
-}
-
 /*
  * Checks if `excepts' were raised.
  *
@@ -77,17 +68,6 @@ iserrno_equalto(int error)
 #endif
 
 	return (1);
-}
-
-int
-set_errno(void)
-{
-	int error = 0;
-#if defined(math_errhandling) && defined(MATH_ERRNO)            \
-	&& (math_errhandling & MATH_ERRNO)
-	error = errno;
-#endif
-	return (error);
 }
 
 void
