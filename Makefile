@@ -18,7 +18,7 @@ obj/%.o: %.c
 .PHONY: all
 all:	t_acos t_acosh t_asin t_asinh t_atan t_atan2 t_atanh t_cbrt t_ceil \
 	t_constants t_copysign t_cos t_erf t_exp t_exp2 t_expm1 t_fabs t_fdim \
-	t_float t_floor t_fmax t_fpclassify t_fpmacros t_ilogb t_mac t_tgamma \
+	t_float t_floor t_fmax t_fpclassify t_fpmacros t_ilogb t_lrint t_mac t_tgamma \
 	t_hypot t_log t_log10 t_log1p t_log2 t_logb t_ldexp t_nextafter \
 	t_rint t_signbit t_sin t_sqrt t_trig_ident t_tanh t_trunc t_types
 
@@ -217,6 +217,12 @@ _DEPS_T_LOGB = t_logb.o subr_atf.o subr_errhandling.o subr_fpcmp.o subr_random.o
  DEPS_T_LOGB = $(_DEPS_T_LOGB:%=obj/%)
 t_logb: $(DEPS_T_LOGB)
 	$(CC99) -o t_logb $(DEPS_T_LOGB) $(CFLAGS) $(LIBS)
+
+
+_DEPS_T_LRINT = t_lrint.o subr_atf.o subr_errhandling.o subr_fpcmp.o subr_random.o
+ DEPS_T_LRINT = $(_DEPS_T_LRINT:%=obj/%)
+t_lrint: $(DEPS_T_LRINT)
+	$(CC99) -o t_lrint $(DEPS_T_LRINT) $(CFLAGS) $(LIBS)
 
 
 _DEPS_T_MAC = t_mac.o subr_atf.o subr_errhandling.o subr_random.o
