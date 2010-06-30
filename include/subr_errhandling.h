@@ -45,6 +45,8 @@ void clear_exceptions(void);
 void clear_errno(void);
 
 int raised_exceptions(int excepts);
+int not_raised_exceptions(int excepts);
+
 int iserrno_equalto(int error);
 int set_errno(void);
 
