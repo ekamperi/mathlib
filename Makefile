@@ -263,7 +263,7 @@ t_sqrt: $(DEPS_T_SQRT)
 	$(CC99) -o t_sqrt $(DEPS_T_SQRT) $(CFLAGS) $(LIBS)
 
 
-_DEPS_T_TAN = t_tan.o subr_atf.o subr_fpcmp.o subr_random.o
+_DEPS_T_TAN = t_tan.o subr_atf.o subr_errhandling.o subr_fpcmp.o subr_random.o
  DEPS_T_TAN = $(_DEPS_T_TAN:%=obj/%)
 t_tan: $(DEPS_T_TAN)
 	$(CC99) -o t_tan $(DEPS_T_TAN) $(CFLAGS) $(LIBS)

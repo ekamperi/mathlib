@@ -2,145 +2,134 @@
 
 #include <atf-c.h>
 #include <math.h>
-#include <stdlib.h>
+#include <errno.h>
 #include <time.h>
 
 #include "config.h"
 #include "subr_atf.h"
+#include "subr_errhandling.h"
 #include "subr_fpcmp.h"
-#include "t_acos.h"
 
 /*
  * Test case 1 -- Basic functionality
  */
-ATF_TC(test_acos1);
-ATF_TC_HEAD(test_acos1, tc)
+ATF_TC(test_tan1);
+ATF_TC_HEAD(test_tan1, tc)
 {
 	atf_tc_set_md_var(tc,
 	    "descr",
-	    "Basic functionality based on a set of good (x, acos(x)) pairs");
+	    "Basic functionality based on a set of good (x, tan(x)) pairs");
 }
-ATF_TC_BODY(test_acos1, tc)
+ATF_TC_BODY(test_tan1, tc)
 {
-	size_t i, N;
-
-	/* double */
-	N = sizeof(t1dtable) / sizeof(t1dtable[0]);
-	for (i = 0; i < N; i++) {
-		/* Sanity check */
-		ATF_REQUIRE(t1dtable[i].x >= -1.0 && t1dtable[i].x <= 1.0);
-
-		/* Actual check */
-		ATF_CHECK(fpcmp_equal(
-			    acos(t1dtable[i].x),
-				 t1dtable[i].y));
-	}
-
-	/* long double */
-#ifdef	HAVE_ACOSL
-	N = sizeof(t1ldtable) / sizeof(t1ldtable[0]);
-	for (i = 0; i < N; i++) {
-		/* Sanity check */
-		ATF_REQUIRE(t1ldtable[i].x >= -1.0 && t1ldtable[i].x <= 1.0);
-
-		/* Actual check */
-		ATF_CHECK(fpcmp_equall(
-			    acosl(t1ldtable[i].x),
-				  t1ldtable[i].y));
-	}
-#endif
 }
 
 /*
- * Test case 2 -- Range
+ * Test case 2 -- Edge cases
  */
-ATF_TC(test_acos2);
-ATF_TC_HEAD(test_acos2, tc)
-{
-	atf_tc_set_md_var(tc,
-	    "descr",
-	    "The range of acos functions is [0, pi] radians");
-}
-ATF_TC_BODY(test_acos2, tc)
-{
-	float fy;
-	double dy;
-	long double ldy;
-	double x;
-	long i, N;
-
-	/* Reusing the table from test 1 */
-	N = sizeof(t1dtable) / sizeof(t1dtable[0]);
-	for (i = 0; i < N; i++) {
-		dy = acos(t1dtable[i].x);
-		ATF_CHECK(dy >= 0.0 && dy <= M_PI);
-
-#ifdef	HAVE_ACOSL
-		ldy = acosl(t1dtable[i].x);
-		ATF_CHECK(ldy >= 0.0 && ldy <= M_PI);
-#endif
-	}
-
-	/* Try the same thing but with some random input */
-	srand(time(NULL));
-
-	N = get_config_var_as_long(tc, "iterations");
-	ATF_REQUIRE(N > 0);
-
-	ATF_FOR_LOOP(i, N, i++) {
-		x = -1.0 + rand() / ((RAND_MAX / 2.0) + 1.0);
-		/* Sanity check */
-		ATF_REQUIRE(x >= -1.0 && x <= 1.0);
-
-		/* float */
-		fy = acosf(x);
-		ATF_PASS_OR_BREAK(fy >= 0.0 && fy <= M_PI);
-
-		/* double */
-		dy = acos(x);
-		ATF_PASS_OR_BREAK(dy >= 0.0 && dy <= M_PI);
-
-		/* long double */
-#ifdef	HAVE_ACOSL
-		ldy = acosl(x);
-		ATF_PASS_OR_BREAK(ldy >= 0.0 && ldy <= M_PI);
-#endif
-	}
-}
-
-/*
- * Test case 3 -- Edge cases
- */
-ATF_TC(test_acos3);
-ATF_TC_HEAD(test_acos3, tc)
+ATF_TC(test_tan2);
+ATF_TC_HEAD(test_tan2, tc)
 {
 	atf_tc_set_md_var(tc,
 	    "descr",
 	    "Check some edge cases");
 }
-ATF_TC_BODY(test_acos3, tc)
+ATF_TC_BODY(test_tan2, tc)
 {
 	/* If x is NaN, a NaN shall be returned */
-	ATF_CHECK_IFNAN(acosf(NAN));
-	ATF_CHECK_IFNAN(acos(NAN));
-#ifdef	HAVE_ACOSL
-	ATF_CHECK_IFNAN(acosl(NAN));
+#ifdef	NAN
+	ATF_CHECK(isnan(tan(NAN)));
+	ATF_CHECK(isnan(tanf(NAN)));
+#ifdef	HAVE_TANL
+	ATF_CHECK(isnan(tanl(NAN)));
+#endif
 #endif
 
-	/* If x is +1, +0 shall be returned */
-	ATF_CHECK(fpcmp_equalf(acosf(1.0), 0.0));
-	ATF_CHECK(fpcmp_equal(acos(1.0), 0.0));
-#ifdef	HAVE_ACOSL
-	ATF_CHECK(fpcmp_equall(acosl(1.0), 0.0));
+	/* If x is +-0, x shall be returned */
+	ATF_CHECK(iszero(tan( 0.0)));
+        ATF_CHECK(iszero(tan(-0.0)));
+
+        ATF_CHECK(iszero(tanf( 0.0)));
+        ATF_CHECK(iszero(tanf(-0.0)));
+
+#ifdef	HAVE_ATANL
+	ATF_CHECK(iszero(tanl( 0.0)));
+        ATF_CHECK(iszero(tanl(-0.0)));
 #endif
+}
+
+/*
+ * Test case 3 -- Edge cases
+ *
+ * If x is +-Inf, a domain error shall occur, and either a NaN (if
+ * supported), or an implementation-defined value shall be returned.
+ */
+static const long double
+t3table[] = {
+#ifdef  INFINITY
+	INFINITY,
+        -INFINITY,
+#endif
+#ifdef  HUGE_VAL
+	HUGE_VAL,
+        -HUGE_VAL,
+#endif
+#ifdef  HUGE_VALF
+	HUGE_VALF,
+        -HUGE_VALF,
+#endif
+#ifdef  HUGE_VALL
+	HUGE_VALL,
+        -HUGE_VALL
+#endif
+};
+
+ATF_TC(test_tan3);
+ATF_TC_HEAD(test_tan3, tc)
+{
+	atf_tc_set_md_var(tc,
+	    "descr",
+	    "Check some edge cases on infinities");
+}
+ATF_TC_BODY(test_tan3, tc)
+{
+	size_t i, N;
+
+	N = sizeof(t3table) / sizeof(t3table[0]);
+	ATF_REQUIRE(N > 0);
+
+	for (i = 0; i < N; i++) {
+		/* float */
+		errno = 0;
+		clear_exceptions();
+		ATF_CHECK_IFNAN(tanf((float)t3table[i]));
+		ATF_CHECK(iserrno_equalto(EDOM));
+		ATF_CHECK(raised_exceptions(MY_FE_INVALID));
+
+		/* double */
+		errno = 0;
+		clear_exceptions();
+		ATF_CHECK_IFNAN(tan((double)t3table[i]));
+                ATF_CHECK(iserrno_equalto(EDOM));
+                ATF_CHECK(raised_exceptions(MY_FE_INVALID));
+
+		/* long double */
+#ifdef	HAVE_TANL
+		errno = 0;
+                clear_exceptions();
+                ATF_CHECK_IFNAN(tanl(t3table[i]));
+                ATF_CHECK(iserrno_equalto(EDOM));
+                ATF_CHECK(raised_exceptions(MY_FE_INVALID));
+#endif
+	}
 }
 
 /* Add test cases to test program */
 ATF_TP_ADD_TCS(tp)
 {
-	ATF_TP_ADD_TC(tp, test_acos1);
-	ATF_TP_ADD_TC(tp, test_acos2);
-	ATF_TP_ADD_TC(tp, test_acos3);
+	ATF_TP_ADD_TC(tp, test_tan1);
+	ATF_TP_ADD_TC(tp, test_tan2);
+	ATF_TP_ADD_TC(tp, test_tan3);
 
 	return atf_no_error();
 }
