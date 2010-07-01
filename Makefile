@@ -106,7 +106,7 @@ _DEPS_T_EXP = t_exp.o subr_atf.o subr_errhandling.o  \
 	      subr_fpcmp.o subr_random.o
  DEPS_T_EXP = $(_DEPS_T_EXP:%=obj/%)
 t_exp: $(DEPS_T_EXP)
-	$(CC99) -o t_erf $(DEPS_T_EXP) $(CFLAGS) $(LIBS)
+	$(CC99) -o t_exp $(DEPS_T_EXP) $(CFLAGS) $(LIBS)
 
 
 _DEPS_T_EXP2 = t_exp2.o subr_atf.o subr_errhandling.o  \
@@ -120,7 +120,7 @@ _DEPS_T_EXPM1 = t_expm1.o subr_atf.o subr_errhandling.o  \
 		subr_fpcmp.o subr_random.o
  DEPS_T_EXPM1 = $(_DEPS_T_EXPM1:%=obj/%)
 t_expm1: $(DEPS_T_EXPM1)
-	$(CC99) -o t_erf $(DEPS_T_EXPM1) $(CFLAGS) $(LIBS)
+	$(CC99) -o t_expm1 $(DEPS_T_EXPM1) $(CFLAGS) $(LIBS)
 
 
 _DEPS_T_FABS = t_fabs.o subr_fpcmp.o
