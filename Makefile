@@ -9,7 +9,7 @@ LIBS=-lm -latf-c
 
 .PHONY: all
 all:    t_acos t_acosh t_asin t_asinh t_atan t_atan2 t_atanh t_cbrt t_ceil \
-	t_constants t_copysign t_cos t_erf t_exp t_exp2 t_expm1 t_fabs t_fdim \
+	t_constants t_copysign t_cos t_cosh t_erf t_exp t_exp2 t_expm1 t_fabs t_fdim \
 	t_float t_floor t_fmax t_fpclassify t_fpmacros t_ilogb t_lrint t_mac t_tgamma \
 	t_hypot t_log t_log10 t_log1p t_log2 t_logb t_ldexp t_nextafter \
 	t_rint t_signbit t_sin t_sinh t_sqrt t_trig_ident t_tan t_tanh t_trunc t_types
@@ -96,6 +96,11 @@ _DEPS_T_COS = t_cos.o subr_atf.o subr_errhandling.o	\
 t_cos: $(DEPS_T_COS)
 	$(CC99) -o t_cos $(DEPS_T_COS) $(CFLAGS) $(LIBS)
 
+
+_DEPS_T_COSH = t_cosh.o subr_errhandling.o subr_fpcmp.o
+ DEPS_T_COSH = $(_DEPS_T_COSH:%=obj/%)
+t_cosh: $(DEPS_T_COSH)
+	$(CC99) -o t_cosh $(DEPS_T_COSH) $(CFLAGS) $(LIBS)
 
 _DEPS_T_ERF = t_erf.o subr_atf.o subr_errhandling.o  \
 	     subr_fpcmp.o subr_random.o
