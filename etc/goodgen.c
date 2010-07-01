@@ -139,7 +139,7 @@ main(int argc, char *argv[])
 	}
 
 	/* Close ifdef guard */
-	printf("#endif	/* __T_%s_H__ */\n", FNAME);
+	printf("#endif	/* ! __T_%s_H__ */\n", FNAME);
 	free(FNAME);
 
 	return (EXIT_SUCCESS);
@@ -274,9 +274,9 @@ gen_ldouble(const char *fname, size_t total,
 		exact = mpfr_get_ld(mp_exact, tonearest);
 
 		if (f->f_narg == 1)
-			printf("\t{ % .35Le, % .35Le }", x, exact);
+			printf("\t{ % .35LeL, % .35LeL }", x, exact);
 		else
-			printf("\t{ % .35Le, % .35Le,\n\t% .35Le }", x, y, exact);
+			printf("\t{ % .35LeL, % .35LeL,\n\t% .35LeL }", x, y, exact);
 
 		if (i < total - 1)
 			printf(",\n");
