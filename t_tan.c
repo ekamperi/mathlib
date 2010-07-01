@@ -143,6 +143,15 @@ ATF_TC_BODY(test_tan3, tc)
 	}
 }
 
+/*
+ * XXX: Test case 4 -- I couldn't reproduce an overflow no matter what
+ *
+ * If the correct value would cause overflow, a range error shall occur
+ * and tan(), tanf(), and tanl() shall return +-HUGE_VAL, +-HUGE_VALF, and
+ * +-HUGE_VALL, respectively, with the same sign as the correct value of
+ * the function.
+ */
+
 /* Add test cases to test program */
 ATF_TP_ADD_TCS(tp)
 {
