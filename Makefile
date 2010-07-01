@@ -7,20 +7,22 @@ CFLAGS=-Wall -W -Wformat-nonliteral -Wcast-align -Wpointer-arith 		\
 	-Wswitch -Wbad-function-cast -g $(INCLUDE)
 LIBS=-lm -latf-c
 
-# Hacky, a bit slow (?) but it gets the job done
-obj/%.o: %.c
-	@test -f config.h || \
-	(echo "You should first run autoreconf && ./configure" && exit 1)
-	@mkdir -p obj/
-	$(CC99) -c -o $@ $< $(CFLAGS)
-
-
 .PHONY: all
-all:	t_acos t_acosh t_asin t_asinh t_atan t_atan2 t_atanh t_cbrt t_ceil \
+all:    t_acos t_acosh t_asin t_asinh t_atan t_atan2 t_atanh t_cbrt t_ceil \
 	t_constants t_copysign t_cos t_erf t_exp t_exp2 t_expm1 t_fabs t_fdim \
 	t_float t_floor t_fmax t_fpclassify t_fpmacros t_ilogb t_lrint t_mac t_tgamma \
 	t_hypot t_log t_log10 t_log1p t_log2 t_logb t_ldexp t_nextafter \
 	t_rint t_signbit t_sin t_sqrt t_trig_ident t_tan t_tanh t_trunc t_types
+
+obj:
+	@mkdir -p obj
+
+# Use order-only prerequisite for obj/
+obj/%.o: %.c | obj
+	@test -f config.h || \
+	(echo "You should first run autoreconf && ./configure" && exit 1)
+	$(CC99) -c -o $@ $< $(CFLAGS)
+
 
 _DEPS_T_ACOS = t_acos.o subr_atf.o subr_fpcmp.o
  DEPS_T_ACOS = $(_DEPS_T_ACOS:%=obj/%)
@@ -96,7 +98,7 @@ t_cos: $(DEPS_T_COS)
 
 
 _DEPS_T_ERF = t_erf.o subr_atf.o subr_errhandling.o  \
-             subr_fpcmp.o subr_random.o
+	     subr_fpcmp.o subr_random.o
  DEPS_T_ERF = $(_DEPS_T_ERF:%=obj/%)
 t_erf: $(DEPS_T_ERF)
 	$(CC99) -o t_erf $(DEPS_T_ERF) $(CFLAGS) $(LIBS)
