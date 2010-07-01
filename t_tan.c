@@ -3,12 +3,12 @@
 #include <atf-c.h>
 #include <math.h>
 #include <errno.h>
-#include <time.h>
 
 #include "config.h"
 #include "subr_atf.h"
 #include "subr_errhandling.h"
 #include "subr_fpcmp.h"
+#include "t_tan.h"
 
 /*
  * Test case 1 -- Basic functionality
@@ -22,6 +22,25 @@ ATF_TC_HEAD(test_tan1, tc)
 }
 ATF_TC_BODY(test_tan1, tc)
 {
+	size_t i, N;
+
+	/* double */
+	N = sizeof(t1dtable) / sizeof(t1dtable[0]);
+	ATF_REQUIRE(N > 0);
+	for (i = 0; i < N; i++)
+		ATF_CHECK(fpcmp_equal(
+			    tan(t1dtable[i].x),
+				t1dtable[i].y));
+
+	/* long double */
+#ifdef	HAVE_TANL
+	N = sizeof(t1ldtable) / sizeof(t1ldtable[0]);
+	ATF_REQUIRE(N > 0);
+	for (i = 0; i < N; i++)
+		ATF_CHECK(fpcmp_equall(
+			    tanl(t1ldtable[i].x),
+				 t1ldtable[i].y));
+#endif
 }
 
 /*
@@ -47,14 +66,14 @@ ATF_TC_BODY(test_tan2, tc)
 
 	/* If x is +-0, x shall be returned */
 	ATF_CHECK(iszero(tan( 0.0)));
-        ATF_CHECK(iszero(tan(-0.0)));
+	ATF_CHECK(iszero(tan(-0.0)));
 
-        ATF_CHECK(iszero(tanf( 0.0)));
-        ATF_CHECK(iszero(tanf(-0.0)));
+	ATF_CHECK(iszero(tanf( 0.0)));
+	ATF_CHECK(iszero(tanf(-0.0)));
 
 #ifdef	HAVE_ATANL
 	ATF_CHECK(iszero(tanl( 0.0)));
-        ATF_CHECK(iszero(tanl(-0.0)));
+	ATF_CHECK(iszero(tanl(-0.0)));
 #endif
 }
 
@@ -68,19 +87,19 @@ static const long double
 t3table[] = {
 #ifdef  INFINITY
 	INFINITY,
-        -INFINITY,
+	-INFINITY,
 #endif
 #ifdef  HUGE_VAL
 	HUGE_VAL,
-        -HUGE_VAL,
+	-HUGE_VAL,
 #endif
 #ifdef  HUGE_VALF
 	HUGE_VALF,
-        -HUGE_VALF,
+	-HUGE_VALF,
 #endif
 #ifdef  HUGE_VALL
 	HUGE_VALL,
-        -HUGE_VALL
+	-HUGE_VALL
 #endif
 };
 
@@ -110,16 +129,16 @@ ATF_TC_BODY(test_tan3, tc)
 		errno = 0;
 		clear_exceptions();
 		ATF_CHECK_IFNAN(tan((double)t3table[i]));
-                ATF_CHECK(iserrno_equalto(EDOM));
-                ATF_CHECK(raised_exceptions(MY_FE_INVALID));
+		ATF_CHECK(iserrno_equalto(EDOM));
+		ATF_CHECK(raised_exceptions(MY_FE_INVALID));
 
 		/* long double */
 #ifdef	HAVE_TANL
 		errno = 0;
-                clear_exceptions();
-                ATF_CHECK_IFNAN(tanl(t3table[i]));
-                ATF_CHECK(iserrno_equalto(EDOM));
-                ATF_CHECK(raised_exceptions(MY_FE_INVALID));
+		clear_exceptions();
+		ATF_CHECK_IFNAN(tanl(t3table[i]));
+		ATF_CHECK(iserrno_equalto(EDOM));
+		ATF_CHECK(raised_exceptions(MY_FE_INVALID));
 #endif
 	}
 }
