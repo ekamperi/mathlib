@@ -52,4 +52,6 @@ int set_errno(void);
 
 void query_errhandling(int *hasfp, int *haserrno);
 
+void print_exceptions(void);
+
 #endif	/* ! __SUBR_ERRHANDLING_H__ */
