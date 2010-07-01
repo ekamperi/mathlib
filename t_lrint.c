@@ -152,6 +152,7 @@ ATF_TC_BODY(test_lrint3, tc)
 		ATF_PASS_OR_BREAK(raised_exceptions(MY_FE_INVALID));
 
 		/* long double */
+#ifdef	HAVE_LRINTL
 		do {
 			ldx = random_long_double(FP_NORMAL);
 		} while (ldx <= LONG_MAX);
@@ -159,16 +160,17 @@ ATF_TC_BODY(test_lrint3, tc)
 		/* positive */
 		errno = 0;
 		clear_exceptions();
-		(void)rintl(ldx);
+		(void)lrintl(ldx);
 		ATF_PASS_OR_BREAK(iserrno_equalto(ERANGE));
 		ATF_PASS_OR_BREAK(raised_exceptions(MY_FE_INVALID));
 
 		/* negative */
 		errno = 0;
 		clear_exceptions();
-		(void)rintl(-ldx);
+		(void)lrintl(-ldx);
 		ATF_PASS_OR_BREAK(iserrno_equalto(ERANGE));
 		ATF_PASS_OR_BREAK(raised_exceptions(MY_FE_INVALID));
+#endif
 	}
 }
 
