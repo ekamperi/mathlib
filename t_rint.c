@@ -148,7 +148,9 @@ ATF_TC_BODY(test_rint3, tc)
 
 		ATF_PASS_OR_BREAK(rintf((float)x) == (float)x);
 		ATF_PASS_OR_BREAK(rint((double)x) == (double)x);
+#ifdef	HAVE_RINTL
 		ATF_PASS_OR_BREAK(rintl((long double)x == (long double)x));
+#endif
 	}
 
 	ATF_CHECK(errno == 0);
