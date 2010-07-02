@@ -9,7 +9,6 @@
 #include <assert.h>
 #include <ctype.h>
 #include <errno.h>
-#include <float.h>
 #include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -25,7 +24,7 @@
 /* Function prototypes */
 #define DECL_GEN(type)					\
 static void gen_##type(const char *fname, size_t total, \
-		       type lower, type upper)
+			type lower, type upper, type delta)
 typedef long double long_double;
 DECL_GEN(double);
 DECL_GEN(long_double);
@@ -46,15 +45,21 @@ do {									\
 } while(0)
 
 /*
+ * `d' represents the symmetric interval around zero that we exclude.
+ * We do so because floating-point numbers tend to become more dense
+ * around zero and less so towards the infinities. And we don't want
+ * to be massively spammed with tiny values (I've seen it happening).
+ *
  * A little bit suboptimal for the f_narg = 2 case, as we may be
  * discarding -say- valid x values, because y was out of bounds.
  */
-#define GET_RANDOM_VAL(type, f, x, y)					\
+#define GET_RANDOM_VAL(type, f, x, y, d)				\
 do {									\
 	if (f->f_narg == 1) {						\
 		do {							\
 			x = random_##type(FP_NORMAL);			\
-		} while (x < lower || x > upper || !f->f_u.fp1(x));	\
+		} while (x < lower || x > upper || fabs(x) < d ||	\
+			 !f->f_u.fp1(x));				\
 	}								\
 									\
 	if (f->f_narg == 2) {						\
@@ -62,7 +67,9 @@ do {									\
 			x = random_##type(FP_NORMAL);			\
 			y = random_##type(FP_NORMAL);			\
 		} while (x < lower || x > upper ||			\
-			 y < lower || y > upper || !f->f_u.fp2(x, y));	\
+			 y < lower || y > upper ||			\
+			 fabsl(x) < d || fabsl(y) < d ||		\
+			 !f->f_u.fp2(x, y));				\
 	}								\
 } while(0)
 
@@ -70,10 +77,10 @@ int
 main(int argc, char *argv[])
 {
 	const char *progname, *fname, *type;
-	long double min, max;
-        long double ldlower, ldupper;
+	long double min, max, delta;
+	long double ldlower, ldupper;
 	double dlower, dupper;
-        int total, opt;
+	int total, opt;
 
 	/*
 	 * Save program name, function name and floating-point type.
@@ -86,8 +93,11 @@ main(int argc, char *argv[])
 
 	/* Parse arguments */
 	total = -1;
-	while ((opt = getopt(argc, argv, "m:M:t:")) != -1) {
+	while ((opt = getopt(argc, argv, "d:m:M:t:")) != -1) {
 		switch (opt) {
+		case 'd':
+			delta = mystrtold(optarg, "delta");
+			break;
 		case 'm':
 			min = mystrtold(optarg, "min");
 			break;
@@ -114,7 +124,7 @@ main(int argc, char *argv[])
 	}
 
 	/* Validate input -- make sure all arguments were given */
-	if (total < 0 || min > max || argc != 6) {
+	if (total < 0 || min > max || argc != 7) {
 		usage(progname);
 		/* NEVER REACHED */
 	}
@@ -136,34 +146,24 @@ main(int argc, char *argv[])
 
 	/* Ready to go */
 	if (!strcmp(type, "double") || !strcmp(type, "all")) {
-		if (min == 0 && max == 0) {
-			dlower = -DBL_MAX;
-			dupper =  DBL_MAX;
-		} else {
-			dlower = min;
-			dupper = max;
-		}
+		dlower = min;
+		dupper = max;
 		printf("const struct\nt1dentry {\n"
 				"\tdouble x;	/* Input */\n"
 				"\tdouble y;	/* Output */\n"
 			"} t1dtable[] = {\n");
-		gen_double(fname, total, dlower, dupper);
+		gen_double(fname, total, dlower, dupper, delta);
 		printf("};\n");
 	}
 
 	if (!strcmp(type, "ldouble") || !strcmp(type, "all")) {
-		if (min == 0 && max == 0) {
-			ldlower = -LDBL_MAX;
-			ldupper =  LDBL_MAX;
-		} else {
-			ldlower = min;
-			ldupper = max;
-		}
+		ldlower = min;
+		ldupper = max;
 		printf("const struct\nt1ldentry {\n"
 				"\tlong double x;   /* Input */\n"
 				"\tlong double y;   /* Output */\n"
 			"} t1ldtable[] = {\n");
-		gen_long_double(fname, total, ldlower, ldupper);
+		gen_long_double(fname, total, ldlower, ldupper, delta);
 		printf("};\n");
 	}
 
@@ -175,7 +175,8 @@ main(int argc, char *argv[])
 }
 
 static void
-gen_double(const char *fname, size_t total, double lower, double upper)
+gen_double(const char *fname, size_t total,
+    double lower, double upper, double delta)
 {
 	const struct fentry *f;
 	const mpfr_rnd_t tonearest = GMP_RNDN;
@@ -192,7 +193,7 @@ gen_double(const char *fname, size_t total, double lower, double upper)
 
 	for (i = 0; i < total; i++) {
 		/* Generate a random input for function f */
-		GET_RANDOM_VAL(double, f, x, y);
+		GET_RANDOM_VAL(double, f, x, y, delta);
 
 		/* Set the mpfr variables */
 		if (f->f_narg >= 1)
@@ -230,7 +231,7 @@ gen_double(const char *fname, size_t total, double lower, double upper)
 
 static void
 gen_long_double(const char *fname, size_t total,
-    long double lower, long double upper)
+    long double lower, long double upper, long double delta)
 {
 	const struct fentry *f;
 	const mpfr_rnd_t tonearest = GMP_RNDN;
@@ -247,7 +248,7 @@ gen_long_double(const char *fname, size_t total,
 
 	for (i = 0; i < total; i++) {
 		/* Generate a random input for function f */
-		GET_RANDOM_VAL(long_double, f, x, y);
+		GET_RANDOM_VAL(long_double, f, x, y, delta);
 
 		/* Set the mpfr variables */
 		if (f->f_narg >= 1)
@@ -291,11 +292,13 @@ static void
 usage(const char *progname)
 {
 	fprintf(stderr,
-	    "usage: %s fname fptype -t total -m min -M Max\n"
+	    "usage: %s fname fptype -t total -m min -M Max -d delta\n"
 	    "\t`fname' is the function name, as declared in math.h\n"
 	    "\t`fptype' is one of `double', `ldouble' or `all'\n"
-	    "If `min' equals `Max', then all possible range is assumed,\n"
-	    "e.g. [-DBL_MAX, DBL_MAX]\n",
+	    "\t`total' is the total number of (x, ..., f(x, ...)) pairs\n"
+	    "\t`delta' is the interval around zero to exclude\n"
+	    "\t`min' and `Max' are long double constants\n"
+	    "\t(+-INF or INFINITY are acceptable input)\n",
 	    progname);
 
 	exit(EXIT_FAILURE);
