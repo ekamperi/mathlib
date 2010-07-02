@@ -581,6 +581,7 @@ getfunctionbyname(const char *fname)
 		f = &ftable[i];
 		if (strcmp(fname, f->f_name) == 0) {
 			assert(f->f_narg == 1 || f->f_narg == 2);
+			assert(f->f_u.fp1 || f->f_u.fp2);
 			return (f);
 		}
 	}
