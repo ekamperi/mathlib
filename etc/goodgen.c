@@ -8,6 +8,7 @@
 
 #include <assert.h>
 #include <ctype.h>
+#include <errno.h>
 #include <float.h>
 #include <math.h>
 #include <stdio.h>
@@ -30,6 +31,7 @@ DECL_GEN(double);
 DECL_GEN(long_double);
 static void usage(const char *progname);
 static char *strtoupper(const char *str);
+static long double mystrtold(const char *str, const char *what);
 
 /*
  * Bite the bullet and don't protect macro arguments with surrounding
@@ -68,9 +70,10 @@ int
 main(int argc, char *argv[])
 {
 	const char *progname, *fname, *type;
+	long double min, max;
         long double ldlower, ldupper;
 	double dlower, dupper;
-        int  min, max, total, opt;
+        int total, opt;
 
 	/*
 	 * Save program name, function name and floating-point type.
@@ -82,14 +85,14 @@ main(int argc, char *argv[])
 	optind += 2;
 
 	/* Parse arguments */
-	min = max = total = -1;
+	total = -1;
 	while ((opt = getopt(argc, argv, "m:M:t:")) != -1) {
 		switch (opt) {
 		case 'm':
-			min = atoi(optarg);
+			min = mystrtold(optarg, "min");
 			break;
 		case 'M':
-			max = atoi(optarg);
+			max = mystrtold(optarg, "Max");
 			break;
 		case 't':
 			total = atoi(optarg);
@@ -110,8 +113,8 @@ main(int argc, char *argv[])
 		/* NEVER REACHED */
 	}
 
-	/* Make sure all arguments were supplied, plus validate input */
-	if (total == -1 || min == -1 || max == -1 || min > max) {
+	/* Validate input -- make sure all arguments were given */
+	if (total < 0 || min > max || argc != 6) {
 		usage(progname);
 		/* NEVER REACHED */
 	}
@@ -291,7 +294,7 @@ usage(const char *progname)
 	    "usage: %s fname fptype -t total -m min -M Max\n"
 	    "\t`fname' is the function name, as declared in math.h\n"
 	    "\t`fptype' is one of `double', `ldouble' or `all'\n"
-	    "If `min'equals `Max', then all possible range is assumed,\n"
+	    "If `min' equals `Max', then all possible range is assumed,\n"
 	    "e.g. [-DBL_MAX, DBL_MAX]\n",
 	    progname);
 
@@ -320,4 +323,30 @@ strtoupper(const char *str)
 	} while(*oldp++);
 
 	return (newstr);
+}
+
+static long double
+mystrtold(const char *str, const char *what)
+{
+	long double rv;
+	char *endp;
+
+	errno = 0;
+
+	rv = strtold(str, &endp);
+
+	if (*endp)
+		fprintf(stderr,
+		    "WARNING: Conversion stopped at %s (was given = %s)\n"
+		    "WARNING: Continuing with %s = %.35Le\n",
+		    endp, str, what, rv);
+
+	/* We only allow over/under-flows to happen (ERANGE) */
+	if (errno) {
+		perror("strtold");
+		if (errno != ERANGE)
+			exit(EXIT_FAILURE);
+	}
+
+	return (rv);
 }
