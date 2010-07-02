@@ -35,18 +35,19 @@ DECL_GEN(long_double);
 static void usage(const char *progname);
 static char *strtoupper(const char *str);
 
+/*
+ * Bite the bullet and don't protect macro arguments with
+ * surrounding parentheses. Trade some safety, for pleasure.
+ */
 #define	COMPUTE_EXACT_VAL(f, mp_exact, mp_x, mp_y, rndmode)	\
 do {								\
-	if ((f)->f_narg == 1)					\
-		(f)->f_mpfr(mp_exact, mp_x, rndmode);		\
+	if (f->f_narg == 1)					\
+		f->f_mpfr(mp_exact, mp_x, rndmode);		\
 	else							\
-		(f)->f_mpfr(mp_exact, mp_x, mp_y, rndmode);	\
-} while(0);							\
-
+		f->f_mpfr(mp_exact, mp_x, mp_y, rndmode);	\
+} while(0)
 
 /*
- * Generate random input
- *
  * A little bit suboptimal for the f_narg = 2 case, as we may be
  * discarding -say- valid x values, because y was out of bounds.
  */
