@@ -1,8 +1,9 @@
 all:	testrand
 
+# -Wstrict-prototypes
 CC99=gcc -std=c99
 CCFLAGS=-Wall -W -Wformat-nonliteral -Wcast-align -Wpointer-arith 		\
-	-Wbad-function-cast -Wmissing-prototypes -Wstrict-prototypes 		\
+	-Wbad-function-cast -Wmissing-prototypes 				\
 	-Wmissing-declarations -Winline -Wundef -Wnested-externs -Wcast-qual 	\
 	-Wshadow -Wwrite-strings -Wno-unused-parameter 				\
 	-Wswitch -Wbad-function-cast -g
