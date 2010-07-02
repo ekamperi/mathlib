@@ -16,5 +16,6 @@ extern const struct fentry ftable[];
 extern const int fsize;
 
 const struct fentry *getfunctionbyname(const char *fname);
+void printfunctions(void);
 
 #endif	/* !__GEN_H__ */

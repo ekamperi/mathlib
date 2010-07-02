@@ -605,3 +605,13 @@ getfunctionbyname(const char *fname)
 
 	return (NULL);
 }
+
+void
+printfunctions(void)
+{
+	int i;
+
+	for (i = 0; i < fsize; i++)
+		printf("%s ", ftable[i].f_name);
+	printf("\n");
+}
