@@ -255,6 +255,9 @@ gen_double(const char *fname, size_t total,
 
 		/* Extract exact value */
 		exact = mpfr_get_d(mp_exact, tonearest);
+		if (isinf(exact) || isnan(exact)) {
+		  i--; continue;
+		}
 
 		if (f->f_narg == 1)
 			printf("\t{ % .16e, % .16e }", x, exact);
@@ -311,6 +314,9 @@ gen_long_double(const char *fname, size_t total,
 
 		/* Extract exact value */
 		exact = mpfr_get_ld(mp_exact, tonearest);
+		if (isinf(exact) || isnan(exact)) {
+		  i--; continue;
+		}
 
 		/*
 		 * Don't forget the L suffix in long double floating-point
