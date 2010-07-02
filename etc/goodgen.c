@@ -73,6 +73,47 @@ do {									\
 	}								\
 } while(0)
 
+/*
+ * Skip the inexact exception
+ *
+ * In case of a non-zero real rounded result, the error on the result is less
+ * or equal to 1/2 ulp (unit in the last place) of that result in the rounding
+ * to nearest mode, and less than 1 ulp of that result in the directed rounding
+ * modes. We use much more bits than double / long double anyway, so a 0.5 ulp
+ * or even 1 ulp doesn't make any difference.
+ */
+#define MPFR_ERROR(x)							\
+	(mpfr_underflow_p() || mpfr_overflow_p() || mpfr_nanflag_p() 	\
+	    || mpfr_erangeflag_p())
+
+/* Used for debugging purposes only */
+#define MPFR_PRINT_FLAGS(x)			\
+do {						\
+	if (mpfr_underflow_p())			\
+		fprintf(stderr, "Underflow\n");	\
+	if (mpfr_overflow_p())			\
+		fprintf(stderr, "Overflow\n");	\
+	if (mpfr_nanflag_p())			\
+		fprintf(stderr, "NaN\n");	\
+	if (mpfr_inexflag_p())			\
+		fprintf(stderr, "Inexact\n");	\
+	if (mpfr_erangeflag_p())		\
+		fprintf(stderr, "Erange\n");	\
+	fprintf(stderr, "\n");			\
+} while(0)
+
+#define MPFR_PRINT_FPCLASS(x)						\
+do {									\
+	if (mpfr_nan_p(x))						\
+		fprintf(stderr, "Nan\n");				\
+	if (mpfr_inf_p(x))						\
+		fprintf(stderr, "Inf\n");				\
+	if (mpfr_number_p(x))						\
+		fprintf(stderr, "Number (neither NaN nor Inf)\n");	\
+	if (mpfr_zero_p(x))						\
+		fprintf(stderr, "Zero\n");				\
+} while(0)
+
 int
 main(int argc, char *argv[])
 {
@@ -201,18 +242,19 @@ gen_double(const char *fname, size_t total,
 		if (f->f_narg == 2)
 			mpfr_set_d(mp_y, y, tonearest);
 		mpfr_set_d(mp_exact, 0.0, tonearest);
+		MPFR_PRINT_FPCLASS(mp_x);
+		MPFR_PRINT_FPCLASS(mp_y);
 
 		/* Compute exact value, mp_exact = f(mp_x, ...)  */
+		mpfr_clear_flags();
 		COMPUTE_EXACT_VAL(f, mp_exact, mp_x, mp_y, tonearest);
-
-		/* Extract exact value */
-		exact = mpfr_get_d(mp_exact, tonearest);
-
-		/* Skip infinities, NAN, etc */
-		if (isinf(exact) || isnan(exact)) {
+		if (MPFR_ERROR() || !mpfr_number_p(mp_exact)) {
 			i--;
 			continue;
 		}
+
+		/* Extract exact value */
+		exact = mpfr_get_d(mp_exact, tonearest);
 
 		if (f->f_narg == 1)
 			printf("\t{ % .16e, % .16e }", x, exact);
@@ -256,18 +298,19 @@ gen_long_double(const char *fname, size_t total,
 		if (f->f_narg == 2)
 			mpfr_set_ld(mp_y, y, tonearest);
 		mpfr_set_ld(mp_exact, 0.0, tonearest);
+		MPFR_PRINT_FPCLASS(mp_x);
+		MPFR_PRINT_FPCLASS(mp_y);
 
 		/* Compute exact value, mp_exact = f(mp_x, ...) */
+		mpfr_clear_flags();
 		COMPUTE_EXACT_VAL(f, mp_exact, mp_x, mp_y, tonearest);
-
-		/* Extract exact value */
-		exact = mpfr_get_ld(mp_exact, tonearest);
-
-		/* Skip infinities, NAN, etc */
-		if (isinf(exact) || isnan(exact)) {
+		if (MPFR_ERROR() || !mpfr_number_p(mp_exact)) {
 			i--;
 			continue;
 		}
+
+		/* Extract exact value */
+		exact = mpfr_get_ld(mp_exact, tonearest);
 
 		/*
 		 * Don't forget the L suffix in long double floating-point
