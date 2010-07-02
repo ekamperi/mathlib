@@ -28,9 +28,9 @@
 static void gen_##type(const char *fname, size_t total, \
 		       type lower, type upper)
 
-typedef	long double ldouble;
+typedef long double long_double;
 DECL_GEN(double);
-DECL_GEN(ldouble);
+DECL_GEN(long_double);
 
 static void usage(const char *progname);
 static char *strtoupper(const char *str);
@@ -42,6 +42,30 @@ do {								\
 	else							\
 		(f)->f_mpfr(mp_exact, mp_x, mp_y, rndmode);	\
 } while(0);							\
+
+
+/*
+ * Generate random input
+ *
+ * A little bit suboptimal for the f_narg = 2 case, as we may be
+ * discarding -say- valid x values, because y was out of bounds.
+ */
+#define GET_RANDOM_VAL(type, f, x, y)					\
+do {									\
+	if (f->f_narg == 1) {						\
+		do {							\
+			x = random_##type(FP_NORMAL);			\
+		} while (x < lower || x > upper || !f->f_u.fp1(x));	\
+	}								\
+									\
+	if (f->f_narg == 2) {						\
+		do {							\
+			x = random_##type(FP_NORMAL);			\
+			y = random_##type(FP_NORMAL);			\
+		} while (x < lower || x > upper ||			\
+			 y < lower || y > upper || !f->f_u.fp2(x, y));	\
+	}								\
+} while(0)
 
 int
 main(int argc, char *argv[])
@@ -142,7 +166,7 @@ main(int argc, char *argv[])
 		    "\tlong double x;   /* Input */\n"
 		    "\tlong double y;   /* Output */\n"
 		    "} t1ldtable[] = {\n");
-		gen_ldouble(fname, total, ldlower, ldupper);
+		gen_long_double(fname, total, ldlower, ldupper);
 		printf("};\n");
 	}
 
@@ -158,9 +182,9 @@ gen_double(const char *fname, size_t total, double lower, double upper)
 {
 	const struct fentry *f;
 	const mpfr_rnd_t tonearest = GMP_RNDN;
-        mpfr_t mp_x, mp_y, mp_exact;
-        double x, y, exact;
-        size_t i;
+	mpfr_t mp_x, mp_y, mp_exact;
+	double x, y, exact;
+	size_t i;
 
 	/* Look up the function */
 	f = getfunctionbyname(fname);
@@ -170,24 +194,8 @@ gen_double(const char *fname, size_t total, double lower, double upper)
 	mpfr_inits2(500, mp_x, mp_y, mp_exact, NULL);
 
 	for (i = 0; i < total; i++) {
-		/*
-		 * Generate random input
-		 *
-		 * A little bit suboptimal for the f_narg = 2 case, as we may be
-		 * discarding -say- valid x values, because y was out of bounds.
-		 */
-		if (f->f_narg == 1) {
-			do {
-				x = random_double(FP_NORMAL);
-			} while (x < lower || x > upper || !f->f_u.fp1(x));
-		}
-		if (f->f_narg == 2) {
-			do {
-				x = random_double(FP_NORMAL);
-				y = random_double(FP_NORMAL);
-			} while (x < lower || x > upper ||
-				 y < lower || y > upper || !f->f_u.fp2(x, y));
-		}
+		/* Generate a random double (x, y) pair */
+		GET_RANDOM_VAL(double, f, x, y);
 
 		/* Set the mpfr variables */
 		if (f->f_narg >= 1)
@@ -224,14 +232,14 @@ gen_double(const char *fname, size_t total, double lower, double upper)
 }
 
 static void
-gen_ldouble(const char *fname, size_t total,
+gen_long_double(const char *fname, size_t total,
     long double lower, long double upper)
 {
 	const struct fentry *f;
 	const mpfr_rnd_t tonearest = GMP_RNDN;
-        mpfr_t mp_x, mp_y, mp_exact;
-        long double x, y, exact;
-        size_t i;
+	mpfr_t mp_x, mp_y, mp_exact;
+	long double x, y, exact;
+	size_t i;
 
 	/* Lookup the function */
 	f = getfunctionbyname(fname);
@@ -241,24 +249,8 @@ gen_ldouble(const char *fname, size_t total,
 	mpfr_inits2(500, mp_x, mp_y, mp_exact, NULL);
 
 	for (i = 0; i < total; i++) {
-		/*
-		 * Generate random input
-		 *
-		 * A little bit suboptimal for the f_narg = 2 case, as we may be
-		 * discarding -say- valid x values, because y was out of bounds.
-		 */
-		if (f->f_narg == 1) {
-			do {
-				x = random_long_double(FP_NORMAL);
-			} while (x < lower || x > upper || !f->f_u.fp1(x));
-		}
-		if (f->f_narg == 2) {
-			do {
-				x = random_long_double(FP_NORMAL);
-				y = random_long_double(FP_NORMAL);
-			} while (x < lower || x > upper ||
-				 y < lower || y > upper || !f->f_u.fp2(x, y));
-		}
+		/* Generate a random double (x, y) pair */
+		GET_RANDOM_VAL(long_double, f, x, y);
 
 		/* Set the mpfr variables */
 		if (f->f_narg >= 1)
