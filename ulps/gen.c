@@ -72,6 +72,12 @@ dom_erf(double x)
 }
 
 static int
+dom_erfc(double x)
+{
+	return 1;
+}
+
+static int
 dom_floor(double x)
 {
 	return 1;
@@ -390,7 +396,7 @@ ftable[] = {
 		.f_narg = 1,
 		.f_libm = erfc,
 		.f_mpfr = mpfr_erfc,
-		.f_u.fp1 = dom_erf
+		.f_u.fp1 = dom_erfc
 	},
 #endif
 
