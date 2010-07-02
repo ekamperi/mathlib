@@ -125,7 +125,7 @@ main(int argc, char *argv[])
 	/* Initialize random number generator */
 	init_randgen();
 
-	/* Print if guards */
+	/* Open #ifdef guard */
 	char *FNAME = strtoupper(fname);
 	printf("#ifndef __T_%s_H__\n", FNAME);
 	printf("#define __T_%s_H__\n", FNAME);
@@ -164,7 +164,7 @@ main(int argc, char *argv[])
 		printf("};\n");
 	}
 
-	/* Close ifdef guard */
+	/* Close #ifdef guard */
 	printf("#endif	/* ! __T_%s_H__ */\n", FNAME);
 	free(FNAME);
 
