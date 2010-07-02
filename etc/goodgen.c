@@ -9,7 +9,6 @@
 #include <assert.h>
 #include <ctype.h>
 #include <errno.h>
-#include <float.h>
 #include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -136,13 +135,8 @@ main(int argc, char *argv[])
 
 	/* Ready to go */
 	if (!strcmp(type, "double") || !strcmp(type, "all")) {
-		if (min == 0 && max == 0) {
-			dlower = -DBL_MAX;
-			dupper =  DBL_MAX;
-		} else {
-			dlower = min;
-			dupper = max;
-		}
+		dlower = min;
+		dupper = max;
 		printf("const struct\nt1dentry {\n"
 				"\tdouble x;	/* Input */\n"
 				"\tdouble y;	/* Output */\n"
@@ -152,13 +146,8 @@ main(int argc, char *argv[])
 	}
 
 	if (!strcmp(type, "ldouble") || !strcmp(type, "all")) {
-		if (min == 0 && max == 0) {
-			ldlower = -LDBL_MAX;
-			ldupper =  LDBL_MAX;
-		} else {
-			ldlower = min;
-			ldupper = max;
-		}
+		ldlower = min;
+		ldupper = max;
 		printf("const struct\nt1ldentry {\n"
 				"\tlong double x;   /* Input */\n"
 				"\tlong double y;   /* Output */\n"
@@ -294,8 +283,8 @@ usage(const char *progname)
 	    "usage: %s fname fptype -t total -m min -M Max\n"
 	    "\t`fname' is the function name, as declared in math.h\n"
 	    "\t`fptype' is one of `double', `ldouble' or `all'\n"
-	    "If `min' equals `Max', then all possible range is assumed,\n"
-	    "e.g. [-DBL_MAX, DBL_MAX]\n",
+	    "\t`min' and `Max' are long double constants\n"
+	    "(+-INF or INFINITY is parsed correctly)\n",
 	    progname);
 
 	exit(EXIT_FAILURE);
