@@ -10,6 +10,7 @@
 #include <ctype.h>
 #include <float.h>
 #include <math.h>
+#include <stdarg.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -23,17 +24,24 @@
 #include "subr_random.h"
 
 /* Function prototypes */
-static void gen_float(const char *fname, size_t total,
-    float lower,
-    float upper);
-static void gen_double(const char *fname, size_t total,
-    double lower,
-    double upper);
-static void gen_ldouble(const char *fname, size_t total,
-    long double lower,
-    long double upper);
+#define DECL_GEN(type)					\
+static void gen_##type(const char *fname, size_t total, \
+		       type lower, type upper)
+
+typedef	long double ldouble;
+DECL_GEN(double);
+DECL_GEN(ldouble);
+
 static void usage(const char *progname);
 static char *strtoupper(const char *str);
+
+#define	COMPUTE_EXACT_VAL(f, mp_exact, mp_x, mp_y, rndmode)	\
+do {								\
+	if ((f)->f_narg == 1)					\
+		(f)->f_mpfr(mp_exact, mp_x, rndmode);		\
+	else							\
+		(f)->f_mpfr(mp_exact, mp_x, mp_y, rndmode);	\
+} while(0);							\
 
 int
 main(int argc, char *argv[])
@@ -130,10 +138,10 @@ main(int argc, char *argv[])
 			ldlower = min;
 			ldupper = max;
 		}
-                printf("const struct\nt1ldentry {\n"
+		printf("const struct\nt1ldentry {\n"
 		    "\tlong double x;   /* Input */\n"
 		    "\tlong double y;   /* Output */\n"
-                    "} t1ldtable[] = {\n");
+		    "} t1ldtable[] = {\n");
 		gen_ldouble(fname, total, ldlower, ldupper);
 		printf("};\n");
 	}
@@ -149,20 +157,17 @@ static void
 gen_double(const char *fname, size_t total, double lower, double upper)
 {
 	const struct fentry *f;
-	mpfr_t mp_x, mp_y, mp_exact;
-	double x, y, exact;
-	size_t i;
 	const mpfr_rnd_t tonearest = GMP_RNDN;
+        mpfr_t mp_x, mp_y, mp_exact;
+        double x, y, exact;
+        size_t i;
 
-	assert(fname);
+	/* Look up the function */
 	f = getfunctionbyname(fname);
 	assert(f);
-	assert(f->f_narg == 1 || f->f_narg == 2);
 
 	/* Initialize high precision variables */
-	mpfr_init2(mp_x,     500);
-	mpfr_init2(mp_y,     500);
-	mpfr_init2(mp_exact, 500);
+	mpfr_inits2(500, mp_x, mp_y, mp_exact, NULL);
 
 	for (i = 0; i < total; i++) {
 		/*
@@ -192,13 +197,16 @@ gen_double(const char *fname, size_t total, double lower, double upper)
 		mpfr_set_d(mp_exact, 0.0, tonearest);
 
 		/* Compute exact value */
-		if (f->f_narg == 1)
-			f->f_mpfr(mp_exact, mp_x, tonearest);
-		else
-			f->f_mpfr(mp_exact, mp_x, mp_y, tonearest);
+		COMPUTE_EXACT_VAL(f, mp_exact, mp_x, mp_y, tonearest);
 
 		/* Extract exact value */
 		exact = mpfr_get_d(mp_exact, tonearest);
+
+		/* Skip infinities, NAN, etc */
+		if (isinf(exact) || isnan(exact)) {
+			i--;
+			continue;
+		}
 
 		if (f->f_narg == 1)
 			printf("\t{ % .16e, % .16e }", x, exact);
@@ -212,9 +220,7 @@ gen_double(const char *fname, size_t total, double lower, double upper)
 	}
 
 	/* Free resources */
-	mpfr_clear(mp_x);
-	mpfr_clear(mp_y);
-	mpfr_clear(mp_exact);
+	mpfr_clears(mp_x, mp_y, mp_exact, NULL);
 }
 
 static void
@@ -222,20 +228,17 @@ gen_ldouble(const char *fname, size_t total,
     long double lower, long double upper)
 {
 	const struct fentry *f;
-	mpfr_t mp_x, mp_y, mp_exact;
-	long double x, y, exact;
-	size_t i;
 	const mpfr_rnd_t tonearest = GMP_RNDN;
+        mpfr_t mp_x, mp_y, mp_exact;
+        long double x, y, exact;
+        size_t i;
 
-	assert(fname);
+	/* Lookup the function */
 	f = getfunctionbyname(fname);
 	assert(f);
-	assert(f->f_narg == 1 || f->f_narg == 2);
 
 	/* Initialize high precision variables */
-	mpfr_init2(mp_x,     500);
-	mpfr_init2(mp_y,     500);
-	mpfr_init2(mp_exact, 500);
+	mpfr_inits2(500, mp_x, mp_y, mp_exact, NULL);
 
 	for (i = 0; i < total; i++) {
 		/*
@@ -246,13 +249,13 @@ gen_ldouble(const char *fname, size_t total,
 		 */
 		if (f->f_narg == 1) {
 			do {
-				x = random_double(FP_NORMAL);
+				x = random_long_double(FP_NORMAL);
 			} while (x < lower || x > upper || !f->f_u.fp1(x));
 		}
 		if (f->f_narg == 2) {
 			do {
-				x = random_double(FP_NORMAL);
-				y = random_double(FP_NORMAL);
+				x = random_long_double(FP_NORMAL);
+				y = random_long_double(FP_NORMAL);
 			} while (x < lower || x > upper ||
 				 y < lower || y > upper || !f->f_u.fp2(x, y));
 		}
@@ -265,14 +268,21 @@ gen_ldouble(const char *fname, size_t total,
 		mpfr_set_ld(mp_exact, 0.0, tonearest);
 
 		/* Compute exact value */
-		if (f->f_narg == 1)
-			f->f_mpfr(mp_exact, mp_x, tonearest);
-		else
-			f->f_mpfr(mp_exact, mp_x, mp_y, tonearest);
+		COMPUTE_EXACT_VAL(f, mp_exact, mp_x, mp_y, tonearest);
 
 		/* Extract exact value */
 		exact = mpfr_get_ld(mp_exact, tonearest);
 
+		/* Skip infinities, NAN, etc */
+		if (isinf(exact) || isnan(exact)) {
+			i--;
+			continue;
+		}
+
+		/*
+		 * Don't forget the L suffix in long double floating-point
+		 * constants, as by default they are treated as double.
+		 */
 		if (f->f_narg == 1)
 			printf("\t{ % .35LeL, % .35LeL }", x, exact);
 		else
@@ -285,24 +295,19 @@ gen_ldouble(const char *fname, size_t total,
 	}
 
 	/* Free resources */
-	mpfr_clear(mp_x);
-	mpfr_clear(mp_y);
-	mpfr_clear(mp_exact);
+	mpfr_clears(mp_x, mp_y, mp_exact, NULL);
 }
 
 static void
 usage(const char *progname)
 {
 	fprintf(stderr,
-	    "usage: %s fname fptype -t total -m min -M max\n",
+	    "usage: %s fname fptype -t total -m min -M Max\n"
+	    "\t`fname' is the function name, as declared in math.h\n"
+	    "\t`fptype' is one of `double', `ldouble' or `all'\n"
+	    "If `min'equals `Max', then all possible range is assumed,\n"
+	    "e.g. [-DBL_MAX, DBL_MAX]\n",
 	    progname);
-	fprintf(stderr,
-		"\t`fname' is the function name, as declared in math.h\n");
-	fprintf(stderr,
-		"\t`fptype' is one of `float', `double' or `ldouble'\n");
-	fprintf(stderr,
-	    "\tIf `min'equals `max', then all possible range is assumed,\n"
-	    "\te.g. [-DBL_MAX, DBL_MAX]\n");
 
 	exit(EXIT_FAILURE);
 }
