@@ -5,13 +5,7 @@
 #include "subr_atf.h"
 #include "subr_fpcmp.h"
 #include "subr_random.h"
-
-static const struct
-tentry {
-	double y;	/* Input */
-	double x;	/* tanh() output */
-} ttable[] = {
-};
+#include "t_tanh.h"
 
 /*
  * Test case 1 -- Basic functionality
@@ -27,9 +21,21 @@ ATF_TC_BODY(test_tanh1, tc)
 {
 	size_t i, N;
 
-	N = sizeof(ttable) / sizeof(ttable[0]);
-	for (i = 0; i < N; i++) {
-	}
+	/* double */
+	N = sizeof(t1dtable) / sizeof(t1dtable[0]);
+	for (i = 0; i < N; i++)
+	  ATF_CHECK(fpcmp_equal(
+		      tanh(t1dtable[i].x),
+			   t1dtable[i].y));
+
+	/* long double */
+#ifdef  HAVE_TANHL
+	N = sizeof(t1ldtable) / sizeof(t1ldtable[0]);
+	for (i = 0; i < N; i++)
+		ATF_CHECK(fpcmp_equall(
+			    tanhl(t1ldtable[i].x),
+				  t1ldtable[i].y));
+#endif
 }
 
 /*
