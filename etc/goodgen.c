@@ -242,13 +242,12 @@ gen_double(const char *fname, size_t total,
 		if (f->f_narg == 2)
 			mpfr_set_d(mp_y, y, tonearest);
 		mpfr_set_d(mp_exact, 0.0, tonearest);
-		MPFR_PRINT_FPCLASS(mp_x);
-		MPFR_PRINT_FPCLASS(mp_y);
 
 		/* Compute exact value, mp_exact = f(mp_x, ...)  */
 		mpfr_clear_flags();
 		COMPUTE_EXACT_VAL(f, mp_exact, mp_x, mp_y, tonearest);
 		if (MPFR_ERROR() || !mpfr_number_p(mp_exact)) {
+                        fprintf(stderr, "ERROR: exactf value overflowed\n");
 			i--;
 			continue;
 		}
@@ -256,7 +255,8 @@ gen_double(const char *fname, size_t total,
 		/* Extract exact value */
 		exact = mpfr_get_d(mp_exact, tonearest);
 		if (isinf(exact) || isnan(exact)) {
-		  i--; continue;
+			i--;
+			continue;
 		}
 
 		if (f->f_narg == 1)
@@ -301,8 +301,6 @@ gen_long_double(const char *fname, size_t total,
 		if (f->f_narg == 2)
 			mpfr_set_ld(mp_y, y, tonearest);
 		mpfr_set_ld(mp_exact, 0.0, tonearest);
-		MPFR_PRINT_FPCLASS(mp_x);
-		MPFR_PRINT_FPCLASS(mp_y);
 
 		/* Compute exact value, mp_exact = f(mp_x, ...) */
 		mpfr_clear_flags();
@@ -315,7 +313,9 @@ gen_long_double(const char *fname, size_t total,
 		/* Extract exact value */
 		exact = mpfr_get_ld(mp_exact, tonearest);
 		if (isinf(exact) || isnan(exact)) {
-		  i--; continue;
+			fprintf(stderr, "ERROR: exactl value overflowed\n");
+			i--;
+			continue;
 		}
 
 		/*
