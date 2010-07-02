@@ -8,7 +8,7 @@
 #include "subr_atf.h"
 #include "subr_errhandling.h"
 #include "subr_fpcmp.h"
-/*XXX: #include "t_cosh.h"*/
+#include "t_cosh.h"
 
 /*
  * Test case 1 -- Basic functionality
@@ -34,15 +34,10 @@ ATF_TC_BODY(test_cosh1, tc)
 	/* long double */
 #ifdef	HAVE_COSHL
         N = sizeof(t1ldtable) / sizeof(t1ldtable[0]);
-        for (i = 0; i < N; i++) {
-		printf("%.35Le\n%.35Le\n\n",
-		    coshl(t1ldtable[i].x),
-		    t1ldtable[i].y);
-
+        for (i = 0; i < N; i++)
 		ATF_CHECK(fpcmp_equall(
 			    coshl(t1ldtable[i].x),
 				  t1ldtable[i].y));
-	}
 #endif
 }
 
