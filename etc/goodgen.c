@@ -347,8 +347,10 @@ usage(const char *progname)
 	    "\t`total' is the total number of (x, ..., f(x, ...)) pairs\n"
 	    "\t`delta' is the interval around zero to exclude\n"
 	    "\t`min' and `Max' are long double constants\n"
-	    "\t(+-INF or INFINITY are acceptable input)\n",
-	    progname);
+	    "\t(+-INF or INFINITY are acceptable input)\n"
+	    "Example:\n"
+	    "%s sin all -t10 -m-Inf -MInf -d1E-10\n",
+	    progname, progname);
 
 	exit(EXIT_FAILURE);
 }
