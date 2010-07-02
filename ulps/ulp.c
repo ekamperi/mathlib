@@ -13,7 +13,7 @@
 #include "subr_random.h"
 #include "ulp.h"
 
-#define	NITERATIONS	(50*50*1000)
+#define	NITERATIONS	(5*1000)
 
 static double
 calculp(double computed, double exact)
@@ -33,24 +33,20 @@ calculp(double computed, double exact)
 int
 getfunctionulp(const char *fname, struct ulp *u)
 {
+	const struct fentry *f;
+	const mpfr_rnd_t tonearest = GMP_RNDN;
 	mpfr_t mp_rop, mp_x, mp_y;
 	double x, y, computed, exact, _u;
 	size_t i;
-	const mpfr_rnd_t tonearest = GMP_RNDN;
-	const struct fentry *f;
+
+	assert(u);
 
 	f = getfunctionbyname(fname);
 	if (f == NULL)
-		return -1;
-
-	/* Some sanity checks */
-	assert(f->f_narg == 1 || f->f_narg == 2);
-	assert(u);
+		return (-1);
 
 	/* Initialize high precision variables */
-	mpfr_init2(mp_rop, 100);
-	mpfr_init2(mp_x, 100);
-	mpfr_init2(mp_y, 100);
+	mpfr_inits2(100, mp_rop, mp_x, mp_y, NULL);
 
 	x = 0.0;
 	y = 0.0;
@@ -135,11 +131,8 @@ getfunctionulp(const char *fname, struct ulp *u)
 	u->ulp_avg /= (i - u->ulp_skipped);
 
 	/* Free resources */
-	mpfr_clear(mp_rop);
-	mpfr_clear(mp_x);
-	mpfr_clear(mp_y);
+	mpfr_clear(mp_rop, mp_x, mp_y, NULL);
 
 	/* Success */
 	return 0;
 }
-
