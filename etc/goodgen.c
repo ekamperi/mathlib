@@ -1,6 +1,6 @@
 /*
- * The purpose of this utility is to generate C arrays of exact (x, $func(x))
- * pairs for consumption by the rest of the test cases.
+ * The purpose of this utility is to generate valid C arrays of exact
+ * (x, ..., func(x, ...)) pairs for consumption by the rest of the test cases.
  *
  * The code is a bit ugly. Sorry, tried to do it as less ugly as possible.
  */
@@ -10,7 +10,6 @@
 #include <ctype.h>
 #include <float.h>
 #include <math.h>
-#include <stdarg.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -19,7 +18,6 @@
 #include <gmp.h>
 #include <mpfr.h>
 
-#include "config.h"
 #include "gen.h"
 #include "subr_random.h"
 
@@ -27,24 +25,22 @@
 #define DECL_GEN(type)					\
 static void gen_##type(const char *fname, size_t total, \
 		       type lower, type upper)
-
 typedef long double long_double;
 DECL_GEN(double);
 DECL_GEN(long_double);
-
 static void usage(const char *progname);
 static char *strtoupper(const char *str);
 
 /*
- * Bite the bullet and don't protect macro arguments with
- * surrounding parentheses. Trade some safety, for pleasure.
+ * Bite the bullet and don't protect macro arguments with surrounding
+ * parentheses nor use intermediate variables. Trade safety, for pleasure.
  */
-#define	COMPUTE_EXACT_VAL(f, mp_exact, mp_x, mp_y, rndmode)	\
-do {								\
-	if (f->f_narg == 1)					\
-		f->f_mpfr(mp_exact, mp_x, rndmode);		\
-	else							\
-		f->f_mpfr(mp_exact, mp_x, mp_y, rndmode);	\
+#define	COMPUTE_EXACT_VAL(f, mp_exact, mp_x, mp_y, rndmode)		\
+do {									\
+	if (f->f_narg == 1)						\
+		f->f_mpfr(mp_exact, mp_x, rndmode);			\
+	else								\
+		f->f_mpfr(mp_exact, mp_x, mp_y, rndmode);		\
 } while(0)
 
 /*
@@ -71,25 +67,21 @@ do {									\
 int
 main(int argc, char *argv[])
 {
-	const char *progname;
-	const char *fname;
-	const char *type;
-	int  min, max, total;
-	int opt;
+	const char *progname, *fname, *type;
+        long double ldlower, ldupper;
 	double dlower, dupper;
-	long double ldlower, ldupper;
+        int  min, max, total, opt;
 
 	/*
-	 * Save program name, function name and floating
-	 * point type for later use.
+	 * Save program name, function name and floating-point type.
+	 * We will be using them later.
 	 */
 	progname = argv[0];
 	fname = argv[1];
 	type = argv[2];
-
 	optind += 2;
 
-	/* Parse arguments. */
+	/* Parse arguments */
 	min = max = total = -1;
 	while ((opt = getopt(argc, argv, "m:M:t:")) != -1) {
 		switch (opt) {
@@ -114,7 +106,8 @@ main(int argc, char *argv[])
 		while (optind < argc)
 			fprintf(stderr, "%s ", argv[optind++]);
 		fprintf(stderr, "\n");
-		exit(EXIT_FAILURE);
+		usage(progname);
+		/* NEVER REACHED */
 	}
 
 	/* Make sure all arguments were supplied, plus validate input */
@@ -148,9 +141,9 @@ main(int argc, char *argv[])
 			dupper = max;
 		}
 		printf("const struct\nt1dentry {\n"
-			    "\tdouble x;	/* Input */\n"
-			    "\tdouble y;	/* Output */\n"
-		    "} t1dtable[] = {\n");
+				"\tdouble x;	/* Input */\n"
+				"\tdouble y;	/* Output */\n"
+			"} t1dtable[] = {\n");
 		gen_double(fname, total, dlower, dupper);
 		printf("};\n");
 	}
@@ -164,9 +157,9 @@ main(int argc, char *argv[])
 			ldupper = max;
 		}
 		printf("const struct\nt1ldentry {\n"
-		    "\tlong double x;   /* Input */\n"
-		    "\tlong double y;   /* Output */\n"
-		    "} t1ldtable[] = {\n");
+				"\tlong double x;   /* Input */\n"
+				"\tlong double y;   /* Output */\n"
+			"} t1ldtable[] = {\n");
 		gen_long_double(fname, total, ldlower, ldupper);
 		printf("};\n");
 	}
@@ -195,7 +188,7 @@ gen_double(const char *fname, size_t total, double lower, double upper)
 	mpfr_inits2(500, mp_x, mp_y, mp_exact, NULL);
 
 	for (i = 0; i < total; i++) {
-		/* Generate a random double (x, y) pair */
+		/* Generate a random input for function f */
 		GET_RANDOM_VAL(double, f, x, y);
 
 		/* Set the mpfr variables */
@@ -205,7 +198,7 @@ gen_double(const char *fname, size_t total, double lower, double upper)
 			mpfr_set_d(mp_y, y, tonearest);
 		mpfr_set_d(mp_exact, 0.0, tonearest);
 
-		/* Compute exact value */
+		/* Compute exact value, mp_exact = f(mp_x, ...)  */
 		COMPUTE_EXACT_VAL(f, mp_exact, mp_x, mp_y, tonearest);
 
 		/* Extract exact value */
@@ -250,7 +243,7 @@ gen_long_double(const char *fname, size_t total,
 	mpfr_inits2(500, mp_x, mp_y, mp_exact, NULL);
 
 	for (i = 0; i < total; i++) {
-		/* Generate a random double (x, y) pair */
+		/* Generate a random input for function f */
 		GET_RANDOM_VAL(long_double, f, x, y);
 
 		/* Set the mpfr variables */
@@ -260,7 +253,7 @@ gen_long_double(const char *fname, size_t total,
 			mpfr_set_ld(mp_y, y, tonearest);
 		mpfr_set_ld(mp_exact, 0.0, tonearest);
 
-		/* Compute exact value */
+		/* Compute exact value, mp_exact = f(mp_x, ...) */
 		COMPUTE_EXACT_VAL(f, mp_exact, mp_x, mp_y, tonearest);
 
 		/* Extract exact value */
