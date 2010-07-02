@@ -131,7 +131,7 @@ getfunctionulp(const char *fname, struct ulp *u)
 	u->ulp_avg /= (i - u->ulp_skipped);
 
 	/* Free resources */
-	mpfr_clear(mp_rop, mp_x, mp_y, NULL);
+	mpfr_clears(mp_rop, mp_x, mp_y, NULL);
 
 	/* Success */
 	return 0;
