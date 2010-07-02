@@ -168,6 +168,12 @@ dom_tan(double x)
 }
 
 static int
+dom_tanh(double x)
+{
+	return 1;
+}
+
+static int
 dom_pow(double x, double y)
 {
 	return (x >= 0.0 || (floor(y) == y));
@@ -518,6 +524,17 @@ ftable[] = {
 		.f_mpfr = mpfr_tan,
 		.f_u.fp1 = dom_tan
 	},
+#endif
+
+	/* tanh() */
+#ifdef  HAVE_TANH
+	{
+	  .f_name = "tanh",
+	  .f_narg = 1,
+	  .f_libm = tanh,
+	  .f_mpfr = mpfr_tanh,
+	  .f_u.fp1 = dom_tanh
+        },
 #endif
 
 	/* tgamma() */
