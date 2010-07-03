@@ -48,7 +48,6 @@ int raised_exceptions(int excepts);
 int not_raised_exceptions(int excepts);
 
 int iserrno_equalto(int error);
-int set_errno(void);
 
 void query_errhandling(int *hasfp, int *haserrno);
 
