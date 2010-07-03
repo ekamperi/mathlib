@@ -1,4 +1,4 @@
-all:	testrand
+all:	goodgen proffenv testrand
 
 # -Wstrict-prototypes
 CC99=gcc -std=c99
