@@ -88,9 +88,11 @@ ATF_TC_BODY(test_pow2, tc)
 			fx = random_float(FP_NORMAL);
 			fy = random_float(FP_NORMAL);
 		} while (fx >= 0 || floorf(fy) == fy);
-		ATF_CHECK_IFNAN(powf(fx, fy));
-		ATF_CHECK(iserrno_equalto(EDOM));
-		ATF_CHECK(raised_exceptions(MY_FE_INVALID));
+#ifdef	NAN
+		ATF_PASS_OR_BREAK(isnan(powf(fx, fy)));
+#endif
+		ATF_PASS_OR_BREAK(iserrno_equalto(EDOM));
+		ATF_PASS_OR_BREAK(raised_exceptions(MY_FE_INVALID));
 
 		/* double */
 		errno = 0;
@@ -99,9 +101,11 @@ ATF_TC_BODY(test_pow2, tc)
 			dx = random_double(FP_NORMAL);
 			dy = random_double(FP_NORMAL);
 		} while (dx >= 0 || floor(dy) == dy);
-		ATF_CHECK_IFNAN(pow(dx, dy));
-		ATF_CHECK(iserrno_equalto(EDOM));
-		ATF_CHECK(raised_exceptions(MY_FE_INVALID));
+#ifdef  NAN
+		ATF_PASS_OR_BREAK(isnan(pow(dx, dy)));
+#endif
+		ATF_PASS_OR_BREAK(iserrno_equalto(EDOM));
+		ATF_PASS_OR_BREAK(raised_exceptions(MY_FE_INVALID));
 
 		/* long double */
 #ifdef	HAVE_POWL
@@ -111,9 +115,11 @@ ATF_TC_BODY(test_pow2, tc)
 			ldx = random_long_double(FP_NORMAL);
 			ldy = random_long_double(FP_NORMAL);
 		} while (ldx >= 0 || floorl(ldy) == ldy);
-		ATF_CHECK_IFNAN(powl(ldx, ldy));
-		ATF_CHECK(iserrno_equalto(EDOM));
-		ATF_CHECK(raised_exceptions(MY_FE_INVALID));
+#ifdef  NAN
+		ATF_PASS_OR_BREAK(isnan(powl(ldx, ldy)));
+#endif
+		ATF_PASS_OR_BREAK(iserrno_equalto(EDOM));
+		ATF_PASS_OR_BREAK(raised_exceptions(MY_FE_INVALID));
 #endif
 	}
 }
@@ -193,8 +199,8 @@ t4entry {
 	{  1.0 - FLT_EPSILON, -INFINITY, INFINITY },
 	{ -1.0 + FLT_EPSILON, -INFINITY, INFINITY },
 
-        {  1.0 - FLT_EPSILON, -INFINITY, INFINITY },
-        { -1.0 + FLT_EPSILON, -INFINITY, INFINITY },
+	{  1.0 - FLT_EPSILON, -INFINITY, INFINITY },
+	{ -1.0 + FLT_EPSILON, -INFINITY, INFINITY },
 #endif
 };
 
