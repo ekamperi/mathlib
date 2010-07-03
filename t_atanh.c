@@ -9,13 +9,7 @@
 #include "subr_atf.h"
 #include "subr_errhandling.h"
 #include "subr_fpcmp.h"
-
-static const struct
-tentry {
-	long double x;       /* Input */
-	long double y;       /* atanh output */
-} ttable[] = {
-};
+#include "t_atanh.h"
 
 /*
  * Test case 1 -- Basic functionality
@@ -31,9 +25,23 @@ ATF_TC_BODY(test_atanh1, tc)
 {
 	size_t i, N;
 
-	N = sizeof(ttable) / sizeof(ttable[0]);
-	for (i = 0; i < N; i++)
-		ATF_CHECK(fpcmp_equal(atanh(ttable[i].x), ttable[i].y));
+        /* double */
+        N = sizeof(t1dtable) / sizeof(t1dtable[0]);
+	ATF_REQUIRE(N > 0);
+        for (i = 0; i < N; i++)
+		ATF_CHECK(fpcmp_equal(
+			    atanh(t1dtable[i].x),
+				  t1dtable[i].y));
+
+        /* long double */
+#ifdef  HAVE_ATANHL
+        N = sizeof(t1ldtable) / sizeof(t1ldtable[0]);
+	ATF_REQUIRE(N > 0);
+        for (i = 0; i < N; i++)
+		ATF_CHECK(fpcmp_equall(
+			    atanhl(t1ldtable[i].x),
+				   t1ldtable[i].y));
+#endif
 }
 
 /*
