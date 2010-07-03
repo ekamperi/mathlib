@@ -224,7 +224,7 @@ gen_double(const char *fname, size_t total,
 	assert(f);
 
 	/* Initialize high precision variables */
-	mpfr_inits2(500, mp_x, mp_y, mp_exact, NULL);
+	mpfr_inits2(97, mp_x, mp_y, mp_exact, NULL);
 
 	for (i = 0; i < total; i++) {
 		/* Generate a random input for function f */
@@ -283,7 +283,7 @@ gen_long_double(const char *fname, size_t total,
 	assert(f);
 
 	/* Initialize high precision variables */
-	mpfr_inits2(500, mp_x, mp_y, mp_exact, NULL);
+	mpfr_inits2(97, mp_x, mp_y, mp_exact, NULL);
 
 	for (i = 0; i < total; i++) {
 		/* Generate a random input for function f */
@@ -427,28 +427,31 @@ static void
 struct_decl_open(const char *fname, const char *type)
 {
 	const struct fentry *f;
+	const char *str;
 
 	f = getfunctionbyname(fname);
 	assert(f);
 
+	str = strcmp(type, "double") == 0 ? "" : "l";
+
 	if (f->f_narg == 1) {
-		printf("const struct\nt1dentry {\n"
+		printf("const struct\nt1%sdentry {\n"
 		    "\t%s x;    /* Input */\n"
 		    "\t%s y;    /* Output */\n"
-		    "} t1dtable[] = {\n",
-		    type, type);
+		    "} t1%sdtable[] = {\n",
+		    str, type, type, str);
 	} else {
-		printf("const struct\nt1dentry {\n"
+		printf("const struct\nt1%sdentry {\n"
 		    "\t%s x;    /* Input */\n"
                     "\t%s y;    /* Input */\n"
 		    "\t%s z;    /* Output */\n"
-                    "} t1dtable[] = {\n",
-		    type, type, type);
+                    "} t1%sdtable[] = {\n",
+		    str, type, type, type, str);
 	}
 }
 
 static void
 struct_decl_close(void)
 {
-	printf("}\n");
+	printf("};\n");
 }
