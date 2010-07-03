@@ -11,7 +11,7 @@ LIBS=-lm -latf-c
 all:    t_acos t_acosh t_asin t_asinh t_atan t_atan2 t_atanh t_cbrt t_ceil \
 	t_constants t_copysign t_cos t_cosh t_erf t_erfc t_exp t_exp2 t_expm1 t_fabs t_fdim \
 	t_float t_floor t_fmax t_fpclassify t_fpmacros t_ilogb t_lrint t_mac t_tgamma \
-	t_hypot t_log t_log10 t_log1p t_log2 t_logb t_ldexp t_nextafter \
+	t_hypot t_log t_log10 t_log1p t_log2 t_logb t_ldexp t_nextafter t_pow \
 	t_rint t_signbit t_sin t_sinh t_sqrt t_trig_ident t_tan t_tanh t_trunc t_types
 
 obj:
@@ -249,6 +249,12 @@ _DEPS_T_NEXTAFTER = t_nextafter.o subr_atf.o subr_errhandling.o subr_random.o
  DEPS_T_NEXTAFTER = $(_DEPS_T_NEXTAFTER:%=obj/%)
 t_nextafter: $(DEPS_T_NEXTAFTER)
 	$(CC99) -o t_nextafter $(DEPS_T_NEXTAFTER) $(CFLAGS) $(LIBS)
+
+
+_DEPS_T_POW = t_pow.o subr_atf.o subr_errhandling.o subr_fpcmp.o subr_random.o
+ DEPS_T_POW = $(_DEPS_T_POW:%=obj/%)
+t_pow: $(DEPS_T_POW)
+	$(CC99) -o t_pow $(DEPS_T_POW) $(CFLAGS) $(LIBS)
 
 
 _DEPS_T_RINT = t_rint.o subr_atf.o subr_errhandling.o subr_fpcmp.o subr_random.o
