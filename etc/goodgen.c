@@ -31,6 +31,10 @@ DECL_GEN(long_double);
 static void usage(const char *progname);
 static char *strtoupper(const char *str);
 static long double mystrtold(const char *str, const char *what);
+static void ifdef_guard_open(const char *fname);
+static void ifdef_guard_close(const char *fname);
+static void struct_decl_open(const char *fname, const char *type);
+static void struct_decl_close(void);
 
 /*
  * Bite the bullet and don't protect macro arguments with surrounding
@@ -180,37 +184,27 @@ main(int argc, char *argv[])
 	init_randgen();
 
 	/* Open #ifdef guard */
-	char *FNAME = strtoupper(fname);
-	printf("#ifndef __T_%s_H__\n", FNAME);
-	printf("#define __T_%s_H__\n", FNAME);
-	printf("\n");
+	ifdef_guard_open(fname);
 
 	/* Ready to go */
 	if (!strcmp(type, "double") || !strcmp(type, "all")) {
 		dlower = min;
 		dupper = max;
-		printf("const struct\nt1dentry {\n"
-				"\tdouble x;	/* Input */\n"
-				"\tdouble y;	/* Output */\n"
-			"} t1dtable[] = {\n");
+		struct_decl_open(fname, type);
 		gen_double(fname, total, dlower, dupper, delta);
-		printf("};\n");
+		struct_decl_close();
 	}
 
 	if (!strcmp(type, "ldouble") || !strcmp(type, "all")) {
 		ldlower = min;
 		ldupper = max;
-		printf("const struct\nt1ldentry {\n"
-				"\tlong double x;   /* Input */\n"
-				"\tlong double y;   /* Output */\n"
-			"} t1ldtable[] = {\n");
+		struct_decl_open(fname, type);
 		gen_long_double(fname, total, ldlower, ldupper, delta);
-		printf("};\n");
+		struct_decl_close();
 	}
 
 	/* Close #ifdef guard */
-	printf("#endif	/* ! __T_%s_H__ */\n", FNAME);
-	free(FNAME);
+	ifdef_guard_close(fname);
 
 	return (EXIT_SUCCESS);
 }
@@ -403,4 +397,58 @@ mystrtold(const char *str, const char *what)
 	}
 
 	return (rv);
+}
+
+static void
+ifdef_guard_open(const char *fname)
+{
+	char *FNAME;
+
+	FNAME = strtoupper(fname);
+        printf("#ifndef __T_%s_H__\n", FNAME);
+	printf("#define __T_%s_H__\n", FNAME);
+        printf("\n");
+
+	free(FNAME);
+}
+
+static void
+ifdef_guard_close(const char *fname)
+{
+	char *FNAME;
+
+	FNAME = strtoupper(fname);
+	printf("#endif  /* ! __T_%s_H__ */\n", FNAME);
+
+	free(FNAME);
+}
+
+static void
+struct_decl_open(const char *fname, const char *type)
+{
+	const struct fentry *f;
+
+	f = getfunctionbyname(fname);
+	assert(f);
+
+	if (f->f_narg == 1) {
+		printf("const struct\nt1dentry {\n"
+		    "\t%s x;    /* Input */\n"
+		    "\t%s y;    /* Output */\n"
+		    "} t1dtable[] = {\n",
+		    type, type);
+	} else {
+		printf("const struct\nt1dentry {\n"
+		    "\t%s x;    /* Input */\n"
+                    "\t%s y;    /* Input */\n"
+		    "\t%s z;    /* Output */\n"
+                    "} t1dtable[] = {\n",
+		    type, type, type);
+	}
+}
+
+static void
+struct_decl_close(void)
+{
+	printf("}\n");
 }
