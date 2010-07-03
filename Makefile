@@ -12,7 +12,8 @@ all:    t_acos t_acosh t_asin t_asinh t_atan t_atan2 t_atanh t_cbrt t_ceil \
 	t_constants t_copysign t_cos t_cosh t_erf t_erfc t_exp t_exp2 t_expm1 t_fabs t_fdim \
 	t_float t_floor t_fmax t_fpclassify t_fpmacros t_ilogb t_lrint t_mac t_tgamma \
 	t_hypot t_log t_log10 t_log1p t_log2 t_logb t_ldexp t_nextafter t_pow \
-	t_rint t_signbit t_sin t_sinh t_sqrt t_trig_ident t_tan t_tanh t_trunc t_types
+	t_rint t_self t_signbit t_sin t_sinh t_sqrt t_trig_ident t_tan t_tanh \
+	t_trunc t_types
 
 obj:
 	@mkdir -p obj
@@ -261,6 +262,12 @@ _DEPS_T_RINT = t_rint.o subr_atf.o subr_errhandling.o subr_fpcmp.o subr_random.o
  DEPS_T_RINT = $(_DEPS_T_RINT:%=obj/%)
 t_rint: $(DEPS_T_RINT)
 	$(CC99) -o t_rint $(DEPS_T_RINT) $(CFLAGS) $(LIBS)
+
+
+_DEPS_T_SELF = t_self.o subr_atf.o subr_random.o
+ DEPS_T_SELF = $(_DEPS_T_SELF:%=obj/%)
+t_self: $(DEPS_T_SELF)
+	$(CC99) -o t_self $(DEPS_T_SELF) $(CFLAGS) $(LIBS)
 
 
 _DEPS_T_SIGNBIT = t_signbit.o subr_atf.o subr_random.o
