@@ -11,7 +11,7 @@
 #include "subr_fpcmp.h"
 #include "subr_random.h"
 
-/*#include "t_pow.h"*/
+#include "t_pow.h"
 
 /*
  * Test case 1 -- Basic functionality
@@ -25,34 +25,32 @@ ATF_TC_HEAD(test_pow1, tc)
 }
 ATF_TC_BODY(test_pow1, tc)
 {
-#if 0
 	size_t i, N;
 
 	/* double */
 	N = sizeof(t1dtable) / sizeof(t1dtable[0]);
 	for (i = 0; i < N; i++) {
-		/* Sanity check */
-		ATF_REQUIRE(t1dtable[i].x >= -1.0 && t1dtable[i].x <= 1.0);
+                if(!fpcmp_equal(
+                            pow(t1dtable[i].x, t1dtable[i].x),
+                                t1dtable[i].z)) {
+			printf("computed = %e,  exact = %e\n", 
+			    pow(t1dtable[i].x, t1dtable[i].x),
+			    t1dtable[i].z);
+		}
 
-		/* Actual check */
 		ATF_CHECK(fpcmp_equal(
-			    pow(t1dtable[i].x),
-				 t1dtable[i].y));
+			    pow(t1dtable[i].x, t1dtable[i].x),
+				t1dtable[i].z));
 	}
 
 	/* long double */
 #ifdef	HAVE_POWL
 	N = sizeof(t1ldtable) / sizeof(t1ldtable[0]);
 	for (i = 0; i < N; i++) {
-		/* Sanity check */
-		ATF_REQUIRE(t1ldtable[i].x >= -1.0 && t1ldtable[i].x <= 1.0);
-
-		/* Actual check */
 		ATF_CHECK(fpcmp_equall(
-			    powl(t1ldtable[i].x),
-				  t1ldtable[i].y));
+			    powl(t1ldtable[i].x, t1ldtable[i].y),
+				 t1ldtable[i].z));
 	}
-#endif
 #endif
 }
 
