@@ -190,7 +190,7 @@ main(int argc, char *argv[])
 	if (!strcmp(type, "double") || !strcmp(type, "all")) {
 		dlower = min;
 		dupper = max;
-		struct_decl_open(fname, type);
+		struct_decl_open(fname, "double");
 		gen_double(fname, total, dlower, dupper, delta);
 		struct_decl_close();
 	}
@@ -198,7 +198,7 @@ main(int argc, char *argv[])
 	if (!strcmp(type, "ldouble") || !strcmp(type, "all")) {
 		ldlower = min;
 		ldupper = max;
-		struct_decl_open(fname, type);
+		struct_decl_open(fname, "long double");
 		gen_long_double(fname, total, ldlower, ldupper, delta);
 		struct_decl_close();
 	}
