@@ -53,7 +53,7 @@ ATF_TC_BODY(test_rand1, tc)
 /* Add test cases to test program */
 ATF_TP_ADD_TCS(tp)
 {
-	ATF_TP_ADD_TC(tp, test_rand);
+	ATF_TP_ADD_TC(tp, test_rand1);
 
 	return atf_no_error();
 }
