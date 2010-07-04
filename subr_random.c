@@ -1,6 +1,7 @@
 #define	_XOPEN_SOURCE	600
 
 #include <math.h>
+#include <inttypes.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -8,16 +9,20 @@
 
 #include "subr_random.h"
 
+/* Function prototypes */
+static int isvalidfp_vax(const uint32_t *y);
+static int isvalidfp_ldouble(const uint32_t *y);
+
 #define	MY_RANDOM(x)	mrand48()
 
 #ifdef	__vax__
-#define	ISVALIDFP(x)	isvalidfp(x)
+#define	ISVALIDFP(x)	isvalidfp_vax(x)
 #else
-#define	ISVALIDFP(x)	1		/* Always valid */
+#define	ISVALIDFP(x)	isvalidfp_ldouble(x)	/* Always valid */
 #endif
 
-int
-isvalidfp(const uint32_t *y)
+static int
+isvalidfp_vax(const uint32_t *y)
 {
 	/*
 	 * A reserved operand exception occurs if a source operand of a
@@ -35,6 +40,17 @@ isvalidfp(const uint32_t *y)
 			return 0;
 		}
 	}
+
+	return 1;
+}
+
+static int
+isvalidfp_ldouble(const uint32_t *y)
+{
+	/* XXX: Allow subnormals */
+	/* It's subnormal */
+	if ((y[1] & 0x80000000) == 0)
+		return 0;
 
 	return 1;
 }
