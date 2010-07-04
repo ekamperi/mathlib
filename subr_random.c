@@ -1,5 +1,6 @@
 #define	_XOPEN_SOURCE	600
 
+#include <assert.h>
 #include <math.h>
 #include <inttypes.h>
 #include <stdio.h>
@@ -14,7 +15,7 @@
 #if	defined(__vax__)
 #define	ISVALIDFP(x)	isvalidfp_vax(x)
 #elif	defined(__i386__) || defined(__x86_64__)
-#define	ISVALIDFP(x)	isvalidfp_ldouble(x)
+#define	ISVALIDFP(x)	isvalidfp_intel80bit(x)
 #else
 #define	ISVALIDFP(x)	1	/* Always valid, until proven otherwise */
 #endif
@@ -57,10 +58,16 @@ isvalidfp_vax(const uint32_t *y)
  * 7.4.1 Real Numbers, Table 7-9. Real Number and NaN encodings
  */
 int
-isvalidfp_ldouble(const uint32_t *y)
+isvalidfp_intel80bit(const uint32_t *y)
 {
+	int intbit;
+	int e;
+
+	intbit = y[1] & 0x80000000;
+	e      = y[2] & 0x7FFF;
+
 	/* Infinity */
-	if ((y[2] & 0x7FFF) == 0x7FFF) {
+	if (e == 0x7FFF) {
 		if ((y[0] == 0) && (y[1] == 0x80000000)) {
 			DPRINTF(("-> infinity\n"));
 			return 1;
@@ -68,16 +75,16 @@ isvalidfp_ldouble(const uint32_t *y)
 	}
 
 	/* Normal */
-	if (((y[2] & 0x7FFF) > 0) && ((y[2] & 0x7FFF) < 0xFFFE)) {
-		if (y[1] & 0x80000000) {
+	if ((e > 0) && (e < 0xFFFE)) {
+		if (intbit) {
 			DPRINTF(("-> normal\n"));
 			return 1;
 		}
 	}
 
 	/* Denormal */
-	if ((y[2] & 0x7FFF) == 0) {
-		if ((y[1] & 0x80000000) == 0) {
+	if (e == 0) {
+		if (intbit == 0) {
 			if (y[0] || y[1]) {
 				DPRINTF(("-> denormal\n"));
 				return 1;
@@ -86,7 +93,7 @@ isvalidfp_ldouble(const uint32_t *y)
 	}
 
 	/* Zero */
-	if ((y[2] & 0x7FFF) == 0) {
+	if (e == 0) {
 		if ((y[0] == 0) && (y[1] == 0)) {
 			DPRINTF(("-> zero\n"));
 			return 1;
@@ -94,8 +101,8 @@ isvalidfp_ldouble(const uint32_t *y)
 	}
 
 	/* NaNs */
-	if ((y[2] & 0x7FFF) == 0x7FFF) {
-		if (y[1] & 0x80000000) {
+	if (e == 0x7FFF) {
+		if (intbit) {
 			if ((y[1] & 0x40000000) == 0) {
 				if (y[0] || (y[1] & 0x7FFFFFFF)) {
 					DPRINTF(("-> SNaN\n"));
@@ -113,7 +120,7 @@ isvalidfp_ldouble(const uint32_t *y)
 		}
 	}
 
-	DPRINTF(("INVALID\n"));
+	DPRINTF(("-> INVALID\n"));
 	return 0;
 }
 
@@ -127,30 +134,53 @@ isvalidfp_ldouble(const uint32_t *y)
  * equally distributed numbers, you may want drand48() or you should roll
  * out your own  with rand().
  */
-#define DECL(TYPE)							\
-TYPE									\
-random_##TYPE(int fpclass)						\
-{									\
-	size_t i, nbytes;						\
-									\
-	nbytes = sizeof(TYPE) / sizeof(uint32_t);			\
-	union {								\
-		TYPE x;							\
-		uint32_t y[nbytes];					\
-	} u;								\
-									\
-	do {								\
-		for (i = 0; i < nbytes; i++)				\
-			u.y[i] = MY_RANDOM();				\
-	} while (!ISVALIDFP(u.y) || fpclassify(u.x) != fpclass);	\
-									\
-	return (u.x);							\
+long double
+random_long_double(int fpclass)
+{
+	size_t i, nbytes;
+
+	nbytes = sizeof(long double) / sizeof(uint32_t);
+	union {
+		long double x;
+		uint32_t y[nbytes];
+	} u;
+
+	do {
+		for (i = 0; i < nbytes; i++)
+			u.y[i] = MY_RANDOM();
+	} while (!ISVALIDFP(u.y) || fpclassify(u.x) != fpclass);
+
+	return (u.x);
 }
 
-DECL(float)
-DECL(double)
-typedef long double long_double;
-DECL(long_double)
+/*
+ * Really cheap hack to avoid deploying validation functions for floats
+ * and doubles. The price is that it slows down things A LOT, due to normal
+ * long double numbers being converted to subnormals at the time of the cast.
+ */
+double
+random_double(int fpclass)
+{
+	double x;
+
+	do {
+		x = (double)random_long_double(fpclass);
+	} while (fpclassify(x) != fpclass);
+
+	return (x);
+}
+
+float
+random_float(int fpclass)
+{
+	float x;
+
+	do {
+		x = (float)random_long_double(fpclass);
+	} while (fpclassify(x) != fpclass);
+
+	return (x);
+}
 
 void
 init_randgen(void)

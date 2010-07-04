@@ -9,6 +9,6 @@ long double random_long_double(int class);
 
 /* We export these functions, only to be used by self tests */
 int isvalidfp_vax(const uint32_t *y);
-int isvalidfp_ldouble(const uint32_t *y);
+int isvalidfp_intel80bit(const uint32_t *y);
 
 #endif	/* ! __SUBR_RANDOM_H__ */

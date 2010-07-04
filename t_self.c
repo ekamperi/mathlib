@@ -29,7 +29,6 @@ ATF_TC_BODY(test_rand1, tc)
 	 * It catches invalid floating point numbers. Really.
 	 */
 	ATF_FOR_LOOP(i, N, i++) {
-#if 0
 		/* float */
 		fx = random_float(FP_NORMAL);
 		fy = random_float(FP_NORMAL);
@@ -47,7 +46,7 @@ ATF_TC_BODY(test_rand1, tc)
 		ATF_PASS_OR_BREAK(fpclassify( 1.0 * dy) == FP_NORMAL);
 		ATF_PASS_OR_BREAK(fpclassify(-1.0 * dx) == FP_NORMAL);
 		ATF_PASS_OR_BREAK(fpclassify(-1.0 * dy) == FP_NORMAL);
-#endif
+
 		/* long double */
 		ldx = random_long_double(FP_NORMAL);
 		ldy = random_long_double(FP_NORMAL);
@@ -134,8 +133,10 @@ ATF_TC_BODY(test_rand2, tc)
 	N = sizeof(t2table) / sizeof(t2table[0]);
 	ATF_REQUIRE(N > 0);
 
+	/* float */
+	/* long double */
 	for (i = 0; i < N; i++)
-		ATF_CHECK(isvalidfp_ldouble(&t2table[i].u.y[0])
+		ATF_CHECK(isvalidfp_intel80bit(&t2table[i].u.y[0])
 		    == t2table[i].v);
 #endif	/* defined(__i386__) || defined(__x86_64__) */
 }
