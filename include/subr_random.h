@@ -1,6 +1,8 @@
 #ifndef	__SUBR_RANDOM_H__
 #define	__SUBR_RANDOM_H__
 
+#include <inttypes.h>
+
 void init_randgen(void);
 
 float random_float(int class);
