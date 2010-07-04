@@ -9,19 +9,24 @@
 
 #include "subr_random.h"
 
-/* Function prototypes */
-static int isvalidfp_vax(const uint32_t *y);
-static int isvalidfp_ldouble(const uint32_t *y);
-
 #define	MY_RANDOM(x)	mrand48()
 
-#ifdef	__vax__
+#if	defined(__vax__)
 #define	ISVALIDFP(x)	isvalidfp_vax(x)
+#elif	defined(__i386__) || defined(__x86_64__)
+#define	ISVALIDFP(x)	isvalidfp_ldouble(x)
 #else
-#define	ISVALIDFP(x)	isvalidfp_ldouble(x)	/* Always valid */
+#define	ISVALIDFP(x)	1	/* Always valid, until proven otherwise */
 #endif
 
-static int
+#undef	DEBUG
+#ifdef  DEBUG
+#define	DPRINTF(x)      do { printf x fflush(NULL); } while(0);
+#else
+#define	DPRINTF(x)
+#endif
+
+int
 isvalidfp_vax(const uint32_t *y)
 {
 	/*
@@ -44,15 +49,72 @@ isvalidfp_vax(const uint32_t *y)
 	return 1;
 }
 
-static int
+/*
+ * Intel Architecture, Software Developer’s Manual, Volume 1:
+ * Basic Architecture,
+ *
+ * 7.2.2. Floating-Point Format,
+ * 7.4.1 Real Numbers, Table 7-9. Real Number and NaN encodings
+ */
+int
 isvalidfp_ldouble(const uint32_t *y)
 {
-	/* XXX: Allow subnormals */
-	/* It's subnormal */
-	if ((y[1] & 0x80000000) == 0)
-		return 0;
+	/* Infinity */
+	if ((y[2] & 0x7FFF) == 0x7FFF) {
+		if ((y[0] == 0) && (y[1] == 0x80000000)) {
+			DPRINTF(("-> infinity\n"));
+			return 1;
+		}
+	}
 
-	return 1;
+	/* Normal */
+	if (((y[2] & 0x7FFF) > 0) && ((y[2] & 0x7FFF) < 0xFFFE)) {
+		if (y[1] & 0x80000000) {
+			DPRINTF(("-> normal\n"));
+			return 1;
+		}
+	}
+
+	/* Denormal */
+	if ((y[2] & 0x7FFF) == 0) {
+		if ((y[1] & 0x80000000) == 0) {
+			if (y[0] || y[1]) {
+				DPRINTF(("-> denormal\n"));
+				return 1;
+			}
+		}
+	}
+
+	/* Zero */
+	if ((y[2] & 0x7FFF) == 0) {
+		if ((y[0] == 0) && (y[1] == 0)) {
+			DPRINTF(("-> zero\n"));
+			return 1;
+		}
+	}
+
+	/* NaNs */
+	if ((y[2] & 0x7FFF) == 0x7FFF) {
+		if (y[1] & 0x80000000) {
+			if ((y[1] & 0x40000000) == 0) {
+				if (y[0] || (y[1] & 0x7FFFFFFF)) {
+					DPRINTF(("-> SNaN\n"));
+					return 1;
+				}
+			} else {
+				if ((y[0] == 0) && (y[1] == 0xC0000000)) {
+					DPRINTF(("-> Real indefinite QNaN\n"));
+					return 1;
+				} else {
+					DPRINTF(("-> QNaN\n"));
+					return 1;
+				}
+			}
+		}
+	}
+
+	DPRINTF(("INVALID\n"));
+	return 0;
 }
 
 /*
