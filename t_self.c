@@ -12,7 +12,7 @@ ATF_TC_HEAD(test_rand1, tc)
 {
 	atf_tc_set_md_var(tc,
 	    "descr",
-	    "Check that our random generator outpus valid fp numbers");
+	    "Check that our random generator outputs valid fp numbers");
 }
 ATF_TC_BODY(test_rand1, tc)
 {
@@ -133,8 +133,6 @@ ATF_TC_BODY(test_rand2, tc)
 	N = sizeof(t2table) / sizeof(t2table[0]);
 	ATF_REQUIRE(N > 0);
 
-	/* float */
-	/* long double */
 	for (i = 0; i < N; i++)
 		ATF_CHECK(isvalidfp_intel80bit(&t2table[i].u.y[0])
 		    == t2table[i].v);
