@@ -448,6 +448,7 @@ ATF_TC_BODY(test_pow46, tc)
 			do {
 				y = rand();
 			} while (y % 2 == 0);
+			y = -y;
 
 			/* float */
 			ATF_PASS_OR_BREAK(fpcmp_equalf(
@@ -469,8 +470,58 @@ ATF_TC_BODY(test_pow46, tc)
 	}
 }
 
+/* Test case 4-7 */
+ATF_TC(test_pow47);
+ATF_TC_HEAD(test_pow47, tc)
+{
+	atf_tc_set_md_var(tc,
+	    "descr",
+	    "For y < 0 and not an odd integer, if x is -Inf, "
+	    "+0 shall be returned");
+}
+ATF_TC_BODY(test_pow47, tc)
+{
+	float fy;
+	double dy;
+	long double ldy;
+	long i, N;
+	size_t j;
+
+	N = get_config_var_as_long(tc, "iterations");
+	ATF_REQUIRE(N > 0);
+
+	ATF_FOR_LOOP(i, N, i++) {
+		for (j = 0; j < t4tablesize; j++) {
+			/* float */
+			do {
+				fy = random_float(FP_NORMAL);
+			} while (fy > 0.0 || (floorf(fy) == fy && ((long)fy %  2)));
+			ATF_PASS_OR_BREAK(fpcmp_equalf(
+				    powf(-(float)t4table[j].y, fy),
+					 0.0));
+
+			/* double */
+			do {
+				dy = random_float(FP_NORMAL);
+			} while (dy > 0.0 || (floor(dy) == dy && ((long)dy %  2)));
+			ATF_PASS_OR_BREAK(fpcmp_equal(
+				    pow(-(double)t4table[j].y, dy),
+					0.0));
+
+			/* long double */
+#ifdef  HAVE_POWL
+			do {
+				ldy = random_float(FP_NORMAL);
+			} while (ldy > 0.0 || (floorl(ldy) == ldy && ((long)ldy %  2)));
+			ATF_PASS_OR_BREAK(fpcmp_equall(
+				    powf(-t4table[j].y, ldy),
+					 0.0));
+#endif
+		}
+	}
+}
+
 /*
-	For y an odd integer < 0, if x is -Inf, -0 shall be returned.
 	For y < 0 and not an odd integer, if x is -Inf, +0 shall be returned.
 	For y an odd integer > 0, if x is -Inf, -Inf shall be returned.
 	For y > 0 and not an odd integer, if x is -Inf, +Inf shall be returned.
@@ -490,6 +541,7 @@ ATF_TP_ADD_TCS(tp)
 	ATF_TP_ADD_TC(tp, test_pow44);
 	ATF_TP_ADD_TC(tp, test_pow45);
 	ATF_TP_ADD_TC(tp, test_pow46);
+        ATF_TP_ADD_TC(tp, test_pow47);
 
 	return atf_no_error();
 }
