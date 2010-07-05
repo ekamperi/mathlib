@@ -555,8 +555,8 @@ ATF_TC_BODY(test_pow48, tc)
 			/* long double */
 #ifdef  HAVE_POWL
 			ATF_PASS_OR_BREAK(fpcmp_equall(
-				    powl(t4table[j].x, y),
-					-t4table[j].x));
+				    powl(-t4table[j].x, y),
+					 -t4table[j].x));
 #endif
 		}
 	}
