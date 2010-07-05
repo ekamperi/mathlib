@@ -193,14 +193,114 @@ t4entry {
 static const size_t t4tablesize =
     sizeof(t4table) / sizeof(t4table[0]);
 
+/* Test case 4-1 */
+ATF_TC(test_pow41);
+ATF_TC_HEAD(test_pow41, tc)
+{
+	atf_tc_set_md_var(tc,
+	    "descr",
+	    "If x or y is a NaN, a NaN shall be returned "
+	    "(unless specified elsewhere in this description)");
+}
+ATF_TC_BODY(test_pow41, tc)
+{
+	/* Only because it's the first test case to use it */
+	ATF_REQUIRE(t4tablesize > 0);
+}
 
-/*If x or y is a NaN, a NaN shall be returned (unless specified elsewhere in this description).
-  For any value of y (including NaN), if x is +1, 1.0 shall be returned.
-  For any value of x (including NaN), if y is ±0, 1.0 shall be returned.
-  For any odd integer value of y > 0, if x is ±0, ±0 shall be returned.
-  For y > 0 and not an odd integer, if x is ±0, +0 shall be returned.*/
+/* Test case 4-2 */
+ATF_TC(test_pow42);
+ATF_TC_HEAD(test_pow42, tc)
+{
+	atf_tc_set_md_var(tc,
+	    "descr",
+	    "For any value of y (including NaN), if x is +1, "
+	    "1.0 shall be returned");
+}
+ATF_TC_BODY(test_pow42, tc)
+{
+}
 
+/* Test case 4-3 */
+ATF_TC(test_pow43);
+ATF_TC_HEAD(test_pow43, tc)
+{
+	atf_tc_set_md_var(tc,
+	    "descr",
+	    "For any value of x (including NaN), if y is +-0, "
+	    "1.0 shall be returned");
+}
+ATF_TC_BODY(test_pow43, tc)
+{
+}
 
+/* Test case 4-4 */
+ATF_TC(test_pow44);
+ATF_TC_HEAD(test_pow44, tc)
+{
+	atf_tc_set_md_var(tc,
+	    "descr",
+	    "For any odd integer value of y > 0, if x is +-0, "
+	    "+-0 shall be returned");
+}
+ATF_TC_BODY(test_pow44, tc)
+{
+}
+
+/* Test case 4-5 */
+ATF_TC(test_pow45);
+ATF_TC_HEAD(test_pow45, tc)
+{
+	atf_tc_set_md_var(tc,
+	    "descr",
+	    "For y > 0 and not an odd integer, if x is +-0, "
+	    "+0 shall be returned");
+}
+ATF_TC_BODY(test_pow45, tc)
+{
+	float fy;
+	double dy;
+	long double ldy;
+	long i, N;
+	size_t j;
+
+	N = get_config_var_as_long(tc, "iterations");
+	ATF_REQUIRE(N > 0);
+
+	ATF_FOR_LOOP(i, N, i++) {
+		for (j = 0; j < t4tablesize; j++) {
+			/* float */
+			do {
+				fy = random_float(FP_NORMAL);
+			} while (fy <= 0.0 || (floorf(fy) == fy && ((long)fy %  2)));
+			ATF_PASS_OR_BREAK(fpcmp_equalf(
+				    powf( 0.0, fy), 0.0));
+			ATF_PASS_OR_BREAK(fpcmp_equalf(
+				    powf(-0.0, fy), 0.0));
+
+			/* double */
+			do {
+				dy = random_double(FP_NORMAL);
+			} while (dy <= 0.0 || (floor(dy) == dy && ((long)dy %  2)));
+			ATF_PASS_OR_BREAK(fpcmp_equal(
+				    pow( 0.0, dy), 0.0));
+			ATF_PASS_OR_BREAK(fpcmp_equal(
+				    pow(-0.0, dy), 0.0));
+
+			/* long double */
+#ifdef  HAVE_POWL
+			do {
+				ldy = random_long_double(FP_NORMAL);
+			} while (ldy <= 0.0 || (floorl(ldy) == ldy && ((long)ldy %  2)));
+			ATF_PASS_OR_BREAK(fpcmp_equall(
+				    powl( 0.0, ldy), 0.0));
+                        ATF_PASS_OR_BREAK(fpcmp_equall(
+                                    powl(-0.0, ldy), 0.0));
+#endif
+		}
+	}
+
+}
 
 /* Test case 4-6 */
 ATF_TC(test_pow46);
@@ -213,9 +313,6 @@ ATF_TC_HEAD(test_pow46, tc)
 ATF_TC_BODY(test_pow46, tc)
 {
 	size_t i;
-
-	/* Only because it's the first test case to use it */
-	ATF_REQUIRE(t4tablesize > 0);
 
 	for (i = 0; i < t4tablesize; i++) {
 		/* float */
@@ -729,13 +826,11 @@ ATF_TP_ADD_TCS(tp)
 	ATF_TP_ADD_TC(tp, test_pow1);
 	ATF_TP_ADD_TC(tp, test_pow2);
 	ATF_TP_ADD_TC(tp, test_pow3);
-#if 0
 	ATF_TP_ADD_TC(tp, test_pow41);
-        ATF_TP_ADD_TC(tp, test_pow42);
-        ATF_TP_ADD_TC(tp, test_pow43);
-        ATF_TP_ADD_TC(tp, test_pow44);
-        ATF_TP_ADD_TC(tp, test_pow45);
-#endif
+	ATF_TP_ADD_TC(tp, test_pow42);
+	ATF_TP_ADD_TC(tp, test_pow43);
+	ATF_TP_ADD_TC(tp, test_pow44);
+	ATF_TP_ADD_TC(tp, test_pow45);
 	ATF_TP_ADD_TC(tp, test_pow46);
 	ATF_TP_ADD_TC(tp, test_pow47);
 	ATF_TP_ADD_TC(tp, test_pow48);
