@@ -219,6 +219,38 @@ ATF_TC_HEAD(test_pow42, tc)
 }
 ATF_TC_BODY(test_pow42, tc)
 {
+	float fy;
+	double dy;
+	long double ldy;
+	long i, N;
+
+	N = get_config_var_as_long(tc, "iterations");
+	ATF_REQUIRE(N > 0);
+
+	ATF_FOR_LOOP(i, N, i++) {
+		/* float */
+		fy = random_float(FP_NORMAL);
+#ifdef  NAN
+		fy = rand() % 2 ? fy : NAN;
+#endif
+		ATF_CHECK(fpcmp_equalf(powf(1.0, fy), 1.0));
+
+		/* double */
+		dy = random_double(FP_NORMAL);
+#ifdef  NAN
+		dy = rand() % 2 ? dy : NAN;
+#endif
+		ATF_CHECK(fpcmp_equal(pow(1.0, dy), 1.0));
+
+		/* long double */
+#ifdef  HAVE_POWL
+		ldy = random_long_double(FP_NORMAL);
+#ifdef  NAN
+		ldy = rand() % 2 ? ldy : NAN;
+#endif
+		ATF_CHECK(fpcmp_equall(powl(1.0, ldy), 1.0));
+	}
+#endif  /* HAVE_POWL */
 }
 
 /* Test case 4-3 */
@@ -232,6 +264,41 @@ ATF_TC_HEAD(test_pow43, tc)
 }
 ATF_TC_BODY(test_pow43, tc)
 {
+	float fx;
+	double dx;
+	long double ldx;
+	long i, N;
+
+	N = get_config_var_as_long(tc, "iterations");
+	ATF_REQUIRE(N > 0);
+
+	ATF_FOR_LOOP(i, N, i++) {
+		/* float */
+		fx = random_float(FP_NORMAL);
+#ifdef	NAN
+		fx = rand() % 2 ? fx : NAN;
+#endif
+		ATF_CHECK(fpcmp_equalf(powf(fx,  0.0), 1.0));
+		ATF_CHECK(fpcmp_equalf(powf(fx, -0.0), 1.0));
+
+		/* double */
+		dx = random_double(FP_NORMAL);
+#ifdef  NAN
+		dx = rand() % 2 ? dx : NAN;
+#endif
+		ATF_CHECK(fpcmp_equal(pow(dx,  0.0), 1.0));
+		ATF_CHECK(fpcmp_equal(pow(dx, -0.0), 1.0));
+
+		/* long double */
+#ifdef	HAVE_POWL
+		ldx = random_long_double(FP_NORMAL);
+#ifdef  NAN
+		ldx = rand() % 2 ? ldx : NAN;
+#endif
+		ATF_CHECK(fpcmp_equal(powl(ldx,  0.0), 1.0));
+		ATF_CHECK(fpcmp_equal(powl(ldx, -0.0), 1.0));
+	}
+#endif	/* HAVE_POWL */
 }
 
 /* Test case 4-4 */
@@ -245,6 +312,33 @@ ATF_TC_HEAD(test_pow44, tc)
 }
 ATF_TC_BODY(test_pow44, tc)
 {
+	long i, N, y;
+	size_t j;
+
+	N = get_config_var_as_long(tc, "iterations");
+	ATF_REQUIRE(N > 0);
+
+	ATF_FOR_LOOP(i, N, i++) {
+		for (j = 0; j < t4tablesize; j++) {
+			do {
+				y = rand();
+			} while (y % 2 == 0);
+
+			/* float */
+			ATF_PASS_OR_BREAK(fpcmp_equalf(powf( 0.0, y),  0.0));
+			ATF_PASS_OR_BREAK(fpcmp_equalf(powf(-0.0, y), -0.0));
+
+			/* double */
+			ATF_PASS_OR_BREAK(fpcmp_equal(pow( 0.0, y),  0.0));
+			ATF_PASS_OR_BREAK(fpcmp_equal(pow(-0.0, y), -0.0));
+
+			/* long double */
+#ifdef  HAVE_POWL
+			ATF_PASS_OR_BREAK(fpcmp_equall(powl( 0.0, y),  0.0));
+			ATF_PASS_OR_BREAK(fpcmp_equall(powl(-0.0, y), -0.0));
+#endif
+		}
+	}
 }
 
 /* Test case 4-5 */
@@ -294,8 +388,8 @@ ATF_TC_BODY(test_pow45, tc)
 			} while (ldy <= 0.0 || (floorl(ldy) == ldy && ((long)ldy %  2)));
 			ATF_PASS_OR_BREAK(fpcmp_equall(
 				    powl( 0.0, ldy), 0.0));
-                        ATF_PASS_OR_BREAK(fpcmp_equall(
-                                    powl(-0.0, ldy), 0.0));
+			ATF_PASS_OR_BREAK(fpcmp_equall(
+				    powl(-0.0, ldy), 0.0));
 #endif
 		}
 	}
