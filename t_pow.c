@@ -12,7 +12,6 @@
 #include "subr_errhandling.h"
 #include "subr_fpcmp.h"
 #include "subr_random.h"
-
 #include "t_pow.h"
 
 /*
@@ -521,9 +520,49 @@ ATF_TC_BODY(test_pow47, tc)
 	}
 }
 
+/* Test case 4-8 */
+ATF_TC(test_pow48);
+ATF_TC_HEAD(test_pow48, tc)
+{
+	atf_tc_set_md_var(tc,
+	    "descr",
+	    "For y an odd integer > 0, if x is -Inf, -Inf shall be returned");
+}
+ATF_TC_BODY(test_pow48, tc)
+{
+	long i, N, y;
+	size_t j;
+
+	N = get_config_var_as_long(tc, "iterations");
+	ATF_REQUIRE(N > 0);
+
+	ATF_FOR_LOOP(i, N, i++) {
+		for (j = 0; j < t4tablesize; j++) {
+			do {
+				y = rand();
+			} while (y % 2 == 0);
+
+			/* float */
+			ATF_PASS_OR_BREAK(fpcmp_equalf(
+				    powf(-(float)t4table[j].x, y),
+					 -(float)t4table[j].x));
+
+			/* double */
+			ATF_PASS_OR_BREAK(fpcmp_equal(
+				    pow(-(double)t4table[j].x, y),
+					-(double)t4table[j].x));
+
+			/* long double */
+#ifdef  HAVE_POWL
+			ATF_PASS_OR_BREAK(fpcmp_equall(
+				    powl(t4table[j].x, y),
+					-t4table[j].x));
+#endif
+		}
+	}
+}
+
 /*
-	For y < 0 and not an odd integer, if x is -Inf, +0 shall be returned.
-	For y an odd integer > 0, if x is -Inf, -Inf shall be returned.
 	For y > 0 and not an odd integer, if x is -Inf, +Inf shall be returned.
 	For y < 0, if x is +Inf, +0 shall be returned.
 	For y > 0, if x is +Inf, +Inf shall be returned.
@@ -541,7 +580,8 @@ ATF_TP_ADD_TCS(tp)
 	ATF_TP_ADD_TC(tp, test_pow44);
 	ATF_TP_ADD_TC(tp, test_pow45);
 	ATF_TP_ADD_TC(tp, test_pow46);
-        ATF_TP_ADD_TC(tp, test_pow47);
+	ATF_TP_ADD_TC(tp, test_pow47);
+	ATF_TP_ADD_TC(tp, test_pow48);
 
 	return atf_no_error();
 }
