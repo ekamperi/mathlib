@@ -202,15 +202,15 @@ static const size_t t4tablesize =
 
 
 
-/* Test case 4-1 */
-ATF_TC(test_pow41);
-ATF_TC_HEAD(test_pow41, tc)
+/* Test case 4-6 */
+ATF_TC(test_pow46);
+ATF_TC_HEAD(test_pow46, tc)
 {
 	atf_tc_set_md_var(tc,
 	    "descr",
 	    "If x is -1, and y is +-Inf, 1.0 shall be returned");
 }
-ATF_TC_BODY(test_pow41, tc)
+ATF_TC_BODY(test_pow46, tc)
 {
 	size_t i;
 
@@ -234,15 +234,15 @@ ATF_TC_BODY(test_pow41, tc)
 	}
 }
 
-/* Test case 4-2 */
-ATF_TC(test_pow42);
-ATF_TC_HEAD(test_pow42, tc)
+/* Test case 4-7 */
+ATF_TC(test_pow47);
+ATF_TC_HEAD(test_pow47, tc)
 {
 	atf_tc_set_md_var(tc,
 	    "descr",
 	    "For |x| < 1, if y is -Inf, +Inf shall be returned");
 }
-ATF_TC_BODY(test_pow42, tc)
+ATF_TC_BODY(test_pow47, tc)
 {
 	float fx;
 	double dx;
@@ -284,15 +284,15 @@ ATF_TC_BODY(test_pow42, tc)
 	}
 }
 
-/* Test case 4-3 */
-ATF_TC(test_pow43);
-ATF_TC_HEAD(test_pow43, tc)
+/* Test case 4-8 */
+ATF_TC(test_pow48);
+ATF_TC_HEAD(test_pow48, tc)
 {
 	atf_tc_set_md_var(tc,
 	    "descr",
 	    "For |x| > 1, if y is -Inf, +0 shall be returned");
 }
-ATF_TC_BODY(test_pow43, tc)
+ATF_TC_BODY(test_pow48, tc)
 {
 	float fx;
 	double dx;
@@ -334,15 +334,15 @@ ATF_TC_BODY(test_pow43, tc)
 	}
 }
 
-/* Test case 4-4 */
-ATF_TC(test_pow44);
-ATF_TC_HEAD(test_pow44, tc)
+/* Test case 4-9 */
+ATF_TC(test_pow49);
+ATF_TC_HEAD(test_pow49, tc)
 {
 	atf_tc_set_md_var(tc,
 	    "descr",
 	    "For |x| < 1, if y is +Inf, +0 shall be returned");
 }
-ATF_TC_BODY(test_pow44, tc)
+ATF_TC_BODY(test_pow49, tc)
 {
 	float fx;
 	double dx;
@@ -384,16 +384,16 @@ ATF_TC_BODY(test_pow44, tc)
 	}
 }
 
-/* Test case 4-5 */
-ATF_TC(test_pow45);
-ATF_TC_HEAD(test_pow45, tc)
+/* Test case 4-10 */
+ATF_TC(test_pow410);
+ATF_TC_HEAD(test_pow410, tc)
 {
 	atf_tc_set_md_var(tc,
 	    "descr",
 	    "For |x| > 1, if y is +Inf, +Inf shall be returned");
 
 }
-ATF_TC_BODY(test_pow45, tc)
+ATF_TC_BODY(test_pow410, tc)
 {
 	float fx;
 	double dx;
@@ -435,15 +435,15 @@ ATF_TC_BODY(test_pow45, tc)
 	}
 }
 
-/* Test case 4-6 */
-ATF_TC(test_pow46);
-ATF_TC_HEAD(test_pow46, tc)
+/* Test case 4-11 */
+ATF_TC(test_pow411);
+ATF_TC_HEAD(test_pow411, tc)
 {
 	atf_tc_set_md_var(tc,
 	    "descr",
 	    "For y an odd integer < 0, if x is -Inf, -0 shall be returned");
 }
-ATF_TC_BODY(test_pow46, tc)
+ATF_TC_BODY(test_pow411, tc)
 {
 	long i, N, y;
 	size_t j;
@@ -478,16 +478,16 @@ ATF_TC_BODY(test_pow46, tc)
 	}
 }
 
-/* Test case 4-7 */
-ATF_TC(test_pow47);
-ATF_TC_HEAD(test_pow47, tc)
+/* Test case 4-12 */
+ATF_TC(test_pow412);
+ATF_TC_HEAD(test_pow412, tc)
 {
 	atf_tc_set_md_var(tc,
 	    "descr",
 	    "For y < 0 and not an odd integer, if x is -Inf, "
 	    "+0 shall be returned");
 }
-ATF_TC_BODY(test_pow47, tc)
+ATF_TC_BODY(test_pow412, tc)
 {
 	float fy;
 	double dy;
@@ -529,15 +529,15 @@ ATF_TC_BODY(test_pow47, tc)
 	}
 }
 
-/* Test case 4-8 */
-ATF_TC(test_pow48);
-ATF_TC_HEAD(test_pow48, tc)
+/* Test case 4-13 */
+ATF_TC(test_pow413);
+ATF_TC_HEAD(test_pow413, tc)
 {
 	atf_tc_set_md_var(tc,
 	    "descr",
 	    "For y an odd integer > 0, if x is -Inf, -Inf shall be returned");
 }
-ATF_TC_BODY(test_pow48, tc)
+ATF_TC_BODY(test_pow413, tc)
 {
 	long i, N, y;
 	size_t j;
@@ -571,16 +571,16 @@ ATF_TC_BODY(test_pow48, tc)
 	}
 }
 
-/* Test case 4-9 */
-ATF_TC(test_pow49);
-ATF_TC_HEAD(test_pow49, tc)
+/* Test case 4-14 */
+ATF_TC(test_pow414);
+ATF_TC_HEAD(test_pow414, tc)
 {
 	atf_tc_set_md_var(tc,
 	    "descr",
 	    "For y > 0 and not an odd integer, if x is -Inf, "
 	    "+Inf shall be returned");
 }
-ATF_TC_BODY(test_pow49, tc)
+ATF_TC_BODY(test_pow414, tc)
 {
 	float fy;
 	double dy;
@@ -622,15 +622,15 @@ ATF_TC_BODY(test_pow49, tc)
 	}
 }
 
-/* Test case 4-10 */
-ATF_TC(test_pow410);
-ATF_TC_HEAD(test_pow410, tc)
+/* Test case 4-15 */
+ATF_TC(test_pow415);
+ATF_TC_HEAD(test_pow415, tc)
 {
 	atf_tc_set_md_var(tc,
 	    "descr",
 	    "For y < 0, if x is +Inf, +0 shall be returned");
 }
-ATF_TC_BODY(test_pow410, tc)
+ATF_TC_BODY(test_pow415, tc)
 {
 	float fy;
 	double dy;
@@ -672,17 +672,15 @@ ATF_TC_BODY(test_pow410, tc)
 	}
 }
 
-
-/* Test case 4-11 */
-ATF_TC(test_pow411);
-ATF_TC_HEAD(test_pow411, tc)
+/* Test case 4-16 */
+ATF_TC(test_pow416);
+ATF_TC_HEAD(test_pow416, tc)
 {
 	atf_tc_set_md_var(tc,
 	    "descr",
 	    "For y > 0, if x is +Inf, +Inf shall be returned");
-
 }
-ATF_TC_BODY(test_pow411, tc)
+ATF_TC_BODY(test_pow416, tc)
 {
 	float fy;
 	double dy;
@@ -731,17 +729,24 @@ ATF_TP_ADD_TCS(tp)
 	ATF_TP_ADD_TC(tp, test_pow1);
 	ATF_TP_ADD_TC(tp, test_pow2);
 	ATF_TP_ADD_TC(tp, test_pow3);
+#if 0
 	ATF_TP_ADD_TC(tp, test_pow41);
-	ATF_TP_ADD_TC(tp, test_pow42);
-	ATF_TP_ADD_TC(tp, test_pow43);
-	ATF_TP_ADD_TC(tp, test_pow44);
-	ATF_TP_ADD_TC(tp, test_pow45);
+        ATF_TP_ADD_TC(tp, test_pow42);
+        ATF_TP_ADD_TC(tp, test_pow43);
+        ATF_TP_ADD_TC(tp, test_pow44);
+        ATF_TP_ADD_TC(tp, test_pow45);
+#endif
 	ATF_TP_ADD_TC(tp, test_pow46);
 	ATF_TP_ADD_TC(tp, test_pow47);
 	ATF_TP_ADD_TC(tp, test_pow48);
 	ATF_TP_ADD_TC(tp, test_pow49);
 	ATF_TP_ADD_TC(tp, test_pow410);
 	ATF_TP_ADD_TC(tp, test_pow411);
+	ATF_TP_ADD_TC(tp, test_pow412);
+	ATF_TP_ADD_TC(tp, test_pow413);
+	ATF_TP_ADD_TC(tp, test_pow414);
+	ATF_TP_ADD_TC(tp, test_pow415);
+	ATF_TP_ADD_TC(tp, test_pow416);
 
 	return atf_no_error();
 }
