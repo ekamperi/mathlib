@@ -18,10 +18,12 @@ all:    t_acos t_acosh t_asin t_asinh t_atan t_atan2 t_atanh t_cbrt t_ceil \
 obj:
 	@mkdir -p obj
 
+config.h:
+	@echo "Preparing to run autotools. This may take a while."
+	@autoreconf && ./configure
+
 # Use order-only prerequisite for obj/
-obj/%.o: %.c | obj
-	@test -f config.h || \
-	(echo "You should first run autoreconf && ./configure" && exit 1)
+obj/%.o: %.c | obj config.h
 	$(CC99) -c -o $@ $< $(CFLAGS)
 
 
@@ -336,9 +338,9 @@ run:
 
 .PHONY: run-html
 run-html:
-	@echo "*** This may take awhile, depending on the value of       ***"
+	@echo "*** This may take a while, depending on the value of      ***"
 	@echo "*** 'iterations' configuration variable, in your Atffile  ***"
-	@echo "*** and the speed of your computer                        ***"
+	@echo "*** and the speed of your computer.                       ***"
 	@echo
 	@rm -f tmp.xml tmp2.xml tmp3.xml
 	@rm -f tmp.html tmp2.html
