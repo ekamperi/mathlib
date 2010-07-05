@@ -246,9 +246,11 @@ gen_double(const char *fname, size_t total,
 			continue;
 		}
 
+                /* mpfr_fprintf(stderr, "-> %.35RNg\n", mp_exact); */
+
 		/* Extract exact value */
 		exact = mpfr_get_d(mp_exact, tonearest);
-		if (isinf(exact) || isnan(exact)) {
+		if (fpclassify(exact) != FP_NORMAL) {
 			i--;
 			continue;
 		}
@@ -304,9 +306,11 @@ gen_long_double(const char *fname, size_t total,
 			continue;
 		}
 
+		/* mpfr_fprintf(stderr, "-> %.35RNg\n", mp_exact); */
+
 		/* Extract exact value */
 		exact = mpfr_get_ld(mp_exact, tonearest);
-		if (isinf(exact) || isnan(exact)) {
+		if (fpclassify(exact) != FP_NORMAL) {
 			fprintf(stderr, "ERROR: exactl value overflowed\n");
 			i--;
 			continue;
