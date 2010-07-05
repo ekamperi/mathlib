@@ -496,7 +496,7 @@ ATF_TC_BODY(test_pow47, tc)
 				fy = random_float(FP_NORMAL);
 			} while (fy > 0.0 || (floorf(fy) == fy && ((long)fy %  2)));
 			ATF_PASS_OR_BREAK(fpcmp_equalf(
-				    powf(-(float)t4table[j].y, fy),
+				    powf(-(float)t4table[j].x, fy),
 					 0.0));
 
 			/* double */
@@ -504,7 +504,7 @@ ATF_TC_BODY(test_pow47, tc)
 				dy = random_double(FP_NORMAL);
 			} while (dy > 0.0 || (floor(dy) == dy && ((long)dy %  2)));
 			ATF_PASS_OR_BREAK(fpcmp_equal(
-				    pow(-(double)t4table[j].y, dy),
+				    pow(-(double)t4table[j].x, dy),
 					0.0));
 
 			/* long double */
@@ -513,7 +513,7 @@ ATF_TC_BODY(test_pow47, tc)
 				ldy = random_long_double(FP_NORMAL);
 			} while (ldy > 0.0 || (floorl(ldy) == ldy && ((long)ldy %  2)));
 			ATF_PASS_OR_BREAK(fpcmp_equall(
-				    powf(-t4table[j].y, ldy),
+				    powf(-t4table[j].x, ldy),
 					 0.0));
 #endif
 		}
@@ -604,7 +604,7 @@ ATF_TC_BODY(test_pow49, tc)
 #ifdef  HAVE_POWL
 			do {
 				ldy = random_long_double(FP_NORMAL);
-			} while (ldy > 0.0 || (floorl(ldy) == ldy && ((long)ldy %  2)));
+			} while (ldy <= 0.0 || (floorl(ldy) == ldy && ((long)ldy %  2)));
 			ATF_PASS_OR_BREAK(fpcmp_equall(
 				    powl(-t4table[j].x, ldy),
 					  t4table[j].x));
