@@ -4,30 +4,13 @@
 #include <errno.h>
 #include <float.h>	/* for DBL_MAX */
 #include <math.h>
-#include <time.h>
 
 #include "config.h"
 #include "subr_atf.h"
 #include "subr_errhandling.h"
 #include "subr_fpcmp.h"
 #include "subr_random.h"
-
-static const struct
-tentry {
-	double x;       /* Input */
-	double y;       /* tgamma() output */
-} ttable[] = {
-	{ 2.533333333333333E0, 1.361235032094808E0  },
-	{ 5.060779216362095E0, 2.631137787195338E1  },
-	{ 8.235382907247958E0, 8.129537123812583E3  },
-	{ 1.193333333333333E1, 3.392481203047053E7  },
-	{ 1.608307453166540E1, 1.642436513346779E12 },
-	{ 2.063632614803888E1, 8.137058099116109E17 },
-	{ 2.555764434627589E1, 3.716363528115563E24 },
-	{ 3.081956706423009E1, 1.432426052161009E32 },
-	{ 3.640000000000000E1, 4.318219406300267E40 },
-	{ 4.228066525535389E1, 9.527369014812556E49 }
-};
+#include "t_tgamma.h"
 
 /*
  * Test case 1 -- Basic functionality
@@ -43,9 +26,24 @@ ATF_TC_BODY(test_tgamma1, tc)
 {
 	size_t i, N;
 
-	N = sizeof(ttable) / sizeof(ttable[0]);
+	/* double */
+	N = sizeof(t1dtable) / sizeof(t1dtable[0]);
+	ATF_REQUIRE(N > 0);
 	for (i = 0; i < N; i++)
-		ATF_CHECK(fpcmp_equal(tgamma(ttable[i].x), ttable[i].y));
+		ATF_CHECK(fpcmp_equal(
+			    tgamma(t1dtable[i].x),
+				   t1dtable[i].y));
+
+
+	/* long double */
+#ifdef	HAVE_TGAMMAL
+	N = sizeof(t1ldtable) / sizeof(t1ldtable[0]);
+	ATF_REQUIRE(N > 0);
+	for (i = 0; i < N; i++)
+		ATF_CHECK(fpcmp_equall(
+			    tgammal(t1ldtable[i].x),
+				    t1ldtable[i].y));
+#endif
 }
 
 /*
@@ -72,7 +70,7 @@ ATF_TC_BODY(test_tgamma2, tc)
 	ATF_REQUIRE(haserrexcept || haserrno);
 
 	/* First for real numbers */
-	srand48(time(NULL));
+	init_randgen();
 
 	N = get_config_var_as_long(tc, "iterations");
 	ATF_REQUIRE(N > 0);
@@ -168,9 +166,9 @@ ATF_TC_BODY(test_tgamma4, tc)
 	float fy;
 	double dy;
 	long double ldy;
-        int haserrexcept;
+	int haserrexcept;
 	int haserrno;
-        int i;
+	int i;
 
 	for (i = 0; i < 2; i++ ) {
 		/* float */
