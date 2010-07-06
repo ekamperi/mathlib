@@ -39,7 +39,7 @@ ATF_TC_BODY(test_exp1, tc)
         N = sizeof(t1ldtable) / sizeof(t1ldtable[0]);
         ATF_REQUIRE(N > 0);
         for (i = 0; i < N; i++) {
-		ATF_CHECK(fpcmp_equal(
+		ATF_CHECK(fpcmp_equall(
 			    expl(t1ldtable[i].x),
 				 t1ldtable[i].y));
 	}
