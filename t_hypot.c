@@ -10,14 +10,7 @@
 #include "subr_errhandling.h"
 #include "subr_fpcmp.h"
 #include "subr_random.h"
-
-static const struct
-t1entry {
-	long double x;	/* Input */
-	long double y;	/* Input */
-	long double z;	/* hypot() output */
-} t1table[] = {
-};
+#include "t_hypot.h"
 
 /*
  * Test case 1 -- Basic functionality
@@ -34,18 +27,32 @@ ATF_TC_BODY(test_hypot1, tc)
 {
 	size_t i, N;
 
-	N = sizeof(t1table) / sizeof(t1table[0]);
-
+	/* double */
+	N = sizeof(t1dtable) / sizeof(t1dtable[0]);
+	ATF_REQUIRE(N > 0);
 	for (i = 0; i < N; i++) {
 		ATF_CHECK(fpcmp_equal(
-			    hypot(t1table[i].x, t1table[i].y), t1table[i].z));
+			    hypot(t1dtable[i].x, t1dtable[i].y),
+				  t1dtable[i].z));
 	}
+
+	/* long double */
+#ifdef	HAVE_HYPOTL
+	N = sizeof(t1ldtable) / sizeof(t1ldtable[0]);
+	ATF_REQUIRE(N > 0);
+	for (i = 0; i < N; i++) {
+		ATF_CHECK(fpcmp_equall(
+			    hypotl(t1ldtable[i].x, t1ldtable[i].y),
+				   t1ldtable[i].z));
+	}
+#endif
 }
 
 /*
  * Test case 2 -- Edge cases
  */
-struct t2entry {
+static const struct
+t2entry {
 	long double x;	/* Input */
 	long double y;	/* Input */
 	long double z;	/* hypot() output */
@@ -163,7 +170,7 @@ ATF_TC_BODY(test_hypot3, tc)
 	clear_exceptions();
 	(void)hypot(x, y);
 	ATF_CHECK(iserrno_equalto(0));
-	ATF_CHECK(!raised_exceptions(MY_FE_OVERFLOW));	/* XXX */
+	ATF_CHECK(not_raised_exceptions(MY_FE_OVERFLOW));
 
 	/* This should indeed overflow */
 	x = DBL_MAX;
@@ -201,7 +208,7 @@ ATF_TC_BODY(test_hypot4, tc)
 	clear_exceptions();
 	(void)hypot(x, y);
 	ATF_CHECK(iserrno_equalto(0));
-	ATF_CHECK(!raised_exceptions(MY_FE_UNDERFLOW));
+	ATF_CHECK(not_raised_exceptions(MY_FE_UNDERFLOW));
 }
 
 /*
