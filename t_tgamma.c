@@ -181,7 +181,7 @@ ATF_TC_BODY(test_tgamma4, tc)
 		ATF_CHECK(fy == HUGE_VALF);
 #endif
 		ATF_CHECK(iserrno_equalto(ERANGE));
-		ATF_CHECK(raised_exceptions(FE_DIVBYZERO));
+		ATF_CHECK(raised_exceptions(MY_FE_DIVBYZERO));
 
 		/* double */
 		errno = 0;
@@ -191,7 +191,7 @@ ATF_TC_BODY(test_tgamma4, tc)
 		ATF_CHECK(dy == HUGE_VAL);
 #endif
 		ATF_CHECK(iserrno_equalto(ERANGE));
-		ATF_CHECK(raised_exceptions(FE_DIVBYZERO));
+		ATF_CHECK(raised_exceptions(MY_FE_DIVBYZERO));
 
 		/* long double */
 #ifdef	HAVE_TGAMMAL
@@ -202,7 +202,7 @@ ATF_TC_BODY(test_tgamma4, tc)
 		ATF_CHECK(ldy == HUGE_VALL);
 #endif
 		ATF_CHECK(iserrno_equalto(ERANGE));
-		ATF_CHECK(raised_exceptions(FE_DIVBYZERO));
+		ATF_CHECK(raised_exceptions(MY_FE_DIVBYZERO));
 #endif	/* HAVE_TGAMMAL */
 	}
 
@@ -333,7 +333,7 @@ ATF_TC_BODY(test_tgamma6, tc)
 		clear_exceptions();
 		(void)tgamma(x);
 		ATF_PASS_OR_BREAK(iserrno_equalto(ERANGE));
-		ATF_PASS_OR_BREAK(raised_exceptions(FE_OVERFLOW));
+		ATF_PASS_OR_BREAK(raised_exceptions(MY_FE_OVERFLOW));
 	}
 }
 
