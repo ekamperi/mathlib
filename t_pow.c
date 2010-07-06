@@ -319,25 +319,23 @@ ATF_TC_BODY(test_pow44, tc)
 	ATF_REQUIRE(N > 0);
 
 	ATF_FOR_LOOP(i, N, i++) {
-		for (j = 0; j < t4tablesize; j++) {
-			do {
-				y = rand();
-			} while (y % 2 == 0);
+		do {
+			y = rand();
+		} while (y % 2 == 0);
 
-			/* float */
-			ATF_PASS_OR_BREAK(fpcmp_equalf(powf( 0.0, y),  0.0));
-			ATF_PASS_OR_BREAK(fpcmp_equalf(powf(-0.0, y), -0.0));
+		/* float */
+		ATF_PASS_OR_BREAK(fpcmp_equalf(powf( 0.0, y),  0.0));
+		ATF_PASS_OR_BREAK(fpcmp_equalf(powf(-0.0, y), -0.0));
 
-			/* double */
-			ATF_PASS_OR_BREAK(fpcmp_equal(pow( 0.0, y),  0.0));
-			ATF_PASS_OR_BREAK(fpcmp_equal(pow(-0.0, y), -0.0));
+		/* double */
+		ATF_PASS_OR_BREAK(fpcmp_equal(pow( 0.0, y),  0.0));
+		ATF_PASS_OR_BREAK(fpcmp_equal(pow(-0.0, y), -0.0));
 
-			/* long double */
+		/* long double */
 #ifdef  HAVE_POWL
-			ATF_PASS_OR_BREAK(fpcmp_equall(powl( 0.0, y),  0.0));
-			ATF_PASS_OR_BREAK(fpcmp_equall(powl(-0.0, y), -0.0));
+		ATF_PASS_OR_BREAK(fpcmp_equall(powl( 0.0, y),  0.0));
+		ATF_PASS_OR_BREAK(fpcmp_equall(powl(-0.0, y), -0.0));
 #endif
-		}
 	}
 }
 
