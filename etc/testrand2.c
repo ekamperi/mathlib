@@ -79,12 +79,12 @@ int
 main(void)
 {
 	struct stats s;
-	const size_t N = 100000;
+	const size_t N = 1*1000*1000;
 
 	/* floats */
 	probe_float(&s, N);
 	print_stats(&s);
-#if 0
+
 	/* double */
         probe_double(&s, N);
         print_stats(&s);
@@ -92,6 +92,6 @@ main(void)
 	/* long double */
         probe_long_double(&s, N);
         print_stats(&s);
-#endif
+
 	return 0;
 }
