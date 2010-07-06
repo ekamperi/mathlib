@@ -23,10 +23,6 @@ ATF_TC_BODY(test_cbrt1, tc)
 	N = sizeof(t1dtable) / sizeof(t1dtable[0]);
 	ATF_REQUIRE(N > 0);
 	for (i = 0; i < N; i++) {
-		/* Sanity check */
-		ATF_REQUIRE(t1dtable[i].x >= -1.0 && t1dtable[i].x <= 1.0);
-
-		/* Actual checks */
 		ATF_CHECK(fpcmp_equal(
 			    cbrt(t1dtable[i].x),
 				 t1dtable[i].y));
@@ -37,10 +33,6 @@ ATF_TC_BODY(test_cbrt1, tc)
 	N = sizeof(t1ldtable) / sizeof(t1ldtable[0]);
 	ATF_REQUIRE(N > 0);
         for (i = 0; i < N; i++) {
-                /* Sanity check */
-                ATF_REQUIRE(t1ldtable[i].x >= -1.0 && t1ldtable[i].x <= 1.0);
-
-                /* Actual checks */
                 ATF_CHECK(fpcmp_equall(
 			    cbrtl(t1ldtable[i].x),
 				  t1ldtable[i].y));
