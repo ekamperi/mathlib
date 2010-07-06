@@ -60,20 +60,20 @@ ATF_TC_BODY(test_signbit2, tc)
 		/* float */
 		fx = random_float(FP_NORMAL);
 		ATF_PASS_OR_BREAK(
-				  (fx >= 0.0 && !signbit(fx)) ||
-				  (fx <  0.0 &&  signbit(fx)));
+			(fx >= 0.0 && !signbit(fx)) ||
+			(fx <  0.0 &&  signbit(fx)));
 
 		/* double */
 		dx = random_double(FP_NORMAL);
 		ATF_PASS_OR_BREAK(
-				  (dx >= 0.0 && !signbit(dx)) ||
-				  (dx <  0.0 &&  signbit(dx)));
+			(dx >= 0.0 && !signbit(dx)) ||
+			(dx <  0.0 &&  signbit(dx)));
 
 		/* long double */
 		ldx = random_long_double(FP_NORMAL);
 		ATF_PASS_OR_BREAK(
-				  (ldx >= 0.0 && !signbit(ldx)) ||
-				  (ldx <  0.0 &&  signbit(ldx)));
+			(ldx >= 0.0 && !signbit(ldx)) ||
+			(ldx <  0.0 &&  signbit(ldx)));
 	}
 }
 
