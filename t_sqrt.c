@@ -7,13 +7,7 @@
 #include "subr_errhandling.h"
 #include "subr_fpcmp.h"
 #include "subr_random.h"
-
-static const struct
-tentry {
-	double x;       /* Input */
-	double y;       /* sqrt output */
-} ttable[] = {
-};
+#include "t_sqrt.h"
 
 /*
  * Test case 1 -- Basic functionality
@@ -29,14 +23,23 @@ ATF_TC_BODY(test_sqrt1, tc)
 {
 	size_t i, N;
 
-	N = sizeof(ttable) / sizeof(ttable[0]);
-	for (i = 0; i < N; i++) {
-		/* Sanity check */
-		ATF_REQUIRE(ttable[i].x >= 0.0);
+	/* double */
+	N = sizeof(t1dtable) / sizeof(t1dtable[0]);
+	ATF_REQUIRE(N > 0);
+	for (i = 0; i < N; i++)
+		ATF_CHECK(fpcmp_equal(
+			    sqrt(t1dtable[i].x),
+				 t1dtable[i].y));
 
-		/* Actual check */
-		ATF_CHECK(fpcmp_equal(sqrt(ttable[i].x), ttable[i].y));
-	}
+	/* long double */
+#ifdef	HAVE_SQRTL
+	N = sizeof(t1dtable) / sizeof(t1dtable[0]);
+	ATF_REQUIRE(N > 0);
+	for (i = 0; i < N; i++)
+		ATF_CHECK(fpcmp_equall(
+			    sqrtl(t1ldtable[i].x),
+				  t1ldtable[i].y));
+#endif
 }
 
 /*
