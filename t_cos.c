@@ -9,17 +9,11 @@
 #include "subr_errhandling.h"
 #include "subr_fpcmp.h"
 #include "subr_random.h"
+#include "t_cos.h"
 
 /*
  * Test case 1 -- Basic functionality
  */
-static const struct
-tentry {
-        long double x;       /* Input */
-        long double y;       /* cos output */
-} ttable[] = {
-};
-
 ATF_TC(test_cos1);
 ATF_TC_HEAD(test_cos1, tc)
 {
@@ -31,9 +25,22 @@ ATF_TC_BODY(test_cos1, tc)
 {
 	size_t i, N;
 
-	N = sizeof(ttable) / sizeof(ttable[0]);
+	/* double */
+	N = sizeof(t1dtable) / sizeof(t1dtable[0]);
 	for (i = 0; i < N; i++)
-		ATF_CHECK(fpcmp_equal(cos(ttable[i].x), ttable[i].y));
+		ATF_CHECK(fpcmp_equal(
+			    cos(t1dtable[i].x),
+				t1dtable[i].y));
+
+	/* long double */
+#ifdef  HAVE_COSL
+	N = sizeof(t1ldtable) / sizeof(t1ldtable[0]);
+	ATF_REQUIRE(N > 0);
+	for (i = 0; i < N; i++)
+		ATF_CHECK(fpcmp_equall(
+			    cosl(t1ldtable[i].x),
+				 t1ldtable[i].y));
+#endif
 }
 
 /*
@@ -164,8 +171,8 @@ ATF_TC_BODY(test_cos4, tc)
 		errno = 0;
 		clear_exceptions();
 		dy = cos((double)t4table[i]);
-                ATF_CHECK(iserrno_equalto(EDOM));
-                ATF_CHECK(raised_exceptions(MY_FE_INVALID));
+		ATF_CHECK(iserrno_equalto(EDOM));
+		ATF_CHECK(raised_exceptions(MY_FE_INVALID));
 		ATF_CHECK_IFNAN(dy);
 
 		/* long double */
