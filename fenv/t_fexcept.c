@@ -7,7 +7,7 @@
 #pragma STDC FENV_ACCESS ON
 
 /*
- * Test case 1 -- 
+ * Test case 1 --
  */
 ATF_TC(test_fenv1);
 ATF_TC_HEAD(test_fenv1, tc)
