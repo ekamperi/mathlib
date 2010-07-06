@@ -9,14 +9,7 @@
 #include "subr_errhandling.h"
 #include "subr_fpcmp.h"
 #include "subr_random.h"
-
-
-static const struct
-tentry {
-	long double x;       /* Input */
-	long double y;       /* log10() output */
-} ttable[] = {
-};
+#include "t_log10.h"
 
 /*
  * Test case 1 -- Basic functionality
@@ -31,10 +24,23 @@ ATF_TC_HEAD(test_log101, tc)
 ATF_TC_BODY(test_log101, tc)
 {
 	size_t i, N;
+        /* double */
+        N = sizeof(t1dtable) / sizeof(t1dtable[0]);
+        ATF_REQUIRE(N > 0);
+        for (i = 0; i < N; i++)
+		ATF_CHECK(fpcmp_equal(
+			    log10(t1dtable[i].x),
+				  t1dtable[i].y));
 
-	N = sizeof(ttable) / sizeof(ttable[0]);
-	for (i = 0; i < N; i++)
-		ATF_CHECK(fpcmp_equal(log10(ttable[i].x), ttable[i].y));
+        /* long double */
+#ifdef  HAVE_LOG10L
+        N = sizeof(t1ldtable) / sizeof(t1ldtable[0]);
+        ATF_REQUIRE(N > 0);
+        for (i = 0; i < N; i++)
+		ATF_CHECK(fpcmp_equall(
+			    log10l(t1ldtable[i].x),
+				   t1ldtable[i].y));
+#endif
 }
 
 /*
