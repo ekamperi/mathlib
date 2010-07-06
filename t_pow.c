@@ -171,27 +171,6 @@ ATF_TC_BODY(test_pow3, tc)
 /*******************************************************************************
  *				Test case(s) 4
  ******************************************************************************/
-static const struct
-t4entry {
-	long double x;
-	long double y;
-} t4table[] = {
-#ifdef  INFINITY
-	{  INFINITY,  INFINITY },
-#endif
-#ifdef  HUGE_VAL
-	{  HUGE_VAL,  HUGE_VAL },
-#endif
-#ifdef  HUGE_VALF
-	{  HUGE_VALF,  HUGE_VALF },
-#endif
-#ifdef  HUGE_VALL
-	{  HUGE_VALL,  HUGE_VALL },
-#endif
-};
-
-static const size_t t4tablesize =
-    sizeof(t4table) / sizeof(t4table[0]);
 
 /* Test case 4-1 */
 ATF_TC(test_pow41);
@@ -204,8 +183,6 @@ ATF_TC_HEAD(test_pow41, tc)
 }
 ATF_TC_BODY(test_pow41, tc)
 {
-	/* Only because it's the first test case to use it */
-	ATF_REQUIRE(t4tablesize > 0);
 }
 
 /* Test case 4-2 */
@@ -313,7 +290,6 @@ ATF_TC_HEAD(test_pow44, tc)
 ATF_TC_BODY(test_pow44, tc)
 {
 	long i, N, y;
-	size_t j;
 
 	N = get_config_var_as_long(tc, "iterations");
 	ATF_REQUIRE(N > 0);
@@ -354,7 +330,6 @@ ATF_TC_BODY(test_pow45, tc)
 	double dy;
 	long double ldy;
 	long i, N;
-	size_t j;
 
 	N = get_config_var_as_long(tc, "iterations");
 	ATF_REQUIRE(N > 0);
@@ -364,71 +339,93 @@ ATF_TC_BODY(test_pow45, tc)
 		do {
 			fy = random_float(FP_NORMAL);
 		} while (fy <= 0.0 || (floorf(fy) == fy && ((long)fy %  2)));
-		ATF_PASS_OR_BREAK(fpcmp_equalf(
-			    powf( 0.0, fy), 0.0));
-		ATF_PASS_OR_BREAK(fpcmp_equalf(
-			    powf(-0.0, fy), 0.0));
+		ATF_PASS_OR_BREAK(fpcmp_equalf(powf( 0.0, fy), 0.0));
+		ATF_PASS_OR_BREAK(fpcmp_equalf(powf(-0.0, fy), 0.0));
 
 		/* double */
 		do {
 			dy = random_double(FP_NORMAL);
 		} while (dy <= 0.0 || (floor(dy) == dy && ((long)dy %  2)));
-		ATF_PASS_OR_BREAK(fpcmp_equal(
-			    pow( 0.0, dy), 0.0));
-		ATF_PASS_OR_BREAK(fpcmp_equal(
-			    pow(-0.0, dy), 0.0));
+		ATF_PASS_OR_BREAK(fpcmp_equal(pow( 0.0, dy), 0.0));
+		ATF_PASS_OR_BREAK(fpcmp_equal(pow(-0.0, dy), 0.0));
 
 		/* long double */
 #ifdef  HAVE_POWL
 		do {
 			ldy = random_long_double(FP_NORMAL);
-		} while (ldy <= 0.0 || (floorl(ldy) == ldy && ((long)ldy %  2)));
-		ATF_PASS_OR_BREAK(fpcmp_equall(
-				    powl( 0.0, ldy), 0.0));
-		ATF_PASS_OR_BREAK(fpcmp_equall(
-			    powl(-0.0, ldy), 0.0));
+		} while (ldy <= 0.0 ||  (floorl(ldy) == ldy && ((long)ldy %  2)));
+		ATF_PASS_OR_BREAK(fpcmp_equall(powl( 0.0, ldy), 0.0));
+		ATF_PASS_OR_BREAK(fpcmp_equall(powl(-0.0, ldy), 0.0));
 #endif
 	}
 }
 
-/* Test case 4-6 */
-ATF_TC(test_pow46);
-ATF_TC_HEAD(test_pow46, tc)
+/*******************************************************************************
+ *                              Test case(s) 5
+ ******************************************************************************/
+static const struct
+t5entry {
+	long double x;
+	long double y;
+} t5table[] = {
+#ifdef  INFINITY
+	{  INFINITY,  INFINITY },
+#endif
+#ifdef  HUGE_VAL
+	{  HUGE_VAL,  HUGE_VAL },
+#endif
+#ifdef  HUGE_VALF
+	{  HUGE_VALF,  HUGE_VALF },
+#endif
+#ifdef  HUGE_VALL
+	{  HUGE_VALL,  HUGE_VALL },
+#endif
+};
+
+static const size_t t5tablesize =
+    sizeof(t5table) / sizeof(t5table[0]);
+
+/* Test case 5-1 */
+ATF_TC(test_pow51);
+ATF_TC_HEAD(test_pow51, tc)
 {
 	atf_tc_set_md_var(tc,
 	    "descr",
 	    "If x is -1, and y is +-Inf, 1.0 shall be returned");
 }
-ATF_TC_BODY(test_pow46, tc)
+ATF_TC_BODY(test_pow51, tc)
 {
 	size_t i;
 
-	for (i = 0; i < t4tablesize; i++) {
+        /* Only because it's the first test case to use it */
+        ATF_REQUIRE(t5tablesize > 0);
+
+	for (i = 0; i < t5tablesize; i++) {
 		/* float */
-		ATF_CHECK(powf(-1.0,  (float)t4table[i].y) == 1.0);
-		ATF_CHECK(powf(-1.0, -(float)t4table[i].y) == 1.0);
+		ATF_CHECK(powf(-1.0,  (float)t5table[i].y) == 1.0);
+		ATF_CHECK(powf(-1.0, -(float)t5table[i].y) == 1.0);
 
 		/* double */
-		ATF_CHECK(pow(-1.0,  (double)t4table[i].y) == 1.0);
-		ATF_CHECK(pow(-1.0, -(double)t4table[i].y) == 1.0);
+		ATF_CHECK(pow(-1.0,  (double)t5table[i].y) == 1.0);
+		ATF_CHECK(pow(-1.0, -(double)t5table[i].y) == 1.0);
 
 		/* long double */
 #ifdef	HAVE_POWL
-		ATF_CHECK(powl(-1.0,  t4table[i].y) == 1.0);
-		ATF_CHECK(powl(-1.0, -t4table[i].y) == 1.0);
+		ATF_CHECK(powl(-1.0,  t5table[i].y) == 1.0);
+		ATF_CHECK(powl(-1.0, -t5table[i].y) == 1.0);
 #endif
 	}
 }
 
-/* Test case 4-7 */
-ATF_TC(test_pow47);
-ATF_TC_HEAD(test_pow47, tc)
+/* Test case 5-2 */
+ATF_TC(test_pow52);
+ATF_TC_HEAD(test_pow52, tc)
 {
 	atf_tc_set_md_var(tc,
 	    "descr",
 	    "For |x| < 1, if y is -Inf, +Inf shall be returned");
 }
-ATF_TC_BODY(test_pow47, tc)
+ATF_TC_BODY(test_pow52, tc)
 {
 	float fx;
 	double dx;
@@ -440,22 +437,22 @@ ATF_TC_BODY(test_pow47, tc)
 	ATF_REQUIRE(N > 0);
 
 	ATF_FOR_LOOP(i, N, i++) {
-		for (j = 0; j < t4tablesize; j++) {
+		for (j = 0; j < t5tablesize; j++) {
 			/* float */
 			do {
 				fx = random_float(FP_NORMAL);
 			} while (fx <= -1.0 || fx >= 1.0);
 			ATF_PASS_OR_BREAK(fpcmp_equalf(
-				    powf(fx, -(float)t4table[j].y),
-					      (float)t4table[j].y));
+				    powf(fx, -(float)t5table[j].y),
+					      (float)t5table[j].y));
 
 			/* double */
 			do {
 				dx = random_long_double(FP_NORMAL);
 			} while (dx <= -1.0 || dx >= 1.0);
 			ATF_PASS_OR_BREAK(fpcmp_equal(
-				    pow(dx, -(double)t4table[j].y),
-					     (double)t4table[j].y));
+				    pow(dx, -(double)t5table[j].y),
+					     (double)t5table[j].y));
 
 			/* long double */
 #ifdef	HAVE_POWL
@@ -463,22 +460,22 @@ ATF_TC_BODY(test_pow47, tc)
 				ldx = random_long_double(FP_NORMAL);
 			} while (ldx <= -1.0 || ldx >= 1.0);
 			ATF_PASS_OR_BREAK(fpcmp_equall(
-				    powl(ldx, -t4table[j].y),
-					       t4table[j].y));
+				    powl(ldx, -t5table[j].y),
+					       t5table[j].y));
 #endif
 		}
 	}
 }
 
-/* Test case 4-8 */
-ATF_TC(test_pow48);
-ATF_TC_HEAD(test_pow48, tc)
+/* Test case 5-3 */
+ATF_TC(test_pow53);
+ATF_TC_HEAD(test_pow53, tc)
 {
 	atf_tc_set_md_var(tc,
 	    "descr",
 	    "For |x| > 1, if y is -Inf, +0 shall be returned");
 }
-ATF_TC_BODY(test_pow48, tc)
+ATF_TC_BODY(test_pow53, tc)
 {
 	float fx;
 	double dx;
@@ -490,13 +487,13 @@ ATF_TC_BODY(test_pow48, tc)
 	ATF_REQUIRE(N > 0);
 
 	ATF_FOR_LOOP(i, N, i++) {
-		for (j = 0; j < t4tablesize; j++) {
+		for (j = 0; j < t5tablesize; j++) {
 			/* float */
 			do {
 				fx = random_float(FP_NORMAL);
 			} while (-1.0 <= fx && fx <= 1.0);
 			ATF_PASS_OR_BREAK(fpcmp_equalf(
-				    powf(fx, -(float)t4table[j].y),
+				    powf(fx, -(float)t5table[j].y),
 				    0.0));
 
 			/* double */
@@ -504,7 +501,7 @@ ATF_TC_BODY(test_pow48, tc)
 				dx = random_double(FP_NORMAL);
 			} while (-1.0 <= dx && dx <= 1.0);
 			ATF_PASS_OR_BREAK(fpcmp_equal(
-				    pow(dx, -(double)t4table[j].y),
+				    pow(dx, -(double)t5table[j].y),
 				    0.0));
 
 			/* long double */
@@ -513,22 +510,22 @@ ATF_TC_BODY(test_pow48, tc)
 				ldx = random_long_double(FP_NORMAL);
 			} while (-1.0 <= ldx && ldx <= 1.0);
 			ATF_PASS_OR_BREAK(fpcmp_equall(
-				    powl(ldx, -t4table[j].y),
+				    powl(ldx, -t5table[j].y),
 				    0.0));
 #endif
 		}
 	}
 }
 
-/* Test case 4-9 */
-ATF_TC(test_pow49);
-ATF_TC_HEAD(test_pow49, tc)
+/* Test case 5-4 */
+ATF_TC(test_pow54);
+ATF_TC_HEAD(test_pow54, tc)
 {
 	atf_tc_set_md_var(tc,
 	    "descr",
 	    "For |x| < 1, if y is +Inf, +0 shall be returned");
 }
-ATF_TC_BODY(test_pow49, tc)
+ATF_TC_BODY(test_pow54, tc)
 {
 	float fx;
 	double dx;
@@ -540,13 +537,13 @@ ATF_TC_BODY(test_pow49, tc)
 	ATF_REQUIRE(N > 0);
 
 	ATF_FOR_LOOP(i, N, i++) {
-		for (j = 0; j < t4tablesize; j++) {
+		for (j = 0; j < t5tablesize; j++) {
 			/* float */
 			do {
 				fx = random_float(FP_NORMAL);
 			} while (fx <= -1.0 || fx >= 1.0);
 			ATF_PASS_OR_BREAK(fpcmp_equalf(
-				    powf(fx, (float)t4table[j].y),
+				    powf(fx, (float)t5table[j].y),
 				    0.0));
 
 			/* double */
@@ -554,7 +551,7 @@ ATF_TC_BODY(test_pow49, tc)
 				dx = random_long_double(FP_NORMAL);
 			} while (dx <= -1.0 || dx >= 1.0);
 			ATF_PASS_OR_BREAK(fpcmp_equal(
-				    pow(dx, (double)t4table[j].y),
+				    pow(dx, (double)t5table[j].y),
 				    0.0));
 
 			/* long double */
@@ -563,23 +560,23 @@ ATF_TC_BODY(test_pow49, tc)
 				ldx = random_long_double(FP_NORMAL);
 			} while (ldx <= -1.0 || ldx >= 1.0);
 			ATF_PASS_OR_BREAK(fpcmp_equall(
-				    powl(ldx, t4table[j].y),
+				    powl(ldx, t5table[j].y),
 				    0.0));
 #endif
 		}
 	}
 }
 
-/* Test case 4-10 */
-ATF_TC(test_pow410);
-ATF_TC_HEAD(test_pow410, tc)
+/* Test case 5-5 */
+ATF_TC(test_pow55);
+ATF_TC_HEAD(test_pow55, tc)
 {
 	atf_tc_set_md_var(tc,
 	    "descr",
 	    "For |x| > 1, if y is +Inf, +Inf shall be returned");
 
 }
-ATF_TC_BODY(test_pow410, tc)
+ATF_TC_BODY(test_pow55, tc)
 {
 	float fx;
 	double dx;
@@ -591,22 +588,22 @@ ATF_TC_BODY(test_pow410, tc)
 	ATF_REQUIRE(N > 0);
 
 	ATF_FOR_LOOP(i, N, i++) {
-		for (j = 0; j < t4tablesize; j++) {
+		for (j = 0; j < t5tablesize; j++) {
 			/* float */
 			do {
 				fx = random_float(FP_NORMAL);
 			} while (-1.0 <= fx && fx <= 1.0);
 			ATF_PASS_OR_BREAK(fpcmp_equalf(
-				    powf(fx, (float)t4table[j].y),
-					     (float)t4table[j].y));
+				    powf(fx, (float)t5table[j].y),
+					     (float)t5table[j].y));
 
 			/* double */
 			do {
 				dx = random_double(FP_NORMAL);
 			} while (-1.0 <= dx && dx <= 1.0);
 			ATF_PASS_OR_BREAK(fpcmp_equal(
-				    pow(dx, (double)t4table[j].y),
-					    (double)t4table[j].y));
+				    pow(dx, (double)t5table[j].y),
+					    (double)t5table[j].y));
 
 			/* long double */
 #ifdef  HAVE_POWL
@@ -614,22 +611,22 @@ ATF_TC_BODY(test_pow410, tc)
 				ldx = random_long_double(FP_NORMAL);
 			} while (-1.0 <= ldx && ldx <= 1.0);
 			ATF_PASS_OR_BREAK(fpcmp_equall(
-				    powl(ldx, t4table[j].y),
-					      t4table[j].y));
+				    powl(ldx, t5table[j].y),
+					      t5table[j].y));
 #endif
 		}
 	}
 }
 
-/* Test case 4-11 */
-ATF_TC(test_pow411);
-ATF_TC_HEAD(test_pow411, tc)
+/* Test case 5-6 */
+ATF_TC(test_pow56);
+ATF_TC_HEAD(test_pow56, tc)
 {
 	atf_tc_set_md_var(tc,
 	    "descr",
 	    "For y an odd integer < 0, if x is -Inf, -0 shall be returned");
 }
-ATF_TC_BODY(test_pow411, tc)
+ATF_TC_BODY(test_pow56, tc)
 {
 	long i, N, y;
 	size_t j;
@@ -638,7 +635,7 @@ ATF_TC_BODY(test_pow411, tc)
 	ATF_REQUIRE(N > 0);
 
 	ATF_FOR_LOOP(i, N, i++) {
-		for (j = 0; j < t4tablesize; j++) {
+		for (j = 0; j < t5tablesize; j++) {
 			do {
 				y = rand();
 			} while (y % 2 == 0);
@@ -646,34 +643,34 @@ ATF_TC_BODY(test_pow411, tc)
 
 			/* float */
 			ATF_PASS_OR_BREAK(fpcmp_equalf(
-				    powf(-(float)t4table[j].x, y),
+				    powf(-(float)t5table[j].x, y),
 					-0.0));
 
 			/* double */
 			ATF_PASS_OR_BREAK(fpcmp_equal(
-				    pow(-(double)t4table[j].x, y),
+				    pow(-(double)t5table[j].x, y),
 					-0.0));
 
 			/* long double */
 #ifdef  HAVE_POWL
 			ATF_PASS_OR_BREAK(fpcmp_equall(
-				    powl(t4table[j].x, y),
+				    powl(t5table[j].x, y),
 					-0.0));
 #endif
 		}
 	}
 }
 
-/* Test case 4-12 */
-ATF_TC(test_pow412);
-ATF_TC_HEAD(test_pow412, tc)
+/* Test case 5-7 */
+ATF_TC(test_pow57);
+ATF_TC_HEAD(test_pow57, tc)
 {
 	atf_tc_set_md_var(tc,
 	    "descr",
 	    "For y < 0 and not an odd integer, if x is -Inf, "
 	    "+0 shall be returned");
 }
-ATF_TC_BODY(test_pow412, tc)
+ATF_TC_BODY(test_pow57, tc)
 {
 	float fy;
 	double dy;
@@ -685,13 +682,13 @@ ATF_TC_BODY(test_pow412, tc)
 	ATF_REQUIRE(N > 0);
 
 	ATF_FOR_LOOP(i, N, i++) {
-		for (j = 0; j < t4tablesize; j++) {
+		for (j = 0; j < t5tablesize; j++) {
 			/* float */
 			do {
 				fy = random_float(FP_NORMAL);
 			} while (fy > 0.0 || (floorf(fy) == fy && ((long)fy %  2)));
 			ATF_PASS_OR_BREAK(fpcmp_equalf(
-				    powf(-(float)t4table[j].x, fy),
+				    powf(-(float)t5table[j].x, fy),
 					 0.0));
 
 			/* double */
@@ -699,7 +696,7 @@ ATF_TC_BODY(test_pow412, tc)
 				dy = random_double(FP_NORMAL);
 			} while (dy > 0.0 || (floor(dy) == dy && ((long)dy %  2)));
 			ATF_PASS_OR_BREAK(fpcmp_equal(
-				    pow(-(double)t4table[j].x, dy),
+				    pow(-(double)t5table[j].x, dy),
 					0.0));
 
 			/* long double */
@@ -708,22 +705,22 @@ ATF_TC_BODY(test_pow412, tc)
 				ldy = random_long_double(FP_NORMAL);
 			} while (ldy > 0.0 || (floorl(ldy) == ldy && ((long)ldy %  2)));
 			ATF_PASS_OR_BREAK(fpcmp_equall(
-				    powf(-t4table[j].x, ldy),
+				    powf(-t5table[j].x, ldy),
 					 0.0));
 #endif
 		}
 	}
 }
 
-/* Test case 4-13 */
-ATF_TC(test_pow413);
-ATF_TC_HEAD(test_pow413, tc)
+/* Test case 5-8 */
+ATF_TC(test_pow58);
+ATF_TC_HEAD(test_pow58, tc)
 {
 	atf_tc_set_md_var(tc,
 	    "descr",
 	    "For y an odd integer > 0, if x is -Inf, -Inf shall be returned");
 }
-ATF_TC_BODY(test_pow413, tc)
+ATF_TC_BODY(test_pow58, tc)
 {
 	long i, N, y;
 	size_t j;
@@ -732,41 +729,41 @@ ATF_TC_BODY(test_pow413, tc)
 	ATF_REQUIRE(N > 0);
 
 	ATF_FOR_LOOP(i, N, i++) {
-		for (j = 0; j < t4tablesize; j++) {
+		for (j = 0; j < t5tablesize; j++) {
 			do {
 				y = rand();
 			} while (y % 2 == 0);
 
 			/* float */
 			ATF_PASS_OR_BREAK(fpcmp_equalf(
-				    powf(-(float)t4table[j].x, y),
-					 -(float)t4table[j].x));
+				    powf(-(float)t5table[j].x, y),
+					 -(float)t5table[j].x));
 
 			/* double */
 			ATF_PASS_OR_BREAK(fpcmp_equal(
-				    pow(-(double)t4table[j].x, y),
-					-(double)t4table[j].x));
+				    pow(-(double)t5table[j].x, y),
+					-(double)t5table[j].x));
 
 			/* long double */
 #ifdef  HAVE_POWL
 			ATF_PASS_OR_BREAK(fpcmp_equall(
-				    powl(-t4table[j].x, y),
-					 -t4table[j].x));
+				    powl(-t5table[j].x, y),
+					 -t5table[j].x));
 #endif
 		}
 	}
 }
 
-/* Test case 4-14 */
-ATF_TC(test_pow414);
-ATF_TC_HEAD(test_pow414, tc)
+/* Test case 5-9 */
+ATF_TC(test_pow59);
+ATF_TC_HEAD(test_pow59, tc)
 {
 	atf_tc_set_md_var(tc,
 	    "descr",
 	    "For y > 0 and not an odd integer, if x is -Inf, "
 	    "+Inf shall be returned");
 }
-ATF_TC_BODY(test_pow414, tc)
+ATF_TC_BODY(test_pow59, tc)
 {
 	float fy;
 	double dy;
@@ -778,22 +775,22 @@ ATF_TC_BODY(test_pow414, tc)
 	ATF_REQUIRE(N > 0);
 
 	ATF_FOR_LOOP(i, N, i++) {
-		for (j = 0; j < t4tablesize; j++) {
+		for (j = 0; j < t5tablesize; j++) {
 			/* float */
 			do {
 				fy = random_float(FP_NORMAL);
 			} while (fy <= 0.0 || (floorf(fy) == fy && ((long)fy %  2)));
 			ATF_PASS_OR_BREAK(fpcmp_equalf(
-				    powf(-(float)t4table[j].x, fy),
-					  (float)t4table[j].x));
+				    powf(-(float)t5table[j].x, fy),
+					  (float)t5table[j].x));
 
 			/* double */
 			do {
 				dy = random_double(FP_NORMAL);
 			} while (dy <= 0.0 || (floor(dy) == dy && ((long)dy %  2)));
 			ATF_PASS_OR_BREAK(fpcmp_equal(
-				    pow(-(double)t4table[j].x, dy),
-					 (double)t4table[j].x));
+				    pow(-(double)t5table[j].x, dy),
+					 (double)t5table[j].x));
 
 			/* long double */
 #ifdef  HAVE_POWL
@@ -801,22 +798,22 @@ ATF_TC_BODY(test_pow414, tc)
 				ldy = random_long_double(FP_NORMAL);
 			} while (ldy <= 0.0 || (floorl(ldy) == ldy && ((long)ldy %  2)));
 			ATF_PASS_OR_BREAK(fpcmp_equall(
-				    powl(-t4table[j].x, ldy),
-					  t4table[j].x));
+				    powl(-t5table[j].x, ldy),
+					  t5table[j].x));
 #endif
 		}
 	}
 }
 
-/* Test case 4-15 */
-ATF_TC(test_pow415);
-ATF_TC_HEAD(test_pow415, tc)
+/* Test case 5-10 */
+ATF_TC(test_pow510);
+ATF_TC_HEAD(test_pow510, tc)
 {
 	atf_tc_set_md_var(tc,
 	    "descr",
 	    "For y < 0, if x is +Inf, +0 shall be returned");
 }
-ATF_TC_BODY(test_pow415, tc)
+ATF_TC_BODY(test_pow510, tc)
 {
 	float fy;
 	double dy;
@@ -828,13 +825,13 @@ ATF_TC_BODY(test_pow415, tc)
 	ATF_REQUIRE(N > 0);
 
 	ATF_FOR_LOOP(i, N, i++) {
-		for (j = 0; j < t4tablesize; j++) {
+		for (j = 0; j < t5tablesize; j++) {
 			/* float */
 			do {
 				fy = random_float(FP_NORMAL);
 			} while (fy >= 0.0);
 			ATF_PASS_OR_BREAK(fpcmp_equalf(
-				    powf((float)t4table[j].x, fy),
+				    powf((float)t5table[j].x, fy),
 					 0.0));
 
 			/* double */
@@ -842,7 +839,7 @@ ATF_TC_BODY(test_pow415, tc)
 				dy = random_double(FP_NORMAL);
 			} while (dy >= 0.0);
 			ATF_PASS_OR_BREAK(fpcmp_equal(
-				    pow((double)t4table[j].x, dy),
+				    pow((double)t5table[j].x, dy),
 					0.0));
 
 			/* long double */
@@ -851,22 +848,22 @@ ATF_TC_BODY(test_pow415, tc)
 				ldy = random_double(FP_NORMAL);
 			} while (ldy >= 0.0);
 			ATF_PASS_OR_BREAK(fpcmp_equall(
-				    powl(t4table[j].x, ldy),
+				    powl(t5table[j].x, ldy),
 					 0.0));
 #endif
 		}
 	}
 }
 
-/* Test case 4-16 */
-ATF_TC(test_pow416);
-ATF_TC_HEAD(test_pow416, tc)
+/* Test case 5-11 */
+ATF_TC(test_pow511);
+ATF_TC_HEAD(test_pow511, tc)
 {
 	atf_tc_set_md_var(tc,
 	    "descr",
 	    "For y > 0, if x is +Inf, +Inf shall be returned");
 }
-ATF_TC_BODY(test_pow416, tc)
+ATF_TC_BODY(test_pow511, tc)
 {
 	float fy;
 	double dy;
@@ -878,22 +875,22 @@ ATF_TC_BODY(test_pow416, tc)
 	ATF_REQUIRE(N > 0);
 
 	ATF_FOR_LOOP(i, N, i++) {
-		for (j = 0; j < t4tablesize; j++) {
+		for (j = 0; j < t5tablesize; j++) {
 			/* float */
 			do {
 				fy = random_float(FP_NORMAL);
 			} while (fy <= 0.0);
 			ATF_PASS_OR_BREAK(fpcmp_equalf(
-				    powf((float)t4table[j].x, fy),
-					 (float)t4table[j].x));
+				    powf((float)t5table[j].x, fy),
+					 (float)t5table[j].x));
 
 			/* double */
 			do {
 				dy = random_double(FP_NORMAL);
 			} while (dy <= 0.0);
 			ATF_PASS_OR_BREAK(fpcmp_equal(
-				    pow((double)t4table[j].x, dy),
-					(double)t4table[j].x));
+				    pow((double)t5table[j].x, dy),
+					(double)t5table[j].x));
 
 			/* long double */
 #ifdef  HAVE_POWL
@@ -901,8 +898,8 @@ ATF_TC_BODY(test_pow416, tc)
 				ldy = random_double(FP_NORMAL);
 			} while (ldy <= 0.0);
 			ATF_PASS_OR_BREAK(fpcmp_equall(
-				    powl(t4table[j].x, ldy),
-					 t4table[j].x));
+				    powl(t5table[j].x, ldy),
+					 t5table[j].x));
 #endif
 		}
 	}
@@ -920,17 +917,17 @@ ATF_TP_ADD_TCS(tp)
 	ATF_TP_ADD_TC(tp, test_pow43);
 	ATF_TP_ADD_TC(tp, test_pow44);
 	ATF_TP_ADD_TC(tp, test_pow45);
-	ATF_TP_ADD_TC(tp, test_pow46);
-	ATF_TP_ADD_TC(tp, test_pow47);
-	ATF_TP_ADD_TC(tp, test_pow48);
-	ATF_TP_ADD_TC(tp, test_pow49);
-	ATF_TP_ADD_TC(tp, test_pow410);
-	ATF_TP_ADD_TC(tp, test_pow411);
-	ATF_TP_ADD_TC(tp, test_pow412);
-	ATF_TP_ADD_TC(tp, test_pow413);
-	ATF_TP_ADD_TC(tp, test_pow414);
-	ATF_TP_ADD_TC(tp, test_pow415);
-	ATF_TP_ADD_TC(tp, test_pow416);
+	ATF_TP_ADD_TC(tp, test_pow51);
+	ATF_TP_ADD_TC(tp, test_pow52);
+	ATF_TP_ADD_TC(tp, test_pow53);
+	ATF_TP_ADD_TC(tp, test_pow54);
+	ATF_TP_ADD_TC(tp, test_pow55);
+	ATF_TP_ADD_TC(tp, test_pow56);
+	ATF_TP_ADD_TC(tp, test_pow57);
+	ATF_TP_ADD_TC(tp, test_pow58);
+	ATF_TP_ADD_TC(tp, test_pow59);
+	ATF_TP_ADD_TC(tp, test_pow510);
+	ATF_TP_ADD_TC(tp, test_pow511);
 
 	return atf_no_error();
 }
