@@ -274,8 +274,8 @@ ATF_TC_BODY(test_pow43, tc)
 #endif
 		ATF_CHECK(fpcmp_equal(powl(ldx,  0.0), 1.0));
 		ATF_CHECK(fpcmp_equal(powl(ldx, -0.0), 1.0));
-	}
 #endif	/* HAVE_POWL */
+	}
 }
 
 /* Test case 4-4 */
