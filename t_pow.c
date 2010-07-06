@@ -705,8 +705,8 @@ ATF_TC_BODY(test_pow57, tc)
 				ldy = random_long_double(FP_NORMAL);
 			} while (ldy > 0.0 || (floorl(ldy) == ldy && ((long)ldy %  2)));
 			ATF_PASS_OR_BREAK(fpcmp_equall(
-				    powf(-t5table[j].x, ldy),
-					 0.0));
+				    powl(-t5table[j].x, ldy),
+				         0.0));
 #endif
 		}
 	}
