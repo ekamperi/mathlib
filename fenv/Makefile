@@ -1,10 +1,12 @@
 CC99=gcc -std=c99
+CPP=g++
 INCLUDE=-I../include -I/usr/opt/include -L/usr/opt/lib
 CFLAGS=-Wall -W -Wformat-nonliteral -Wcast-align -Wpointer-arith 		\
 	-Wbad-function-cast -Wmissing-prototypes -Wstrict-prototypes 		\
 	-Wmissing-declarations -Winline -Wundef -Wnested-externs -Wcast-qual	\
 	-Wshadow -Wwrite-strings -Wno-unused-parameter				\
 	-Wswitch -Wbad-function-cast -g $(INCLUDE)
+CPPFLAGS=-Wall -W -g $(INCLUDE)
 LIBS=-lm -latf-c
 
 # For ../subr_*.c
@@ -14,9 +16,19 @@ obj/%.o: %.c
 	mkdir -p obj
 	$(CC99) -c -o $@ $< $(CFLAGS)
 
+obj/%o: %cpp
+	mkdir -p obj
+	$(CPP) -c -o $@ $< $(CPPFLAGS)
+
 .PHONY: all
-all:	t_feclearexcept t_fegetround t_fegetexceptflag t_fenv t_feraiseexcept \
-	t_fesetenv t_fesetexceptflag
+all:	t_extern t_feclearexcept t_fegetround t_fegetexceptflag t_fenv 		\
+	t_feraiseexcept t_fesetenv t_fesetexceptflag
+
+
+_DEPS_T_EXTERN = t_extern.o
+ DEPS_T_EXTERN = $(_DEPS_T_EXTERN:%=obj/%)
+t_extern: $(DEPS_T_EXTERN)
+	$(CPP) -o t_extern $(DEPS_T_EXTERN) $(CPPFLAGS) -latf-c++ -latf-c
 
 
 _DEPS_T_FECLEAREXCEPT = t_feclearexcept.o
