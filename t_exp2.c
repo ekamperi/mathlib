@@ -9,17 +9,11 @@
 #include "subr_errhandling.h"
 #include "subr_fpcmp.h"
 #include "subr_random.h"
+#include "t_exp2.h"
 
 /*
  * Test case 1 -- Basic functionality
  */
-static const struct
-t1entry {
-	long double x;       /* Input */
-	long double y;       /* exp2 output */
-} t1table[] = {
-};
-
 ATF_TC(test_exp21);
 ATF_TC_HEAD(test_exp21, tc)
 {
@@ -29,6 +23,27 @@ ATF_TC_HEAD(test_exp21, tc)
 }
 ATF_TC_BODY(test_exp21, tc)
 {
+	size_t i, N;
+
+	/* double */
+	N = sizeof(t1dtable) / sizeof(t1dtable[0]);
+	ATF_REQUIRE(N > 0);
+	for (i = 0; i < N; i++) {
+		ATF_CHECK(fpcmp_equal(
+			    exp2(t1dtable[i].x),
+				 t1dtable[i].y));
+	}
+
+	/* long double */
+#ifdef  HAVE_EXP2L
+	N = sizeof(t1ldtable) / sizeof(t1ldtable[0]);
+	ATF_REQUIRE(N > 0);
+	for (i = 0; i < N; i++) {
+		ATF_CHECK(fpcmp_equall(
+			    exp2l(t1ldtable[i].x),
+				  t1ldtable[i].y));
+	}
+#endif
 }
 
 /*
