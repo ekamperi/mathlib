@@ -226,8 +226,8 @@ ATF_TC_BODY(test_pow42, tc)
 		ldy = rand() % 2 ? ldy : NAN;
 #endif
 		ATF_CHECK(fpcmp_equall(powl(1.0, ldy), 1.0));
-	}
 #endif  /* HAVE_POWL */
+	}
 }
 
 /* Test case 4-3 */
