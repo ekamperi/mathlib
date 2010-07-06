@@ -37,7 +37,7 @@ ATF_TC_BODY(test_sin1, tc)
 	N = sizeof(t1ldtable) / sizeof(t1ldtable[0]);
 	ATF_REQUIRE(N > 0);
 	for (i = 0; i < N; i++)
-		ATF_CHECK(fpcmp_equal(
+		ATF_CHECK(fpcmp_equall(
 			    sinl(t1ldtable[i].x),
 				 t1ldtable[i].y));
 #endif
