@@ -37,13 +37,13 @@ struct timeval *end   = NULL;
 static void
 init(void)
 {
-        dx    = malloc(NSAMPLE * sizeof(double));
+	dx    = malloc(NSAMPLE * sizeof(double));
 	dy    = malloc(NSAMPLE * sizeof(double));
-        dz    = malloc(NSAMPLE * sizeof(double));
-        start = malloc(NSAMPLE * sizeof(struct timeval));
-        end   = malloc(NSAMPLE * sizeof(struct timeval));
+	dz    = malloc(NSAMPLE * sizeof(double));
+	start = malloc(NSAMPLE * sizeof(struct timeval));
+	end   = malloc(NSAMPLE * sizeof(struct timeval));
 
-        assert(dx && dy && dz && start && end);
+	assert(dx && dy && dz && start && end);
 }
 
 static void
@@ -52,10 +52,10 @@ reset(void)
 	assert(dx && dy && dz && start && end);
 
 	memset(dx,    0, NSAMPLE * sizeof(double));
-        memset(dy,    0, NSAMPLE * sizeof(double));
-        memset(dz,    0, NSAMPLE * sizeof(double));
-        memset(start, 0, NSAMPLE * sizeof(double));
-        memset(end,   0, NSAMPLE * sizeof(double));
+	memset(dy,    0, NSAMPLE * sizeof(double));
+	memset(dz,    0, NSAMPLE * sizeof(double));
+	memset(start, 0, NSAMPLE * sizeof(double));
+	memset(end,   0, NSAMPLE * sizeof(double));
 }
 
 static void
@@ -114,13 +114,13 @@ proffunc(const char *fname)
 				dz[i] = f->f_libm(dx[i], dy[i]);
 			}
 		}
-		
+
 		MARK_END(&end[i]);
 	}
 
 	/* Calculate diffs and dump them to the file */
-        fp = fopen(FILENAME(fname), "w");
-        assert(fp);
+	fp = fopen(FILENAME(fname), "w");
+	assert(fp);
 
 	for (i = 0; i < NSAMPLE; i++) {
 		if (f->f_narg == 1)
@@ -128,7 +128,7 @@ proffunc(const char *fname)
 			    dx[i], dz[i], USECS(start[i], end[i]));
 		else
 			fprintf(fp, "%.16e\t%.16e\t%.16e\t%ld\n",
-                            dx[i], dy[i], dz[i], USECS(start[i], end[i]));
+			    dx[i], dy[i], dz[i], USECS(start[i], end[i]));
 	}
 
 	return (0);
