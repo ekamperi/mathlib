@@ -33,5 +33,8 @@ testrand: testrand.c ../subr_random.c
 	-o testrand						\
 	$(LIB)
 
+clean:
+	rm -f obj/*.o *~ core *.csv
+
 git-clean:
 	git clean -f
