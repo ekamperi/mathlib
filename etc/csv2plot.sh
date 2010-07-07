@@ -7,7 +7,7 @@ set terminal png
 set out '$1.png'
 set logscale x
 set xlabel "x"
-set ylabel "y"
+set ylabel "t"
 plot '$1'
 EOF
 gnuplot 1dscript.plot
@@ -22,9 +22,10 @@ set logscale x
 set logscale y
 set xlabel "x"
 set ylabel "y"
+set zlabel "t"
 set view 60,30
 set style data lines
-set dgrid3d 20,20,20
+set dgrid3d 50,50,50
 splot '$1'
 EOF
 gnuplot 2dscript.plot
