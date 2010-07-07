@@ -177,7 +177,7 @@ main(int argc, char *argv[])
 		target = all ? ftable[i].f_name : argv[i];
 		rv = proffunc(target);
 		if (rv != -1) {
-			printf("[%2d/%2d] %-10s : OK\n", i, total, target);
+			printf("[%2d/%2d] %-10s : OK\n", i+1, total, target);
 		} else {
 			fprintf(stderr, "function: %s not probed -- skipping\n",
 			    argv[i]);
