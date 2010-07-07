@@ -25,7 +25,10 @@
 	(((tv2).tv_sec  - (tv1).tv_sec ) * 1000000 +		\
 	 ((tv2).tv_usec - (tv1).tv_usec))
 
-/* Make the globals so that we allocate memory only once */
+/*
+ * Make these globals, so that we allocate memory only once
+ * during the program's lifetime.
+ */
 double *dx = NULL;
 double *dy = NULL;
 double *dz = NULL;
@@ -33,7 +36,7 @@ struct timeval *start = NULL;
 struct timeval *end   = NULL;
 
 static void
-init(void)
+init_arrays(void)
 {
 	dx    = malloc(NSAMPLE * sizeof(double));
 	dy    = malloc(NSAMPLE * sizeof(double));
@@ -52,8 +55,8 @@ reset(void)
 	memset(dx,    0, NSAMPLE * sizeof(double));
 	memset(dy,    0, NSAMPLE * sizeof(double));
 	memset(dz,    0, NSAMPLE * sizeof(double));
-	memset(start, 0, NSAMPLE * sizeof(double));
-	memset(end,   0, NSAMPLE * sizeof(double));
+	memset(start, 0, NSAMPLE * sizeof(struct timeval));
+	memset(end,   0, NSAMPLE * sizeof(struct timeval));
 }
 
 static void
@@ -141,6 +144,7 @@ proffunc(const char *fname)
 		}
 	}
 
+	/* Success */
 	return (0);
 }
 
@@ -170,7 +174,7 @@ main(int argc, char *argv[])
 	init_randgen();
 
 	/* Allocate memory */
-	init();
+	init_arrays();
 
 	total = all ? fsize : argc;
 
