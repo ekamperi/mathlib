@@ -11,7 +11,8 @@ do {							\
 		    && (signbit(x) == signbit(y)));	\
 							\
 	if (iszero(x) || iszero(y))			\
-		return ((iszero(x) && iszero(y)));	\
+		return ((iszero(x) && iszero(y))	\
+		    && (signbit(x) == signbit(y)));	\
 } while(0)
 
 int
