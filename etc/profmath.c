@@ -9,8 +9,6 @@
 #include "gen.h"
 #include "subr_random.h"
 
-#define FILENAME(x)	#x ".txt"
-
 #define NSAMPLE (10*1000)
 
 /*
@@ -107,7 +105,7 @@ proffunc(const char *fname)
 	for (i = 0; i < NSAMPLE; i++) {
 		MARK_START(&start[i]);
 
-		for (j = 0; j < 100; j++) {
+		for (j = 0; j < 1000; j++) {
 			if (f->f_narg == 1) {
 				dz[i] = f->f_libm(dx[i]);
 			} else {
@@ -119,16 +117,27 @@ proffunc(const char *fname)
 	}
 
 	/* Calculate diffs and dump them to the file */
-	fp = fopen(FILENAME(fname), "w");
+	char buf[256];
+	snprintf(buf, sizeof(buf), "%s.csv", fname);
+	fp = fopen(buf, "w");
 	assert(fp);
 
 	for (i = 0; i < NSAMPLE; i++) {
-		if (f->f_narg == 1)
-			fprintf(fp, "%.16e\t%.16e\t%ld\n",
+		if (f->f_narg == 1) {
+			if (fpclassify(dx[i]) != FP_NORMAL ||
+			    fpclassify(dz[i]) != FP_NORMAL)
+				continue;
+			fprintf(fp, "% .16e   % .16e   % ld\n",
 			    dx[i], dz[i], USECS(start[i], end[i]));
-		else
-			fprintf(fp, "%.16e\t%.16e\t%.16e\t%ld\n",
+		}
+		else {
+                        if (fpclassify(dx[i]) != FP_NORMAL ||
+			    fpclassify(dy[i]) != FP_NORMAL ||
+                            fpclassify(dz[i]) != FP_NORMAL)
+				continue;
+			fprintf(fp, "%.16e   %.16e   %.16e   %ld\n",
 			    dx[i], dy[i], dz[i], USECS(start[i], end[i]));
+		}
 	}
 
 	return (0);
