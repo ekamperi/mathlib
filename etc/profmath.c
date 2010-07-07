@@ -122,21 +122,22 @@ proffunc(const char *fname)
 	fp = fopen(buf, "w");
 	assert(fp);
 
+	fprintf(fp, "#%d\n", f->f_narg);
 	for (i = 0; i < NSAMPLE; i++) {
 		if (f->f_narg == 1) {
 			if (fpclassify(dx[i]) != FP_NORMAL ||
 			    fpclassify(dz[i]) != FP_NORMAL)
 				continue;
-			fprintf(fp, "% .16e   % .16e   % ld\n",
-			    dx[i], dz[i], USECS(start[i], end[i]));
+			fprintf(fp, "% .16e   % ld\n",
+			    dx[i], USECS(start[i], end[i]));
 		}
 		else {
                         if (fpclassify(dx[i]) != FP_NORMAL ||
 			    fpclassify(dy[i]) != FP_NORMAL ||
                             fpclassify(dz[i]) != FP_NORMAL)
 				continue;
-			fprintf(fp, "%.16e   %.16e   %.16e   %ld\n",
-			    dx[i], dy[i], dz[i], USECS(start[i], end[i]));
+			fprintf(fp, "%.16e   %.16e   %ld\n",
+			    dx[i], dy[i], USECS(start[i], end[i]));
 		}
 	}
 
