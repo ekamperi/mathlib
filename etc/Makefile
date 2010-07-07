@@ -22,11 +22,16 @@ goodgen: goodgen.c ../ulps/gen.c ../subr_random.c
 proffenv: proffenv.c
 	$(CC99) $(CCFLAGS) $(INCLUDE) proffenv.c -o proffenv $(LIB)
 
+profmath: profmath.c ../ulps/gen.c ../subr_random.c
+	$(CC99) $(CCFLAGS) $(INCLUDE)				\
+		profmath.c ../ulps/gen.c ../subr_random.c	\
+	-o profmath $(LIB)
+
 testrand: testrand.c ../subr_random.c
 	$(CC99) $(CCFLAGS) $(INCLUDE)				\
 		testrand.c ../subr_random.c			\
 	-o testrand						\
 	$(LIB)
 
-clean:
+git-clean:
 	git clean -f
