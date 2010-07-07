@@ -18,9 +18,9 @@ all:    t_acos t_acosh t_asin t_asinh t_atan t_atan2 t_atanh t_cbrt t_ceil \
 obj:
 	@mkdir -p obj
 
-config.h:
+config.h: config.h.in
 	@echo "Preparing to run autotools. This may take a while."
-	@autoreconf && ./configure
+	autoreconf && ./configure
 
 # Use order-only prerequisite for obj/
 obj/%.o: %.c | obj config.h
