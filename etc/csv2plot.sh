@@ -1,10 +1,12 @@
 #!/bin/sh
 
+DESTDIR=graphs/
+
 plot1dfile()
 {
     cat > 1dscript.plot <<EOF
 set terminal png
-set out '$1.png'
+set out '$DESTDIR/$1.png'
 set logscale x
 set xlabel "x"
 set ylabel "t"
@@ -17,7 +19,7 @@ plot2dfile()
 {
     cat > 2dscript.plot <<EOF
 set terminal png
-set out '$1.png'
+set out '$DESTDIR/$1.png'
 set logscale x
 set logscale y
 set xlabel "x"

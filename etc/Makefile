@@ -33,13 +33,13 @@ testrand: testrand.c ../subr_random.c
 	-o testrand						\
 	$(LIB)
 
-gen-csv:
+gen-csv: profmath
 	@./profmath
 
 gen-graphs: gen-csv
 	@mkdir -p graphs
 	@rm -f graphs/*
-	@./csv2plot.sh 2>/dev/null
+	@./csv2plot.sh graphs/ 2>/dev/null
 
 clean:
 	rm -f obj/*.o *~ core *.csv
