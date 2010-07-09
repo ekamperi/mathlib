@@ -40,7 +40,7 @@ main(int argc, char *argv[])
 		if (rv != -1) {
 			printf("[%2u/%2u] function: %-8s ", i+1, total, target);
 			if (u.ulp_max > 9.9) {
-				printf("max ulp: %.4E "
+				printf("max ulp: %.4e "
 				       "min ulp: %.4f "
 				       "avg ulp: %.4e ",
 				    u.ulp_max, u.ulp_min, u.ulp_avg);
