@@ -38,11 +38,19 @@ main(int argc, char *argv[])
 		target = all ? ftable[i].f_name : argv[i];
 		rv = getfunctionulp(target, &u);
 		if (rv != -1) {
-			printf("[%2u/%2u] function: %-8s "
-			    "max ulp: %.4f  min ulp: %.4f  avg ulp: %.4f  "
-			    "[skipped = %5u]\n",
-			    i+1, total, target,
-			    u.ulp_max, u.ulp_min, u.ulp_avg, u.ulp_skipped);
+			printf("[%2u/%2u] function: %-8s ", i+1, total, target);
+			if (u.ulp_max > 9.9) {
+				printf("max ulp: %.4E "
+				       "min ulp: %.4f "
+				       "avg ulp: %.4e ",
+				    u.ulp_max, u.ulp_min, u.ulp_avg);
+			} else {
+				printf("max ulp: %.4f     "
+				       "min ulp: %.4f "
+				       "avg ulp: %.4f     ",
+                                    u.ulp_max, u.ulp_min, u.ulp_avg);
+			}
+			printf("[skipped = %5u]\n", u.ulp_skipped);
 		} else {
 			fprintf(stderr, "function: %s not found\n", argv[i]);
 			continue;

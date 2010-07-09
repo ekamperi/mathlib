@@ -59,6 +59,7 @@ getfunctionulp(const char *fname, struct ulp *u)
 	for (i = 0; i < NITERATIONS; i++) {
 		if (i %  100 == 0)
 			printf("Percentage complete: %2.2f\r", (100.0 * i)/NITERATIONS);
+
 		/* Generate random arguments */
 		if (f->f_narg == 1) {
 			do {
@@ -90,27 +91,12 @@ getfunctionulp(const char *fname, struct ulp *u)
 			f->f_mpfr(mp_rop, mp_x, mp_y, tonearest);
 		}
 		exact = mpfr_get_d(mp_rop, tonearest);
-		if (fpclassify(exact) == FP_NAN) {
-			printf("%s\n", fname);
-			if (f->f_narg == 1)
-				printf("%f\n\n", x);
-			else
-				printf("%f %f\n\n", x, y);
-		}
 
 		/* Ready to call the libm*() */
 		if (f->f_narg == 1) {
 			computed = f->f_libm(x);
 		} else {
 			computed = f->f_libm(x, y);
-		}
-
-		if (fpclassify(computed) == FP_NAN) {
-			printf("%s\n", fname);
-			if (f->f_narg == 1)
-				printf("%.16e\n\n", x);
-			else
-				printf("%.16e %.16e\n\n", x, y);
 		}
 
 		/* Skip bogus results */
