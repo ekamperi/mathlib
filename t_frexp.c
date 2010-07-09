@@ -47,19 +47,19 @@ t2entry {
 	 * and the value of *exp is unspecified.
 	 */
 #ifdef  INFINITY
-        {  INFINITY,  INFINITY },
+	{  INFINITY,  INFINITY },
 	{ -INFINITY, -INFINITY },
 #endif
 #ifdef  HUGE_VAL
-        {  HUGE_VAL,  HUGE_VAL },
+	{  HUGE_VAL,  HUGE_VAL },
 	{ -HUGE_VAL, -HUGE_VAL },
 #endif
 #ifdef  HUGE_VALF
-        {  HUGE_VALF,  HUGE_VALF },
+	{  HUGE_VALF,  HUGE_VALF },
 	{ -HUGE_VALF, -HUGE_VALF },
 #endif
 #ifdef  HUGE_VALL
-        {  HUGE_VALL,  HUGE_VALL },
+	{  HUGE_VALL,  HUGE_VALL },
 	{ -HUGE_VALL, -HUGE_VALL }
 #endif
 };
@@ -102,29 +102,45 @@ ATF_TC_BODY(test_frexp2, tc)
  * Test case 3
  *
  * For finite arguments, these functions shall return the value x, such that
- * x has a magnitude in the interval [½,1) or 0, and num equals x times
+ * x has a magnitude in the interval [1/2,1) or 0, and num equals x times
  * 2 raised to the power *exp.
  */
 ATF_TC(test_frexp3);
 ATF_TC_HEAD(test_frexp3, tc)
 {
-        atf_tc_set_md_var(tc,
-            "descr",
-            "Fuzzing");
+	atf_tc_set_md_var(tc,
+	    "descr",
+	    "Fuzzing");
 }
 ATF_TC_BODY(test_frexp3, tc)
 {
+	float fx, fy;
+	double dx, dy;
+	long double ldx, ldy;
 	long i, N;
+	int myexp;
 
 	N = get_config_var_as_long(tc, "iterations");
 	ATF_REQUIRE(N > 0);
 
 	ATF_FOR_LOOP(i, N, i++) {
 		/* float */
+		fx = random_float(FP_NORMAL);
+		fy = frexpf(fx, &myexp);
+		ATF_PASS_OR_BREAK(fpcmp_equalf(
+			    fx, fy * powf(2, myexp)));
 
 		/* double */
+		dx = random_double(FP_NORMAL);
+		dy = frexp(dx, &myexp);
+		ATF_PASS_OR_BREAK(fpcmp_equal(
+			    dx, dy * pow(2, myexp)));
 
 		/* long double */
+		ldx = random_long_double(FP_NORMAL);
+		ldy = frexp(ldx, &myexp);
+		ATF_PASS_OR_BREAK(fpcmp_equal(
+			    ldx, ldy * pow(2, myexp)));
 	}
 }
 
