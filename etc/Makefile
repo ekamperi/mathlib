@@ -34,15 +34,19 @@ testrand: testrand.c ../subr_random.c
 	$(LIB)
 
 gen-csv: profmath
-	@./profmath
 
 gen-graphs: gen-csv
+	@type gnuplot > /dev/null || \
+	(echo "Sorry, you need to have gnuplot installed" && exit 111)
+	@echo "*** Generating .csv data files ***"
+	@./profmath
+	@echo "*** Generating .png plot graphs ***"
 	@mkdir -p graphs
 	@rm -f graphs/*
 	@./csv2plot.sh graphs/ 2>/dev/null
 
 clean:
-	rm -f obj/*.o *~ core *.csv
+	rm -f *.o *~ core
 
 git-clean:
-	git clean -f
+	git clean -fd > /dev/null
