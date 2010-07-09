@@ -129,12 +129,14 @@ ATF_TC_BODY(test_frexp3, tc)
 		/* float */
 		fx = random_float(FP_NORMAL);
 		fy = frexpf(fx, &myexp);
+		ATF_PASS_OR_BREAK(-0.5 <= fabsf(fy) && fabsf(fy) < 1.0);
 		ATF_PASS_OR_BREAK(fpcmp_equalf(
 			    fx, fy * powf(2, myexp)));
 
 		/* double */
 		dx = random_double(FP_NORMAL);
 		dy = frexp(dx, &myexp);
+		ATF_PASS_OR_BREAK(-0.5 <= fabs(dy) && fabs(dy) < 1.0);
 		ATF_PASS_OR_BREAK(fpcmp_equal(
 			    dx, dy * pow(2, myexp)));
 
@@ -142,6 +144,7 @@ ATF_TC_BODY(test_frexp3, tc)
 #ifdef	HAVE_FREXPL
 		ldx = random_long_double(FP_NORMAL);
 		ldy = frexp(ldx, &myexp);
+		ATF_PASS_OR_BREAK(-0.5 <= fabsl(ldy) && fabsl(ldy) < 1.0);
 		ATF_PASS_OR_BREAK(fpcmp_equal(
 			    ldx, ldy * pow(2, myexp)));
 #endif
