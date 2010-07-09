@@ -91,9 +91,11 @@ ATF_TC_BODY(test_frexp2, tc)
 				  (double)t2table[i].y));
 
 		/* long double */
+#ifdef	HAVE_FREXPL
 		ATF_CHECK(fpcmp_equal(
-			    frexp(t2table[i].x, &myexp),
+			    frexpl(t2table[i].x, &myexp),
 				  t2table[i].y));
+#endif
 	}
 }
 
@@ -137,10 +139,12 @@ ATF_TC_BODY(test_frexp3, tc)
 			    dx, dy * pow(2, myexp)));
 
 		/* long double */
+#ifdef	HAVE_FREXPL
 		ldx = random_long_double(FP_NORMAL);
 		ldy = frexp(ldx, &myexp);
 		ATF_PASS_OR_BREAK(fpcmp_equal(
 			    ldx, ldy * pow(2, myexp)));
+#endif
 	}
 }
 
