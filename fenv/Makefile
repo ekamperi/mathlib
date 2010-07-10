@@ -22,7 +22,7 @@ obj/%o: %cpp
 
 .PHONY: all
 all:	t_extern t_feclearexcept t_fegetround t_fegetexceptflag t_fenv 		\
-	t_feraiseexcept t_fesetenv t_fesetexceptflag
+	t_feraiseexcept t_fesetenv t_fesetexceptflag t_ieeefp
 
 
 _DEPS_T_EXTERN = t_extern.o
@@ -95,6 +95,12 @@ _DEPS_T_FE_DFL_ENV = t_fe_dfl_env.o
  DEPS_T_FE_DFL_ENV = $(_DEPS_T_FE_DFL_ENV:%=obj/%)
 t_fe_dfl_env: $(DEPS_T_FE_DFL_ENV)
 	$(CC99) -o t_fe_dfl_env $(DEPS_T_FE_DFL_ENV) $(CFLAGS) $(LIBS)
+
+
+_DEPS_T_IEEEFP = t_ieeefp.o
+ DEPS_T_IEEEFP = $(_DEPS_T_IEEEFP:%=obj/%)
+t_ieeefp: $(DEPS_T_IEEEFP)
+	$(CC99) -o t_ieeefp $(DEPS_T_IEEEFP) $(CFLAGS) $(LIBS)
 
 
 _DEPS_T_THREAD = t_thread.o
