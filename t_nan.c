@@ -33,7 +33,7 @@ ATF_TC_BODY(test_nan1, tc)
 		    strtod("NAN(n-char-sequence)", (char **) NULL)));
 
 	/* long double */
-#ifdef	HAVE_NANL
+#if defined(HAVE_NANL) && defined(HAVE_STRTOLD)
 	ATF_CHECK(fpcmp_equall(
 		    nanl("n-char-sequence"),
 		    strtold("NAN(n-char-sequence)", (char **) NULL)));
@@ -66,7 +66,7 @@ ATF_TC_BODY(test_nan2, tc)
 		    strtod("NAN()", (char **) NULL)));
 
 	/* long double */
-#ifdef  HAVE_NANL
+#if defined(HAVE_NANL) && defined(HAVE_STRTOLD)
 	ATF_CHECK(fpcmp_equall(
 		    nanl(""),
 		    strtold("NAN()", (char **) NULL)));
@@ -101,7 +101,7 @@ ATF_TC_BODY(test_nan3, tc)
 		    strtod("NAN", (char **) NULL)));
 
 	/* long double */
-#ifdef  HAVE_NANL
+#if defined(HAVE_NANL) && defined(HAVE_STRTOLD)
 	ATF_CHECK(fpcmp_equall(
 		    nanl(NULL),
 		    strtold("NAN", (char **) NULL)));

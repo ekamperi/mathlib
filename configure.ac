@@ -30,4 +30,6 @@ AC_CHECK_FUNCS([lroundl modfl nanl nearbyintl nextafterl nexttowardl powl])
 AC_CHECK_FUNCS([remainderl remquol rintl roundl scalblnl scalbnl sinhl sinl])
 AC_CHECK_FUNCS([sqrtl tanhl tanl tgammal truncl])
 
+AC_CHECK_FUNCS([strtold])
+
 AC_OUTPUT
