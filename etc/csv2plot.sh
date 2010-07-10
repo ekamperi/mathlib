@@ -8,7 +8,7 @@ plot1dfile()
 set terminal png
 set out '$DESTDIR/$1.png'
 set logscale x
-set xlabel "x"
+set xlabel "x (logscale)"
 set ylabel "t"
 plot '$1'
 EOF
@@ -22,8 +22,8 @@ set terminal png
 set out '$DESTDIR/$1.png'
 set logscale x
 set logscale y
-set xlabel "x"
-set ylabel "y"
+set xlabel "x (logscale)"
+set ylabel "y (logscale)"
 set zlabel "t"
 set view 60,30
 set style data lines
