@@ -3,7 +3,6 @@
 #include <atf-c.h>
 #include <errno.h>
 #include <math.h>
-#include <stdio.h>
 
 #include "subr_atf.h"
 #include "subr_errhandling.h"

@@ -1,11 +1,4 @@
-/*
- * Compile with:
- * gcc t_str.c -o t_str `pkg-config --cflags --libs atf-c`
- */
-
 #include <math.h>
-#include <stdio.h>
-#include <string.h>
 
 #include <atf-c.h>
 
