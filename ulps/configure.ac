@@ -29,6 +29,6 @@ AC_TYPE_SIZE_T
 # Checks for library functions.
 AC_CHECK_FUNCS([acos acosh asin asinh atan atanh cbrt ceil cosh erf erfc floor hypot])
 AC_CHECK_FUNCS([sin cos exp expm1 exp2 fabs log log1p log10 log2 rint sinh])
-AC_CHECK_FUNCS([sqrt pow tan tanh tgamma y0 y1 yn])
+AC_CHECK_FUNCS([sqrt pow remainder tan tanh tgamma y0 y1 yn])
 
 AC_OUTPUT

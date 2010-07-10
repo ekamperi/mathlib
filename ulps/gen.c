@@ -150,6 +150,12 @@ dom_log2(double x)
 }
 
 static int
+dom_remainder(double x, double y)
+{
+	return (fpclassify(y) != FP_ZERO);
+}
+
+static int
 dom_rint(double x)
 {
 	return 1;
@@ -227,12 +233,12 @@ ftable[] = {
 	/* acosh() */
 #ifdef	HAVE_ACOSH
 	{
-                .f_name = "acosh",
-                .f_narg = 1,
-                .f_libm = acosh,
-                .f_mpfr = mpfr_acosh,
-                .f_u.fp1 = dom_acosh
-        },
+		.f_name = "acosh",
+		.f_narg = 1,
+		.f_libm = acosh,
+		.f_mpfr = mpfr_acosh,
+		.f_u.fp1 = dom_acosh
+	},
 #endif
 
 	/* asin() */
@@ -248,13 +254,13 @@ ftable[] = {
 
 	/* asinh() */
 #ifdef	HAVE_ASINH
-        {
-                .f_name = "asinh",
-                .f_narg = 1,
-                .f_libm = asinh,
-                .f_mpfr = mpfr_asinh,
-                .f_u.fp1 = dom_asinh
-        },
+	{
+		.f_name = "asinh",
+		.f_narg = 1,
+		.f_libm = asinh,
+		.f_mpfr = mpfr_asinh,
+		.f_u.fp1 = dom_asinh
+	},
 #endif
 
 	/* atan() */
@@ -356,15 +362,15 @@ ftable[] = {
 	},
 #endif
 
-        /* expm1() */
+	/* expm1() */
 #ifdef	HAVE_EXPM1
-        {
-                .f_name = "expm1",
-                .f_narg = 1,
-                .f_libm = expm1,
-                .f_mpfr = mpfr_expm1,
+	{
+		.f_name = "expm1",
+		.f_narg = 1,
+		.f_libm = expm1,
+		.f_mpfr = mpfr_expm1,
 		.f_u.fp1 = dom_expm1
-        },
+	},
 #endif
 
 	/* exp2() */
@@ -374,7 +380,7 @@ ftable[] = {
 		.f_narg = 1,
 		.f_libm = exp2,
 		.f_mpfr = mpfr_exp2,
-                .f_u.fp1 = dom_exp2
+		.f_u.fp1 = dom_exp2
 	},
 #endif
 
@@ -426,10 +432,10 @@ ftable[] = {
 #ifdef	HAVE_HYPOT
 	{
 		.f_name = "hypot",
-                .f_narg = 2,
+		.f_narg = 2,
 		.f_libm = hypot,
-                .f_mpfr = mpfr_hypot,
-                .f_u.fp2 = dom_hypot
+		.f_mpfr = mpfr_hypot,
+		.f_u.fp2 = dom_hypot
 	},
 #endif
 
@@ -451,7 +457,7 @@ ftable[] = {
 		.f_narg = 1,
 		.f_libm = log1p,
 		.f_mpfr = mpfr_log1p,
-                .f_u.fp1 = dom_log1p
+		.f_u.fp1 = dom_log1p
 	},
 #endif
 
@@ -474,6 +480,17 @@ ftable[] = {
 		.f_libm = log2,
 		.f_mpfr = mpfr_log2,
 		.f_u.fp1 = dom_log2
+	},
+#endif
+
+	/* remainder() */
+#ifdef  HAVE_REMAINDER
+	{
+		.f_name = "remainder",
+		.f_narg = 2,
+		.f_libm = remainder,
+		.f_mpfr = mpfr_remainder,
+		.f_u.fp2 = dom_remainder
 	},
 #endif
 
@@ -540,7 +557,7 @@ ftable[] = {
 	  .f_libm = tanh,
 	  .f_mpfr = mpfr_tanh,
 	  .f_u.fp1 = dom_tanh
-        },
+	},
 #endif
 
 	/* tgamma() */
@@ -557,23 +574,23 @@ ftable[] = {
 	/* y0() */
 #ifdef	HAVE_Y0
 	{
-                .f_name = "y0",
-                .f_narg = 1,
+		.f_name = "y0",
+		.f_narg = 1,
 		.f_libm = y0,
-                .f_mpfr = mpfr_y0,
-                .f_u.fp1 = dom_y0
-        },
+		.f_mpfr = mpfr_y0,
+		.f_u.fp1 = dom_y0
+	},
 #endif
 
 	/* y1() */
 #ifdef	HAVE_Y1
 	{
 		.f_name = "y1",
-                .f_narg = 1,
-                .f_libm = y1,
+		.f_narg = 1,
+		.f_libm = y1,
 		.f_mpfr = mpfr_y1,
-                .f_u.fp1 = dom_y1
-        },
+		.f_u.fp1 = dom_y1
+	},
 #endif
 
 #if 0
@@ -581,11 +598,11 @@ ftable[] = {
 #ifdef	HAVE_YN
 	{
 		.f_name = "yn",
-                .f_narg = 2,
-                .f_libm = yn,
+		.f_narg = 2,
+		.f_libm = yn,
 		.f_mpfr = mpfr_yn,
-                .f_u.fp2 = dom_yn
-        }
+		.f_u.fp2 = dom_yn
+	}
 #endif
 #endif
 };
