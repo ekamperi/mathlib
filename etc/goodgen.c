@@ -364,7 +364,7 @@ strtoupper(const char *str)
 
 	assert(str);
 
-	newstr = malloc(sizeof(str));
+	newstr = malloc(strlen(str)+1);
 	assert(newstr);
 
 	oldp = str;
