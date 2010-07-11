@@ -78,9 +78,9 @@ ATF_TC_BODY(test_remainder2, tc)
 			ATF_PASS_OR_BREAK(isnan(ldz));
 		else
 			ATF_PASS_OR_BREAK(!isnan(ldz));
-#endif
+#endif	/* HAVE_REMAINDERL */
 	}
-#endif
+#endif	/* NAN */
 }
 
 /*
@@ -188,18 +188,18 @@ ATF_TC_BODY(test_remainder3, tc)
 			ATF_CHECK_NOTNAN(ldz);
 		}
 #endif
-
-		/*
-		 * Revenge is a Dish Best Served Cold :)
-		 *
-		 * We put this check here and not in the beginning of the test case,
-		 * because we don't want the lack of error handling support to
-		 * block the check against HUGE_VAL*. Nor do we want to split the test
-		 * case into 2.
-		 */
-		query_errhandling(&haserrexcept, &haserrno);
-		ATF_REQUIRE(haserrexcept || haserrno);
 	}
+
+	/*
+	 * Revenge is a Dish Best Served Cold :)
+	 *
+	 * We put this check here and not in the beginning of the test case,
+	 * because we don't want the lack of error handling support to
+	 * block the check against HUGE_VAL*. Nor do we want to split the test
+	 * case into 2.
+	 */
+	query_errhandling(&haserrexcept, &haserrno);
+	ATF_REQUIRE(haserrexcept || haserrno);
 }
 
 /* Add test cases to test program */
