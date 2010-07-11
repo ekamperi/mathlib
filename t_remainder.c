@@ -144,7 +144,7 @@ ATF_TC_BODY(test_remainder3, tc)
 	for (i = 0; i < N; i++) {
 		/* float */
 		errno = 0;
-                clear_exceptions();
+		clear_exceptions();
 		fx = rand() % 2 ? (float)t3table[i].x : random_float(FP_NORMAL);
 		fy = rand() % 2 ? (float)t3table[i].y : random_float(FP_NORMAL);
 		fz = remainderf(fx, fy);
@@ -159,33 +159,33 @@ ATF_TC_BODY(test_remainder3, tc)
 
 		/* double */
 		errno = 0;
-                clear_exceptions();
-                dx = rand() % 2 ? (double)t3table[i].x : random_double(FP_NORMAL);
-                dy = rand() % 2 ? (double)t3table[i].y : random_double(FP_NORMAL);
+		clear_exceptions();
+		dx = rand() % 2 ? (double)t3table[i].x : random_double(FP_NORMAL);
+		dy = rand() % 2 ? (double)t3table[i].y : random_double(FP_NORMAL);
 		dz = remainder(dx, dy);
 
 		if (isinf(dx) || isinf(dy) || iszero(dx) || iszero(dy)) {
-                        ATF_CHECK_IFNAN(dz);
+			ATF_CHECK_IFNAN(dz);
 			ATF_CHECK(iserrno_equalto(EDOM));
 			ATF_CHECK(raised_exceptions(MY_FE_INVALID));
 		} else {
-                        ATF_CHECK_NOTNAN(dz);
+			ATF_CHECK_NOTNAN(dz);
 		}
 
 		/* long double */
 #ifdef	HAVE_REMAINDERL
 		errno = 0;
-                clear_exceptions();
-                ldx = rand() % 2 ? t3table[i].x : random_long_double(FP_NORMAL);
-                ldy = rand() % 2 ? t3table[i].y : random_long_double(FP_NORMAL);
+		clear_exceptions();
+		ldx = rand() % 2 ? t3table[i].x : random_long_double(FP_NORMAL);
+		ldy = rand() % 2 ? t3table[i].y : random_long_double(FP_NORMAL);
 		ldz = remainderl(ldx, ldy);
 
 		if (isinf(ldx) || isinf(ldy) || iszero(ldx) || iszero(ldy)) {
-                        ATF_CHECK_IFNAN(ldz);
+			ATF_CHECK_IFNAN(ldz);
 			ATF_CHECK(iserrno_equalto(EDOM));
 			ATF_CHECK(raised_exceptions(MY_FE_INVALID));
 		} else {
-                        ATF_CHECK_NOTNAN(ldz);
+			ATF_CHECK_NOTNAN(ldz);
 		}
 #endif
 
