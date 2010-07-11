@@ -1,7 +1,5 @@
 #include <atf-c.h>
 #include <math.h>
-#include <stdio.h>
-#include <string.h>
 
 /* Test case 1 -- float.h constants */
 ATF_TC(test_float);
