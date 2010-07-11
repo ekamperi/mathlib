@@ -10,6 +10,7 @@
 #include "subr_errhandling.h"
 #include "subr_fpcmp.h"
 #include "subr_random.h"
+#include "t_remainder.h"
 
 /*
  * Test case 1 -- Basic functionality
@@ -24,6 +25,25 @@ ATF_TC_HEAD(test_remainder1, tc)
 }
 ATF_TC_BODY(test_remainder1, tc)
 {
+	size_t i, N;
+
+	/* double */
+	N = sizeof(t1dtable) / sizeof(t1dtable[0]);
+	ATF_REQUIRE(N > 0);
+	for (i = 0; i < N; i++)
+		ATF_CHECK(fpcmp_equal(
+			    remainder(t1dtable[i].x, t1dtable[i].y),
+				      t1dtable[i].z));
+
+	/* long double */
+#ifdef  HAVE_REMAINDERL
+	N = sizeof(t1ldtable) / sizeof(t1ldtable[0]);
+	ATF_REQUIRE(N > 0);
+	for (i = 0; i < N; i++)
+		ATF_CHECK(fpcmp_equall(
+			    remainderl(t1ldtable[i].x, t1ldtable[i].y),
+				       t1ldtable[i].z));
+#endif
 }
 
 /*
