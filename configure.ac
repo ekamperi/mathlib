@@ -27,6 +27,7 @@ AC_CHECK_FUNCS([acos asin atan acosh asinh atanh cos sin tan cosh sinh tanh])
 AC_CHECK_FUNCS([exp log pow sqrt fabs])
 
 # Long double versions -- needed by all test cases
+# Note: `fmal' is not a typo, it refers to fused-multiply-and-add function
 AC_CHECK_FUNCS([acoshl acosl asinhl asinl atan2l atanhl atanl cbrtl ceill])
 AC_CHECK_FUNCS([copysignl coshl cosl erfcl erfl exp2l expl expm1l fabsl fdiml])
 AC_CHECK_FUNCS([floorl fmal fmaxl fminl fmodl frexpl hypotl ilogbl ldexpl])
