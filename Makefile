@@ -10,7 +10,7 @@ LIBS=-lm -latf-c
 TESTS=	t_acos t_acosh t_asin t_asinh t_atan t_atan2 t_atanh t_cbrt t_ceil \
 	t_constants t_copysign t_cos t_cosh t_erf t_erfc t_exp t_exp2 t_expm1 t_fabs t_fdim \
 	t_float t_floor t_fmax t_fpclassify t_fpmacros t_frexp t_ilogb t_lrint t_mac t_nan \
-	t_tgamma t_hypot t_log t_log10 t_log1p t_log2 t_logb t_ldexp t_nextafter t_pow \
+	t_tgamma t_tgmath t_hypot t_log t_log10 t_log1p t_log2 t_logb t_ldexp t_nextafter t_pow \
 	t_remainder t_rint t_self t_signbit t_sin t_sinh t_sqrt t_trig_ident t_tan t_tanh \
 	t_trunc t_types
 .PHONY: all
@@ -331,6 +331,12 @@ _DEPS_T_TGAMMA = t_tgamma.o subr_atf.o subr_errhandling.o subr_fpcmp.o subr_rand
  DEPS_T_TGAMMA = $(_DEPS_T_TGAMMA:%=obj/%)
 t_tgamma: $(DEPS_T_TGAMMA)
 	$(CC99) -o t_tgamma $(DEPS_T_TGAMMA) $(CFLAGS) $(LIBS)
+
+
+_DEPS_T_TGMATH = t_tgmath.o
+ DEPS_T_TGMATH = $(_DEPS_T_TGMATH:%=obj/%)
+t_tgmath: $(DEPS_T_TGMATH)
+	$(CC99) -o t_tgmath $(DEPS_T_TGMATH) -Wno-bad-function-cast $(LIBS)
 
 
 _DEPS_T_TRIG_IDENT = t_trig_ident.o subr_atf.o subr_fpcmp.o subr_random.o

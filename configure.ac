@@ -22,6 +22,8 @@ AC_TYPE_UINT32_T
 # Checks for library functions.
 AC_FUNC_MALLOC
 
+AC_CHECK_FUNCS([acos asin])
+
 AC_CHECK_FUNCS([acoshl acosl asinhl asinl atan2l atanhl atanl cbrtl ceill])
 AC_CHECK_FUNCS([copysignl coshl cosl erfcl erfl exp2l expl expm1l fabsl fdiml])
 AC_CHECK_FUNCS([floorl fmal fmaxl fminl fmodl frexpl hypotl ilogbl ldexpl])
