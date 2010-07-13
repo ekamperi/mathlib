@@ -22,8 +22,11 @@ AC_TYPE_UINT32_T
 # Checks for library functions.
 AC_FUNC_MALLOC
 
-AC_CHECK_FUNCS([acos asin])
+# Needed by t_tgmath only
+AC_CHECK_FUNCS([acos asin atan acosh asinh atanh cos sin tan cosh sinh tanh])
+AC_CHECK_FUNCS([exp log pow sqrt fabs])
 
+# Long double versions -- needed by all test cases
 AC_CHECK_FUNCS([acoshl acosl asinhl asinl atan2l atanhl atanl cbrtl ceill])
 AC_CHECK_FUNCS([copysignl coshl cosl erfcl erfl exp2l expl expm1l fabsl fdiml])
 AC_CHECK_FUNCS([floorl fmal fmaxl fminl fmodl frexpl hypotl ilogbl ldexpl])

@@ -336,7 +336,7 @@ t_tgamma: $(DEPS_T_TGAMMA)
 _DEPS_T_TGMATH = t_tgmath.o
  DEPS_T_TGMATH = $(_DEPS_T_TGMATH:%=obj/%)
 t_tgmath: $(DEPS_T_TGMATH)
-	$(CC99) -o t_tgmath $(DEPS_T_TGMATH) -Wno-bad-function-cast $(LIBS)
+	$(CC99) -o t_tgmath $(DEPS_T_TGMATH) $(CFLAGS) $(LIBS)
 
 
 _DEPS_T_TRIG_IDENT = t_trig_ident.o subr_atf.o subr_fpcmp.o subr_random.o
