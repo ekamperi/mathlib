@@ -13,6 +13,7 @@ AC_CHECK_LIB([m], [cos])
 
 # Checks for header files.
 AC_CHECK_HEADERS([fenv.h float.h inttypes.h limits.h math.h stdlib.h string.h])
+AC_CHECK_HEADERS([tgmath.h])
 
 # Checks for typedefs, structures, and compiler characteristics.
 AC_HEADER_STDBOOL
