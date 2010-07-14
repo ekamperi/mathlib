@@ -34,7 +34,7 @@ ATF_TC_BODY(test_log1, tc)
 				t1dtable[i].y));
 
 	/* long double */
-#ifdef	HAVE_LOG
+#ifdef	HAVE_LOGL
 	N = sizeof(t1ldtable) / sizeof(t1ldtable[0]);
 	ATF_REQUIRE(N > 0);
 	for (i = 0; i < N; i++)
