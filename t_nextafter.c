@@ -10,26 +10,11 @@
 #include "subr_atf.h"
 #include "subr_errhandling.h"
 #include "subr_random.h"
+#include "t_nextafter.h"
 
 /*
  * Test case 1 -- Basic functionality
  */
-static const struct
-tentry {
-	double x;       /* Input */
-	double y;       /* Input */
-	double z;       /* nextafter() output */
-} ttable[] = {
-	{ 1.0,	2.0,			1.0 + DBL_EPSILON },
-	{ 1.0,	1.0 + DBL_EPSILON,	1.0 + DBL_EPSILON },
-	{ 1.0,	+INFINITY,		1.0 + DBL_EPSILON },
-#ifdef	notyet
-	{ 1.0,  -2.0,                   1.0 - DBL_EPSILON },
-	{ 1.0,   1.0 - DBL_EPSILON,     1.0 - DBL_EPSILON },
-	{ 1.0,  -INFINITY,              1.0 - DBL_EPSILON },
-#endif
-};
-
 ATF_TC(test_nextafter1);
 ATF_TC_HEAD(test_nextafter1, tc)
 {
@@ -42,10 +27,25 @@ ATF_TC_BODY(test_nextafter1, tc)
 {
 	size_t i, N;
 
-	N = sizeof(ttable) / sizeof(ttable[0]);
-	for (i = 0; i < N; i++) {
-		ATF_CHECK(nextafter(ttable[i].x, ttable[i].y) == ttable[i].z);
-	}
+	/* float */
+	N = sizeof(t1ftable) / sizeof(t1ftable[0]);
+	for (i = 0; i < N; i++)
+		ATF_CHECK(nextafterf(t1ftable[i].x, t1ftable[i].y)
+		    == t1ftable[i].z);
+
+	/* double */
+	N = sizeof(t1dtable) / sizeof(t1dtable[0]);
+        for (i = 0; i < N; i++)
+		ATF_CHECK(nextafter(t1dtable[i].x, t1dtable[i].y)
+		    == t1dtable[i].z);
+
+	/* long double */
+#ifdef	HAVE_NEXTAFTERL
+        N = sizeof(t1ldtable) / sizeof(t1ldtable[0]);
+        for (i = 0; i < N; i++)
+		ATF_CHECK(nextafterl(t1ldtable[i].x, t1ldtable[i].y)
+		    == t1ldtable[i].z);
+#endif
 }
 
 /*
