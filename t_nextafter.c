@@ -9,6 +9,7 @@
 #include "config.h"
 #include "subr_atf.h"
 #include "subr_errhandling.h"
+#include "subr_fpcmp.h"
 #include "subr_random.h"
 #include "t_nextafter.h"
 
@@ -51,7 +52,6 @@ ATF_TC_BODY(test_nextafter1, tc)
 /*
  * Test case 2 -- Random walks
  */
-#define NWALKS	10000	/* Number of walks */
 #define WALKLEN	10000	/* Length of each walk in terms of nextafter() calls */
 
 ATF_TC(test_nextafter2);
@@ -68,13 +68,17 @@ ATF_TC_BODY(test_nextafter2, tc)
 	double startd, nextd;
 	long double startld, nextld;
 	size_t i, j;
+	long nwalks;
+
+	nwalks = get_config_var_as_long(tc, "iterations");
+	ATF_REQUIRE(nwalks > 0);
 
 	/*
 	 * If at any time we hit an infinity while walking, skip the check.
 	 * For example this could happen if startd = -DBL_MAX, NWALKS > 0.
 	 * Be indiscriminate and skip all tests, even if only one is bad.
 	 */
-	ATF_FOR_LOOP(i, NWALKS, i++) {
+	ATF_FOR_LOOP(i, nwalks, i++) {
 		startf  = random_float(FP_NORMAL);
 		startd  = random_double(FP_NORMAL);
 		startld = random_long_double(FP_NORMAL);
@@ -167,6 +171,10 @@ ATF_TC_BODY(test_nextafter3, tc)
 /*
  * Test case 4 -- Edge cases
  *
+ * If x is finite and the correct function value would overflow, a range error
+ * shall occur and +-HUGE_VAL, +-HUGE_VALF, and +-HUGE_VALL (with the same sign
+ * as x) shall be returned as appropriate for the return type of the function.
+ *
  * We put this checks in a separate test case, because we will strictly
  * require the existence of errno or fp exception error handling. And it
  * would be bad to block the other tests because the lack of latter.
@@ -180,6 +188,7 @@ ATF_TC_HEAD(test_nextafter4, tc)
 }
 ATF_TC_BODY(test_nextafter4, tc)
 {
+#ifdef	INFINITY
 	int haserrexcept;
 	int haserrno;
 
@@ -187,40 +196,35 @@ ATF_TC_BODY(test_nextafter4, tc)
 	query_errhandling(&haserrexcept, &haserrno);
 	ATF_REQUIRE(haserrexcept || haserrno);
 
-	/*
-	 * If x is finite and the correct function value would overflow,
-	 * a range error shall occur and +-HUGE_VAL, +-HUGE_VALF,
-	 * and +-HUGE_VALL (with the same sign as x) shall be returned as
-	 * appropriate for the return type of the function.
-	 */
-#ifdef	INFINITY
-	/* double */
-	errno = 0;
-	clear_exceptions();
-
-	ATF_CHECK(nextafter(DBL_MAX, +INFINITY) == HUGE_VAL);
-	ATF_CHECK(signbit(nextafter(DBL_MAX, +INFINITY)) == 0);
-
-	ATF_CHECK(iserrno_equalto(ERANGE));
-	ATF_CHECK(raised_exceptions(MY_FE_OVERFLOW));
-
 	/* float */
 	errno = 0;
 	clear_exceptions();
 
-	ATF_CHECK(nextafterf(FLT_MAX, +INFINITY) == HUGE_VALF);
-	ATF_CHECK(signbit(nextafterf(FLT_MAX, +INFINITY)) == 0);
+	ATF_CHECK(fpcmp_equalf(
+		    nextafterf(FLT_MAX, +INFINITY),
+		    HUGE_VALF));
+
+	ATF_CHECK(iserrno_equalto(ERANGE));
+	ATF_CHECK(raised_exceptions(MY_FE_OVERFLOW));
+
+	/* double */
+	errno = 0;
+	clear_exceptions();
+	ATF_CHECK(fpcmp_equal(
+		    nextafter(DBL_MAX, +INFINITY),
+		    HUGE_VAL));
 
 	ATF_CHECK(iserrno_equalto(ERANGE));
 	ATF_CHECK(raised_exceptions(MY_FE_OVERFLOW));
 
 	/* long double */
-#if	HAVE_NEXTAFTERL
+#ifdef	HAVE_NEXTAFTERL
 	errno = 0;
 	clear_exceptions();
 
-	ATF_CHECK(nextafterl(LDBL_MAX, +INFINITY) == HUGE_VALL);
-	ATF_CHECK(signbit(nextafterl(LDBL_MAX, +INFINITY)) == 0);
+	ATF_CHECK(fpcmp_equall(
+		    nextafterl(LDBL_MAX, +INFINITY),
+		    HUGE_VALL));
 
 	ATF_CHECK(iserrno_equalto(ERANGE));
 	ATF_CHECK(raised_exceptions(MY_FE_OVERFLOW));
