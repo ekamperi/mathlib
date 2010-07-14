@@ -1,11 +1,11 @@
 #define _XOPEN_SOURCE 600
 
 #include <atf-c.h>
+
+#include "config.h"
 #ifdef	HAVE_TGMATH
 #include <tgmath.h>
 #endif
-
-#include "config.h"
 
 /*
  * Test case 1 -- Basic functionality
