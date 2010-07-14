@@ -47,4 +47,10 @@ for (i = 0; i < (end) && __cond; incr)
 #define ATF_CHECK_IFNAN(x)	1
 #endif
 
+#ifdef  NAN
+#define ATF_CHECK_NOTNAN(x)      ATF_CHECK(!isnan(x))
+#else
+#define ATF_CHECK_NOTNAN(x)      1
+#endif
+
 #endif	/* ! __SUBR_ATF_H__ */

@@ -156,7 +156,8 @@ random_long_double(int fpclass)
 /*
  * Really cheap hack to avoid deploying validation functions for floats
  * and doubles. The price is that it slows down things A LOT, due to normal
- * long double numbers being converted to subnormals at the time of the cast.
+ * long double numbers being converted to NaNs, Inf and subnormals at the
+ * time of the cast. XXX: Could we take advantage of that ?
  */
 double
 random_double(int fpclass)
