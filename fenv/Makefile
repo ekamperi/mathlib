@@ -20,10 +20,10 @@ obj/%o: %cpp
 	mkdir -p obj
 	$(CPP) -c -o $@ $< $(CPPFLAGS)
 
-.PHONY: all
-all:	t_extern t_feclearexcept t_fegetround t_fegetexceptflag t_fenv 		\
+TESTS=	t_extern t_feclearexcept t_fegetround t_fegetexceptflag t_fenv 		\
 	t_feraiseexcept t_fesetenv t_fesetexceptflag t_ieeefp
-
+.PHONY: all
+all: $(TESTS)
 
 _DEPS_T_EXTERN = t_extern.o
  DEPS_T_EXTERN = $(_DEPS_T_EXTERN:%=obj/%)
@@ -114,7 +114,7 @@ run:
 
 .PHONY: clean
 clean:
-	rm -f obj/*.o *~ core
+	rm -f $(TESTS) obj/*.o *~ core
 
 .PHONY: git-clean
 git-clean:
