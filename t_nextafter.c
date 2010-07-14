@@ -87,7 +87,9 @@ ATF_TC_BODY(test_nextafter2, tc)
 		for (j = 0; j < WALKLEN; j++) {
 			nextf  = nextafterf(nextf,  -INFINITY);
 			nextd  = nextafter (nextd,  -INFINITY);
+#ifdef	HAVE_NEXTAFTERL
 			nextld = nextafterl(nextld, -INFINITY);
+#endif
 			if (isinf(nextf) || isinf(nextd) || isinf(nextld))
 				goto SKIP_CHECKS;
 		}
@@ -96,7 +98,9 @@ ATF_TC_BODY(test_nextafter2, tc)
 		for (j = 0; j < WALKLEN; j++) {
 			nextf  = nextafterf(nextf,  +INFINITY);
 			nextd  = nextafter (nextd,  +INFINITY);
+#ifdef	HAVE_NEXTAFTERL
 			nextld = nextafterl(nextld, +INFINITY);
+#endif
 			if (isinf(nextf) || isinf(nextd) || isinf(nextld))
 				goto SKIP_CHECKS;
 		}
@@ -104,7 +108,9 @@ ATF_TC_BODY(test_nextafter2, tc)
 		/* We should be back to square 1 by now */
 		ATF_PASS_OR_BREAK(nextf  == startf );
 		ATF_PASS_OR_BREAK(nextd  == startd );
+#ifdef	HAVE_NEXTAFTERL
 		ATF_PASS_OR_BREAK(nextld == startld);
+#endif
 SKIP_CHECKS:;
 	}
 #endif	/* INFINITY */
