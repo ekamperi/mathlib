@@ -5,7 +5,6 @@
 #include <float.h>
 #include <math.h>
 
-
 #include "config.h"
 #include "subr_atf.h"
 #include "subr_errhandling.h"

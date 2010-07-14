@@ -262,7 +262,7 @@ t_nan: $(DEPS_T_NAN)
 	$(CC99) -o t_nan $(DEPS_T_NAN) $(CFLAGS) $(LIBS)
 
 
-_DEPS_T_NEXTAFTER = t_nextafter.o subr_atf.o subr_errhandling.o subr_random.o
+_DEPS_T_NEXTAFTER = t_nextafter.o subr_atf.o subr_errhandling.o subr_fpcmp.o subr_random.o
  DEPS_T_NEXTAFTER = $(_DEPS_T_NEXTAFTER:%=obj/%)
 t_nextafter: $(DEPS_T_NEXTAFTER)
 	$(CC99) -o t_nextafter $(DEPS_T_NEXTAFTER) $(CFLAGS) $(LIBS)
