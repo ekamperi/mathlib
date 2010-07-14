@@ -35,14 +35,14 @@ ATF_TC_BODY(test_nextafter1, tc)
 
 	/* double */
 	N = sizeof(t1dtable) / sizeof(t1dtable[0]);
-        for (i = 0; i < N; i++)
+	for (i = 0; i < N; i++)
 		ATF_CHECK(nextafter(t1dtable[i].x, t1dtable[i].y)
 		    == t1dtable[i].z);
 
 	/* long double */
 #ifdef	HAVE_NEXTAFTERL
-        N = sizeof(t1ldtable) / sizeof(t1ldtable[0]);
-        for (i = 0; i < N; i++)
+	N = sizeof(t1ldtable) / sizeof(t1ldtable[0]);
+	for (i = 0; i < N; i++)
 		ATF_CHECK(nextafterl(t1ldtable[i].x, t1ldtable[i].y)
 		    == t1ldtable[i].z);
 #endif
@@ -63,26 +63,51 @@ ATF_TC_HEAD(test_nextafter2, tc)
 }
 ATF_TC_BODY(test_nextafter2, tc)
 {
-	double start, next;
+#ifdef	INFINITY
+	float startf, nextf;
+	double startd, nextd;
+	long double startld, nextld;
 	size_t i, j;
 
+	/*
+	 * If at any time we hit an infinity while walking, skip the check.
+	 * For example this could happen if startd = -DBL_MAX, NWALKS > 0.
+	 * Be indiscriminate and skip all tests, even if only one is bad.
+	 */
 	ATF_FOR_LOOP(i, NWALKS, i++) {
-		start = random_double(FP_NORMAL);
-		next = start;
+		startf  = random_float(FP_NORMAL);
+		startd  = random_double(FP_NORMAL);
+		startld = random_long_double(FP_NORMAL);
+
+		nextf  = startf;
+		nextd  = startd;
+		nextld = startld;
 
 		/* Go backwards */
 		for (j = 0; j < WALKLEN; j++) {
-			next = nextafter(next, -INFINITY);
+			nextf  = nextafterf(nextf,  -INFINITY);
+			nextd  = nextafter (nextd,  -INFINITY);
+			nextld = nextafterl(nextld, -INFINITY);
+			if (isinf(nextf) || isinf(nextd) || isinf(nextld))
+				goto SKIP_CHECKS;
 		}
 
 		/* Go forward */
 		for (j = 0; j < WALKLEN; j++) {
-			next = nextafter(next, +INFINITY);
+			nextf  = nextafterf(nextf,  +INFINITY);
+			nextd  = nextafter (nextd,  +INFINITY);
+			nextld = nextafterl(nextld, +INFINITY);
+			if (isinf(nextf) || isinf(nextd) || isinf(nextld))
+				goto SKIP_CHECKS;
 		}
 
 		/* We should be back to square 1 by now */
-		ATF_PASS_OR_BREAK(next == start);
+		ATF_PASS_OR_BREAK(nextf  == startf );
+		ATF_PASS_OR_BREAK(nextd  == startd );
+		ATF_PASS_OR_BREAK(nextld == startld);
+SKIP_CHECKS:;
 	}
+#endif	/* INFINITY */
 }
 
 /*
@@ -149,8 +174,8 @@ ATF_TC_HEAD(test_nextafter4, tc)
 }
 ATF_TC_BODY(test_nextafter4, tc)
 {
-        int haserrexcept;
-        int haserrno;
+	int haserrexcept;
+	int haserrno;
 
 	/* We can't proceed if there's no way to detect errors */
 	query_errhandling(&haserrexcept, &haserrno);
