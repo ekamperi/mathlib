@@ -18,20 +18,14 @@ t1entry {
 	/* -1 digit */
 	{ 1.1234567890123456, 1.1234567890123455, 0 },
 	{ 1.1234567890123455, 1.1234567890123456, 1 },
-	{ 2.0000000000000001, 2.0000000000000000, 1 },
-	{ 2.0000000000000000, 2.0000000000000001, 1 },
 
 	/* -2 */
 	{ 1.1234567890123465, 1.1234567890123456, 0 },
 	{ 1.1234567890123456, 1.1234567890123465, 1 },
-	{ 2.0000000000000010, 2.0000000000000001, 0 },
-	{ 2.0000000000000001, 2.0000000000000010, 1 },
 
 	/* -3 */
 	{ 1.1234567890123654, 1.1234567890123456, 0 },
 	{ 1.1234567890123456, 1.1234567890123654, 1 },
-	{ 2.0000000000000100, 2.0000000000000011, 1 },
-	{ 2.0000000000000011, 2.0000000000000100, 1 },
 
 	/* -4 */
 	{ 1.1234567890126453, 1.1234567890125634, 0 },
@@ -174,20 +168,9 @@ ATF_TC_BODY(test_fmax3, tc)
 	ATF_REQUIRE(N > 0);
 
 	ATF_FOR_LOOP(i, N, i++) {
-		/* Normal - normal */
 		do {
 			x = random_double(FP_NORMAL);
 			y = random_double(FP_NORMAL);
-		} while (x == y);
-
-		ATF_PASS_OR_BREAK((fmax(x, y) == x) || (fmax(x, y) == y));
-		ATF_PASS_OR_BREAK((fmin(x, y) == x) || (fmin(x, y) == y));
-		ATF_PASS_OR_BREAK((fmax(x, y) != fmin(x, y)));
-
-		/* Normal - subnormal */
-		do {
-			x = random_double(FP_NORMAL);
-			y = random_double(FP_SUBNORMAL);
 		} while (x == y);
 
 		ATF_PASS_OR_BREAK((fmax(x, y) == x) || (fmax(x, y) == y));
@@ -206,17 +189,62 @@ ATF_TC_BODY(test_fmax3, tc)
 		ATF_CHECK(fmax(x, NAN) == x);
 		ATF_CHECK(fmax(y, NAN) == y);
 #endif
-
-		/* Subnormal - subnormal */
-		do {
-			x = random_double(FP_SUBNORMAL);
-			y = random_double(FP_SUBNORMAL);
-		} while (x == y);
-
-		ATF_PASS_OR_BREAK((fmax(x, y) == x) || (fmax(x, y) == y));
-		ATF_PASS_OR_BREAK((fmin(x, y) == x) || (fmin(x, y) == y));
-		ATF_PASS_OR_BREAK((fmax(x, y) != fmin(x, y)));
 	}
+}
+
+/*
+ * Test case 4 - Live on the nextafter() edge
+ */
+ATF_TC(test_fmax4);
+ATF_TC_HEAD(test_fmax4, tc)
+{
+	atf_tc_set_md_var(tc,
+	    "descr",
+	    "Check some edge cases");
+}
+ATF_TC_BODY(test_fmax4, tc)
+{
+#ifdef	INFINITY
+	float fx, fy, fz;
+	double dx, dy, dz;
+	long double ldx, ldy, ldz;
+        long i, N;
+
+        N = get_config_var_as_long(tc, "iterations");
+	ATF_REQUIRE(N > 0);
+
+	/* x < y < z */
+	ATF_FOR_LOOP(i, N, i++) {
+		/* float */
+		fy = random_float(FP_NORMAL);
+		fx = nextafterf(fy, -INFINITY);
+		fz = nextafterf(fy, +INFINITY);
+		ATF_PASS_OR_BREAK(fmaxf(fx, fy) == fy);
+		ATF_PASS_OR_BREAK(fmaxf(fy, fz) == fz);
+		ATF_PASS_OR_BREAK(fminf(fx, fy) == fx);
+                ATF_PASS_OR_BREAK(fminf(fy, fz) == fy);
+
+		/* double */
+		dy = random_double(FP_NORMAL);
+		dx = nextafter(dy, -INFINITY);
+		dz = nextafter(dy, +INFINITY);
+		ATF_PASS_OR_BREAK(fmax(dx, dy) == dy);
+		ATF_PASS_OR_BREAK(fmax(dy, dz) == dz);
+                ATF_PASS_OR_BREAK(fmin(dx, dy) == dx);
+                ATF_PASS_OR_BREAK(fmin(dy, dz) == dy);
+
+		/* long double */
+#if defined(HAVE_FMAXL) && defined(HAVE_FMINL) && defined(HAVE_NEXTAFTERL)
+		ldy = random_long_double(FP_NORMAL);
+		ldx = nextafterl(ldy, -INFINITY);
+		ldz = nextafterl(ldy, +INFINITY);
+		ATF_PASS_OR_BREAK(fmaxl(ldx, ldy) == ldy);
+		ATF_PASS_OR_BREAK(fmaxl(ldy, ldz) == ldz);
+                ATF_PASS_OR_BREAK(fminl(ldx, ldy) == ldx);
+                ATF_PASS_OR_BREAK(fminl(ldy, ldz) == ldy);
+#endif
+	}
+#endif	/* INFINITY */
 }
 
 /* Add test cases to test program */
@@ -225,6 +253,7 @@ ATF_TP_ADD_TCS(tp)
 	ATF_TP_ADD_TC(tp, test_fmax1);
 	ATF_TP_ADD_TC(tp, test_fmax2);
 	ATF_TP_ADD_TC(tp, test_fmax3);
+	ATF_TP_ADD_TC(tp, test_fmax4);
 
 	return atf_no_error();
 }
