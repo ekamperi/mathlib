@@ -1,6 +1,7 @@
 #define	_XOPEN_SOURCE	600
 
 #include <assert.h>
+#include <complex.h>
 #include <math.h>
 #include <inttypes.h>
 #include <stdio.h>
@@ -181,6 +182,42 @@ random_float(int fpclass)
 	} while (fpclassify(x) != fpclass);
 
 	return (x);
+}
+
+/*******************************************************************************
+ *				Complex Numbers				       *
+ ******************************************************************************/
+long double complex
+random_long_double_complex(int fpclass)
+{
+	long double x, y;
+
+	x = random_long_double(fpclass);
+	y = random_long_double(fpclass);
+
+	return (x + y*I);
+}
+
+double complex
+random_double_complex(int fpclass)
+{
+	double x, y;
+
+	x = random_double(fpclass);
+        y = random_double(fpclass);
+
+	return (x + y*I);
+}
+
+float complex
+random_float_complex(int fpclass)
+{
+	float x, y;
+
+	x = random_float(fpclass);
+	y = random_float(fpclass);
+
+	return (x + y*I);
 }
 
 void
