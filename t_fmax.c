@@ -208,9 +208,9 @@ ATF_TC_BODY(test_fmax4, tc)
 	float fx, fy, fz;
 	double dx, dy, dz;
 	long double ldx, ldy, ldz;
-        long i, N;
+	long i, N;
 
-        N = get_config_var_as_long(tc, "iterations");
+	N = get_config_var_as_long(tc, "iterations");
 	ATF_REQUIRE(N > 0);
 
 	/* x < y < z */
@@ -222,7 +222,7 @@ ATF_TC_BODY(test_fmax4, tc)
 		ATF_PASS_OR_BREAK(fmaxf(fx, fy) == fy);
 		ATF_PASS_OR_BREAK(fmaxf(fy, fz) == fz);
 		ATF_PASS_OR_BREAK(fminf(fx, fy) == fx);
-                ATF_PASS_OR_BREAK(fminf(fy, fz) == fy);
+		ATF_PASS_OR_BREAK(fminf(fy, fz) == fy);
 
 		/* double */
 		dy = random_double(FP_NORMAL);
@@ -230,8 +230,8 @@ ATF_TC_BODY(test_fmax4, tc)
 		dz = nextafter(dy, +INFINITY);
 		ATF_PASS_OR_BREAK(fmax(dx, dy) == dy);
 		ATF_PASS_OR_BREAK(fmax(dy, dz) == dz);
-                ATF_PASS_OR_BREAK(fmin(dx, dy) == dx);
-                ATF_PASS_OR_BREAK(fmin(dy, dz) == dy);
+		ATF_PASS_OR_BREAK(fmin(dx, dy) == dx);
+		ATF_PASS_OR_BREAK(fmin(dy, dz) == dy);
 
 		/* long double */
 #if defined(HAVE_FMAXL) && defined(HAVE_FMINL) && defined(HAVE_NEXTAFTERL)
@@ -240,8 +240,8 @@ ATF_TC_BODY(test_fmax4, tc)
 		ldz = nextafterl(ldy, +INFINITY);
 		ATF_PASS_OR_BREAK(fmaxl(ldx, ldy) == ldy);
 		ATF_PASS_OR_BREAK(fmaxl(ldy, ldz) == ldz);
-                ATF_PASS_OR_BREAK(fminl(ldx, ldy) == ldx);
-                ATF_PASS_OR_BREAK(fminl(ldy, ldz) == ldy);
+		ATF_PASS_OR_BREAK(fminl(ldx, ldy) == ldx);
+		ATF_PASS_OR_BREAK(fminl(ldy, ldz) == ldy);
 #endif
 	}
 #endif	/* INFINITY */
