@@ -5,13 +5,31 @@
 #include "subr_random.h"
 
 static const struct
-tentry {
+t1entry {
 	long double x;       /* Input */
 	long double y;       /* signbit output */
-} ttable[] = {
+} t1table[] = {
 	/* Some special cases */
 	{  0.0, 0 },
-	{ -0.0, 1 }
+	{ -0.0, 1 },
+
+	/* Infinities */
+#ifdef  INFINITIY
+        {  INFINITY, 0 },
+        { -INFINITY, 1 },
+#endif
+#ifdef  HUGE_VAL
+        {  HUGE_VAL, 0 },
+        { -HUGE_VAL, 1 },
+#endif
+#ifdef  HUGE_VALF
+        {  HUGE_VALF, 0 },
+        { -HUGE_VALF, 1 },
+#endif
+#ifdef  HUGE_VALL
+        {  HUGE_VALL, 0 },
+        { -HUGE_VALL, 1 },
+#endif
 };
 
 /*
@@ -28,11 +46,11 @@ ATF_TC_BODY(test_signbit1, tc)
 {
 	size_t i, N;
 
-	N = sizeof(ttable) / sizeof(ttable[0]);
+	N = sizeof(t1table) / sizeof(t1table[0]);
 	for (i = 0; i < N; i++) {
-		ATF_CHECK(signbit(	  ttable[i].x) == ttable[i].y);
-		ATF_CHECK(signbit((float) ttable[i].x) == ttable[i].y);
-		ATF_CHECK(signbit((double)ttable[i].x) == ttable[i].y);
+		ATF_CHECK(signbit(	  t1table[i].x) == t1table[i].y);
+		ATF_CHECK(signbit((float) t1table[i].x) == t1table[i].y);
+		ATF_CHECK(signbit((double)t1table[i].x) == t1table[i].y);
 	}
 }
 
