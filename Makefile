@@ -20,12 +20,12 @@ all: $(TESTS)
 obj:
 	@mkdir -p obj
 
-config.h:
+include/config.h:
 	@echo "Preparing to run autotools. This may take a while."
 	autoreconf && ./configure
 
 # Use order-only prerequisite for obj/
-obj/%.o: %.c | obj config.h
+obj/%.o: %.c | obj include/config.h
 	$(CC99) -c -o $@ $< $(CFLAGS)
 
 
