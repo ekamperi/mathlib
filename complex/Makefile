@@ -1,0 +1,43 @@
+CC99=gcc -std=c99
+INCLUDE=-I../include -I/usr/opt/include -L/usr/opt/lib
+CFLAGS=-Wall -W -Wformat-nonliteral -Wcast-align -Wpointer-arith 		\
+	-Wbad-function-cast -Wmissing-prototypes -Wstrict-prototypes 		\
+	-Wmissing-declarations -Winline -Wundef -Wnested-externs -Wcast-qual	\
+	-Wshadow -Wwrite-strings -Wno-unused-parameter				\
+	-Wswitch -Wbad-function-cast -g $(INCLUDE)
+CPPFLAGS=-Wall -W -g $(INCLUDE)
+LIBS=-lm -latf-c
+
+# For ../subr_*.c
+VPATH = ../
+
+obj/%.o: %.c
+	mkdir -p obj
+	$(CC99) -c -o $@ $< $(CFLAGS)
+
+obj/%o: %cpp
+	mkdir -p obj
+	$(CPP) -c -o $@ $< $(CPPFLAGS)
+
+TESTS=	t_imgconstant
+
+.PHONY: all
+all: $(TESTS)
+
+_DEPS_T_IMGCONSTANT = t_imgconstant.o
+ DEPS_T_IMGCONSTANT = $(_DEPS_T_IMGCONSTANT:%=obj/%)
+t_imgconstant: $(DEPS_T_IMGCONSTANT)
+	$(CC99) -o t_imgconstant $(DEPS_T_IMGCONSTANT) $(CFLAGS) $(LIBS)
+
+
+.PHONY: run
+run:
+	atf-run | atf-report
+
+.PHONY: clean
+clean:
+	rm -f $(TESTS) obj/*.o *~ core
+
+.PHONY: git-clean
+git-clean:
+	git clean -fd > /dev/null
