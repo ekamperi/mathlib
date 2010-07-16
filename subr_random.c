@@ -187,6 +187,18 @@ random_float(int fpclass)
 /*******************************************************************************
  *				Complex Numbers				       *
  ******************************************************************************/
+
+/*
+ * Solaris doesn't provide the `_Imaginary' datatype,
+ * so we need to workaround it.
+ *
+ * ISO/IEC 9899:TC2 - 6.2.5.13 Types
+ * Each complex type has the same representation and alignment requirements as
+ * an array type containing exactly two elements of the corresponding real type;
+ * the first element is equal to the real part, and the second element to the
+ * imaginary part, of the complex number.
+ */
+
 long double complex
 random_long_double_complex(int fpclass)
 {
@@ -195,7 +207,15 @@ random_long_double_complex(int fpclass)
 	x = random_long_double(fpclass);
 	y = random_long_double(fpclass);
 
+#if defined(__sun__)
+	union {
+		long double complex z;
+		long double a[2];
+	} u = { .a = {x, y}};
+	return (u.z);
+#else
 	return (x + y*I);
+#endif
 }
 
 double complex
@@ -204,9 +224,17 @@ random_double_complex(int fpclass)
 	double x, y;
 
 	x = random_double(fpclass);
-        y = random_double(fpclass);
+	y = random_double(fpclass);
 
+#if defined(__sun__)
+	union {
+		double complex z;
+		double a[2];
+	} u = { .a = {x, y}};
+	return (u.z);
+#else
 	return (x + y*I);
+#endif
 }
 
 float complex
@@ -217,7 +245,15 @@ random_float_complex(int fpclass)
 	x = random_float(fpclass);
 	y = random_float(fpclass);
 
+#if defined(__sun__)
+	union {
+		long double complex z;
+		long double a[2];
+	} u = { .a = {x, y}};
+	return (u.z);
+#else
 	return (x + y*I);
+#endif
 }
 
 void
