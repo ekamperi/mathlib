@@ -1,5 +1,5 @@
 CC99=gcc -std=c99
-INCLUDE=-I../include -I/usr/opt/include -L/usr/opt/lib
+INCLUDE=-I../include -I/usr/pkg/include -L/usr/pkg/lib
 CFLAGS=-Wall -W -Wformat-nonliteral -Wcast-align -Wpointer-arith 		\
 	-Wbad-function-cast -Wmissing-prototypes -Wstrict-prototypes 		\
 	-Wmissing-declarations -Winline -Wundef -Wnested-externs -Wcast-qual	\
@@ -15,16 +15,12 @@ obj/%.o: %.c
 	mkdir -p obj
 	$(CC99) -c -o $@ $< $(CFLAGS)
 
-obj/%o: %cpp
-	mkdir -p obj
-	$(CPP) -c -o $@ $< $(CPPFLAGS)
-
 TESTS=	t_imgconstant
 
 .PHONY: all
 all: $(TESTS)
 
-_DEPS_T_IMGCONSTANT = t_imgconstant.o
+_DEPS_T_IMGCONSTANT = t_imgconstant.o subr_fpcmp.o
  DEPS_T_IMGCONSTANT = $(_DEPS_T_IMGCONSTANT:%=obj/%)
 t_imgconstant: $(DEPS_T_IMGCONSTANT)
 	$(CC99) -o t_imgconstant $(DEPS_T_IMGCONSTANT) $(CFLAGS) $(LIBS)

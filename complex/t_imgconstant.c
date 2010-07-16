@@ -1,6 +1,8 @@
 #include <atf-c.h>
 #include <complex.h>
 
+#include "subr_fpcmp.h"
+
 /*
  * Test case 1
  *
@@ -44,16 +46,16 @@ ATF_TC_BODY(test_imgconstant, tc)
 
 	for (i = 0; i < N; i++) {
 		/* float */
-		fcx = I*t1table;
+		fcx = I*t1table[i];
 		ATF_CHECK(fpcmp_equalf(
 			    creal(fcx),
-			    0.0);
+			    0.0));
 
 		/* double */
-		dcx = I*t1table;
+		dcx = I*t1table[i];
 
 		/* long double */
-		ldcx = I*t1table;
+		ldcx = I*t1table[i];
 	}
 #endif	/* !defined(__sun__) */
 }
