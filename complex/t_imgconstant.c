@@ -30,14 +30,14 @@ t1table[] =
 #endif
 };
 
-ATF_TC(test_imgconstant);
-ATF_TC_HEAD(test_imgconstant, tc)
+ATF_TC(test_imgconstant1);
+ATF_TC_HEAD(test_imgconstant1, tc)
 {
 	atf_tc_set_md_var(tc,
 	    "descr",
 	    "");
 }
-ATF_TC_BODY(test_imgconstant, tc)
+ATF_TC_BODY(test_imgconstant1, tc)
 {
 #if !defined(__sun__)
 	float complex fcx;
@@ -72,10 +72,23 @@ ATF_TC_BODY(test_imgconstant, tc)
 #endif	/* !defined(__sun__) */
 }
 
+ATF_TC(test_imgconstant2);
+ATF_TC_HEAD(test_imgconstant2, tc)
+{
+        atf_tc_set_md_var(tc,
+            "descr",
+            "");
+}
+ATF_TC_BODY(test_imgconstant2, tc)
+{
+
+}
+
 /* Add test cases to test program */
 ATF_TP_ADD_TCS(tp)
 {
-	ATF_TP_ADD_TC(tp, test_imgconstant);
+	ATF_TP_ADD_TC(tp, test_imgconstant1);
+	ATF_TP_ADD_TC(tp, test_imgconstant2);
 
 	return atf_no_error();
 }
