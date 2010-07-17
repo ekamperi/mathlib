@@ -1,5 +1,5 @@
 CC99=gcc -std=c99
-INCLUDE=-I../include -I/usr/pkg/include -L/usr/pkg/lib
+INCLUDE=-I../include -I/usr/opt/include -L/usr/opt/lib
 CFLAGS=-Wall -W -Wformat-nonliteral -Wcast-align -Wpointer-arith 		\
 	-Wbad-function-cast -Wmissing-prototypes -Wstrict-prototypes 		\
 	-Wmissing-declarations -Winline -Wundef -Wnested-externs -Wcast-qual	\
