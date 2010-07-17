@@ -38,7 +38,7 @@ ATF_TC_HEAD(test_imgconstant1, tc)
 {
 	atf_tc_set_md_var(tc,
 	    "descr",
-	    "");
+	    "Check if I*Inf is corrupted");
 }
 ATF_TC_BODY(test_imgconstant1, tc)
 {
@@ -83,7 +83,7 @@ ATF_TC_HEAD(test_imgconstant2, tc)
 {
         atf_tc_set_md_var(tc,
             "descr",
-            "");
+            "Check if Inf-0.0 is corrupted");
 }
 ATF_TC_BODY(test_imgconstant2, tc)
 {
