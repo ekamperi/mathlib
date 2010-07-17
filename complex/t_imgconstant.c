@@ -1,5 +1,6 @@
 #include <atf-c.h>
 #include <complex.h>
+#include <math.h>
 
 #include "subr_fpcmp.h"
 
@@ -44,18 +45,29 @@ ATF_TC_BODY(test_imgconstant, tc)
 	long double complex ldcx;
 	size_t i, N;
 
+	N = sizeof(t1table) / sizeof(t1table[0]);
+	ATF_REQUIRE(N > 0);
+
 	for (i = 0; i < N; i++) {
 		/* float */
-		fcx = I*t1table[i];
+		fcx = I*((float)t1table[i]);
 		ATF_CHECK(fpcmp_equalf(
-			    creal(fcx),
+			    crealf(fcx),
 			    0.0));
 
 		/* double */
-		dcx = I*t1table[i];
+		dcx = I*((double)t1table[i]);
+		ATF_CHECK(fpcmp_equal(
+			    creal(dcx),
+			    0.0));
 
 		/* long double */
+#if defined(creall)
 		ldcx = I*t1table[i];
+		ATF_CHECK(fpcmp_equall(
+			    creall(ldcx),
+			    0.0));
+#endif
 	}
 #endif	/* !defined(__sun__) */
 }
