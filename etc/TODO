@@ -7,3 +7,5 @@
 * Add profiling capabilities for all complex.h functions
 * Add good (x, $f(x)) pairs for all test cases
 * #ifdef protect all long double math functions -- DONE
+* Provide a long double version of M_PI and use it where due
+
