@@ -7,11 +7,14 @@
 /*
  * Test case 1
  *
- * There are some old references stating that x+I*y is unusable in general,
- * since gcc introduces many overflow, underflow, sign and efficiency bugs
- * by rewriting I*y as (0.0+I)*(y+0.0*I) and laboriously computing the full
- * complex product. In particular, I*Inf is corrupted to NaN+I*Inf, and I*-0
- * is corrupted.
+ *  Quoting comment in freebsd/lib/msun/src/math_private.h:
+ *
+ * x+I*y is unusable in general,since gcc introduces many overflow,
+ * underflow, sign and efficiency bugs by rewriting I*y as (0.0+I)*(y+0.0*I)
+ * and laboriously computing the full complex product.
+ *
+ * In particular, I*Inf is corrupted to NaN+I*Inf, and I*-0 is corrupted to
+ *  -0.0+I*0.0.
  */
 static const long double
 t1table[] =
@@ -72,6 +75,9 @@ ATF_TC_BODY(test_imgconstant1, tc)
 #endif	/* !defined(__sun__) */
 }
 
+/*
+ * and I*-0 is corrupted to -0.0+I*0.0
+ */
 ATF_TC(test_imgconstant2);
 ATF_TC_HEAD(test_imgconstant2, tc)
 {
@@ -81,7 +87,18 @@ ATF_TC_HEAD(test_imgconstant2, tc)
 }
 ATF_TC_BODY(test_imgconstant2, tc)
 {
+#ifdef	!defined(__sun__)
+	float complex fcx;
 
+	/* float */
+	fcx = I*(-0.0);
+	ATF_CHECK(fpcmp_equalf(creal(fcx), 0.0) &&
+	    fpcmp_equalf(cimagf(fcx), -0.0));
+
+	/* double */
+
+	/* long double */
+#endif	/* !defined(__sun__) */
 }
 
 /* Add test cases to test program */
