@@ -28,12 +28,12 @@ AC_TYPE_UINT32_T
 # Checks for library functions.
 AC_FUNC_MALLOC
 
-# Needed by t_tgmath only
+# Needed by t_tgmath only.
 AC_CHECK_FUNCS([acos asin atan acosh asinh atanh cos sin tan cosh sinh tanh])
 AC_CHECK_FUNCS([exp log pow sqrt fabs])
 
-# Long double versions -- needed by all test cases
-# Note: `fmal' is not a typo, it refers to fused-multiply-and-add function
+# Long double versions of real-value math functions.
+# Note: `fmal' is not a typo, it refers to fused-multiply-and-add function.
 AC_CHECK_FUNCS([acoshl acosl asinhl asinl atan2l atanhl atanl cbrtl ceill])
 AC_CHECK_FUNCS([copysignl coshl cosl erfcl erfl exp2l expl expm1l fabsl fdiml])
 AC_CHECK_FUNCS([floorl fmal fmaxl fminl fmodl frexpl hypotl ilogbl ldexpl])
@@ -42,7 +42,7 @@ AC_CHECK_FUNCS([lroundl modfl nanl nearbyintl nextafterl nexttowardl powl])
 AC_CHECK_FUNCS([remainderl remquol rintl roundl scalblnl scalbnl sinhl sinl])
 AC_CHECK_FUNCS([sqrtl tanhl tanl tgammal truncl])
 
-# versions of complex arithmetic functions
+# Long double versions of complex arithmetic functions.
 AC_CHECK_FUNCS([cabsl cacoshl cacosl cargl casinhl casinl catanhl catanl])
 AC_CHECK_FUNCS([ccoshl ccosl cexpl cimagl clogl conjl cpowl cprojl creall])
 AC_CHECK_FUNCS([csinhl csinl csqrtl ctanhl ctanl])
