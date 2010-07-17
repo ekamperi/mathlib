@@ -76,7 +76,7 @@ ATF_TC_BODY(test_imgconstant1, tc)
 }
 
 /*
- * and I*-0 is corrupted to -0.0+I*0.0
+ * and I*-0.0 is corrupted to -0.0+I*0.0
  */
 ATF_TC(test_imgconstant2);
 ATF_TC_HEAD(test_imgconstant2, tc)
@@ -87,7 +87,7 @@ ATF_TC_HEAD(test_imgconstant2, tc)
 }
 ATF_TC_BODY(test_imgconstant2, tc)
 {
-#ifdef	!defined(__sun__)
+#if	!defined(__sun__)
 	float complex fcx;
 
 	/* float */
