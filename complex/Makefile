@@ -15,10 +15,15 @@ obj/%.o: %.c
 	mkdir -p obj
 	$(CC99) -c -o $@ $< $(CFLAGS)
 
-TESTS=	t_imgconstant
+TESTS=	t_cacos t_imgconstant
 
 .PHONY: all
 all: $(TESTS)
+
+_DEPS_T_CACOS = t_cacos.o subr_atf.o subr_fpcmp.o subr_random.o
+ DEPS_T_CACOS = $(_DEPS_T_CACOS:%=obj/%)
+t_cacos: $(DEPS_T_CACOS)
+	$(CC99) -o t_cacos $(DEPS_T_CACOS) $(CFLAGS) $(LIBS)
 
 _DEPS_T_IMGCONSTANT = t_imgconstant.o subr_fpcmp.o
  DEPS_T_IMGCONSTANT = $(_DEPS_T_IMGCONSTANT:%=obj/%)
