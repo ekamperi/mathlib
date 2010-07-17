@@ -42,6 +42,11 @@ AC_CHECK_FUNCS([lroundl modfl nanl nearbyintl nextafterl nexttowardl powl])
 AC_CHECK_FUNCS([remainderl remquol rintl roundl scalblnl scalbnl sinhl sinl])
 AC_CHECK_FUNCS([sqrtl tanhl tanl tgammal truncl])
 
+# versions of complex arithmetic functions
+AC_CHECK_FUNCS([cabsl cacoshl cacosl cargl casinhl casinl catanhl catanl])
+AC_CHECK_FUNCS([ccoshl ccosl cexpl cimagl clogl conjl cpowl cprojl creall])
+AC_CHECK_FUNCS([csinhl csinl csqrtl ctanhl ctanl])
+
 AC_CHECK_FUNCS([strtold])
 
 AC_OUTPUT
