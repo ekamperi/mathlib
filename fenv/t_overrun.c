@@ -23,22 +23,21 @@ ATF_TC_BODY(test_overrun1, tc)
 	fenv_t env[2];
 	unsigned char bytes[sizeof(fenv_t)];
 	long N;
-	size_t i;
+	size_t i, j;
 
 	N = get_config_var_as_long(tc, "iterations");
 	ATF_REQUIRE(N > 0);
 
 	ATF_FOR_LOOP(i, N, i++) {
-		for (i = 0; i < sizeof(fenv_t); i++)
-			bytes[i] = rand() % 255;
+		for (j = 0; j < sizeof(fenv_t); j++)
+			bytes[j] = rand() % 255;
 		memcpy(&env[1], bytes, sizeof(fenv_t));
 
 		ATF_REQUIRE(fegetenv(env) == 0);
 
 		/* One failure is enough to prove corruption */
-		for (i = 0; i < sizeof(fenv_t); i++)
-			ATF_PASS_OR_BREAK(
-				memcmp(&env[1], bytes, sizeof(fenv_t)) == 0);
+		ATF_PASS_OR_BREAK(
+			memcmp(&env[1], bytes, sizeof(fenv_t)) == 0);
 	}
 }
 
