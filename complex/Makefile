@@ -15,7 +15,7 @@ obj/%.o: %.c
 	mkdir -p obj
 	$(CC99) -c -o $@ $< $(CFLAGS)
 
-TESTS=	t_cacos t_cacosh t_imgconstant
+TESTS=	t_cacos t_cacosh t_carg t_imgconstant
 
 .PHONY: all
 all: $(TESTS)
@@ -30,6 +30,13 @@ _DEPS_T_CACOSH = t_cacosh.o subr_atf.o subr_fpcmp.o subr_random.o
  DEPS_T_CACOSH = $(_DEPS_T_CACOSH:%=obj/%)
 t_cacosh: $(DEPS_T_CACOSH)
 	$(CC99) -o t_cacosh $(DEPS_T_CACOSH) $(CFLAGS) $(LIBS)
+
+
+_DEPS_T_CARG = t_carg.o subr_atf.o subr_fpcmp.o subr_random.o
+ DEPS_T_CARG = $(_DEPS_T_CARG:%=obj/%)
+t_carg: $(DEPS_T_CARG)
+	$(CC99) -o t_carg $(DEPS_T_CARG) $(CFLAGS) $(LIBS)
+
 
 _DEPS_T_IMGCONSTANT = t_imgconstant.o subr_fpcmp.o
  DEPS_T_IMGCONSTANT = $(_DEPS_T_IMGCONSTANT:%=obj/%)
