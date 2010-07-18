@@ -134,20 +134,23 @@ isvalidfp_intel80bit(const uint32_t *y)
  * of floating-point numbers. They are biased towards zero. If you want
  * equally distributed numbers, you may want drand48() or you should roll
  * out your own  with rand().
+ *
+ * The formats we are studying (96bits, 128bits) are 4-byte aligned,
+ * so uin32_t is fine for the moment.
  */
 long double
 random_long_double(int fpclass)
 {
-	size_t i, nbytes;
+#define	NBYTES	(sizeof(long double) / sizeof(uint32_t))
+	size_t i;
 
-	nbytes = sizeof(long double) / sizeof(uint32_t);
 	union {
 		long double x;
-		uint32_t y[nbytes];
+		uint32_t y[NBYTES];
 	} u;
 
 	do {
-		for (i = 0; i < nbytes; i++)
+		for (i = 0; i < NBYTES; i++)
 			u.y[i] = MY_RANDOM();
 	} while (!ISVALIDFP(u.y) || fpclassify(u.x) != fpclass);
 
