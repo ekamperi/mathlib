@@ -5,6 +5,7 @@
 #include <math.h>
 
 #include "config.h"
+#include "lconstants.h"
 #include "subr_atf.h"
 #include "subr_fpcmp.h"
 #include "subr_random.h"
@@ -61,7 +62,7 @@ ATF_TC_BODY(test_cacos2, tc)
                 ldcx = random_long_double_complex(FP_NORMAL);
                 ldcy = cacosl(ldcx);
                 ATF_PASS_OR_BREAK(creall(ldcy) >= 0
-			       && creall(ldcy) <= M_PI);
+			       && creall(ldcy) <= M_PIl);
 #endif
 	}
 }
