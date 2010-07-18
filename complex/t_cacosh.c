@@ -29,8 +29,8 @@ ATF_TC_BODY(test_cacosh1, tc)
 ATF_TC(test_cacosh2);
 ATF_TC_HEAD(test_cacosh2, tc)
 {
-        atf_tc_set_md_var(tc,
-            "descr",
+	atf_tc_set_md_var(tc,
+	    "descr",
 	    "The range of a half-strip of non-negative values along the real "
 	    "axis and in the interval [-i*Pi, +i*Pi] along the imaginary axis");
 }
@@ -48,20 +48,24 @@ ATF_TC_BODY(test_cacosh2, tc)
 		/* float */
 		fcx = random_float_complex(FP_NORMAL);
 		fcy = cacoshf(fcx);
-		ATF_PASS_OR_BREAK(crealf(fcy) >= 0);
-		ATF_PASS_OR_BREAK(cimagf(fcy) >= -I*M_PI
-			       && cimagf(fcx) <=  I*M_PI);
+		ATF_PASS_OR_BREAK(crealf(fcy) >= 0.0);
+		ATF_PASS_OR_BREAK(cimagf(fcy) >= -(float)M_PI
+			       && cimagf(fcx) <=  (float)M_PI);
 
 		/* double */
-                dcx = random_double_complex(FP_NORMAL);
-                dcy = cacosh(dcx);
-                ATF_PASS_OR_BREAK(creal(dcy) >= 0);
+		dcx = random_double_complex(FP_NORMAL);
+		dcy = cacosh(dcx);
+		ATF_PASS_OR_BREAK(creal(dcy) >= 0.0);
+		ATF_PASS_OR_BREAK(cimag(dcy) >= -M_PI
+			       && cimag(dcx) <=  M_PI);
 
 		/* long double */
 #if defined(HAVE_CACOSHL) && defined(HAVE_CREALL)
-                ldcx = random_long_double_complex(FP_NORMAL);
-                ldcy = cacoshl(ldcx);
-                ATF_PASS_OR_BREAK(creall(ldcy) >= 0);
+		ldcx = random_long_double_complex(FP_NORMAL);
+		ldcy = cacoshl(ldcx);
+		ATF_PASS_OR_BREAK(creall(ldcy) >= 0.0);
+		ATF_PASS_OR_BREAK(cimagl(ldcy) >= -M_PI
+			       && cimagl(ldcx) <=  M_PI);
 #endif
 	}
 }
