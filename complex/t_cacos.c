@@ -47,18 +47,21 @@ ATF_TC_BODY(test_cacos2, tc)
 		/* float */
 		fcx = random_float_complex(FP_NORMAL);
 		fcy = cacosf(fcx);
-		ATF_PASS_OR_BREAK(crealf(fcy) >= 0 && crealf(fcy) <= M_PI);
+		ATF_PASS_OR_BREAK(crealf(fcy) >= 0
+			       && crealf(fcy) <= (float)M_PI);
 
 		/* double */
                 dcx = random_double_complex(FP_NORMAL);
                 dcy = cacos(dcx);
-                ATF_PASS_OR_BREAK(creal(dcy) >= 0 && crealf(dcy) <= M_PI);
+                ATF_PASS_OR_BREAK(creal(dcy) >= 0
+			       && creal(dcy) <= M_PI);
 
 		/* long double */
 #if defined(HAVE_CACOSL) && defined(HAVE_CREALL)
                 ldcx = random_long_double_complex(FP_NORMAL);
                 ldcy = cacosl(ldcx);
-                ATF_PASS_OR_BREAK(creall(ldcy) >= 0 && creall(ldcy) <= M_PI);
+                ATF_PASS_OR_BREAK(creall(ldcy) >= 0
+			       && creall(ldcy) <= M_PI);
 #endif
 	}
 }
