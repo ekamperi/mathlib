@@ -21,7 +21,8 @@ obj/%o: %cpp
 	$(CPP) -c -o $@ $< $(CPPFLAGS)
 
 TESTS=	t_extern t_feclearexcept t_fegetround t_fegetexceptflag t_fenv 		\
-	t_feraiseexcept t_fesetenv t_fesetexceptflag t_ieeefp
+	t_feraiseexcept t_fesetenv t_fesetexceptflag t_ieeefp t_overrun
+
 .PHONY: all
 all: $(TESTS)
 
@@ -107,6 +108,13 @@ _DEPS_T_THREAD = t_thread.o
  DEPS_T_THREAD = $(_DEPS_T_THREAD:%=obj/%)
 t_thread: $(DEPS_T_THREAD)
 	$(CC99) -o t_thread $(DEPS_T_THREAD) $(CFLAGS) $(LIBS)
+
+
+_DEPS_T_OVERRUN = t_overrun.o subr_atf.o
+ DEPS_T_OVERRUN = $(_DEPS_T_OVERRUN:%=obj/%)
+t_overrun: $(DEPS_T_OVERRUN)
+	$(CC99) -o t_overrun $(DEPS_T_OVERRUN) $(CFLAGS) $(LIBS)
+
 
 .PHONY: run
 run:
