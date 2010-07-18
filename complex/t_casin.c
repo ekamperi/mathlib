@@ -32,7 +32,8 @@ ATF_TC_HEAD(test_casin2, tc)
 {
         atf_tc_set_md_var(tc,
             "descr",
-	    "Check if result is in the interval [0, Pi] along the real axis.");
+	    "Check if result is in the interval [-Pi/2, Pi/2] "
+	    "along the real axis.");
 }
 ATF_TC_BODY(test_casin2, tc)
 {
