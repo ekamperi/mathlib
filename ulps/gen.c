@@ -225,6 +225,9 @@ ftable[] = {
 		.f_name = "acos",
 		.f_narg = 1,
 		.f_libm = acos,
+#ifdef	HAVE_ACOSL
+		.f_libml = acosl,
+#endif
 		.f_mpfr = mpfr_acos,
 		.f_u.fp1 = dom_acos
 	},
@@ -236,6 +239,9 @@ ftable[] = {
 		.f_name = "acosh",
 		.f_narg = 1,
 		.f_libm = acosh,
+#ifdef  HAVE_ACOSHL
+                .f_libml = acoshl,
+#endif
 		.f_mpfr = mpfr_acosh,
 		.f_u.fp1 = dom_acosh
 	},
@@ -247,6 +253,9 @@ ftable[] = {
 		.f_name = "asin",
 		.f_narg = 1,
 		.f_libm = asin,
+#ifdef	HAVE_ASINL
+		.f_libml = asinl,
+#endif
 		.f_mpfr = mpfr_asin,
 		.f_u.fp1 = dom_asin
 	},
@@ -258,6 +267,9 @@ ftable[] = {
 		.f_name = "asinh",
 		.f_narg = 1,
 		.f_libm = asinh,
+#ifdef	HAVE_ASINHL
+		.f_libml = asinhl,
+#endif
 		.f_mpfr = mpfr_asinh,
 		.f_u.fp1 = dom_asinh
 	},
@@ -269,6 +281,9 @@ ftable[] = {
 		.f_name = "atan",
 		.f_narg = 1,
 		.f_libm = atan,
+#ifdef	HAVE_ATANL
+		.f_libml = atanl,
+#endif
 		.f_mpfr = mpfr_atan,
 		.f_u.fp1 = dom_atan
 	},
@@ -280,6 +295,9 @@ ftable[] = {
 		.f_name = "atan2",
 		.f_narg = 2,
 		.f_libm = atan2,
+#ifdef	HAVE_ATAN2L
+		.f_libml = atan2l,
+#endif
 		.f_mpfr = mpfr_atan2,
 		.f_u.fp1 = dom_atan
 	},
@@ -291,6 +309,9 @@ ftable[] = {
 		.f_name = "atanh",
 		.f_narg = 1,
 		.f_libm = atanh,
+#ifdef	HAVE_ATANHL
+		.f_libml = atanhl,
+#endif
 		.f_mpfr = mpfr_atanh,
 		.f_u.fp1 = dom_atanh
 	},
@@ -302,6 +323,9 @@ ftable[] = {
 		.f_name = "sin",
 		.f_narg = 1,
 		.f_libm = sin,
+#ifdef	HAVE_SINL
+		.f_libml = sinl,
+#endif
 		.f_mpfr = mpfr_sin,
 		.f_u.fp1 = dom_sin
 	},
@@ -313,6 +337,9 @@ ftable[] = {
 		.f_name = "cbrt",
 		.f_narg = 1,
 		.f_libm = cbrt,
+#ifdef	HAVE_CBRTL
+		.f_libml = cbrl,
+#endif
 		.f_mpfr = mpfr_cbrt,
 		.f_u.fp1 = dom_cbrt
 	},
@@ -324,6 +351,9 @@ ftable[] = {
 		.f_name = "ceil",
 		.f_narg = 1,
 		.f_libm = ceil,
+#ifdef	HAVE_CEILL
+		.f_libml = ceill,
+#endif
 		.f_mpfr = mpfr_ceil,
 		.f_u.fp1 = dom_ceil
 	},
@@ -335,6 +365,9 @@ ftable[] = {
 		.f_name = "cos",
 		.f_narg = 1,
 		.f_libm = cos,
+#ifdef	HAVE_COSL
+		.f_libml = cosl,
+#endif
 		.f_mpfr = mpfr_cos,
 		.f_u.fp1 = dom_cos
 	},
@@ -346,6 +379,9 @@ ftable[] = {
 		.f_name = "cosh",
 		.f_narg = 1,
 		.f_libm = cosh,
+#ifdef	HAVE_COSHL
+		.f_libml = coshl,
+#endif
 		.f_mpfr = mpfr_cosh,
 		.f_u.fp1 = dom_cosh
 	},
@@ -357,6 +393,9 @@ ftable[] = {
 		.f_name = "exp",
 		.f_narg = 1,
 		.f_libm = exp,
+#ifdef	HAVE_EXPL
+		.f_libml = expl,
+#endif
 		.f_mpfr = mpfr_exp,
 		.f_u.fp1 = dom_exp
 	},
@@ -368,6 +407,9 @@ ftable[] = {
 		.f_name = "expm1",
 		.f_narg = 1,
 		.f_libm = expm1,
+#ifdef	HAVE_EXPM1L
+		.f_libml = exmp1l,
+#endif
 		.f_mpfr = mpfr_expm1,
 		.f_u.fp1 = dom_expm1
 	},
@@ -379,6 +421,9 @@ ftable[] = {
 		.f_name = "exp2",
 		.f_narg = 1,
 		.f_libm = exp2,
+#ifdef	HAVE_EXP2L
+		.f_libml = exp2l,
+#endif
 		.f_mpfr = mpfr_exp2,
 		.f_u.fp1 = dom_exp2
 	},
@@ -390,6 +435,9 @@ ftable[] = {
 		.f_name = "erf",
 		.f_narg = 1,
 		.f_libm = erf,
+#ifdef	HAVE_ERFL
+		.f_libml = erfl,
+#endif
 		.f_mpfr = mpfr_erf,
 		.f_u.fp1 = dom_erf
 	},
@@ -401,6 +449,9 @@ ftable[] = {
 		.f_name = "erfc",
 		.f_narg = 1,
 		.f_libm = erfc,
+#ifdef	HAVE_ERFCL
+		.f_libml = erfcl,
+#endif
 		.f_mpfr = mpfr_erfc,
 		.f_u.fp1 = dom_erfc
 	},
@@ -412,6 +463,9 @@ ftable[] = {
 		.f_name = "fabs",
 		.f_narg = 1,
 		.f_libm = fabs,
+#ifdef	HAVE_FABSL
+		.f_libml = fabsl,
+#endif
 		.f_mpfr = mpfr_abs,
 		.f_u.fp1 = dom_fabs
 	},
@@ -423,6 +477,9 @@ ftable[] = {
 		.f_name = "floor",
 		.f_narg = 1,
 		.f_libm = floor,
+#ifdef	HAVE_FLOORL
+		.f_libml = floorl,
+#endif
 		.f_mpfr = mpfr_floor,
 		.f_u.fp1 = dom_floor
 	},
@@ -434,6 +491,9 @@ ftable[] = {
 		.f_name = "hypot",
 		.f_narg = 2,
 		.f_libm = hypot,
+#ifdef	HAVE_HYPOTL
+		.f_libml = hypotl,
+#endif
 		.f_mpfr = mpfr_hypot,
 		.f_u.fp2 = dom_hypot
 	},
@@ -445,6 +505,9 @@ ftable[] = {
 		.f_name = "log",
 		.f_narg = 1,
 		.f_libm = log,
+#ifdef	HAVE_LOGL
+		.f_libml = logl,
+#endif
 		.f_mpfr = mpfr_log,
 		.f_u.fp1 = dom_log
 	},
@@ -456,6 +519,9 @@ ftable[] = {
 		.f_name = "log1p",
 		.f_narg = 1,
 		.f_libm = log1p,
+#ifdef	HAVE_LOG1PL
+		.f_libml = log1pl,
+#endif
 		.f_mpfr = mpfr_log1p,
 		.f_u.fp1 = dom_log1p
 	},
@@ -467,6 +533,9 @@ ftable[] = {
 		.f_name = "log10",
 		.f_narg = 1,
 		.f_libm = log10,
+#ifdef	HAVE_LOG10L
+		.f_libml = log10l,
+#endif
 		.f_mpfr = mpfr_log10,
 		.f_u.fp1 = dom_log10
 	},
@@ -478,6 +547,9 @@ ftable[] = {
 		.f_name = "log2",
 		.f_narg = 1,
 		.f_libm = log2,
+#ifdef	HAVE_LOG2L
+		.f_libml = log2l,
+#endif
 		.f_mpfr = mpfr_log2,
 		.f_u.fp1 = dom_log2
 	},
@@ -489,6 +561,9 @@ ftable[] = {
 		.f_name = "remainder",
 		.f_narg = 2,
 		.f_libm = remainder,
+#ifdef	HAVE_REMAINDERL
+		.f_libml = remainderl,
+#endif
 		.f_mpfr = mpfr_remainder,
 		.f_u.fp2 = dom_remainder
 	},
@@ -500,6 +575,9 @@ ftable[] = {
 		.f_name = "rint",
 		.f_narg = 1,
 		.f_libm = rint,
+#ifdef	HAVE_RINTL
+		.f_libml = rintl,
+#endif
 		.f_mpfr = mpfr_rint,
 		.f_u.fp1 = dom_rint
 	},
@@ -511,6 +589,9 @@ ftable[] = {
 		.f_name = "sinh",
 		.f_narg = 1,
 		.f_libm = sinh,
+#ifdef	HAVE_SINHL
+		.f_libml = sinhl,
+#endif
 		.f_mpfr = mpfr_sinh,
 		.f_u.fp1 = dom_sinh
 	},
@@ -522,6 +603,9 @@ ftable[] = {
 		.f_name = "sqrt",
 		.f_narg = 1,
 		.f_libm = sqrt,
+#ifdef	HAVE_SQRTL
+		.f_libml = sqrtl,
+#endif
 		.f_mpfr = mpfr_sqrt,
 		.f_u.fp1 = dom_sqrt
 	},
@@ -533,6 +617,9 @@ ftable[] = {
 		.f_name = "pow",
 		.f_narg = 2,
 		.f_libm = pow,
+#ifdef	HAVE_POWL
+		.f_libml = powl,
+#endif
 		.f_mpfr = mpfr_pow,
 		.f_u.fp2 = dom_pow
 	},
@@ -544,6 +631,9 @@ ftable[] = {
 		.f_name = "tan",
 		.f_narg = 1,
 		.f_libm = tan,
+#ifdef	HAVE_TANL
+		.f_libml = tanl,
+#endif
 		.f_mpfr = mpfr_tan,
 		.f_u.fp1 = dom_tan
 	},
@@ -552,11 +642,14 @@ ftable[] = {
 	/* tanh() */
 #ifdef  HAVE_TANH
 	{
-	  .f_name = "tanh",
-	  .f_narg = 1,
-	  .f_libm = tanh,
-	  .f_mpfr = mpfr_tanh,
-	  .f_u.fp1 = dom_tanh
+		.f_name = "tanh",
+		.f_narg = 1,
+		.f_libm = tanh,
+#ifdef	HAVE_TANHL
+		.f_libml = tanhl,
+#endif
+		.f_mpfr = mpfr_tanh,
+		.f_u.fp1 = dom_tanh
 	},
 #endif
 
@@ -566,6 +659,9 @@ ftable[] = {
 		.f_name = "tgamma",
 		.f_narg = 1,
 		.f_libm = tgamma,
+#ifdef	HAVE_TGAMMAL
+		.f_libml = tgammal,
+#endif
 		.f_mpfr = mpfr_gamma,
 		.f_u.fp1 = dom_tgamma
 	},

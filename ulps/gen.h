@@ -9,6 +9,7 @@ struct fentry {
 		int (*fp2)(double x, double y);
 	} f_u;
 	double (*f_libm)();
+	long double (*f_libml)();
 	int (*f_mpfr)();
 };
 
