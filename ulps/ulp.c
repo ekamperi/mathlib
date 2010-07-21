@@ -16,7 +16,7 @@
 #define	NITERATIONS	(5*1000)
 
 static double
-calculp(double computed, double exact)
+calculp_double(double computed, double exact)
 {
 	double xbefore, xafter;
 	double ulps;
@@ -26,6 +26,21 @@ calculp(double computed, double exact)
 	assert(xafter != xbefore);
 
 	ulps = fabs( (exact - computed) / (xafter - xbefore) );
+
+	return (ulps);
+}
+
+static long double
+calculp_long_double(long double computed, long double exact)
+{
+	long double xbefore, xafter;
+	long double ulps;
+
+	xbefore = nextafterl(exact, -INFINITY);
+	xafter = nextafterl(exact, +INFINITY);
+	assert(xafter != xbefore);
+
+	ulps = fabsl( (exact - computed) / (xafter - xbefore) );
 
 	return (ulps);
 }
@@ -51,10 +66,7 @@ getfunctionulp(const char *fname, struct ulp *u)
 	x = 0.0;
 	y = 0.0;
 
-	u->ulp_max = -DBL_MAX;
-	u->ulp_min = DBL_MAX;
-	u->ulp_avg = 0.0;
-	u->ulp_skipped = 0;
+	ULP_INIT(u);
 
 	for (i = 0; i < NITERATIONS; i++) {
 		if (i %  100 == 0)

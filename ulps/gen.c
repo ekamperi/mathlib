@@ -338,7 +338,7 @@ ftable[] = {
 		.f_narg = 1,
 		.f_libm = cbrt,
 #ifdef	HAVE_CBRTL
-		.f_libml = cbrl,
+		.f_libml = cbrtl,
 #endif
 		.f_mpfr = mpfr_cbrt,
 		.f_u.fp1 = dom_cbrt
@@ -408,7 +408,7 @@ ftable[] = {
 		.f_narg = 1,
 		.f_libm = expm1,
 #ifdef	HAVE_EXPM1L
-		.f_libml = exmp1l,
+		.f_libml = expm1l,
 #endif
 		.f_mpfr = mpfr_expm1,
 		.f_u.fp1 = dom_expm1
