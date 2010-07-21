@@ -12,8 +12,15 @@ LIBS=-lm -latf-c
 # For ../subr_*.c
 VPATH = ../
 
-obj/%.o: %.c
+obj:
 	mkdir -p obj
+
+include/config.h:
+	autoreconf ../ && ../configure
+	@mv include/config.h ../include/config.h
+	@rm -rf include
+
+obj/%.o: %.c | obj include/config.h
 	$(CC99) -c -o $@ $< $(CFLAGS)
 
 obj/%o: %cpp
