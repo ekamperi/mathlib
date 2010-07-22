@@ -5,8 +5,8 @@ struct fentry {
 	const char *f_name;
 	size_t f_narg;
 	union {
-		int (*fp1)(double x);
-		int (*fp2)(double x, double y);
+		int (*fp1)(long double x);
+		int (*fp2)(long double x, long double y);
 	} f_u;
 	double (*f_libm)();
 	long double (*f_libml)();

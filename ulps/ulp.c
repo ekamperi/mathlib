@@ -31,18 +31,18 @@ calculp_double(double computed, double exact)
 }
 
 static long double
-calculp_long_double(long double computed, long double exact)
+calculp_long_double(long double computedl, long double exactl)
 {
-	long double xbefore, xafter;
-	long double ulps;
+	long double xbeforel, xafterl;
+	long double ulpsl;
 
-	xbefore = nextafterl(exact, -INFINITY);
-	xafter = nextafterl(exact, +INFINITY);
-	assert(xafter != xbefore);
+	xbeforel = nextafterl(exactl, -INFINITY);
+	xafterl = nextafterl(exactl, +INFINITY);
+	assert(xafterl != xbeforel);
 
-	ulps = fabsl( (exact - computed) / (xafter - xbefore) );
+	ulpsl = fabsl( (exactl - computedl) / (xafterl - xbeforel) );
 
-	return (ulps);
+	return (ulpsl);
 }
 
 int
@@ -50,18 +50,19 @@ getfunctionulp(const char *fname, struct ulp *u)
 {
 	const struct fentry *f;
 	const mpfr_rnd_t tonearest = GMP_RNDN;
+	mpfr_t mp_ropl, mp_xl, mp_yl;
 	mpfr_t mp_rop, mp_x, mp_y;
-	double x, y, computed, exact, _u;
+	long double xl, yl, computedl, exactl, myulpl;
+	double x, y, computed, exact, myulp;
 	size_t i;
-
-	assert(u);
 
 	f = getfunctionbyname(fname);
 	if (f == NULL)
 		return (-1);
 
 	/* Initialize high precision variables */
-	mpfr_inits2(100, mp_rop, mp_x, mp_y, NULL);
+	mpfr_inits2(100, mp_rop,  mp_x,  mp_y,  NULL);
+	mpfr_inits2(100, mp_ropl, mp_xl, mp_yl, NULL);
 
 	x = 0.0;
 	y = 0.0;
@@ -69,19 +70,23 @@ getfunctionulp(const char *fname, struct ulp *u)
 	ULP_INIT(u);
 
 	for (i = 0; i < NITERATIONS; i++) {
-		if (i %  100 == 0)
-			printf("Percentage complete: %2.2f\r", (100.0 * i)/NITERATIONS);
+		if (i % 100 == 0)
+			printf("Percentage complete: %2.2f\r",
+			    (100.0 * i)/NITERATIONS);
 
 		/* Generate random arguments */
 		if (f->f_narg == 1) {
 			do {
-				x = random_double(FP_NORMAL);
+				x  = random_double(FP_NORMAL);
+				xl = random_long_double(FP_NORMAL);
 			} while (!f->f_u.fp1(x));
 		}
 		if (f->f_narg == 2) {
 			do {
-				x = random_double(FP_NORMAL);
-				y = random_double(FP_NORMAL);
+				x  = random_double(FP_NORMAL);
+				y  = random_double(FP_NORMAL);
+				xl = random_long_double(FP_NORMAL);
+				yl = random_long_double(FP_NORMAL);
 			} while (!f->f_u.fp2(x, y));
 		}
 
@@ -92,17 +97,31 @@ getfunctionulp(const char *fname, struct ulp *u)
 
 		/* Copy arguments to mpfr variables */
 		mpfr_set_d(mp_x, x, tonearest);
+		mpfr_set_ld(mp_xl, xl, tonearest);
 		if (f->f_narg == 2){
 			mpfr_set_d(mp_y, y, tonearest);
+			mpfr_set_ld(mp_y, yl, tonearest);
 		}
 
-		/* Ready to call the mpfr*() */
+		/*
+		 * Ready to call the mpfr*()
+		 * There double version ALWAYS exist!
+		 */
 		if(f->f_narg == 1) {
 			f->f_mpfr(mp_rop, mp_x, tonearest);
 		} else {
 			f->f_mpfr(mp_rop, mp_x, mp_y, tonearest);
 		}
 		exact = mpfr_get_d(mp_rop, tonearest);
+
+		/* We can't tell the same for long double functions though */
+		if (f->f_libml) {
+			if(f->f_narg == 1) {
+				f->f_mpfr(mp_ropl, mp_xl, tonearest);
+			} else {
+				f->f_mpfr(mp_ropl, mp_xl, mp_yl, tonearest);
+			}
+		}
 
 		/* Ready to call the libm*() */
 		if (f->f_narg == 1) {
@@ -111,25 +130,35 @@ getfunctionulp(const char *fname, struct ulp *u)
 			computed = f->f_libm(x, y);
 		}
 
-		/* Skip bogus results */
-		if (fpclassify(computed) != FP_NORMAL ||
-		    fpclassify(exact) != FP_NORMAL) {
-			u->ulp_skipped++;
-			continue;
+                if (f->f_libml) {
+			if (f->f_narg == 1) {
+				computedl = f->f_libm(xl);
+			} else {
+				computedl = f->f_libm(xl, yl);
+			}
 		}
 
-		_u = calculp(computed, exact);
+		/* Skip bogus results */
+		if (fpclassify(computed) == FP_NORMAL &&
+		    fpclassify(exact) == FP_NORMAL) {
+			myulp = calculp_double(computed, exact);
+			ULP_UPDATE(u, myulp);
+		}
+                if (f->f_libml) {
+			if (fpclassify(computedl) == FP_NORMAL &&
+			    fpclassify(exactl) == FP_NORMAL) {
+				myulpl = calculp_long_double(computedl, exactl);
+				ULP_UPDATE(u, myulpl);
+			}
+		}
 
-		if (_u > u->ulp_max)
-			u->ulp_max = _u;
-		if (_u < u->ulp_min)
-			u->ulp_min = _u;
-		u->ulp_avg += _u;
+		u->ulp_avg  /= (i - u->ulp_skipped);
+		u->ulp_avgl /= (i - u->ulp_skippedl);
 	}
-	u->ulp_avg /= (i - u->ulp_skipped);
 
 	/* Free resources */
-	mpfr_clears(mp_rop, mp_x, mp_y, NULL);
+	mpfr_clears(mp_rop,  mp_x,  mp_y,  NULL);
+	mpfr_clears(mp_ropl, mp_xl, mp_yl, NULL);
 
 	/* Success */
 	return 0;
