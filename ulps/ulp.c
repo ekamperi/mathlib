@@ -50,7 +50,7 @@ populate_vars(const struct fentry *f,
     double *x, double *y, long double *xl, long double *yl,
     mpfr_ptr mp_x, mpfr_ptr mp_y, mpfr_ptr mp_xl, mpfr_ptr mp_yl)
 {
-        const mpfr_rnd_t tonearest = GMP_RNDN;
+	const mpfr_rnd_t tonearest = GMP_RNDN;
 	long double txl, tyl;
 	double tx, ty;
 
@@ -86,7 +86,7 @@ populate_vars(const struct fentry *f,
 
 	/* Copy arguments to mpfr variables */
 	mpfr_set_d (mp_x,  tx,  tonearest);
-        mpfr_set_d (mp_y,  ty,  tonearest);
+	mpfr_set_d (mp_y,  ty,  tonearest);
 	mpfr_set_ld(mp_xl, txl, tonearest);
 	mpfr_set_ld(mp_yl, tyl, tonearest);
 }
@@ -148,7 +148,7 @@ getfunctionulp(const char *fname, struct ulp *u)
 			computed = f->f_libm(x, y);
 		}
 
-                if (f->f_libml) {
+		if (f->f_libml) {
 			if (f->f_narg == 1) {
 				computedl = f->f_libml(xl);
 			} else {
@@ -165,7 +165,7 @@ getfunctionulp(const char *fname, struct ulp *u)
 			u->ulp_skipped++;
 		}
 
-                if (f->f_libml) {
+		if (f->f_libml) {
 			if (fpclassify(computedl) == FP_NORMAL &&
 			    fpclassify(exactl) == FP_NORMAL) {
 				myulpl = calculp_long_double(computedl, exactl);
