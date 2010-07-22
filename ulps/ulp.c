@@ -13,7 +13,7 @@
 #include "subr_random.h"
 #include "ulp.h"
 
-#define	NITERATIONS	(5*10000)
+#define	NITERATIONS	(50*1000)
 
 static double
 calculp_double(double computed, double exact)
@@ -45,6 +45,52 @@ calculp_long_double(long double computedl, long double exactl)
 	return (ulpsl);
 }
 
+static void
+populate_vars(const struct fentry *f,
+    double *x, double *y, long double *xl, long double *yl,
+    mpfr_ptr mp_x, mpfr_ptr mp_y, mpfr_ptr mp_xl, mpfr_ptr mp_yl)
+{
+        const mpfr_rnd_t tonearest = GMP_RNDN;
+	long double txl, tyl;
+	double tx, ty;
+
+	assert(f && x && y && xl && yl);
+	txl = tx = 0.0;
+	tyl = ty = 0.0;
+
+	/* Generate random arguments */
+	if (f->f_narg == 1) {
+		do {
+			tx  = random_double(FP_NORMAL);
+			txl = random_long_double(FP_NORMAL);
+		} while (!f->f_u.fp1(tx) || !f->f_u.fp1(txl));
+	}
+	if (f->f_narg == 2) {
+		do {
+			tx  = random_double(FP_NORMAL);
+			ty  = random_double(FP_NORMAL);
+			txl = random_long_double(FP_NORMAL);
+			tyl = random_long_double(FP_NORMAL);
+		} while (!f->f_u.fp2(tx, ty) || !f->f_u.fp2(txl, tyl));
+	}
+
+	/* Hack, yikes */
+	if (!strcmp(f->f_name, "yn")) {
+		txl = tx = 1.0;
+	}
+
+	*x  = tx;
+	*y  = ty;
+	*xl = txl;
+	*yl = tyl;
+
+	/* Copy arguments to mpfr variables */
+	mpfr_set_d (mp_x,  tx,  tonearest);
+        mpfr_set_d (mp_y,  ty,  tonearest);
+	mpfr_set_ld(mp_xl, txl, tonearest);
+	mpfr_set_ld(mp_yl, tyl, tonearest);
+}
+
 int
 getfunctionulp(const char *fname, struct ulp *u)
 {
@@ -62,10 +108,7 @@ getfunctionulp(const char *fname, struct ulp *u)
 
 	/* Initialize high precision variables */
 	mpfr_inits2(100, mp_exact,  mp_x,  mp_y,  (mpfr_ptr)NULL);
-	mpfr_inits2(200, mp_exactl, mp_xl, mp_yl, (mpfr_ptr)NULL);
-
-	x = xl = 0.0;
-	y = yl = 0.0;
+	mpfr_inits2(100, mp_exactl, mp_xl, mp_yl, (mpfr_ptr)NULL);
 
 	ULP_INIT(u);
 
@@ -74,35 +117,8 @@ getfunctionulp(const char *fname, struct ulp *u)
 			printf("Percentage complete: %2.2f\r",
 			    (100.0 * i)/NITERATIONS);
 
-		assert(f->f_libml);
 		/* Generate random arguments */
-		if (f->f_narg == 1) {
-			do {
-				x  = random_double(FP_NORMAL);
-				xl = random_long_double(FP_NORMAL);
-			} while (!f->f_u.fp1(x));
-		}
-		if (f->f_narg == 2) {
-			do {
-				x  = random_double(FP_NORMAL);
-				y  = random_double(FP_NORMAL);
-				xl = random_long_double(FP_NORMAL);
-				yl = random_long_double(FP_NORMAL);
-			} while (!f->f_u.fp2(x, y));
-		}
-
-		/* Hack, yikes */
-		if (!strcmp(f->f_name, "yn")) {
-			x = 1.0;
-		}
-
-		/* Copy arguments to mpfr variables */
-		mpfr_set_d (mp_x,  x,  tonearest);
-		mpfr_set_ld(mp_xl, xl, tonearest);
-		if (f->f_narg == 2){
-			mpfr_set_d (mp_y, y,  tonearest);
-			mpfr_set_ld(mp_y, yl, tonearest);
-		}
+		populate_vars(f, &x, &y, &xl, &yl, mp_x, mp_y, mp_xl, mp_yl);
 
 		/*
 		 * Ready to call the mpfr*()
@@ -144,11 +160,6 @@ getfunctionulp(const char *fname, struct ulp *u)
 		if (fpclassify(computed) == FP_NORMAL &&
 		    fpclassify(exact) == FP_NORMAL) {
 			myulp = calculp_double(computed, exact);
-			if (myulp > 1E100) {
-				printf("----------->\nx=%.16e  y=%.16e\n"
-				    "computed = %.16e  exact = %.16e  ULP = %.16e\n\n",
-				    x, y, computed, exact, myulp);
-			}
 			ULP_UPDATE(u, myulp);
 		} else {
 			u->ulp_skipped++;
@@ -169,8 +180,8 @@ getfunctionulp(const char *fname, struct ulp *u)
 	u->ulp_avgl /= (i - u->ulp_skippedl);
 
 	/* Free resources */
-	mpfr_clears(mp_exact,  mp_x,  mp_y,  NULL);
-	mpfr_clears(mp_exactl, mp_xl, mp_yl, NULL);
+	mpfr_clears(mp_exact,  mp_x,  mp_y,  (mpfr_ptr)NULL);
+	mpfr_clears(mp_exactl, mp_xl, mp_yl, (mpfr_ptr)NULL);
 
 	/* Success */
 	return 0;

@@ -12,212 +12,212 @@
 #include "gen.h"
 
 static int
-dom_acos(double x)
+dom_acos(long double x)
 {
 	return (x >= -1.0 && x <= 1.0);
 }
 
 static int
-dom_acosh(double x)
+dom_acosh(long double x)
 {
 	return (x >= 1.0);
 }
 
 static int
-dom_asin(double x)
+dom_asin(long double x)
 {
 	return (x >= -1.0 && x <= 1.0);
 }
 
 static int
-dom_asinh(double x)
+dom_asinh(long double x)
 {
 	return 1;
 }
 
 static int
-dom_atan(double x)
+dom_atan(long double x)
 {
-	return (x > 0.01 && x < 1E10);
+	return 1;
 }
 
 static int
-dom_atan2(double x, double y)
+dom_atan2(long double x, long double y)
 {
 	return (x > 0.01 && x < 1E10 && y > 0.01 && y < 1E10);
 }
 
 static int
-dom_atanh(double x)
+dom_atanh(long double x)
 {
 	return (x > -1.0 && x < 1.0);
 }
 
 static int
-dom_cbrt(double x)
+dom_cbrt(long double x)
 {
 	return 1;
 }
 
 static int
-dom_ceil(double x)
+dom_ceil(long double x)
 {
 	return 1;
 }
 
 static int
-dom_cosh(double x)
+dom_cosh(long double x)
 {
 	return 1;
 }
 
 static int
-dom_erf(double x)
+dom_erf(long double x)
 {
 	return 1;
 }
 
 static int
-dom_erfc(double x)
+dom_erfc(long double x)
 {
 	return 1;
 }
 
 static int
-dom_floor(double x)
+dom_floor(long double x)
 {
 	return 1;
 }
 
 static int
-dom_hypot(double x, double y)
+dom_hypot(long double x, long double y)
 {
 	return 1;
 }
 
 static int
-dom_sin(double x)
+dom_sin(long double x)
 {
 	return 1;
 }
 
 static int
-dom_cos(double x)
+dom_cos(long double x)
 {
 	return 1;
 }
 
 static int
-dom_exp(double x)
+dom_exp(long double x)
 {
 	return 1;
 }
 
 static int
-dom_expm1(double x)
+dom_expm1(long double x)
 {
 	return 1;
 }
 
 static int
-dom_exp2(double x)
+dom_exp2(long double x)
 {
 	return 1;
 }
 
 static int
-dom_fabs(double x)
+dom_fabs(long double x)
 {
 	return 1;
 }
 
 static int
-dom_log(double x)
+dom_log(long double x)
 {
 	return (x > 0.0);
 }
 
 static int
-dom_log1p(double x)
+dom_log1p(long double x)
 {
 	return (x > -1.0);
 }
 
 static int
-dom_log10(double x)
+dom_log10(long double x)
 {
 	return (x > 0.0);
 }
 
 static int
-dom_log2(double x)
+dom_log2(long double x)
 {
 	return (x > 0.0);
 }
 
 static int
-dom_remainder(double x, double y)
+dom_remainder(long double x, long double y)
 {
 	return (fpclassify(y) != FP_ZERO);
 }
 
 static int
-dom_rint(double x)
+dom_rint(long double x)
 {
 	return 1;
 }
 
 static int
-dom_sinh(double x)
+dom_sinh(long double x)
 {
 	return 1;
 }
 
 static int
-dom_sqrt(double x)
+dom_sqrt(long double x)
 {
 	return (x >= 0.0);
 }
 
 static int
-dom_tan(double x)
+dom_tan(long double x)
 {
 	return (fabs(x - M_PI_2) > 1E-10);
 }
 
 static int
-dom_tanh(double x)
+dom_tanh(long double x)
 {
 	return 1;
 }
 
 static int
-dom_pow(double x, double y)
+dom_pow(long double x, long double y)
 {
 	return (x >= 0.0 || (floor(y) == y));
 }
 
 static int
-dom_tgamma(double x)
+dom_tgamma(long double x)
 {
 	return (x > 0.0 || (floor(x) != x));
 }
 
 static int
-dom_y0(double x)
+dom_y0(long double x)
 {
 	return (x > 0.0);
 }
 
 static int
-dom_y1(double x)
+dom_y1(long double x)
 {
 	return (x > 1.0 && x < 1E5);
 }
 
 #if 0
 static int
-dom_yn(double x, double y)
+dom_yn(long double x, long double y)
 {
 	return (y > 0.0 && y < 1E10);
 }
