@@ -13,7 +13,7 @@
 #include "subr_random.h"
 #include "ulp.h"
 
-#define	NITERATIONS	(5*1000)
+#define	NITERATIONS	(5*10000)
 
 static double
 calculp_double(double computed, double exact)
@@ -50,8 +50,8 @@ getfunctionulp(const char *fname, struct ulp *u)
 {
 	const struct fentry *f;
 	const mpfr_rnd_t tonearest = GMP_RNDN;
-	mpfr_t mp_ropl, mp_xl, mp_yl;
-	mpfr_t mp_rop, mp_x, mp_y;
+	mpfr_t mp_exactl, mp_xl, mp_yl;
+	mpfr_t mp_exact, mp_x, mp_y;
 	long double xl, yl, computedl, exactl, myulpl;
 	double x, y, computed, exact, myulp;
 	size_t i;
@@ -61,11 +61,11 @@ getfunctionulp(const char *fname, struct ulp *u)
 		return (-1);
 
 	/* Initialize high precision variables */
-	mpfr_inits2(100, mp_rop,  mp_x,  mp_y,  NULL);
-	mpfr_inits2(100, mp_ropl, mp_xl, mp_yl, NULL);
+	mpfr_inits2(100, mp_exact,  mp_x,  mp_y,  (mpfr_ptr)NULL);
+	mpfr_inits2(200, mp_exactl, mp_xl, mp_yl, (mpfr_ptr)NULL);
 
-	x = 0.0;
-	y = 0.0;
+	x = xl = 0.0;
+	y = yl = 0.0;
 
 	ULP_INIT(u);
 
@@ -74,6 +74,7 @@ getfunctionulp(const char *fname, struct ulp *u)
 			printf("Percentage complete: %2.2f\r",
 			    (100.0 * i)/NITERATIONS);
 
+		assert(f->f_libml);
 		/* Generate random arguments */
 		if (f->f_narg == 1) {
 			do {
@@ -96,31 +97,32 @@ getfunctionulp(const char *fname, struct ulp *u)
 		}
 
 		/* Copy arguments to mpfr variables */
-		mpfr_set_d(mp_x, x, tonearest);
+		mpfr_set_d (mp_x,  x,  tonearest);
 		mpfr_set_ld(mp_xl, xl, tonearest);
 		if (f->f_narg == 2){
-			mpfr_set_d(mp_y, y, tonearest);
+			mpfr_set_d (mp_y, y,  tonearest);
 			mpfr_set_ld(mp_y, yl, tonearest);
 		}
 
 		/*
 		 * Ready to call the mpfr*()
-		 * There double version ALWAYS exist!
+		 * The double version ALWAYS exist!
 		 */
 		if(f->f_narg == 1) {
-			f->f_mpfr(mp_rop, mp_x, tonearest);
+			f->f_mpfr(mp_exact, mp_x, tonearest);
 		} else {
-			f->f_mpfr(mp_rop, mp_x, mp_y, tonearest);
+			f->f_mpfr(mp_exact, mp_x, mp_y, tonearest);
 		}
-		exact = mpfr_get_d(mp_rop, tonearest);
+		exact = mpfr_get_d(mp_exact,  tonearest);
 
 		/* We can't tell the same for long double functions though */
 		if (f->f_libml) {
 			if(f->f_narg == 1) {
-				f->f_mpfr(mp_ropl, mp_xl, tonearest);
+				f->f_mpfr(mp_exactl, mp_xl, tonearest);
 			} else {
-				f->f_mpfr(mp_ropl, mp_xl, mp_yl, tonearest);
+				f->f_mpfr(mp_exactl, mp_xl, mp_yl, tonearest);
 			}
+			exactl = mpfr_get_ld(mp_exactl, tonearest);
 		}
 
 		/* Ready to call the libm*() */
@@ -132,9 +134,9 @@ getfunctionulp(const char *fname, struct ulp *u)
 
                 if (f->f_libml) {
 			if (f->f_narg == 1) {
-				computedl = f->f_libm(xl);
+				computedl = f->f_libml(xl);
 			} else {
-				computedl = f->f_libm(xl, yl);
+				computedl = f->f_libml(xl, yl);
 			}
 		}
 
@@ -142,23 +144,33 @@ getfunctionulp(const char *fname, struct ulp *u)
 		if (fpclassify(computed) == FP_NORMAL &&
 		    fpclassify(exact) == FP_NORMAL) {
 			myulp = calculp_double(computed, exact);
+			if (myulp > 1E100) {
+				printf("----------->\nx=%.16e  y=%.16e\n"
+				    "computed = %.16e  exact = %.16e  ULP = %.16e\n\n",
+				    x, y, computed, exact, myulp);
+			}
 			ULP_UPDATE(u, myulp);
+		} else {
+			u->ulp_skipped++;
 		}
+
                 if (f->f_libml) {
 			if (fpclassify(computedl) == FP_NORMAL &&
 			    fpclassify(exactl) == FP_NORMAL) {
 				myulpl = calculp_long_double(computedl, exactl);
 				ULP_UPDATE(u, myulpl);
 			}
+		} else {
+			u->ulp_skippedl++;
 		}
-
-		u->ulp_avg  /= (i - u->ulp_skipped);
-		u->ulp_avgl /= (i - u->ulp_skippedl);
 	}
 
+	u->ulp_avg  /= (i - u->ulp_skipped);
+	u->ulp_avgl /= (i - u->ulp_skippedl);
+
 	/* Free resources */
-	mpfr_clears(mp_rop,  mp_x,  mp_y,  NULL);
-	mpfr_clears(mp_ropl, mp_xl, mp_yl, NULL);
+	mpfr_clears(mp_exact,  mp_x,  mp_y,  NULL);
+	mpfr_clears(mp_exactl, mp_xl, mp_yl, NULL);
 
 	/* Success */
 	return 0;

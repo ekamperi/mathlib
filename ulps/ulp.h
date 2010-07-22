@@ -15,37 +15,41 @@ struct ulp {
 	size_t ulp_skippedl;
 };
 
-#define	ULP_INIT(u)					\
-	assert(u);					\
-	(u)->ulp_max = -DBL_MAX;			\
-	(u)->ulp_min = DBL_MAX;				\
-	(u)->ulp_avg = 0.0;				\
-	(u)->ulp_skipped = 0;				\
-	(u)->ulp_maxl = -LDBL_MAX;			\
-	(u)->ulp_minl = LDBL_MAX;			\
-	(u)->ulp_avgl = 0.0;				\
-	(u)->ulp_skippedl = 0;				\
+/*
+ * As usual, bite the bullet and don't surround macro arguments with
+ * parentheses. Nor put any intermediate variables. Trade security,
+ * for beauty. Until it bites as back ;)
+ */
+#define	ULP_INIT(u)				\
+	assert(u);				\
+	u->ulp_max = -DBL_MAX;			\
+	u->ulp_min = DBL_MAX;			\
+	u->ulp_avg = 0.0;			\
+	u->ulp_skipped = 0;			\
+	u->ulp_maxl = -LDBL_MAX;		\
+	u->ulp_minl = LDBL_MAX;			\
+	u->ulp_avgl = 0.0;			\
+	u->ulp_skippedl = 0;			\
 
-#define	ULP_UPDATE(u, myulp)			\
+#define	ULP_UPDATE(u, n)			\
 assert(u);					\
 do {						\
-	if (myulp > u->ulp_max)			\
-		u->ulp_max = myulp;		\
-	if (myulp < u->ulp_min)			\
-		u->ulp_min = myulp;		\
-	u->ulp_avg += myulp;			\
+	if (n > u->ulp_max)			\
+		u->ulp_max = n;			\
+	if (n < u->ulp_min)			\
+		u->ulp_min = n;			\
+	u->ulp_avg += n;			\
 } while(0)
 
-#define ULP_UPDATEL(u, myulpl)			\
+#define ULP_UPDATEL(u, nl)			\
 assert(u);					\
 do {						\
-	if (myulpl > u->ulp_maxl)		\
-		u->ulp_maxl = myulpl;		\
-	if (myulpl < u->ulp_minl)		\
-		u->ulp_minl = myulpl;		\
-	u->ulp_avgl += myulpl;			\
+	if (nl > u->ulp_maxl)			\
+		u->ulp_maxl = nl;		\
+	if (nl < u->ulp_minl)			\
+		u->ulp_minl = nl;		\
+	u->ulp_avgl += nl;			\
 } while(0)
-
 
 int getfunctionulp(const char *fname, struct ulp *u);
 
