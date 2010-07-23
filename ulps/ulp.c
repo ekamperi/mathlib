@@ -13,7 +13,7 @@
 #include "subr_random.h"
 #include "ulp.h"
 
-#define	NITERATIONS	(50*1000)
+#define	NITERATIONS	(5*1000)
 
 static double
 calculp_double(double computed, double exact)
@@ -36,11 +36,16 @@ calculp_long_double(long double computedl, long double exactl)
 	long double xbeforel, xafterl;
 	long double ulpsl;
 
+	//printf("%.35Le   %.35Le\n", computedl, exactl);
+
 	xbeforel = nextafterl(exactl, -INFINITY);
 	xafterl = nextafterl(exactl, +INFINITY);
 	assert(xafterl != xbeforel);
 
 	ulpsl = fabsl( (exactl - computedl) / (xafterl - xbeforel) );
+
+	if (ulpsl > 1)
+		printf("->%.35Le\n", ulpsl);
 
 	return (ulpsl);
 }
@@ -63,7 +68,7 @@ populate_vars(const struct fentry *f,
 		do {
 			tx  = random_double(FP_NORMAL);
 			txl = random_long_double(FP_NORMAL);
-		} while (!f->f_u.fp1(tx) || !f->f_u.fp1(txl));
+		} while (!f->f_u.fp1(tx) || !f->f_u.fp1(txl) || fabs(txl) < 1E-10);
 	}
 	if (f->f_narg == 2) {
 		do {
@@ -107,8 +112,8 @@ getfunctionulp(const char *fname, struct ulp *u)
 		return (-1);
 
 	/* Initialize high precision variables */
-	mpfr_inits2(200, mp_exact,  mp_x,  mp_y,  (mpfr_ptr)NULL);
-	mpfr_inits2(200, mp_exactl, mp_xl, mp_yl, (mpfr_ptr)NULL);
+	mpfr_inits2(300, mp_exact,  mp_x,  mp_y,  (mpfr_ptr)NULL);
+	mpfr_inits2(300, mp_exactl, mp_xl, mp_yl, (mpfr_ptr)NULL);
 
 	ULP_INIT(u);
 
@@ -169,7 +174,7 @@ getfunctionulp(const char *fname, struct ulp *u)
 			if (fpclassify(computedl) == FP_NORMAL &&
 			    fpclassify(exactl) == FP_NORMAL) {
 				myulpl = calculp_long_double(computedl, exactl);
-				ULP_UPDATE(u, myulpl);
+				ULP_UPDATEL(u, myulpl);
 			}
 		} else {
 			u->ulp_skippedl++;

@@ -38,11 +38,11 @@ main(int argc, char *argv[])
 		target = all ? ftable[i].f_name : argv[i];
 		rv = getfunctionulp(target, &u);
 		if (rv != -1) {
-			printf("[%2u/%2u] function: %-8s ", i+1, total, target);
+			printf("[%2u/%2u] function: %-8s ", 2*(i+1), total, target);
 			printulps(u);
 			if (ftable[i].f_libm) {
 				printf("[%2u/%2u] function: %s%-7s ",
-				    i+1, total, "l", target);
+				    2*(i+1)+1, total, "l", target);
 				printulps_long_double(u);
 			}
 		} else {
