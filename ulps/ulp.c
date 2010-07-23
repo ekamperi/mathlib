@@ -13,7 +13,7 @@
 #include "subr_random.h"
 #include "ulp.h"
 
-#define	NITERATIONS	(5*1000)
+#define	NITERATIONS	(50*1000)
 
 static double
 calculp_double(double computed, double exact)
@@ -68,7 +68,7 @@ populate_vars(const struct fentry *f,
 		do {
 			tx  = random_double(FP_NORMAL);
 			txl = random_long_double(FP_NORMAL);
-		} while (!f->f_u.fp1(tx) || !f->f_u.fp1(txl) || fabs(txl) < 1E-10);
+		} while (!f->f_u.fp1(tx) || !f->f_u.fp1(txl) || fabs(txl) < 1E-100);
 	}
 	if (f->f_narg == 2) {
 		do {
@@ -76,7 +76,12 @@ populate_vars(const struct fentry *f,
 			ty  = random_double(FP_NORMAL);
 			txl = random_long_double(FP_NORMAL);
 			tyl = random_long_double(FP_NORMAL);
-		} while (!f->f_u.fp2(tx, ty) || !f->f_u.fp2(txl, tyl));
+		} while (!f->f_u.fp2(tx, ty) || !f->f_u.fp2(txl, tyl) || fabsl(txl) < 1E-100);
+	}
+
+	if (txl > 1E10) {
+		printf("YES\n");
+		fflush(stdout);
 	}
 
 	/* Hack, yikes */
@@ -112,15 +117,17 @@ getfunctionulp(const char *fname, struct ulp *u)
 		return (-1);
 
 	/* Initialize high precision variables */
-	mpfr_inits2(300, mp_exact,  mp_x,  mp_y,  (mpfr_ptr)NULL);
-	mpfr_inits2(300, mp_exactl, mp_xl, mp_yl, (mpfr_ptr)NULL);
+	mpfr_inits2(200, mp_exact,  mp_x,  mp_y,  (mpfr_ptr)NULL);
+	mpfr_inits2(200, mp_exactl, mp_xl, mp_yl, (mpfr_ptr)NULL);
 
 	ULP_INIT(u);
 
 	for (i = 0; i < NITERATIONS; i++) {
-		if (i % 100 == 0)
+		if (i % 100 == 0) {
 			printf("Percentage complete: %2.2f\r",
 			    (100.0 * i)/NITERATIONS);
+			fflush(stdout);
+		}
 
 		/* Generate random arguments */
 		populate_vars(f, &x, &y, &xl, &yl, mp_x, mp_y, mp_xl, mp_yl);
