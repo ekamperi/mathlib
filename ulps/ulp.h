@@ -52,5 +52,7 @@ do {						\
 } while(0)
 
 int getfunctionulp(const char *fname, struct ulp *u);
+void printulps(struct ulp u);
+void printulps_long_double(struct ulp u);
 
 #endif	/* ! __ULP_H__ */
