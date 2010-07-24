@@ -13,7 +13,7 @@
 #include "subr_random.h"
 #include "ulp.h"
 
-#define	NITERATIONS	(50*1000)
+#define	NITERATIONS	(100*1000)
 
 static double
 calculp_double(double computed, double exact)
@@ -107,8 +107,8 @@ getfunctionulp(const char *fname, struct ulp *u)
 		return (-1);
 
 	/* Initialize high precision variables */
-	mpfr_inits2(100, mp_exact,  mp_x,  mp_y,  (mpfr_ptr)NULL);
-	mpfr_inits2(100, mp_exactl, mp_xl, mp_yl, (mpfr_ptr)NULL);
+	mpfr_inits2(200, mp_exact,  mp_x,  mp_y,  (mpfr_ptr)NULL);
+	mpfr_inits2(200, mp_exactl, mp_xl, mp_yl, (mpfr_ptr)NULL);
 
 	ULP_INIT(u);
 
@@ -129,7 +129,11 @@ getfunctionulp(const char *fname, struct ulp *u)
 		if(f->f_narg == 1) {
 			f->f_mpfr(mp_exact, mp_x, tonearest);
 		} else {
-			f->f_mpfr(mp_exact, mp_x, mp_y, tonearest);
+			/* Hack, yikes */
+			if (!strcmp(f->f_name, "yn"))
+				f->f_mpfr(mp_exact, (long)x, mp_y, tonearest);
+			else
+				f->f_mpfr(mp_exact, mp_x, mp_y, tonearest);
 		}
 		exact = mpfr_get_d(mp_exact,  tonearest);
 
@@ -192,8 +196,8 @@ getfunctionulp(const char *fname, struct ulp *u)
 void
 printulps(struct ulp u)
 {
-	if (u.ulp_max > 9.9) {
-		printf("%-10.4e %-10.4f %-10.4e   ",
+	if (u.ulp_max > 9.9 || u.ulp_min > 9.9) {
+		printf("%-10.4e %-10.e %-10.4e   ",
 		    u.ulp_max, u.ulp_min, u.ulp_avg);
 	} else {
 		printf("%-10.4f %-10.4f %-10.4f   ",
@@ -205,7 +209,7 @@ printulps(struct ulp u)
 void
 printulps_long_double(struct ulp u)
 {
-	if (u.ulp_maxl > 9.9) {
+	if (u.ulp_maxl > 9.9 || u.ulp_minl > 9.9) {
 		printf("%-10.4e %-10.4e %-10.4e   ",
 		    (double)u.ulp_maxl, (double)u.ulp_minl, (double)u.ulp_avgl);
 	} else {
