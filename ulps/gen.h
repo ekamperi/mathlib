@@ -2,8 +2,9 @@
 #define	__GEN_H__
 
 struct fentry {
-	const char *f_name;
 	size_t f_narg;
+	const char *f_name;
+	const char *f_namel;
 	union {
 		int (*fp1)(long double x);
 		int (*fp2)(long double x, long double y);
@@ -13,9 +14,9 @@ struct fentry {
 	int (*f_mpfr)();
 };
 
-extern const struct fentry ftable[];
 extern const int fsize;
 
+const struct fentry *getfunctionbyidx(size_t idx);
 const struct fentry *getfunctionbyname(const char *fname);
 void printfunctions(void);
 

@@ -193,10 +193,10 @@ void
 printulps(struct ulp u)
 {
 	if (u.ulp_max > 9.9) {
-		printf("%.4e     %.4f     %.4e    ",
+		printf("%-10.4e %-10.4f %-10.4e   ",
 		    u.ulp_max, u.ulp_min, u.ulp_avg);
 	} else {
-		printf("%.4f     %.4f     %.4f    ",
+		printf("%-10.4f %-10.4f %-10.4f   ",
 		    u.ulp_max, u.ulp_min, u.ulp_avg);
 	}
 	printf("%5u\n", u.ulp_skipped);
@@ -206,10 +206,10 @@ void
 printulps_long_double(struct ulp u)
 {
 	if (u.ulp_maxl > 9.9) {
-		printf("%.4e     %.4f     %.4e    ",
+		printf("%-10.4e %-10.4e %-10.4e   ",
 		    (double)u.ulp_maxl, (double)u.ulp_minl, (double)u.ulp_avgl);
 	} else {
-		printf("%.4f     %.4f     %.4f    ",
+		printf("%-10.4f %-10.4f %-10.4f   ",
 		    (double)u.ulp_maxl, (double)u.ulp_minl, (double)u.ulp_avgl);
 	}
 	printf("%5u\n", u.ulp_skippedl);

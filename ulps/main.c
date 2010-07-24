@@ -12,6 +12,7 @@ main(int argc, char *argv[])
 	struct ulp u;
 	int i, rv, total, all;
 	const char *target;
+	const struct fentry *f;
 
 	/* Skip program name */
 	argv++;
@@ -32,19 +33,20 @@ main(int argc, char *argv[])
 	/* Initialize random number generator */
 	init_randgen();
 
-	/* */
+	/* Print header */
 	printf("\tFUNCTION     Max ULP    Min ULP    Avg ULP    skipped\n");
 
 	total = all ? fsize : argc;
 
 	for (i = 0; i < total; i++) {
-		target = all ? ftable[i].f_name : argv[i];
+		f = getfunctionbyidx(i);
+		target = all ? f->f_name : argv[i];
 		rv = getfunctionulp(target, &u);
 		if (rv != -1) {
-			printf("[%2u/%2u] %-8s     ", i+1, total, target);
+			printf("[%2u/%2u] %-12s ", i+1, total, target);
 			printulps(u);
-			if (ftable[i].f_libm) {
-				printf("        %s%-7s     ", "l", target);
+			if (f->f_libm) {
+				printf("        %-12s ", f->f_namel);
 				printulps_long_double(u);
 			}
 		} else {
