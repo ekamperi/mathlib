@@ -39,13 +39,17 @@ main(int argc, char *argv[])
 	total = all ? fsize : argc;
 
 	for (i = 0; i < total; i++) {
-		f = getfunctionbyidx(i);
-		target = all ? f->f_name : argv[i];
+		if (all) {
+			f = getfunctionbyidx(i);
+			target = f->f_name;
+		} else {
+			target = argv[i];
+		}
 		rv = getfunctionulp(target, &u);
 		if (rv != -1) {
 			printf("[%2u/%2u] %-12s ", i+1, total, target);
 			printulps(u);
-			if (f->f_libm) {
+			if (all && f->f_libml) {
 				printf("        %-12s ", f->f_namel);
 				printulps_long_double(u);
 			}

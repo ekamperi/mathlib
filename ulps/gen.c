@@ -212,13 +212,13 @@ dom_y0(long double x)
 static int
 dom_y1(long double x)
 {
-	return (x > 1.0 && x < 1E5);
+	return (x > 0.0);
 }
 
 static int
 dom_yn(long double x, long double y)
 {
-	return (y > 0.0 && y < 1E10);
+	return (y > 0.0);
 }
 
 static const struct fentry
@@ -717,25 +717,23 @@ ftable[] = {
 	/* y1() */
 #ifdef	HAVE_Y1
 	{
-		.f_name = "y1",
 		.f_narg = 1,
+		.f_name = "y1",
 		.f_libm = y1,
 		.f_mpfr = mpfr_y1,
 		.f_u.fp1 = dom_y1
 	},
 #endif
 
-#if 0
 	/* yn() */
 #ifdef	HAVE_YN
 	{
-		.f_name = "yn",
 		.f_narg = 2,
+		.f_name = "yn",
 		.f_libm = yn,
 		.f_mpfr = mpfr_yn,
 		.f_u.fp2 = dom_yn
 	}
-#endif
 #endif
 };
 
