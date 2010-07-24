@@ -14,16 +14,26 @@ OBJDIR = ulpsobj
 # For ../subr_*.c
 VPATH=../
 
-$(OBJDIR)/%.o: %.c
-	@test -f config.h || \
-		(echo "You need to run autoreconf && ./configure first"; exit 1)
+.PHONY: all
+all:	ulpcalc
+
+$(OBJDIR):
 	mkdir -p $(OBJDIR)
+
+config.h:
+	autoreconf && ./configure
+
+$(OBJDIR)/%.o: %.c | $(OBJDIR) config.h
 	$(CC99) -c -o $@ $< $(CCFLAGS) $(INCLUDE)
 
 _DEPS = main.o gen.o ulp.o subr_random.o
  DEPS = $(_DEPS:%=$(OBJDIR)/%)
 ulpcalc: $(DEPS)
 	$(CC99) -o ulps $(DEPS) $(CCFLAGS) $(INCLUDE) $(LIBS)
+
+.PHONY: run
+run:
+	./ulps
 
 # Hacky; create tar to ../ or else it will be included in the final tar
 .PHONY: dist
