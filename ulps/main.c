@@ -32,16 +32,19 @@ main(int argc, char *argv[])
 	/* Initialize random number generator */
 	init_randgen();
 
+	/* */
+	printf("\tFUNCTION     Max ULP    Min ULP    Avg ULP    skipped\n");
+
 	total = all ? fsize : argc;
 
 	for (i = 0; i < total; i++) {
 		target = all ? ftable[i].f_name : argv[i];
 		rv = getfunctionulp(target, &u);
 		if (rv != -1) {
-			printf("[%2u/%2u] function: %-8s ", i+1, total, target);
+			printf("[%2u/%2u] %-8s     ", i+1, total, target);
 			printulps(u);
 			if (ftable[i].f_libm) {
-				printf("        function: %s%-7s ", "l", target);
+				printf("        %s%-7s     ", "l", target);
 				printulps_long_double(u);
 			}
 		} else {

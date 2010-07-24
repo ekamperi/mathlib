@@ -107,8 +107,8 @@ getfunctionulp(const char *fname, struct ulp *u)
 		return (-1);
 
 	/* Initialize high precision variables */
-	mpfr_inits2(200, mp_exact,  mp_x,  mp_y,  (mpfr_ptr)NULL);
-	mpfr_inits2(200, mp_exactl, mp_xl, mp_yl, (mpfr_ptr)NULL);
+	mpfr_inits2(100, mp_exact,  mp_x,  mp_y,  (mpfr_ptr)NULL);
+	mpfr_inits2(100, mp_exactl, mp_xl, mp_yl, (mpfr_ptr)NULL);
 
 	ULP_INIT(u);
 
@@ -193,32 +193,24 @@ void
 printulps(struct ulp u)
 {
 	if (u.ulp_max > 9.9) {
-		printf("max ulp: %.4e "
-                    "min ulp: %.4f "
-		    "avg ulp: %.4e ",
+		printf("%.4e     %.4f     %.4e    ",
 		    u.ulp_max, u.ulp_min, u.ulp_avg);
 	} else {
-		printf("max ulp: %.4f     "
-                    "min ulp: %.4f "
-		    "avg ulp: %.4f     ",
+		printf("%.4f     %.4f     %.4f    ",
 		    u.ulp_max, u.ulp_min, u.ulp_avg);
 	}
-	printf("[skipped = %5u]\n", u.ulp_skipped);
+	printf("%5u\n", u.ulp_skipped);
 }
 
 void
 printulps_long_double(struct ulp u)
 {
 	if (u.ulp_maxl > 9.9) {
-		printf("max ulp: %.4e "
-		    "min ulp: %.4f "
-		    "avg ulp: %.4e ",
+		printf("%.4e     %.4f     %.4e    ",
 		    (double)u.ulp_maxl, (double)u.ulp_minl, (double)u.ulp_avgl);
 	} else {
-		printf("max ulp: %.4f     "
-                    "min ulp: %.4f "
-		    "avg ulp: %.4f     ",
+		printf("%.4f     %.4f     %.4f    ",
 		    (double)u.ulp_maxl, (double)u.ulp_minl, (double)u.ulp_avgl);
 	}
-	printf("[skipped = %5u]\n", u.ulp_skippedl);
+	printf("%5u\n", u.ulp_skippedl);
 }
