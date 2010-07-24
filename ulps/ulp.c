@@ -36,16 +36,11 @@ calculp_long_double(long double computedl, long double exactl)
 	long double xbeforel, xafterl;
 	long double ulpsl;
 
-	//printf("%.35Le   %.35Le\n", computedl, exactl);
-
 	xbeforel = nextafterl(exactl, -INFINITY);
 	xafterl = nextafterl(exactl, +INFINITY);
 	assert(xafterl != xbeforel);
 
 	ulpsl = fabsl( (exactl - computedl) / (xafterl - xbeforel) );
-
-	if (ulpsl > 1)
-		printf("->%.35Le\n", ulpsl);
 
 	return (ulpsl);
 }
@@ -68,7 +63,7 @@ populate_vars(const struct fentry *f,
 		do {
 			tx  = random_double(FP_NORMAL);
 			txl = random_long_double(FP_NORMAL);
-		} while (!f->f_u.fp1(tx) || !f->f_u.fp1(txl) || fabs(txl) < 1E-100);
+		} while (!f->f_u.fp1(tx) || !f->f_u.fp1(txl));
 	}
 	if (f->f_narg == 2) {
 		do {
@@ -76,12 +71,7 @@ populate_vars(const struct fentry *f,
 			ty  = random_double(FP_NORMAL);
 			txl = random_long_double(FP_NORMAL);
 			tyl = random_long_double(FP_NORMAL);
-		} while (!f->f_u.fp2(tx, ty) || !f->f_u.fp2(txl, tyl) || fabsl(txl) < 1E-100);
-	}
-
-	if (txl > 1E10) {
-		printf("YES\n");
-		fflush(stdout);
+		} while (!f->f_u.fp2(tx, ty) || !f->f_u.fp2(txl, tyl));
 	}
 
 	/* Hack, yikes */
@@ -219,7 +209,7 @@ printulps(struct ulp u)
 void
 printulps_long_double(struct ulp u)
 {
-	if (u.ulp_max > 9.9) {
+	if (u.ulp_maxl > 9.9) {
 		printf("max ulp: %.4e "
 		    "min ulp: %.4f "
 		    "avg ulp: %.4e ",
