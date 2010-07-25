@@ -39,7 +39,7 @@ ATF_TC_BODY(test_rand1, tc)
 		/* long double */
 		ldcx = random_long_double_complex(FP_NORMAL);
 		ATF_PASS_OR_BREAK(
-			fpcomplex_equall(dcx, dcx));
+			fpcomplex_equall(ldcx, ldcx));
 	}
 }
 
