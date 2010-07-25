@@ -5,6 +5,7 @@
 #include <stdio.h>
 
 #include "subr_atf.h"
+#include "subr_fpcmp.h"
 #include "subr_random.h"
 
 ATF_TC(test_rand1);
