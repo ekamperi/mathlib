@@ -145,7 +145,7 @@ ATF_TC_HEAD(test_tanh3, tc)
 		/* long double */
 #ifdef	HAVE_TANHL
 		ldy = tanhl(t3table[i].y);
-		ATF_CHECK(fpcmp_equal(ldy, t3table[i].y));
+		ATF_CHECK(fpcmp_equall(ldy, t3table[i].y));
 #endif
 	}
 }
