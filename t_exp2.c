@@ -105,7 +105,7 @@ ATF_TC_BODY(test_exp22, tc)
 
 		/* long double */
 #ifdef	HAVE_EXP2L
-		ATF_CHECK(fpcmp_equal(
+		ATF_CHECK(fpcmp_equall(
 			    exp2l(t2table[i].x),
 				  t2table[i].y));
 #endif

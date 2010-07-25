@@ -98,7 +98,7 @@ ATF_TC_BODY(test_exp2, tc)
 
 	for (i = 0; i < N; i++) {
 		/* float */
-		ATF_CHECK(fpcmp_equal(
+		ATF_CHECK(fpcmp_equalf(
 			    expf((float)t2table[i].x),
 				 (float)t2table[i].y));
 
@@ -109,7 +109,7 @@ ATF_TC_BODY(test_exp2, tc)
 
 		/* long double */
 #ifdef	HAVE_EXPL
-		ATF_CHECK(fpcmp_equal(
+		ATF_CHECK(fpcmp_equall(
 			    expl(t2table[i].x),
 				 t2table[i].y));
 #endif
