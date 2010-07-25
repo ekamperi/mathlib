@@ -153,6 +153,7 @@ main(int argc, char *argv[])
 {
 	int i, rv, total, all;
 	const char *target;
+	const struct fentry *f;
 
 	/* Skip program name */
 	argv++;
@@ -179,7 +180,8 @@ main(int argc, char *argv[])
 	total = all ? fsize : argc;
 
 	for (i = 0; i < total; i++) {
-		target = all ? ftable[i].f_name : argv[i];
+		f = getfunctionbyidx(i);
+		target = all ? f->f_name : argv[i];
 		rv = proffunc(target);
 		if (rv != -1) {
 			printf("[%2d/%2d] %-10s : OK\n", i+1, total, target);
