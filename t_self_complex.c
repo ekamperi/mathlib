@@ -8,15 +8,15 @@
 #include "subr_fpcmp.h"
 #include "subr_random.h"
 
-ATF_TC(test_rand1);
-ATF_TC_HEAD(test_rand1, tc)
+ATF_TC(test_self_complex1);
+ATF_TC_HEAD(test_self_complex1, tc)
 {
 	atf_tc_set_md_var(tc,
 	    "descr",
 	    "Check that our comparison functions work fine "
 	    "for complex arithmetic");
 }
-ATF_TC_BODY(test_rand1, tc)
+ATF_TC_BODY(test_self_complex1, tc)
 {
 	float complex fcx;
 	double complex dcx;
@@ -47,7 +47,7 @@ ATF_TC_BODY(test_rand1, tc)
 /* Add test cases to test program */
 ATF_TP_ADD_TCS(tp)
 {
-	ATF_TP_ADD_TC(tp, test_rand1);
+	ATF_TP_ADD_TC(tp, test_self_complex1);
 
 	return atf_no_error();
 }
