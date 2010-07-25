@@ -221,6 +221,15 @@ dom_yn(long double x, long double y)
 	return (y > 0.0);
 }
 
+/*
+ * ISO/IEC 9899:1999 - 6.7.8.10 - Initialization
+ *
+ * If an object that has static storage duration is not initialized explicitly,
+ * then [...] if it has pointer type, it is initialized to a null pointer.
+ *
+ * Therefore, we can safely assume that f_namel or f_libml is NULL, if autoconf
+ * didn't define the corresponding HAVE_XYZ symbol for us.
+ */
 static const struct fentry
 ftable[] = {
 	/* acos() */
