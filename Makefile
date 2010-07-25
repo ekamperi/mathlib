@@ -11,9 +11,11 @@ TESTS=	t_acos t_acosh t_asin t_asinh t_atan t_atan2 t_atanh t_cbrt t_ceil \
 	t_constants t_copysign t_cos t_cosh t_erf t_erfc t_exp t_exp2 t_expm1 t_fabs t_fdim \
 	t_float t_floor t_fmax t_fpclassify t_fpmacros t_frexp t_ilogb t_lrint t_mac t_nan \
 	t_tgmath t_hypot t_log t_log10 t_log1p t_log2 t_logb t_ldexp t_nextafter t_pow \
-	t_remainder t_rint t_self t_signbit t_sin t_sinh t_sqrt t_trig_ident t_tan t_tanh \
+	t_remainder t_rint t_signbit t_sin t_sinh t_sqrt t_trig_ident t_tan t_tanh \
 	t_trunc
 #TESTS+= t_tgamma t_types
+TESTS+= t_self t_self_complex
+
 .PHONY: all
 all: $(TESTS)
 
@@ -290,6 +292,12 @@ _DEPS_T_SELF = t_self.o subr_atf.o subr_random.o
  DEPS_T_SELF = $(_DEPS_T_SELF:%=obj/%)
 t_self: $(DEPS_T_SELF)
 	$(CC99) -o t_self $(DEPS_T_SELF) $(CFLAGS) $(LIBS)
+
+
+_DEPS_T_SELF_COMPLEX = t_self_complex.o subr_atf.o subr_fpcmp.o subr_random.o
+ DEPS_T_SELF_COMPLEX = $(_DEPS_T_SELF_COMPLEX:%=obj/%)
+t_self_complex: $(DEPS_T_SELF_COMPLEX)
+	$(CC99) -o t_self_complex $(DEPS_T_SELF_COMPLEX) $(CFLAGS) $(LIBS)
 
 
 _DEPS_T_SIGNBIT = t_signbit.o subr_atf.o subr_random.o
