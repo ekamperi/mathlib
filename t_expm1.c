@@ -107,7 +107,7 @@ ATF_TC_BODY(test_expm12, tc)
 				  (double)t2table[i].y));
 
 		/* long double */
-#ifdef	HAVE_EXPM1
+#ifdef	HAVE_EXPM1L
 		ATF_CHECK(fpcmp_equall(
 			    expm1l(t2table[i].x),
 				   t2table[i].y));
