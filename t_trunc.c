@@ -66,9 +66,9 @@ ATF_TC_BODY(test_trunc2, tc)
 		/* float */
 		fx = random_float(FP_NORMAL);
 		fy = truncf(fx);
-		ATF_PASS_OR_BREAK(floor(fy) == fy);
-		ATF_PASS_OR_BREAK(ceil(fy) == fy);
-		ATF_PASS_OR_BREAK(fabs(fx) >= fabs(fy));
+		ATF_PASS_OR_BREAK(floorf(fy) == fy);
+		ATF_PASS_OR_BREAK(ceilf(fy) == fy);
+		ATF_PASS_OR_BREAK(fabsf(fx) >= fabsf(fy));
 
 		/* double */
 		dx = random_double(FP_NORMAL);
@@ -81,9 +81,9 @@ ATF_TC_BODY(test_trunc2, tc)
 #ifdef	HAVE_TRUNCL
 		ldx = random_long_double(FP_NORMAL);
 		ldy = truncl(dx);
-		ATF_PASS_OR_BREAK(floorl(dy) == dy);
-		ATF_PASS_OR_BREAK(ceill(dy) == dy);
-		ATF_PASS_OR_BREAK(fabsl(dx) >= fabsl(dy));
+		ATF_PASS_OR_BREAK(floorl(ldy) == ldy);
+		ATF_PASS_OR_BREAK(ceill(ldy) == ldy);
+		ATF_PASS_OR_BREAK(fabsl(ldx) >= fabsl(ldy));
 #endif
 	}
 }
@@ -152,7 +152,7 @@ ATF_TC_BODY(test_trunc3, tc)
 		/* long double */
 #ifdef	HAVE_TRUNCL
 		ldy = truncl(t3table[i].x);
-		ATF_CHECK(fpcmp_equal(ldy, t3table[i].y));
+		ATF_CHECK(fpcmp_equall(ldy, t3table[i].y));
 #endif
 	}
 }
