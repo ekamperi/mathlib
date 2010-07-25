@@ -11,8 +11,11 @@ LIBS=-lm -latf-c
 # For ../subr_*.c
 VPATH = ../
 
-obj/%.o: %.c
-	mkdir -p obj
+# Don't use 'obj' or funny things will happen with VPATH set to ../
+OBJDIR = obj-complex
+
+$(OBJDIR)/%.o: %.c
+	mkdir -p $(OBJDIR)
 	$(CC99) -c -o $@ $< $(CFLAGS)
 
 TESTS=	t_cacos t_cacosh t_carg t_casin t_casinh t_catan t_catanh t_csqrt	\
@@ -22,55 +25,55 @@ TESTS=	t_cacos t_cacosh t_carg t_casin t_casinh t_catan t_catanh t_csqrt	\
 all: $(TESTS)
 
 _DEPS_T_CACOS = t_cacos.o subr_atf.o subr_fpcmp.o subr_random.o
- DEPS_T_CACOS = $(_DEPS_T_CACOS:%=obj/%)
+ DEPS_T_CACOS = $(_DEPS_T_CACOS:%=$(OBJDIR)/%)
 t_cacos: $(DEPS_T_CACOS)
 	$(CC99) -o t_cacos $(DEPS_T_CACOS) $(CFLAGS) $(LIBS)
 
 
 _DEPS_T_CACOSH = t_cacosh.o subr_atf.o subr_fpcmp.o subr_random.o
- DEPS_T_CACOSH = $(_DEPS_T_CACOSH:%=obj/%)
+ DEPS_T_CACOSH = $(_DEPS_T_CACOSH:%=$(OBJDIR)/%)
 t_cacosh: $(DEPS_T_CACOSH)
 	$(CC99) -o t_cacosh $(DEPS_T_CACOSH) $(CFLAGS) $(LIBS)
 
 
 _DEPS_T_CARG = t_carg.o subr_atf.o subr_fpcmp.o subr_random.o
- DEPS_T_CARG = $(_DEPS_T_CARG:%=obj/%)
+ DEPS_T_CARG = $(_DEPS_T_CARG:%=$(OBJDIR)/%)
 t_carg: $(DEPS_T_CARG)
 	$(CC99) -o t_carg $(DEPS_T_CARG) $(CFLAGS) $(LIBS)
 
 
 _DEPS_T_CASIN = t_casin.o subr_atf.o subr_fpcmp.o subr_random.o
- DEPS_T_CASIN = $(_DEPS_T_CASIN:%=obj/%)
+ DEPS_T_CASIN = $(_DEPS_T_CASIN:%=$(OBJDIR)/%)
 t_casin: $(DEPS_T_CASIN)
 	$(CC99) -o t_casin $(DEPS_T_CASIN) $(CFLAGS) $(LIBS)
 
 
 _DEPS_T_CASINH = t_casinh.o subr_atf.o subr_fpcmp.o subr_random.o
- DEPS_T_CASINH = $(_DEPS_T_CASINH:%=obj/%)
+ DEPS_T_CASINH = $(_DEPS_T_CASINH:%=$(OBJDIR)/%)
 t_casinh: $(DEPS_T_CASINH)
 	$(CC99) -o t_casinh $(DEPS_T_CASINH) $(CFLAGS) $(LIBS)
 
 
 _DEPS_T_CATAN = t_catan.o subr_atf.o subr_fpcmp.o subr_random.o
- DEPS_T_CATAN = $(_DEPS_T_CATAN:%=obj/%)
+ DEPS_T_CATAN = $(_DEPS_T_CATAN:%=$(OBJDIR)/%)
 t_catan: $(DEPS_T_CATAN)
 	$(CC99) -o t_catan $(DEPS_T_CATAN) $(CFLAGS) $(LIBS)
 
 
 _DEPS_T_CATANH = t_catanh.o subr_atf.o subr_fpcmp.o subr_random.o
- DEPS_T_CATANH = $(_DEPS_T_CATANH:%=obj/%)
+ DEPS_T_CATANH = $(_DEPS_T_CATANH:%=$(OBJDIR)/%)
 t_catanh: $(DEPS_T_CATANH)
 	$(CC99) -o t_catanh $(DEPS_T_CATANH) $(CFLAGS) $(LIBS)
 
 
 _DEPS_T_CSQRT = t_csqrt.o subr_atf.o subr_fpcmp.o subr_random.o
- DEPS_T_CSQRT = $(_DEPS_T_CSQRT:%=obj/%)
+ DEPS_T_CSQRT = $(_DEPS_T_CSQRT:%=$(OBJDIR)/%)
 t_csqrt: $(DEPS_T_CSQRT)
 	$(CC99) -o t_csqrt $(DEPS_T_CSQRT) $(CFLAGS) $(LIBS)
 
 
 _DEPS_T_IMGCONSTANT = t_imgconstant.o subr_fpcmp.o
- DEPS_T_IMGCONSTANT = $(_DEPS_T_IMGCONSTANT:%=obj/%)
+ DEPS_T_IMGCONSTANT = $(_DEPS_T_IMGCONSTANT:%=$(OBJDIR)/%)
 t_imgconstant: $(DEPS_T_IMGCONSTANT)
 	$(CC99) -o t_imgconstant $(DEPS_T_IMGCONSTANT) $(CFLAGS) $(LIBS)
 
@@ -81,7 +84,7 @@ run:
 
 .PHONY: clean
 clean:
-	rm -f $(TESTS) obj/*.o *~ core
+	rm -f $(TESTS) $(OBJDIR)/*.o *~ core
 
 .PHONY: git-clean
 git-clean:
