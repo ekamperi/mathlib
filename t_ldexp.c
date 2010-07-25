@@ -180,20 +180,20 @@ ATF_TC_BODY(test_ldexp2, tc)
 
 	for (i = 0; i < N; i++) {
 		/* float */
-		ATF_CHECK(fpcmp_equalf(
+		ATF_CHECK(fpreal_equalf(
 			    ldexpf((float)t2table[i].x,
 				   (float)t2table[i].exp),
 			    t2table[i].z));
 
 		/* double */
-		ATF_CHECK(fpcmp_equal(
+		ATF_CHECK(fpreal_equal(
                             ldexp((double)t2table[i].x,
 				  (double)t2table[i].exp),
 			    t2table[i].z));
 
 		/* long double */
 #ifdef	HAVE_LDEXPL
-		ATF_CHECK(fpcmp_equall(
+		ATF_CHECK(fpreal_equall(
                             ldexpl(t2table[i].x,
 				   t2table[i].exp),
 			    t2table[i].z));

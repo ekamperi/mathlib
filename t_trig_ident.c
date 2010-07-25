@@ -33,8 +33,8 @@ ATF_TC_BODY(test_symmetry, tc)
 	ATF_FOR_LOOP(i, N, i++) {
 		x = random_double(FP_NORMAL);
 
-		ATF_PASS_OR_BREAK(fpcmp_equal(sin(-x), -sin(x)));
-		ATF_PASS_OR_BREAK(fpcmp_equal(cos(-x),  cos(x)));
+		ATF_PASS_OR_BREAK(fpreal_equal(sin(-x), -sin(x)));
+		ATF_PASS_OR_BREAK(fpreal_equal(cos(-x),  cos(x)));
 	}
 }
 
@@ -59,8 +59,8 @@ ATF_TC_BODY(test_shifts, tc)
 	ATF_FOR_LOOP(i, N, i++) {
 		x = random_double(FP_NORMAL);
 
-		ATF_PASS_OR_BREAK(fpcmp_equal(sin(x + M_PI_2), cos(x)));
-		ATF_PASS_OR_BREAK(fpcmp_equal(cos(x + M_PI_2), sin(x)));
+		ATF_PASS_OR_BREAK(fpreal_equal(sin(x + M_PI_2), cos(x)));
+		ATF_PASS_OR_BREAK(fpreal_equal(cos(x + M_PI_2), sin(x)));
 	}
 }
 
@@ -87,16 +87,16 @@ ATF_TC_BODY(test_angle_sum, tc)
 		y = random_double(FP_NORMAL);
 
 		s = sin(x) * cos(y) + cos(x) * sin(y);
-		ATF_PASS_OR_BREAK(fpcmp_equal(sin(x+y), s));
+		ATF_PASS_OR_BREAK(fpreal_equal(sin(x+y), s));
 
 		s = sin(x) * cos(y) - cos(x) * sin(y);
-		ATF_PASS_OR_BREAK(fpcmp_equal(sin(x-y), s));
+		ATF_PASS_OR_BREAK(fpreal_equal(sin(x-y), s));
 
 		s = cos(x) * cos(y) + sin(x) * sin(y);
-		ATF_PASS_OR_BREAK(fpcmp_equal(cos(x-y), s));
+		ATF_PASS_OR_BREAK(fpreal_equal(cos(x-y), s));
 
 		s = cos(x) * cos(y) + sin(x) * sin(y);
-		ATF_PASS_OR_BREAK(fpcmp_equal(cos(x-y), s));
+		ATF_PASS_OR_BREAK(fpreal_equal(cos(x-y), s));
 	}
 }
 
@@ -122,27 +122,27 @@ ATF_TC_BODY(test_half_angle, tc)
 		x = random_double(FP_NORMAL);
 
 		ATF_PASS_OR_BREAK(
-			fpcmp_equal(
+			fpreal_equal(
 				sin(x/2)*sin(x/2),
 				0.5*(1-cos(x))));
 		ATF_PASS_OR_BREAK(
-			fpcmp_equal(
+			fpreal_equal(
 				cos(x/2)*cos(x/2),
 				0.5*(1+cos(x))));
 
 		ATF_PASS_OR_BREAK(
-			fpcmp_equal(
+			fpreal_equal(
 				sin(2*x),
 				    2*sin(x)*cos(x)));
 		ATF_PASS_OR_BREAK(
-			fpcmp_equal(cos(2*x),
+			fpreal_equal(cos(2*x),
 			    cos(x)*cos(x) - sin(x)*sin(x)));
 
 		ATF_PASS_OR_BREAK(
-			fpcmp_equal(sin(3*x),
+			fpreal_equal(sin(3*x),
 			    (3*sin(x) - 4*sin(x)*sin(x)*sin(x))));
 		ATF_PASS_OR_BREAK(
-			fpcmp_equal(cos(3*x),
+			fpreal_equal(cos(3*x),
 			    4*cos(x)*cos(x)*cos(x) - 3*cos(x)));
 	}
 }
@@ -170,16 +170,16 @@ ATF_TC_BODY(test_product_to_sum, tc)
 		y = random_double(FP_NORMAL);
 
 		s = 0.5*(cos(x-y) + cos(x + y));
-		ATF_PASS_OR_BREAK(fpcmp_equal(cos(x)*cos(y), s));
+		ATF_PASS_OR_BREAK(fpreal_equal(cos(x)*cos(y), s));
 
 		s = 0.5*(cos(x-y) - cos(x+y));
-		ATF_PASS_OR_BREAK(fpcmp_equal(sin(x)*sin(y), s));
+		ATF_PASS_OR_BREAK(fpreal_equal(sin(x)*sin(y), s));
 
 		s = 0.5*(sin(x+y) + sin(x-y));
-		ATF_PASS_OR_BREAK(fpcmp_equal(sin(x)*cos(y), s));
+		ATF_PASS_OR_BREAK(fpreal_equal(sin(x)*cos(y), s));
 
 		s = 0.5*(sin(x+y) - sin(x-y));
-		ATF_PASS_OR_BREAK(fpcmp_equal(cos(x)*sin(y), s));
+		ATF_PASS_OR_BREAK(fpreal_equal(cos(x)*sin(y), s));
 	}
 }
 
@@ -205,7 +205,7 @@ ATF_TC_BODY(test_fundamental, tc)
 		x = random_double(FP_NORMAL);
 
 		ATF_PASS_OR_BREAK(
-			fpcmp_equal(
+			fpreal_equal(
 				sin(x)*sin(x) + cos(x)*cos(x),
 				1.0));
 	}
@@ -235,32 +235,32 @@ ATF_TC_BODY(test_power_reduction, tc)
 		/* sin^2(x) = 0.5(1 - cos(2x)) */
 		e1 = sin(x) * sin(x);
 		e2 = 0.5 * (1 - cos(2*x));
-		ATF_PASS_OR_BREAK(fpcmp_equal(e1, e2));
+		ATF_PASS_OR_BREAK(fpreal_equal(e1, e2));
 
 		/* cos^2(x) = 0.5(1 + cos(2x)) */
 		e1 = cos(x) * cos(x);
 		e2 = 0.5 * (1 + cos(2*x));
-		ATF_PASS_OR_BREAK(fpcmp_equal(e1, e2));
+		ATF_PASS_OR_BREAK(fpreal_equal(e1, e2));
 
 		/* sin^2(x)*cos^2(x) = 0.125(1-cos(4x)) */
 		e1 = sin(x)*sin(x) * cos(x)*cos(x);
 		e2 = 0.125*(1-cos(4*x));
-		ATF_PASS_OR_BREAK(fpcmp_equal(e1, e2));
+		ATF_PASS_OR_BREAK(fpreal_equal(e1, e2));
 
 		/* sin^3(x) = 0.25(3sin(x) - sin(3x)) */
 		e1 = sin(x) * sin(x) * sin(x);
 		e2 = 0.25 * (3*sin(x) - sin(3*x));
-		ATF_PASS_OR_BREAK(fpcmp_equal(e1, e2));
+		ATF_PASS_OR_BREAK(fpreal_equal(e1, e2));
 
 		/* cos^3(x) = 0.25(3cos(x) + cos(3x)) */
 		e1 = cos(x) * cos(x) * cos(x);
 		e2 = 0.25 * (3*cos(x) + cos(3*x));
-		ATF_PASS_OR_BREAK(fpcmp_equal(e1, e2));
+		ATF_PASS_OR_BREAK(fpreal_equal(e1, e2));
 
 		/* sin^3(x)*cos^3(x) = 0.03125(3sin(2x) - sin(6x)) */
 		e1 = sin(x)*sin(x)*sin(x) * cos(x)*cos(x)*cos(x);
 		e2 = 0.03125 * (3*sin(2*x) - sin(6*x));
-		ATF_PASS_OR_BREAK(fpcmp_equal(e1, e2));
+		ATF_PASS_OR_BREAK(fpreal_equal(e1, e2));
 	}
 }
 

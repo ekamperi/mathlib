@@ -128,20 +128,20 @@ ATF_TC_BODY(test_fmax2, tc)
 
 	for (i = 0; i < N; i++) {
 		/* float */
-		ATF_CHECK(fpcmp_equalf(
+		ATF_CHECK(fpreal_equalf(
 			    fmaxf((float)t2table[i].x,
 				  (float)t2table[i].y),
 			    (float)t2table[i].z));
 
 		/* double */
-		ATF_CHECK(fpcmp_equal(
+		ATF_CHECK(fpreal_equal(
 			    fmax((double)t2table[i].x,
 				 (double)t2table[i].y),
 			    (double)t2table[i].z));
 
 		/* long double */
 #ifdef	HAVE_FMAXL
-		ATF_CHECK(fpcmp_equall(
+		ATF_CHECK(fpreal_equall(
 			    fmaxl(t2table[i].x,
 				  t2table[i].y),
 			    t2table[i].z));

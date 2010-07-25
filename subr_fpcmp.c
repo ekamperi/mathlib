@@ -20,7 +20,7 @@ do {							\
 } while(0)
 
 int
-fpcmp_equalf(float x, float y)
+fpreal_equalf(float x, float y)
 {
 	__FPCMP_COMMON(x, y);
 
@@ -28,7 +28,7 @@ fpcmp_equalf(float x, float y)
 }
 
 int
-fpcmp_equal(double x, double y)
+fpreal_equal(double x, double y)
 {
 	__FPCMP_COMMON(x, y);
 
@@ -36,7 +36,7 @@ fpcmp_equal(double x, double y)
 }
 
 int
-fpcmp_equall(long double x, long double y)
+fpreal_equall(long double x, long double y)
 {
 	__FPCMP_COMMON(x, y);
 
@@ -77,8 +77,8 @@ fpcomplex_equalf(float complex x, float complex y)
 	float_complex fcy = { .z = y };
 	int real, imag;
 
-	real = fpcmp_equalf(fcx.parts[0], fcy.parts[0]);
-	imag = fpcmp_equalf(fcx.parts[1], fcy.parts[1]);
+	real = fpreal_equalf(fcx.parts[0], fcy.parts[0]);
+	imag = fpreal_equalf(fcx.parts[1], fcy.parts[1]);
 
 	return (real && imag);
 }
@@ -90,8 +90,8 @@ fpcomplex_equal(double complex x, double complex y)
 	double_complex dcy = { .z = y };
 	int real, imag;
 
-	real = fpcmp_equal(dcx.parts[0], dcy.parts[0]);
-	imag = fpcmp_equal(dcx.parts[1], dcy.parts[1]);
+	real = fpreal_equal(dcx.parts[0], dcy.parts[0]);
+	imag = fpreal_equal(dcx.parts[1], dcy.parts[1]);
 
 	return (real && imag);
 }
@@ -103,8 +103,8 @@ fpcomplex_equall(long double complex x, long double complex y)
 	long_double_complex ldcy = { .z = y };
 	int real, imag;
 
-	real = fpcmp_equall(ldcx.parts[0], ldcy.parts[0]);
-	imag = fpcmp_equall(ldcx.parts[1], ldcy.parts[1]);
+	real = fpreal_equall(ldcx.parts[0], ldcy.parts[0]);
+	imag = fpreal_equall(ldcx.parts[1], ldcy.parts[1]);
 
 	return (real && imag);
 }

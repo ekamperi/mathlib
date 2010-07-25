@@ -199,7 +199,7 @@ ATF_TC_BODY(test_nextafter4, tc)
 	errno = 0;
 	clear_exceptions();
 
-	ATF_CHECK(fpcmp_equalf(
+	ATF_CHECK(fpreal_equalf(
 		    nextafterf(FLT_MAX, +INFINITY),
 		    HUGE_VALF));
 
@@ -209,7 +209,7 @@ ATF_TC_BODY(test_nextafter4, tc)
 	/* double */
 	errno = 0;
 	clear_exceptions();
-	ATF_CHECK(fpcmp_equal(
+	ATF_CHECK(fpreal_equal(
 		    nextafter(DBL_MAX, +INFINITY),
 		    HUGE_VAL));
 
@@ -221,7 +221,7 @@ ATF_TC_BODY(test_nextafter4, tc)
 	errno = 0;
 	clear_exceptions();
 
-	ATF_CHECK(fpcmp_equall(
+	ATF_CHECK(fpreal_equall(
 		    nextafterl(LDBL_MAX, +INFINITY),
 		    HUGE_VALL));
 

@@ -66,7 +66,7 @@ ATF_TC_BODY(test_atan21, tc)
 
 	N = sizeof(ttable) / sizeof(ttable[0]);
 	for (i = 0; i < N; i++) {
-		ATF_CHECK(fpcmp_equal(
+		ATF_CHECK(fpreal_equal(
 			    atan2(ttable[i].y, ttable[i].x),
 			    ttable[i].z));
 	}
@@ -272,18 +272,18 @@ ATF_TC_BODY(test_atan23, tc)
 		/* float */
 		fz = atan2f((float)t3table[i].y,
 			    (float)t3table[i].x);
-		ATF_CHECK(fpcmp_equalf(fz, (float)t3table[i].z));
+		ATF_CHECK(fpreal_equalf(fz, (float)t3table[i].z));
 
 		/* double */
 		dz = atan2((double)t3table[i].y,
 			   (double)t3table[i].x);
-		ATF_CHECK(fpcmp_equal(dz, (double)t3table[i].z));
+		ATF_CHECK(fpreal_equal(dz, (double)t3table[i].z));
 
 		/* long double */
 #ifdef	HAVE_ATAN2L
 		ldz = atan2l(t3table[i].y,
 			     t3table[i].x);
-		ATF_CHECK(fpcmp_equall(ldz, t3table[i].z));
+		ATF_CHECK(fpreal_equall(ldz, t3table[i].z));
 #endif
 	}
 }

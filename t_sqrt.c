@@ -27,7 +27,7 @@ ATF_TC_BODY(test_sqrt1, tc)
 	N = sizeof(t1dtable) / sizeof(t1dtable[0]);
 	ATF_REQUIRE(N > 0);
 	for (i = 0; i < N; i++)
-		ATF_CHECK(fpcmp_equal(
+		ATF_CHECK(fpreal_equal(
 			    sqrt(t1dtable[i].x),
 				 t1dtable[i].y));
 
@@ -36,7 +36,7 @@ ATF_TC_BODY(test_sqrt1, tc)
 	N = sizeof(t1dtable) / sizeof(t1dtable[0]);
 	ATF_REQUIRE(N > 0);
 	for (i = 0; i < N; i++)
-		ATF_CHECK(fpcmp_equall(
+		ATF_CHECK(fpreal_equall(
 			    sqrtl(t1ldtable[i].x),
 				  t1ldtable[i].y));
 #endif
@@ -94,16 +94,16 @@ ATF_TC_BODY(test_sqrt2, tc)
 	for (i = 0; i < N; i++) {
 		/* float */
 		fy = sqrtf(t2table[i].x);
-		ATF_CHECK(fpcmp_equal(fy, (float)t2table[i].y));
+		ATF_CHECK(fpreal_equal(fy, (float)t2table[i].y));
 
 		/* double */
 		dy = sqrt(t2table[i].x);
-		ATF_CHECK(fpcmp_equal(dy, (double)t2table[i].y));
+		ATF_CHECK(fpreal_equal(dy, (double)t2table[i].y));
 
 		/* long double */
 #ifdef	HAVE_SQRTL
 		ldy = sqrtl(t2table[i].x);
-		ATF_CHECK(fpcmp_equal(ldy, t2table[i].y));
+		ATF_CHECK(fpreal_equal(ldy, t2table[i].y));
 #endif
 	}
 }

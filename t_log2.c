@@ -29,7 +29,7 @@ ATF_TC_BODY(test_log21, tc)
 	N = sizeof(t1dtable) / sizeof(t1dtable[0]);
 	ATF_REQUIRE(N > 0);
 	for (i = 0; i < N; i++)
-		ATF_CHECK(fpcmp_equal(
+		ATF_CHECK(fpreal_equal(
 			    log2(t1dtable[i].x),
 				 t1dtable[i].y));
 
@@ -38,7 +38,7 @@ ATF_TC_BODY(test_log21, tc)
 	N = sizeof(t1ldtable) / sizeof(t1ldtable[0]);
 	ATF_REQUIRE(N > 0);
 	for (i = 0; i < N; i++)
-		ATF_CHECK(fpcmp_equall(
+		ATF_CHECK(fpreal_equall(
 			    log2l(t1ldtable[i].x),
 				  t1ldtable[i].y));
 #endif
@@ -268,42 +268,42 @@ ATF_TC_BODY(test_log24, tc)
 #endif
 
 	/* If x is 1, +0 shall be returned */
-	ATF_CHECK(fpcmp_equalf(log2f(1.0), 0.0));
-	ATF_CHECK(fpcmp_equal (log2 (1.0), 0.0));
+	ATF_CHECK(fpreal_equalf(log2f(1.0), 0.0));
+	ATF_CHECK(fpreal_equal (log2 (1.0), 0.0));
 #ifdef	HAVE_LOG2L
-	ATF_CHECK(fpcmp_equall(log2l(1.0), 0.0));
+	ATF_CHECK(fpreal_equall(log2l(1.0), 0.0));
 #endif
 
 	/* If x is +Inf, x shall be returned */
 #ifdef	INFINITY
-	ATF_CHECK(fpcmp_equalf(log2f(INFINITY), INFINITY));
-	ATF_CHECK(fpcmp_equal (log2 (INFINITY), INFINITY));
+	ATF_CHECK(fpreal_equalf(log2f(INFINITY), INFINITY));
+	ATF_CHECK(fpreal_equal (log2 (INFINITY), INFINITY));
 #ifdef	HAVE_LOG2L
-	ATF_CHECK(fpcmp_equall(log2l(INFINITY), INFINITY));
+	ATF_CHECK(fpreal_equall(log2l(INFINITY), INFINITY));
 #endif	/* HAVE_LOG2L */
 #endif
 
 #ifdef  HUGE_VAL
-	ATF_CHECK(fpcmp_equalf(log2f(HUGE_VAL), HUGE_VAL));
-	ATF_CHECK(fpcmp_equal (log2 (HUGE_VAL), HUGE_VAL));
+	ATF_CHECK(fpreal_equalf(log2f(HUGE_VAL), HUGE_VAL));
+	ATF_CHECK(fpreal_equal (log2 (HUGE_VAL), HUGE_VAL));
 #ifdef	HAVE_LOG2L
-	ATF_CHECK(fpcmp_equall(log2l(HUGE_VAL), HUGE_VAL));
+	ATF_CHECK(fpreal_equall(log2l(HUGE_VAL), HUGE_VAL));
 #endif  /* HAVE_LOG2L */
 #endif
 
 #ifdef	HUGE_VALF
-	ATF_CHECK(fpcmp_equalf(log2f(HUGE_VALF), HUGE_VALF));
-	ATF_CHECK(fpcmp_equal (log2 (HUGE_VALF), HUGE_VALF));
+	ATF_CHECK(fpreal_equalf(log2f(HUGE_VALF), HUGE_VALF));
+	ATF_CHECK(fpreal_equal (log2 (HUGE_VALF), HUGE_VALF));
 #ifdef	HAVE_LOG2L
-	ATF_CHECK(fpcmp_equall(log2l(HUGE_VALF), HUGE_VALF));
+	ATF_CHECK(fpreal_equall(log2l(HUGE_VALF), HUGE_VALF));
 #endif  /* HAVE_LOG2L */
 #endif
 
 #ifdef  HUGE_VALL
-	ATF_CHECK(fpcmp_equalf(log2f(HUGE_VALL), HUGE_VALL));
-	ATF_CHECK(fpcmp_equal( log2 (HUGE_VALL), HUGE_VALL));
+	ATF_CHECK(fpreal_equalf(log2f(HUGE_VALL), HUGE_VALL));
+	ATF_CHECK(fpreal_equal( log2 (HUGE_VALL), HUGE_VALL));
 #ifdef	HAVE_LOG2L
-	ATF_CHECK(fpcmp_equall(log2l(HUGE_VALL), HUGE_VALL));
+	ATF_CHECK(fpreal_equall(log2l(HUGE_VALL), HUGE_VALL));
 #endif  /* HAVE_LOG2L */
 #endif
 }

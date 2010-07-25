@@ -83,18 +83,18 @@ ATF_TC_BODY(test_fabs2, tc)
 
 	for (i = 0; i < N; i++) {
 		/* float */
-		ATF_CHECK(fpcmp_equalf(
+		ATF_CHECK(fpreal_equalf(
 			    fabsf((float)t2table[i].x),
 				  (float)t2table[i].y));
 
 		/* double */
-                ATF_CHECK(fpcmp_equal(
+                ATF_CHECK(fpreal_equal(
 			    fabs((double)t2table[i].x),
 				 (double)t2table[i].y));
 
 		/* long double */
 #ifdef	HAVE_FABSL
-                ATF_CHECK(fpcmp_equall(
+                ATF_CHECK(fpreal_equall(
 			    fabsl(t2table[i].x),
 				 t2table[i].y));
 #endif

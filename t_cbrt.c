@@ -23,7 +23,7 @@ ATF_TC_BODY(test_cbrt1, tc)
 	N = sizeof(t1dtable) / sizeof(t1dtable[0]);
 	ATF_REQUIRE(N > 0);
 	for (i = 0; i < N; i++) {
-		ATF_CHECK(fpcmp_equal(
+		ATF_CHECK(fpreal_equal(
 			    cbrt(t1dtable[i].x),
 				 t1dtable[i].y));
 	}
@@ -33,7 +33,7 @@ ATF_TC_BODY(test_cbrt1, tc)
 	N = sizeof(t1ldtable) / sizeof(t1ldtable[0]);
 	ATF_REQUIRE(N > 0);
         for (i = 0; i < N; i++) {
-                ATF_CHECK(fpcmp_equall(
+                ATF_CHECK(fpreal_equall(
 			    cbrtl(t1ldtable[i].x),
 				  t1ldtable[i].y));
         }
@@ -92,18 +92,18 @@ ATF_TC_BODY(test_cbrt2, tc)
 
 	for (i = 0; i < N; i++) {
 		/* float */
-		ATF_CHECK(fpcmp_equalf(
+		ATF_CHECK(fpreal_equalf(
 			    cbrtf((float)t2table[i].x),
 				  (float)t2table[i].y));
 
 		/* double */
-		ATF_CHECK(fpcmp_equal(
+		ATF_CHECK(fpreal_equal(
 			    cbrt((double)t2table[i].x),
 				 (double)t2table[i].y));
 
 		/* long double */
 #ifdef	HAVE_CBRTL
-		ATF_CHECK(fpcmp_equall(
+		ATF_CHECK(fpreal_equall(
 			    cbrtl(t2table[i].x),
 				  t2table[i].y));
 #endif

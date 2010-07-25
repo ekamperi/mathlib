@@ -54,20 +54,20 @@ ATF_TC_BODY(test_imgconstant1, tc)
 	for (i = 0; i < N; i++) {
 		/* float */
 		fcx = I*((float)t1table[i]);
-		ATF_CHECK(fpcmp_equalf(
+		ATF_CHECK(fpreal_equalf(
 			    crealf(fcx),
 			    0.0));
 
 		/* double */
 		dcx = I*((double)t1table[i]);
-		ATF_CHECK(fpcmp_equal(
+		ATF_CHECK(fpreal_equal(
 			    creal(dcx),
 			    0.0));
 
 		/* long double */
 #if defined(creall)
 		ldcx = I*t1table[i];
-		ATF_CHECK(fpcmp_equall(
+		ATF_CHECK(fpreal_equall(
 			    creall(ldcx),
 			    0.0));
 #endif
@@ -92,8 +92,8 @@ ATF_TC_BODY(test_imgconstant2, tc)
 
 	/* float */
 	fcx = I*(-0.0);
-	ATF_CHECK(fpcmp_equalf(creal(fcx), 0.0) &&
-	    fpcmp_equalf(cimagf(fcx), -0.0));
+	ATF_CHECK(fpreal_equalf(creal(fcx), 0.0)
+	    fpreal_equalf(cimagf(fcx), -0.0));
 
 	/* double */
 

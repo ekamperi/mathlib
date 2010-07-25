@@ -27,7 +27,7 @@ ATF_TC_BODY(test_cos1, tc)
 	/* double */
 	N = sizeof(t1dtable) / sizeof(t1dtable[0]);
 	for (i = 0; i < N; i++)
-		ATF_CHECK(fpcmp_equal(
+		ATF_CHECK(fpreal_equal(
 			    cos(t1dtable[i].x),
 				t1dtable[i].y));
 
@@ -36,7 +36,7 @@ ATF_TC_BODY(test_cos1, tc)
 	N = sizeof(t1ldtable) / sizeof(t1ldtable[0]);
 	ATF_REQUIRE(N > 0);
 	for (i = 0; i < N; i++)
-		ATF_CHECK(fpcmp_equall(
+		ATF_CHECK(fpreal_equall(
 			    cosl(t1ldtable[i].x),
 				 t1ldtable[i].y));
 #endif
@@ -102,15 +102,15 @@ ATF_TC_BODY(test_cos3, tc)
 #endif
 
 	/* If x is +-0, the value 1.0 shall be returned */
-	ATF_CHECK(fpcmp_equal(cos( 0.0), 1.0));
-	ATF_CHECK(fpcmp_equal(cos(-0.0), 1.0));
+	ATF_CHECK(fpreal_equal(cos( 0.0), 1.0));
+	ATF_CHECK(fpreal_equal(cos(-0.0), 1.0));
 
-	ATF_CHECK(fpcmp_equal(cosf( 0.0), 1.0));
-	ATF_CHECK(fpcmp_equal(cosf(-0.0), 1.0));
+	ATF_CHECK(fpreal_equal(cosf( 0.0), 1.0));
+	ATF_CHECK(fpreal_equal(cosf(-0.0), 1.0));
 
 #ifdef	HAVE_COSL
-	ATF_CHECK(fpcmp_equal(cosl( 0.0), 1.0));
-	ATF_CHECK(fpcmp_equal(cosl(-0.0), 1.0));
+	ATF_CHECK(fpreal_equal(cosl( 0.0), 1.0));
+	ATF_CHECK(fpreal_equal(cosl(-0.0), 1.0));
 #endif
 }
 

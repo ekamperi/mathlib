@@ -28,7 +28,7 @@ ATF_TC_BODY(test_atan1, tc)
 	N = sizeof(t1dtable) / sizeof(t1dtable[0]);
 	ATF_REQUIRE(N > 0);
 	for (i = 0; i < N; i++)
-		ATF_CHECK(fpcmp_equal(
+		ATF_CHECK(fpreal_equal(
 			    atan(t1dtable[i].x),
 				 t1dtable[i].y));
 
@@ -37,7 +37,7 @@ ATF_TC_BODY(test_atan1, tc)
 	N = sizeof(t1ldtable) / sizeof(t1ldtable[0]);
 	ATF_REQUIRE(N > 0);
 	for (i = 0; i < N; i++)
-		ATF_CHECK(fpcmp_equall(
+		ATF_CHECK(fpreal_equall(
 			    atanl(t1ldtable[i].x),
 				  t1ldtable[i].y));
 #endif
@@ -145,18 +145,18 @@ ATF_TC_BODY(test_atan3, tc)
 
 	for (i = 0; i < N; i++) {
 		/* float */
-		ATF_CHECK(fpcmp_equalf(
+		ATF_CHECK(fpreal_equalf(
 			    atanf((float)t3table[i].x),
 					 t3table[i].y));
 
 		/* double */
-		ATF_CHECK(fpcmp_equal(
+		ATF_CHECK(fpreal_equal(
 			    atan((double)t3table[i].x),
 					 t3table[i].y));
 
 		/* long double */
 #ifdef	HAVE_ATANL
-		ATF_CHECK(fpcmp_equall(
+		ATF_CHECK(fpreal_equall(
 			    atanl(t3table[i].x),
 				  t3table[i].y));
 #endif

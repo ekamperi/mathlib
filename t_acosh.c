@@ -27,7 +27,7 @@ ATF_TC_BODY(test_acosh1, tc)
 	/* double */
 	N = sizeof(t1dtable) / sizeof(t1dtable[0]);
 	for (i = 0; i < N; i++)
-		ATF_CHECK(fpcmp_equal(
+		ATF_CHECK(fpreal_equal(
 			    acosh(t1dtable[i].x),
 				  t1dtable[i].y));
 
@@ -35,7 +35,7 @@ ATF_TC_BODY(test_acosh1, tc)
 #ifdef	HAVE_ACOSHL
         N = sizeof(t1ldtable) / sizeof(t1ldtable[0]);
         for (i = 0; i < N; i++)
-		ATF_CHECK(fpcmp_equall(
+		ATF_CHECK(fpreal_equall(
 			    acoshl(t1ldtable[i].x),
 				   t1ldtable[i].y));
 #endif
@@ -88,18 +88,18 @@ ATF_TC_BODY(test_acosh2, tc)
 
 	for (i = 0; i < N; i++) {
 		/* float */
-		ATF_CHECK(fpcmp_equalf(
+		ATF_CHECK(fpreal_equalf(
 			    acoshf((float)t2table[i].x),
 				   (float)t2table[i].y));
 
 		/* double */
-		ATF_CHECK(fpcmp_equal(
+		ATF_CHECK(fpreal_equal(
 			    acosh((double)t2table[i].x),
 				  (double)t2table[i].y));
 
 		/* long double */
 #ifdef	HAVE_ACOSHL
-		ATF_CHECK(fpcmp_equall(
+		ATF_CHECK(fpreal_equall(
 			    acoshl(t2table[i].x),
 				   t2table[i].y));
 #endif

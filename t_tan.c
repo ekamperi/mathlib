@@ -28,7 +28,7 @@ ATF_TC_BODY(test_tan1, tc)
 	N = sizeof(t1dtable) / sizeof(t1dtable[0]);
 	ATF_REQUIRE(N > 0);
 	for (i = 0; i < N; i++)
-		ATF_CHECK(fpcmp_equal(
+		ATF_CHECK(fpreal_equal(
 			    tan(t1dtable[i].x),
 				t1dtable[i].y));
 
@@ -37,7 +37,7 @@ ATF_TC_BODY(test_tan1, tc)
 	N = sizeof(t1ldtable) / sizeof(t1ldtable[0]);
 	ATF_REQUIRE(N > 0);
 	for (i = 0; i < N; i++)
-		ATF_CHECK(fpcmp_equall(
+		ATF_CHECK(fpreal_equall(
 			    tanl(t1ldtable[i].x),
 				 t1ldtable[i].y));
 #endif

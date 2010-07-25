@@ -10,9 +10,9 @@
 #undef	iszero
 #define	iszero(x)	(fpclassify(x) == FP_ZERO)
 
-int fpcmp_equalf(float x, float y);
-int fpcmp_equal(double x, double y);
-int fpcmp_equall(long double x, long double y);
+int fpreal_equalf(float x, float y);
+int fpreal_equal(double x, double y);
+int fpreal_equall(long double x, long double y);
 
 int fpcomplex_equalf(float complex x, float complex y);
 int fpcomplex_equal(double complex x, double complex y);

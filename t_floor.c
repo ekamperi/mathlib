@@ -131,18 +131,18 @@ ATF_TC_BODY(test_floor3, tc)
 
 	for (i = 0; i < N; i++) {
 		/* float */
-		ATF_CHECK(fpcmp_equalf(
+		ATF_CHECK(fpreal_equalf(
 			    floorf((float)t3table[i].x),
 				   (float)t3table[i].y));
 
 		/* double */
-		ATF_CHECK(fpcmp_equalf(
+		ATF_CHECK(fpreal_equalf(
 			    floor((double)t3table[i].x),
 				  (double)t3table[i].y));
 
 		/* long double */
 #ifdef	HAVE_FLOORL
-		ATF_CHECK(fpcmp_equall(
+		ATF_CHECK(fpreal_equall(
 			    floorl(t3table[i].x),
 				   t3table[i].y));
 #endif

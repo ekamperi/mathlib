@@ -31,7 +31,7 @@ ATF_TC_BODY(test_hypot1, tc)
 	N = sizeof(t1dtable) / sizeof(t1dtable[0]);
 	ATF_REQUIRE(N > 0);
 	for (i = 0; i < N; i++) {
-		ATF_CHECK(fpcmp_equal(
+		ATF_CHECK(fpreal_equal(
 			    hypot(t1dtable[i].x, t1dtable[i].y),
 				  t1dtable[i].z));
 	}
@@ -41,7 +41,7 @@ ATF_TC_BODY(test_hypot1, tc)
 	N = sizeof(t1ldtable) / sizeof(t1ldtable[0]);
 	ATF_REQUIRE(N > 0);
 	for (i = 0; i < N; i++) {
-		ATF_CHECK(fpcmp_equall(
+		ATF_CHECK(fpreal_equall(
 			    hypotl(t1ldtable[i].x, t1ldtable[i].y),
 				   t1ldtable[i].z));
 	}
@@ -121,20 +121,20 @@ ATF_TC_BODY(test_hypot2, tc)
 
 	for (i = 0; i < N; i++) {
 		/* float */
-		ATF_CHECK(fpcmp_equalf(
+		ATF_CHECK(fpreal_equalf(
 			    hypotf((float)t2table[i].x,
 				   (float)t2table[i].y),
 			    (float)t2table[i].z));
 
 		/* double */
-		ATF_CHECK(fpcmp_equal(
+		ATF_CHECK(fpreal_equal(
 			    hypot((double)t2table[i].x,
 				  (double)t2table[i].y),
 			    (double)t2table[i].z));
 
 		/* long double */
 #ifdef	HAVE_HYPOTL
-		ATF_CHECK(fpcmp_equall(
+		ATF_CHECK(fpreal_equall(
 			    hypotl(t2table[i].x,
 				   t2table[i].y),
 			    t2table[i].z));

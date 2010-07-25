@@ -23,18 +23,18 @@ ATF_TC_HEAD(test_nan1, tc)
 ATF_TC_BODY(test_nan1, tc)
 {
 	/* float */
-	ATF_CHECK(fpcmp_equalf(
+	ATF_CHECK(fpreal_equalf(
 		    nanf("n-char-sequence"),
 		    strtof("NAN(n-char-sequence)", (char **) NULL)));
 
 	/* double */
-	ATF_CHECK(fpcmp_equal(
+	ATF_CHECK(fpreal_equal(
 		    nan("n-char-sequence"),
 		    strtod("NAN(n-char-sequence)", (char **) NULL)));
 
 	/* long double */
 #if defined(HAVE_NANL) && defined(HAVE_STRTOLD)
-	ATF_CHECK(fpcmp_equall(
+	ATF_CHECK(fpreal_equall(
 		    nanl("n-char-sequence"),
 		    strtold("NAN(n-char-sequence)", (char **) NULL)));
 #endif
@@ -56,18 +56,18 @@ ATF_TC_HEAD(test_nan2, tc)
 ATF_TC_BODY(test_nan2, tc)
 {
 	/* float */
-	ATF_CHECK(fpcmp_equalf(
+	ATF_CHECK(fpreal_equalf(
 		    nanf(""),
 		    strtof("NAN()", (char **) NULL)));
 
 	/* double */
-	ATF_CHECK(fpcmp_equal(
+	ATF_CHECK(fpreal_equal(
 		    nan(""),
 		    strtod("NAN()", (char **) NULL)));
 
 	/* long double */
 #if defined(HAVE_NANL) && defined(HAVE_STRTOLD)
-	ATF_CHECK(fpcmp_equall(
+	ATF_CHECK(fpreal_equall(
 		    nanl(""),
 		    strtold("NAN()", (char **) NULL)));
 #endif
@@ -91,18 +91,18 @@ ATF_TC_HEAD(test_nan3, tc)
 ATF_TC_BODY(test_nan3, tc)
 {
 	/* float */
-	ATF_CHECK(fpcmp_equalf(
+	ATF_CHECK(fpreal_equalf(
 		    nanf(NULL),
 		    strtof("NAN", (char **) NULL)));
 
 	/* double */
-	ATF_CHECK(fpcmp_equal(
+	ATF_CHECK(fpreal_equal(
 		    nan(NULL),
 		    strtod("NAN", (char **) NULL)));
 
 	/* long double */
 #if defined(HAVE_NANL) && defined(HAVE_STRTOLD)
-	ATF_CHECK(fpcmp_equall(
+	ATF_CHECK(fpreal_equall(
 		    nanl(NULL),
 		    strtold("NAN", (char **) NULL)));
 #endif

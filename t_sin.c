@@ -28,7 +28,7 @@ ATF_TC_BODY(test_sin1, tc)
 	/* double */
 	N = sizeof(t1dtable) / sizeof(t1dtable[0]);
 	for (i = 0; i < N; i++)
-		ATF_CHECK(fpcmp_equal(
+		ATF_CHECK(fpreal_equal(
 			    sin(t1dtable[i].x),
 				t1dtable[i].y));
 
@@ -37,7 +37,7 @@ ATF_TC_BODY(test_sin1, tc)
 	N = sizeof(t1ldtable) / sizeof(t1ldtable[0]);
 	ATF_REQUIRE(N > 0);
 	for (i = 0; i < N; i++)
-		ATF_CHECK(fpcmp_equall(
+		ATF_CHECK(fpreal_equall(
 			    sinl(t1ldtable[i].x),
 				 t1ldtable[i].y));
 #endif
@@ -103,15 +103,15 @@ ATF_TC_BODY(test_sin3, tc)
 #endif
 
 	/* If x is +-0, x shall be returned */
-	ATF_CHECK(fpcmp_equal(sin( 0.0),  0.0));
-	ATF_CHECK(fpcmp_equal(sin(-0.0), -0.0));
+	ATF_CHECK(fpreal_equal(sin( 0.0),  0.0));
+	ATF_CHECK(fpreal_equal(sin(-0.0), -0.0));
 
-	ATF_CHECK(fpcmp_equal(sinf( 0.0),  0.0));
-	ATF_CHECK(fpcmp_equal(sinf(-0.0), -0.0));
+	ATF_CHECK(fpreal_equal(sinf( 0.0),  0.0));
+	ATF_CHECK(fpreal_equal(sinf(-0.0), -0.0));
 
 #ifdef	HAVE_SINL
-	ATF_CHECK(fpcmp_equal(sinl( 0.0),  0.0));
-	ATF_CHECK(fpcmp_equal(sinl(-0.0), -0.0));
+	ATF_CHECK(fpreal_equal(sinl( 0.0),  0.0));
+	ATF_CHECK(fpreal_equal(sinl(-0.0), -0.0));
 #endif
 }
 

@@ -143,16 +143,16 @@ ATF_TC_BODY(test_trunc3, tc)
 	for (i = 0; i < N; i++) {
 		/* float */
 		fy = truncf(t3table[i].x);
-		ATF_CHECK(fpcmp_equal(fy, (float)t3table[i].y));
+		ATF_CHECK(fpreal_equal(fy, (float)t3table[i].y));
 
 		/* double */
 		dy = trunc(t3table[i].x);
-		ATF_CHECK(fpcmp_equal(dy, (double)t3table[i].y));
+		ATF_CHECK(fpreal_equal(dy, (double)t3table[i].y));
 
 		/* long double */
 #ifdef	HAVE_TRUNCL
 		ldy = truncl(t3table[i].x);
-		ATF_CHECK(fpcmp_equall(ldy, t3table[i].y));
+		ATF_CHECK(fpreal_equall(ldy, t3table[i].y));
 #endif
 	}
 }

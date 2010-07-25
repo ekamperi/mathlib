@@ -24,7 +24,7 @@ ATF_TC_BODY(test_tanh1, tc)
 	/* double */
 	N = sizeof(t1dtable) / sizeof(t1dtable[0]);
 	for (i = 0; i < N; i++)
-	  ATF_CHECK(fpcmp_equal(
+	  ATF_CHECK(fpreal_equal(
 		      tanh(t1dtable[i].x),
 			   t1dtable[i].y));
 
@@ -32,7 +32,7 @@ ATF_TC_BODY(test_tanh1, tc)
 #ifdef  HAVE_TANHL
 	N = sizeof(t1ldtable) / sizeof(t1ldtable[0]);
 	for (i = 0; i < N; i++)
-		ATF_CHECK(fpcmp_equall(
+		ATF_CHECK(fpreal_equall(
 			    tanhl(t1ldtable[i].x),
 				  t1ldtable[i].y));
 #endif
@@ -136,16 +136,16 @@ ATF_TC_HEAD(test_tanh3, tc)
 	for (i = 0; i < N; i++) {
 		/* float */
 		fy = tanhf(t3table[i].x);
-		ATF_CHECK(fpcmp_equal(fy, t3table[i].y));
+		ATF_CHECK(fpreal_equal(fy, t3table[i].y));
 
 		/* double */
 		dy = tanh(t3table[i].x);
-		ATF_CHECK(fpcmp_equal(fy, t3table[i].y));
+		ATF_CHECK(fpreal_equal(fy, t3table[i].y));
 
 		/* long double */
 #ifdef	HAVE_TANHL
 		ldy = tanhl(t3table[i].y);
-		ATF_CHECK(fpcmp_equall(ldy, t3table[i].y));
+		ATF_CHECK(fpreal_equall(ldy, t3table[i].y));
 #endif
 	}
 }

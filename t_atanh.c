@@ -29,7 +29,7 @@ ATF_TC_BODY(test_atanh1, tc)
         N = sizeof(t1dtable) / sizeof(t1dtable[0]);
 	ATF_REQUIRE(N > 0);
         for (i = 0; i < N; i++)
-		ATF_CHECK(fpcmp_equal(
+		ATF_CHECK(fpreal_equal(
 			    atanh(t1dtable[i].x),
 				  t1dtable[i].y));
 
@@ -38,7 +38,7 @@ ATF_TC_BODY(test_atanh1, tc)
         N = sizeof(t1ldtable) / sizeof(t1ldtable[0]);
 	ATF_REQUIRE(N > 0);
         for (i = 0; i < N; i++)
-		ATF_CHECK(fpcmp_equall(
+		ATF_CHECK(fpreal_equall(
 			    atanhl(t1ldtable[i].x),
 				   t1ldtable[i].y));
 #endif
@@ -64,15 +64,15 @@ ATF_TC_BODY(test_atanh2, tc)
 #endif
 
 	/* If x is +-0, x shall be returned */
-	ATF_CHECK(fpcmp_equalf(atanhf( 0.0),  0.0));
-	ATF_CHECK(fpcmp_equalf(atanhf(-0.0), -0.0));
+	ATF_CHECK(fpreal_equalf(atanhf( 0.0),  0.0));
+	ATF_CHECK(fpreal_equalf(atanhf(-0.0), -0.0));
 
-	ATF_CHECK(fpcmp_equal(atanh( 0.0),  0.0));
-	ATF_CHECK(fpcmp_equal(atanh(-0.0), -0.0));
+	ATF_CHECK(fpreal_equal(atanh( 0.0),  0.0));
+	ATF_CHECK(fpreal_equal(atanh(-0.0), -0.0));
 
 #ifdef	HAVE_ATANHL
-	ATF_CHECK(fpcmp_equall(atanhl( 0.0),  0.0));
-	ATF_CHECK(fpcmp_equall(atanhl(-0.0), -0.0));
+	ATF_CHECK(fpreal_equall(atanhl( 0.0),  0.0));
+	ATF_CHECK(fpreal_equall(atanhl(-0.0), -0.0));
 #endif
 }
 
@@ -125,7 +125,7 @@ ATF_TC_BODY(test_atanh3, tc)
 		errno = 0;
 		clear_exceptions();
 #ifdef	HUGE_VALF
-		ATF_CHECK(fpcmp_equalf(atanhf(t3table[i].x), HUGE_VALF));
+		ATF_CHECK(fpreal_equalf(atanhf(t3table[i].x), HUGE_VALF));
 #endif
 		ATF_CHECK(iserrno_equalto(ERANGE));
 		ATF_CHECK(raised_exceptions(MY_FE_DIVBYZERO));
@@ -134,7 +134,7 @@ ATF_TC_BODY(test_atanh3, tc)
 		errno = 0;
 		clear_exceptions();
 #ifdef	HUGE_VAL
-		ATF_CHECK(fpcmp_equal(atanh(t3table[i].x), HUGE_VAL));
+		ATF_CHECK(fpreal_equal(atanh(t3table[i].x), HUGE_VAL));
 #endif
 		ATF_CHECK(iserrno_equalto(ERANGE));
 		ATF_CHECK(raised_exceptions(MY_FE_DIVBYZERO));
@@ -144,7 +144,7 @@ ATF_TC_BODY(test_atanh3, tc)
 		errno = 0;
 		clear_exceptions();
 #ifdef	HUGE_VALL
-		ATF_CHECK(fpcmp_equall(atanhl(t3table[i].x), HUGE_VALL));
+		ATF_CHECK(fpreal_equall(atanhl(t3table[i].x), HUGE_VALL));
 #endif
 		ATF_CHECK(iserrno_equalto(ERANGE));
 		ATF_CHECK(raised_exceptions(MY_FE_DIVBYZERO));

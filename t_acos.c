@@ -31,7 +31,7 @@ ATF_TC_BODY(test_acos1, tc)
 		ATF_REQUIRE(t1dtable[i].x >= -1.0 && t1dtable[i].x <= 1.0);
 
 		/* Actual check */
-		ATF_CHECK(fpcmp_equal(
+		ATF_CHECK(fpreal_equal(
 			    acos(t1dtable[i].x),
 				 t1dtable[i].y));
 	}
@@ -44,7 +44,7 @@ ATF_TC_BODY(test_acos1, tc)
 		ATF_REQUIRE(t1ldtable[i].x >= -1.0 && t1ldtable[i].x <= 1.0);
 
 		/* Actual check */
-		ATF_CHECK(fpcmp_equall(
+		ATF_CHECK(fpreal_equall(
 			    acosl(t1ldtable[i].x),
 				  t1ldtable[i].y));
 	}
@@ -128,10 +128,10 @@ ATF_TC_BODY(test_acos3, tc)
 #endif
 
 	/* If x is +1, +0 shall be returned */
-	ATF_CHECK(fpcmp_equalf(acosf(1.0), 0.0));
-	ATF_CHECK(fpcmp_equal(acos(1.0), 0.0));
+	ATF_CHECK(fpreal_equalf(acosf(1.0), 0.0));
+	ATF_CHECK(fpreal_equal(acos(1.0), 0.0));
 #ifdef	HAVE_ACOSL
-	ATF_CHECK(fpcmp_equall(acosl(1.0), 0.0));
+	ATF_CHECK(fpreal_equall(acosl(1.0), 0.0));
 #endif
 }
 

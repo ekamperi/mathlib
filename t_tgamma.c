@@ -30,7 +30,7 @@ ATF_TC_BODY(test_tgamma1, tc)
 	N = sizeof(t1dtable) / sizeof(t1dtable[0]);
 	ATF_REQUIRE(N > 0);
 	for (i = 0; i < N; i++)
-		ATF_CHECK(fpcmp_equal(
+		ATF_CHECK(fpreal_equal(
 			    tgamma(t1dtable[i].x),
 				   t1dtable[i].y));
 
@@ -40,7 +40,7 @@ ATF_TC_BODY(test_tgamma1, tc)
 	N = sizeof(t1ldtable) / sizeof(t1ldtable[0]);
 	ATF_REQUIRE(N > 0);
 	for (i = 0; i < N; i++)
-		ATF_CHECK(fpcmp_equall(
+		ATF_CHECK(fpreal_equall(
 			    tgammal(t1ldtable[i].x),
 				    t1ldtable[i].y));
 #endif
@@ -90,7 +90,7 @@ ATF_TC_BODY(test_tgamma2, tc)
 		if (raised_exceptions(MY_FE_ALL_EXCEPT) || errno)
 			continue;
 
-		ATF_PASS_OR_BREAK(fpcmp_equal(g1, z*g0));
+		ATF_PASS_OR_BREAK(fpreal_equal(g1, z*g0));
 		++cnt;
 	}
 	ATF_CHECK(cnt > i/2);

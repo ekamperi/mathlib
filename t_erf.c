@@ -80,18 +80,18 @@ ATF_TC_BODY(test_erf1, tc)
 	N = sizeof(t1table) / sizeof(t1table[0]);
 	for (i = 0; i < N; i++) {
 		/* float */
-		ATF_CHECK(fpcmp_equalf(
+		ATF_CHECK(fpreal_equalf(
 			    erff((float)t1table[i].x),
 				 (float)t1table[i].y));
 
 		/* double */
-		ATF_CHECK(fpcmp_equal(
+		ATF_CHECK(fpreal_equal(
 			    erf((double)t1table[i].x),
 				(double)t1table[i].y));
 
 		/* long double */
 #ifdef	HAVE_ERFL
-		ATF_CHECK(fpcmp_equall(
+		ATF_CHECK(fpreal_equall(
 			    erfl(t1table[i].x),
 				 t1table[i].y));
 #endif
@@ -150,18 +150,18 @@ ATF_TC_BODY(test_erf2, tc)
 
 	for (i = 0; i < N; i++) {
 		/* float */
-		ATF_CHECK(fpcmp_equalf(
+		ATF_CHECK(fpreal_equalf(
 			    erff((float)t2table[i].x),
 				 (float)t2table[i].y));
 
 		/* double */
-		ATF_CHECK(fpcmp_equal(
+		ATF_CHECK(fpreal_equal(
 			    erf((double)t2table[i].x),
 				(double)t2table[i].y));
 
 		/* long double */
 #ifdef	HAVE_ERFL
-		ATF_CHECK(fpcmp_equall(
+		ATF_CHECK(fpreal_equall(
 			    erfl(t2table[i].x),
 				 t2table[i].y));
 #endif

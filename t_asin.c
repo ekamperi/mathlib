@@ -31,7 +31,7 @@ ATF_TC_BODY(test_asin1, tc)
 		ATF_REQUIRE(t1dtable[i].x >= -1.0 && t1dtable[i].x <= 1.0);
 
 		/* Actual check */
-		ATF_CHECK(fpcmp_equal(
+		ATF_CHECK(fpreal_equal(
 			    asin(t1dtable[i].x),
 				 t1dtable[i].y));
 	}
@@ -44,7 +44,7 @@ ATF_TC_BODY(test_asin1, tc)
                 ATF_REQUIRE(t1ldtable[i].x >= -1.0 && t1ldtable[i].x <= 1.0);
 
                 /* Actual check */
-                ATF_CHECK(fpcmp_equall(
+                ATF_CHECK(fpreal_equall(
                             asinl(t1ldtable[i].x),
 				  t1ldtable[i].y));
         }
@@ -127,15 +127,15 @@ ATF_TC_BODY(test_asin3, tc)
 #endif
 
 	/* If x is +-0, x shall be returned */
-	ATF_CHECK(fpcmp_equalf(asinf( 0.0),  0.0));
-        ATF_CHECK(fpcmp_equalf(asinf(-0.0), -0.0));
+	ATF_CHECK(fpreal_equalf(asinf( 0.0),  0.0));
+        ATF_CHECK(fpreal_equalf(asinf(-0.0), -0.0));
 
-        ATF_CHECK(fpcmp_equal(asin( 0.0),  0.0));
-        ATF_CHECK(fpcmp_equal(asin(-0.0), -0.0));
+        ATF_CHECK(fpreal_equal(asin( 0.0),  0.0));
+        ATF_CHECK(fpreal_equal(asin(-0.0), -0.0));
 
 #ifdef	HAVE_ASINL
-        ATF_CHECK(fpcmp_equall(asinl( 0.0),  0.0));
-        ATF_CHECK(fpcmp_equall(asinl(-0.0), -0.0));
+        ATF_CHECK(fpreal_equall(asinl( 0.0),  0.0));
+        ATF_CHECK(fpreal_equall(asinl(-0.0), -0.0));
 #endif
 }
 

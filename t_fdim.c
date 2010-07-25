@@ -129,7 +129,7 @@ ATF_TC_BODY(test_fdim3, tc)
 		clear_exceptions();
 		fy = fdimf((float)t3table[i], 0.0);
 #ifdef	HUGE_VALF
-		ATF_CHECK(fpcmp_equalf(fy, HUGE_VALF));
+		ATF_CHECK(fpreal_equalf(fy, HUGE_VALF));
 #endif
 		ATF_CHECK(iserrno_equalto(ERANGE));
 		ATF_CHECK(raised_exceptions(MY_FE_OVERFLOW));
@@ -139,7 +139,7 @@ ATF_TC_BODY(test_fdim3, tc)
 		clear_exceptions();
 		dy = fdim((double)t3table[i], 0.0);
 #ifdef	HUGE_VAL
-		ATF_CHECK(fpcmp_equal(dy, HUGE_VAL));
+		ATF_CHECK(fpreal_equal(dy, HUGE_VAL));
 #endif
 		ATF_CHECK(iserrno_equalto(ERANGE));
 		ATF_CHECK(raised_exceptions(MY_FE_OVERFLOW));
@@ -150,7 +150,7 @@ ATF_TC_BODY(test_fdim3, tc)
 		clear_exceptions();
 		ldy = fdiml(t3table[i], 0.0);
 #ifdef	HUGE_VALL
-		ATF_CHECK(fpcmp_equall(ldy, HUGE_VALL));
+		ATF_CHECK(fpreal_equall(ldy, HUGE_VALL));
 #endif
 		ATF_CHECK(iserrno_equalto(ERANGE));
 		ATF_CHECK(raised_exceptions(MY_FE_OVERFLOW));

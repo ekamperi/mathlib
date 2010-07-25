@@ -33,7 +33,7 @@ ATF_TC_BODY(test_logb1, tc)
 
 	N = sizeof(ttable) / sizeof(ttable[0]);
 	for (i = 0; i < N; i++)
-		ATF_CHECK(fpcmp_equal(logb(ttable[i].x), ttable[i].y));
+		ATF_CHECK(fpreal_equal(logb(ttable[i].x), ttable[i].y));
 }
 
 /*
@@ -152,18 +152,18 @@ ATF_TC_BODY(test_logb3, tc)
 
 	for (i = 0; i < N; i++) {
 		/* float */
-		ATF_CHECK(fpcmp_equalf(
+		ATF_CHECK(fpreal_equalf(
 			    logbf((float)t3table[i].x),
 				  (float)t3table[i].y));
 
 		/* double */
-		ATF_CHECK(fpcmp_equal(
+		ATF_CHECK(fpreal_equal(
 			    logb((double)t3table[i].x),
 				 (double)t3table[i].y));
 
 		/* long double */
 #ifdef	HAVE_LOGBL
-		ATF_CHECK(fpcmp_equall(
+		ATF_CHECK(fpreal_equall(
 			    logbl(t3table[i].x),
 				  t3table[i].y));
 #endif
