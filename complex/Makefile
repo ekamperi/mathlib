@@ -66,6 +66,12 @@ t_catanh: $(DEPS_T_CATANH)
 	$(CC99) -o t_catanh $(DEPS_T_CATANH) $(CFLAGS) $(LIBS)
 
 
+_DEPS_T_CLOG = t_clog.o subr_atf.o subr_fpcmp.o subr_random.o
+ DEPS_T_CLOG = $(_DEPS_T_CLOG:%=$(OBJDIR)/%)
+t_clog: $(DEPS_T_CLOG)
+	$(CC99) -o t_clog $(DEPS_T_CLOG) $(CFLAGS) $(LIBS)
+
+
 _DEPS_T_CSQRT = t_csqrt.o subr_atf.o subr_fpcmp.o subr_random.o
  DEPS_T_CSQRT = $(_DEPS_T_CSQRT:%=$(OBJDIR)/%)
 t_csqrt: $(DEPS_T_CSQRT)
