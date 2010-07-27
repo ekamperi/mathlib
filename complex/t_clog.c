@@ -87,22 +87,22 @@ t3entry {
 	{       0.0,      0.0, -INFINITY, DONT_CARE },
 #endif
 #ifdef  HUGE_VAL
-        { -HUGE_VAL, HUGE_VAL,  HUGE_VAL, DONT_CARE },
-        {  HUGE_VAL, HUGE_VAL,  HUGE_VAL, DONT_CARE },
-        {      -0.0,      0.0, -HUGE_VAL, DONT_CARE },
-        {       0.0,      0.0, -HUGE_VAL, DONT_CARE },
+	{ -HUGE_VAL, HUGE_VAL,  HUGE_VAL, DONT_CARE },
+	{  HUGE_VAL, HUGE_VAL,  HUGE_VAL, DONT_CARE },
+	{      -0.0,      0.0, -HUGE_VAL, DONT_CARE },
+	{       0.0,      0.0, -HUGE_VAL, DONT_CARE },
 #endif
 #ifdef  HUGE_VALF
-        { -HUGE_VALF, HUGE_VALF, HUGE_VALF, DONT_CARE },
-        {  HUGE_VALF, HUGE_VALF, HUGE_VALF, DONT_CARE },
-        {      -0.0,      0.0,  -HUGE_VALF, DONT_CARE },
-        {       0.0,      0.0,  -HUGE_VALF, DONT_CARE },
+	{ -HUGE_VALF, HUGE_VALF, HUGE_VALF, DONT_CARE },
+	{  HUGE_VALF, HUGE_VALF, HUGE_VALF, DONT_CARE },
+	{      -0.0,      0.0,  -HUGE_VALF, DONT_CARE },
+	{       0.0,      0.0,  -HUGE_VALF, DONT_CARE },
 #endif
 #ifdef  HUGE_VALL
-        { -HUGE_VALL, HUGE_VALL, HUGE_VALL, DONT_CARE },
-        {  HUGE_VALL, HUGE_VALL, HUGE_VALL, DONT_CARE },
-        {      -0.0,      0.0,  -HUGE_VALL, DONT_CARE },
-        {       0.0,      0.0,  -HUGE_VALL, DONT_CARE },
+	{ -HUGE_VALL, HUGE_VALL, HUGE_VALL, DONT_CARE },
+	{  HUGE_VALL, HUGE_VALL, HUGE_VALL, DONT_CARE },
+	{      -0.0,      0.0,  -HUGE_VALL, DONT_CARE },
+	{       0.0,      0.0,  -HUGE_VALL, DONT_CARE },
 #endif
 
 #ifdef	NAN
