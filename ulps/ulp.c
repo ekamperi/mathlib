@@ -45,6 +45,8 @@ calculp_long_double(long double computedl, long double exactl)
 	return (ulpsl);
 }
 
+
+
 static void
 populate_vars(const struct fentry *f,
     double *x, double *y, long double *xl, long double *yl,

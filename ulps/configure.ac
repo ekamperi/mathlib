@@ -37,4 +37,11 @@ AC_CHECK_FUNCS([cosl coshl erfl erfcl expl exp2l expm1l fabsl floorl fmodl])
 AC_CHECK_FUNCS([hypotl lgammal log10l log1pl log2l logbl logl])
 AC_CHECK_FUNCS([powl remainderl rintl sinhl sinl sqrtl tanhl tanl tgammal truncl])
 
+# Long double versions of complex arithmetic functions.
+AC_CHECK_FUNCS([clog])
+
+AC_CHECK_FUNCS([cabsl cacoshl cacosl cargl casinhl casinl catanhl catanl])
+AC_CHECK_FUNCS([ccoshl ccosl cexpl cimagl clogl conjl cpowl cprojl creall])
+AC_CHECK_FUNCS([csinhl csinl csqrtl ctanhl ctanl])
+
 AC_OUTPUT

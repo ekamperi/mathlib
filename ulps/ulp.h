@@ -15,11 +15,20 @@ struct ulp {
 	size_t ulp_skippedl;
 };
 
+struct ulp_complex {
+	struct ulp ulp_real;
+	struct ulp ulp_imag;
+};
+
 /*
- * As usual, bite the bullet and don't surround macro arguments with
- * parentheses. Nor put any intermediate variables. Trade security,
- * for beauty. Until it bites as back ;)
+ * As usual, bite the bullet and don't surround macro arguments with parentheses.
+ * Nor put any intermediate variables. Trade security, for beauty. Until it bites
+ * as back ;)
  */
+
+/*******************************************************************************
+ *				Real arithmetic
+ ******************************************************************************/
 #define	ULP_INIT(u)				\
 	assert(u);				\
 	u->ulp_max = -DBL_MAX;			\
@@ -29,7 +38,7 @@ struct ulp {
 	u->ulp_maxl = -LDBL_MAX;		\
 	u->ulp_minl = LDBL_MAX;			\
 	u->ulp_avgl = 0.0;			\
-	u->ulp_skippedl = 0;			\
+	u->ulp_skippedl = 0;
 
 #define	ULP_UPDATE(u, n)			\
 assert(u);					\
@@ -49,6 +58,24 @@ do {						\
 	if (nl < u->ulp_minl)			\
 		u->ulp_minl = nl;		\
 	u->ulp_avgl += nl;			\
+} while(0)
+
+
+/*******************************************************************************
+ *				Complex arithmetic
+ ******************************************************************************/
+#define ULP_COMPLEX_INIT(uc)			\
+	ULP_INIT(uc.ulp_real);			\
+	ULP_INIT(uc.ulp_imag);
+
+#define ULP_COMPLEX_UPDATE(uc, n)		\
+assert(uc);					\
+do {						\
+	if (n > u->ulp_max)			\
+		u->ulp_max = n;			\
+	if (n < u->ulp_min)			\
+		u->ulp_min = n;			\
+	u->ulp_avg += n;			\
 } while(0)
 
 int getfunctionulp(const char *fname, struct ulp *u);

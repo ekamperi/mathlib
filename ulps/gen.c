@@ -6,10 +6,12 @@
 #include <string.h>
 
 #include <gmp.h>
+#include <mpc.h>
 #include <mpfr.h>
 
 #include "config.h"
 #include "gen.h"
+#include "mytypes.h"
 
 static int
 dom_acos(long double x)
@@ -219,6 +221,18 @@ static int
 dom_yn(long double x, long double y)
 {
 	return (y > 0.0);
+}
+
+/*******************************************************************************
+ *				Complex arithmetic
+ ******************************************************************************/
+static int
+dom_clog(long double complex z)
+{
+	long_double_complex ldcz = { .z = z };
+
+	return (fpclassify(ldcz.parts[0]) != FP_ZERO ||
+		fpclassify(ldcz.parts[1]) != FP_ZERO);
 }
 
 /*
@@ -742,11 +756,46 @@ ftable[] = {
 		.f_libm = yn,
 		.f_mpfr = mpfr_yn,
 		.f_u.fp2 = dom_yn
+	},
+#endif
+
+/*******************************************************************************
+ *				Complex arithmetic
+ ******************************************************************************/
+	/* clog() */
+#ifdef	HAVE_CLOG
+	{
+		.f_domain = COMPLEX,
+		.f_narg = 1,
+		.f_name = "clog",
+		.f_libm = clog,
+#ifdef  HAVE_CLOGL
+                .f_namel = "clogl",
+                .f_libml = clogl,
+#endif
+		.f_mpc = mpc_log,
+		.f_uc.fp1 = dom_clog
 	}
 #endif
 };
 
 const int fsize = sizeof(ftable) / sizeof(ftable[0]);
+
+static const void
+assertfunction(const struct fentry *f)
+{
+	assert(f);
+        assert(f->f_narg == 1 || f->f_narg == 2);
+	assert(f->f_name);
+	assert(f->f_libm);
+	if (f->f_namel)
+		assert(f->f_libml);
+	if (f->f_mpfr)
+		assert(f->f_u.fp1 || f->f_u.fp2);
+	if (f->f_mpc)
+		assert(f->f_uc.fp1 || f->f_u.fp2);
+	assert(f->f_mpfr || f->f_mpc);
+}
 
 const struct fentry *
 getfunctionbyidx(size_t idx)
@@ -768,8 +817,7 @@ getfunctionbyname(const char *fname)
 		f = &ftable[i];
 		if ((strcmp(fname, f->f_name ) == 0) ||
 		    (f->f_namel && strcmp(fname, f->f_namel) == 0)) {
-			assert(f->f_narg == 1 || f->f_narg == 2);
-			assert(f->f_u.fp1 || f->f_u.fp2);
+			assertfunction(f);
 			return (f);
 		}
 	}

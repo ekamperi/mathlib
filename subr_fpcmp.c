@@ -1,5 +1,6 @@
 #include <complex.h>
 #include <math.h>
+#include "mytypes.h"
 #include "subr_fpcmp.h"
 
 /*******************************************************************************
@@ -78,6 +79,7 @@ typedef union {
 	long double complex z;
 	long double parts[2];
 } long_double_complex;
+
 
 int
 fpcomplex_equalf(float complex x, float complex y)
