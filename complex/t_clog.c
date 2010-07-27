@@ -136,12 +136,53 @@ ATF_TC_BODY(test_clog3, tc)
 	}
 }
 
+/*
+ * Test case 4
+ */
+ATF_TC(test_clog4);
+ATF_TC_HEAD(test_clog4, tc)
+{
+	atf_tc_set_md_var(tc,
+	    "descr",
+	    "clog(conj(z)) = conj(clog(z)), for all complex numbers");
+}
+ATF_TC_BODY(test_clog4, tc)
+{
+	float complex fcx;
+	double complex dcx;
+	long double complex ldcx;
+	long i, N;
+
+	N = get_config_var_as_long(tc, "iterations");
+	ATF_REQUIRE(N > 0);
+
+	ATF_FOR_LOOP(i, N, i++) {
+		/* float */
+		fcx = random_float_complex(FP_NORMAL);
+		ATF_PASS_OR_BREAK(
+			clogf(conjf(fcx)) == conjf(clogf(fcx)));
+
+		/* double */
+		dcx = random_double_complex(FP_NORMAL);
+		ATF_PASS_OR_BREAK(
+			clog(conj(dcx)) == conj(clog(dcx)));
+
+		/* long double */
+#if defined(HAVE_CLOGL) && defined(HAVE_CONJL)
+		ldcx = random_long_double_complex(FP_NORMAL);
+		ATF_PASS_OR_BREAK(
+			clogl(conjl(ldcx)) == conjl(clogl(ldcx)));
+#endif
+	}
+}
+
 /* Add test cases to test program */
 ATF_TP_ADD_TCS(tp)
 {
 	ATF_TP_ADD_TC(tp, test_clog1);
 	ATF_TP_ADD_TC(tp, test_clog2);
 	ATF_TP_ADD_TC(tp, test_clog3);
+	ATF_TP_ADD_TC(tp, test_clog4);
 
 	return atf_no_error();
 }
