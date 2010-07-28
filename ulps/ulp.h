@@ -82,4 +82,10 @@ int getfunctionulp(const char *fname, struct ulp *u);
 void printulps(struct ulp u);
 void printulps_long_double(struct ulp u);
 
+
+double calculp_double(double computed, double exact);
+long double calculp_long_double(long double computedl, long double exactl);
+
+#define	NITERATIONS (100 * 1000)
+
 #endif	/* ! __ULP_H__ */

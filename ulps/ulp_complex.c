@@ -1,58 +1,53 @@
 #define _XOPEN_SOURCE 600
 
 #include <assert.h>
+#include <complex.h>
 #include <float.h>
 #include <math.h>
 #include <stdio.h>
 #include <string.h>
 
 #include <gmp.h>
+#include <mpc.h>
 #include <mpfr.h>
 
 #include "gen.h"
 #include "subr_random.h"
 #include "ulp.h"
 
-double
-calculp_double(double computed, double exact)
+static double
+calculp_double_complex(double complex computed, double complex exact)
 {
-	double xbefore, xafter;
-	double ulps;
+	double ulp_real;
+	double ulp_imag;
 
-	xbefore = nextafter(exact, -INFINITY);
-	xafter = nextafter(exact, +INFINITY);
-	assert(xafter != xbefore);
+	ulp_real = calculp_double(creal(computed), creal(exact));
+	ulp_imag = calculp_double(cimag(computed), cimag(exact));
 
-	ulps = fabs( (exact - computed) / (xafter - xbefore) );
-
-	return (ulps);
+	return (fabs(ulp_real) + fabs(ulp_imag));
 }
 
-long double
+static long double
 calculp_long_double(long double computedl, long double exactl)
 {
-	long double xbeforel, xafterl;
-	long double ulpsl;
+        long double ulp_reall;
+        long double ulp_imagl;
 
-	xbeforel = nextafterl(exactl, -INFINITY);
-	xafterl = nextafterl(exactl, +INFINITY);
-	assert(xafterl != xbeforel);
+        ulp_reall = calculp_long_double(creall(computedl), creall(exactl));
+        ulp_imagl = calculp_long_double(cimagl(computedl), cimagl(exactl));
 
-	ulpsl = fabsl( (exactl - computedl) / (xafterl - xbeforel) );
-
-	return (ulpsl);
+        return (fabsl(ulp_reall) + fabsl(ulp_imagl));
 }
 
-
-
 static void
-populate_vars(const struct fentry *f,
-    double *x, double *y, long double *xl, long double *yl,
-    mpfr_ptr mp_x, mpfr_ptr mp_y, mpfr_ptr mp_xl, mpfr_ptr mp_yl)
+populate_complex_vars(const struct fentry *f,
+    double complex *x, double complex *y,
+    long double complex *xl, long double coplex *yl,
+    mpc_t mp_x, mpc_t mp_y, mpc_t mp_xl, mpc_t mp_yl)
 {
-	const mpfr_rnd_t tonearest = GMP_RNDN;
-	long double txl, tyl;
-	double tx, ty;
+	const mpc_rnd_t tonearest = MPC_RNDNN;
+	long double complex txl, tyl;
+	double complex tx, ty;
 
 	assert(f && x && y && xl && yl);
 	txl = tx = 0.0;
@@ -61,22 +56,17 @@ populate_vars(const struct fentry *f,
 	/* Generate random arguments */
 	if (f->f_narg == 1) {
 		do {
-			tx  = random_double(FP_NORMAL);
-			txl = random_long_double(FP_NORMAL);
-		} while (!f->f_u.fp1(tx) || !f->f_u.fp1(txl));
+			tx  = random_double_complex(FP_NORMAL);
+			txl = random_long_double_complex(FP_NORMAL);
+		} while (!f->f_uc.fp1(tx) || !f->f_uc.fp1(txl));
 	}
 	if (f->f_narg == 2) {
 		do {
-			tx  = random_double(FP_NORMAL);
-			ty  = random_double(FP_NORMAL);
-			txl = random_long_double(FP_NORMAL);
-			tyl = random_long_double(FP_NORMAL);
-		} while (!f->f_u.fp2(tx, ty) || !f->f_u.fp2(txl, tyl));
-	}
-
-	/* Hack, yikes */
-	if (!strcmp(f->f_name, "yn")) {
-		txl = tx = 1.0;
+			tx  = random_double_complex(FP_NORMAL);
+			ty  = random_double_complex(FP_NORMAL);
+			txl = random_long_double_complex(FP_NORMAL);
+			tyl = random_long_double_complex(FP_NORMAL);
+		} while (!f->f_uc.fp2(tx, ty) || !f->f_uc.fp2(txl, tyl));
 	}
 
 	*x  = tx;
@@ -84,20 +74,20 @@ populate_vars(const struct fentry *f,
 	*xl = txl;
 	*yl = tyl;
 
-	/* Copy arguments to mpfr variables */
-	mpfr_set_d (mp_x,  tx,  tonearest);
-	mpfr_set_d (mp_y,  ty,  tonearest);
-	mpfr_set_ld(mp_xl, txl, tonearest);
-	mpfr_set_ld(mp_yl, tyl, tonearest);
+	/* Copy arguments to mpc variables */
+	mpc_set_d_d  (mp_x,  creal (tx),  cimag (tx),  tonearest);
+	mpc_set_d_d  (mp_y,  creal (ty),  cimag (ty),  tonearest);
+	mpc_set_ld_ld(mp_xl, creall(txl), cimagl(txl), tonearest);
+	mpc_set_ld_ld(mp_yl, creall(tyl), cimagl(tyl), tonearest);
 }
 
 int
 getfunctionulp(const char *fname, struct ulp *u)
 {
 	const struct fentry *f;
-	const mpfr_rnd_t tonearest = GMP_RNDN;
-	mpfr_t mp_exactl, mp_xl, mp_yl;
-	mpfr_t mp_exact, mp_x, mp_y;
+	const mpc_rnd_t tonearest = GMP_RNDNN;
+	mpc_t mp_exactl, mp_xl, mp_yl;
+	mpc_t mp_exact, mp_x, mp_y;
 	long double xl, yl, computedl, exactl, myulpl;
 	double x, y, computed, exact, myulp;
 	size_t i;
@@ -107,8 +97,12 @@ getfunctionulp(const char *fname, struct ulp *u)
 		return (-1);
 
 	/* Initialize high precision variables */
-	mpfr_inits2(200, mp_exact,  mp_x,  mp_y,  (mpfr_ptr)NULL);
-	mpfr_inits2(200, mp_exactl, mp_xl, mp_yl, (mpfr_ptr)NULL);
+	mpc_init2(mp_exact, 200);
+        mpc_init2(mp_x,     200);
+        mpc_init2(mp_y,     200);
+	mpc_init2(mp_exactl,200);
+	mpc_init2(mp_xl,    200);
+	mpc_init2(mp_yl,    200);
 
 	ULP_INIT(u);
 
@@ -194,7 +188,7 @@ getfunctionulp(const char *fname, struct ulp *u)
 }
 
 void
-printulps(struct ulp u)
+printulps_double_complex(struct ulp_complex u)
 {
 	if (u.ulp_max > 9.9 || u.ulp_min > 9.9) {
 		printf("%-10.4e %-10.e %-10.4e   ",
@@ -207,7 +201,7 @@ printulps(struct ulp u)
 }
 
 void
-printulps_long_double(struct ulp u)
+printulps_long_double_complex(struct ulp_complex u)
 {
 	if (u.ulp_maxl > 9.9 || u.ulp_minl > 9.9) {
 		printf("%-10.4e %-10.4e %-10.4e   ",
