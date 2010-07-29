@@ -28,7 +28,7 @@ calculp_double_complex(double complex computed, double complex exact)
 }
 
 long double
-calculp_long_double(long double computedl, long double exactl)
+calculp_long_double_complex(long double computedl, long double exactl)
 {
         long double ulp_reall;
         long double ulp_imagl;
@@ -160,7 +160,8 @@ getfunctionulp_complex(const char *fname, struct ulp_complex *uc)
 			myulp = calculp_double_complex(computed, exact);
 			ULP_COMPLEX_UPDATE(uc, myulp);
 		} else {
-			uc->ulp_skipped++;
+			uc->ulp_real.ulp_skipped++;
+			uc->ulp_imag.ulp_skipped++;
 		}
 
 		if (f->f_libml) {
@@ -170,12 +171,13 @@ getfunctionulp_complex(const char *fname, struct ulp_complex *uc)
 				ULP_COMPLEX_UPDATEL(uc, myulpl);
 			}
 		} else {
-			uc->ulp_skippedl++;
+			uc->ulp_real.ulp_skippedl++;
+			uc->ulp_imag.ulp_skippedl++;
 		}
 	}
 
-	uc->ulp_avg  /= (i - uc->ulp_skipped);
-	uc->ulp_avgl /= (i - uc->ulp_skippedl);
+	uc->ulp_real.ulp_avg  /= (i - uc->ulp_real.ulp_skipped);
+	uc->ulp_imag.ulp_avgl /= (i - uc->ulp_imag.ulp_skippedl);
 
 	/* Free resources */
 	mpc_clear(mp_exact);

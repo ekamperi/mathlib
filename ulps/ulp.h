@@ -71,15 +71,28 @@ do {						\
 #define ULP_COMPLEX_UPDATE(uc, n)					\
 assert(uc);								\
 do {									\
-	if (n > (u)->ulp_max)						\
-		(u)->ulp_max = n;					\
-	if (n < (u)->ulp_min)						\
-		(u)->ulp_min = n;					\
-	u->ulp_avg += n;						\
+	if (creal(n) > (uc)->ulp_real.ulp_max)				\
+		       (uc)->ulp_real.ulp_max = n;			\
+	if (creal(n) < (uc)->ulp_real.ulp_min)				\
+		       (uc)->ulp_real.ulp_min = n;			\
+	uc->ulp_real.ulp_avg += creal(n);				\
 } while(0)
 
+#define ULP_COMPLEX_UPDATEL(uc, n)					\
+assert(uc);                                                             \
+do {                                                                    \
+	if (creall(n) > (uc)->ulp_real.ulp_max)                         \
+			(uc)->ulp_real.ulp_max = n;			\
+	if (creall(n) < (uc)->ulp_real.ulp_min)                         \
+			(uc)->ulp_real.ulp_min = n;			\
+	uc->ulp_real.ulp_avgl += creal(n);				\
+} while(0)
+
+
+
+
 int getfunctionulp(const char *fname, struct ulp *u);
-int getfunctionulp_complex(const char *fname, struct ulp *u);
+int getfunctionulp_complex(const char *fname, struct ulp_complex *u);
 void printulps(struct ulp u);
 void printulps_long_double(struct ulp u);
 
