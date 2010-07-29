@@ -72,6 +72,12 @@ t_clog: $(DEPS_T_CLOG)
 	$(CC99) -o t_clog $(DEPS_T_CLOG) $(CFLAGS) $(LIBS)
 
 
+_DEPS_T_CONJ = t_conj.o subr_atf.o subr_random.o
+ DEPS_T_CONJ = $(_DEPS_T_CONJ:%=$(OBJDIR)/%)
+t_conj: $(DEPS_T_CONJ)
+	$(CC99) -o t_conj $(DEPS_T_CONJ) $(CFLAGS) $(LIBS)
+
+
 _DEPS_T_CSQRT = t_csqrt.o subr_atf.o subr_fpcmp.o subr_random.o
  DEPS_T_CSQRT = $(_DEPS_T_CSQRT:%=$(OBJDIR)/%)
 t_csqrt: $(DEPS_T_CSQRT)
