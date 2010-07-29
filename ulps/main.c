@@ -45,7 +45,12 @@ main(int argc, char *argv[])
 		} else {
 			target = argv[i];
 		}
-		rv = getfunctionulp(target, &u);
+		printf("-> %s\n", target);
+		/* Is it real or complex value function ? */
+		if (f->f_mpfr)
+			rv = getfunctionulp(target, &u);
+		else
+			rv = getfunctionulp_complex(target, &u);
 		if (rv != -1) {
 			printf("[%2u/%2u] %-12s ", i+1, total, target);
 			printulps(u);

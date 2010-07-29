@@ -27,7 +27,7 @@ calculp_double_complex(double complex computed, double complex exact)
 	return (fabs(ulp_real) + fabs(ulp_imag));
 }
 
-static long double
+long double
 calculp_long_double(long double computedl, long double exactl)
 {
         long double ulp_reall;
@@ -39,10 +39,10 @@ calculp_long_double(long double computedl, long double exactl)
         return (fabsl(ulp_reall) + fabsl(ulp_imagl));
 }
 
-static void
+void
 populate_complex_vars(const struct fentry *f,
     double complex *x, double complex *y,
-    long double complex *xl, long double coplex *yl,
+    long double complex *xl, long double complex *yl,
     mpc_t mp_x, mpc_t mp_y, mpc_t mp_xl, mpc_t mp_yl)
 {
 	const mpc_rnd_t tonearest = MPC_RNDNN;
@@ -82,19 +82,21 @@ populate_complex_vars(const struct fentry *f,
 }
 
 int
-getfunctionulp(const char *fname, struct ulp *u)
+getfunctionulp_complex(const char *fname, struct ulp_complex *uc)
 {
 	const struct fentry *f;
-	const mpc_rnd_t tonearest = GMP_RNDNN;
+	const mpc_rnd_t tonearest = MPC_RNDNN;
 	mpc_t mp_exactl, mp_xl, mp_yl;
 	mpc_t mp_exact, mp_x, mp_y;
-	long double xl, yl, computedl, exactl, myulpl;
-	double x, y, computed, exact, myulp;
+	long double complex xl, yl, computedl, exactl, myulpl;
+	double complex x, y, computed, exact, myulp;
 	size_t i;
 
 	f = getfunctionbyname(fname);
 	if (f == NULL)
 		return (-1);
+
+	assert(f->f_mpfr && f->f_mpc == NULL);
 
 	/* Initialize high precision variables */
 	mpc_init2(mp_exact, 200);
@@ -104,7 +106,7 @@ getfunctionulp(const char *fname, struct ulp *u)
 	mpc_init2(mp_xl,    200);
 	mpc_init2(mp_yl,    200);
 
-	ULP_INIT(u);
+	ULP_COMPLEX_INIT(uc);
 
 	for (i = 0; i < NITERATIONS; i++) {
 		if (i % 100 == 0) {
@@ -114,31 +116,27 @@ getfunctionulp(const char *fname, struct ulp *u)
 		}
 
 		/* Generate random arguments */
-		populate_vars(f, &x, &y, &xl, &yl, mp_x, mp_y, mp_xl, mp_yl);
+		populate_complex_vars(f, &x, &y, &xl, &yl, mp_x, mp_y, mp_xl, mp_yl);
 
 		/*
 		 * Ready to call the mpfr*()
 		 * The double version ALWAYS exist!
 		 */
 		if(f->f_narg == 1) {
-			f->f_mpfr(mp_exact, mp_x, tonearest);
+			f->f_mpc(mp_exact, mp_x, tonearest);
 		} else {
-			/* Hack, yikes */
-			if (!strcmp(f->f_name, "yn"))
-				f->f_mpfr(mp_exact, (long)x, mp_y, tonearest);
-			else
-				f->f_mpfr(mp_exact, mp_x, mp_y, tonearest);
+			f->f_mpc(mp_exact, mp_x, mp_y, tonearest);
 		}
-		exact = mpfr_get_d(mp_exact,  tonearest);
+		exact = mpc_get_d(mp_exact,  tonearest);
 
 		/* We can't tell the same for long double functions though */
 		if (f->f_libml) {
 			if(f->f_narg == 1) {
-				f->f_mpfr(mp_exactl, mp_xl, tonearest);
+				f->f_mpc(mp_exactl, mp_xl, tonearest);
 			} else {
-				f->f_mpfr(mp_exactl, mp_xl, mp_yl, tonearest);
+				f->f_mpc(mp_exactl, mp_xl, mp_yl, tonearest);
 			}
-			exactl = mpfr_get_ld(mp_exactl, tonearest);
+			exactl = mpc_get_ld(mp_exactl, tonearest);
 		}
 
 		/* Ready to call the libm*() */
@@ -159,56 +157,50 @@ getfunctionulp(const char *fname, struct ulp *u)
 		/* Skip bogus results */
 		if (fpclassify(computed) == FP_NORMAL &&
 		    fpclassify(exact) == FP_NORMAL) {
-			myulp = calculp_double(computed, exact);
-			ULP_UPDATE(u, myulp);
+			myulp = calculp_double_complex(computed, exact);
+			ULP_COMPLEX_UPDATE(uc, myulp);
 		} else {
-			u->ulp_skipped++;
+			uc->ulp_skipped++;
 		}
 
 		if (f->f_libml) {
 			if (fpclassify(computedl) == FP_NORMAL &&
 			    fpclassify(exactl) == FP_NORMAL) {
-				myulpl = calculp_long_double(computedl, exactl);
-				ULP_UPDATEL(u, myulpl);
+				myulpl = calculp_long_double_complex(computedl, exactl);
+				ULP_COMPLEX_UPDATEL(uc, myulpl);
 			}
 		} else {
-			u->ulp_skippedl++;
+			uc->ulp_skippedl++;
 		}
 	}
 
-	u->ulp_avg  /= (i - u->ulp_skipped);
-	u->ulp_avgl /= (i - u->ulp_skippedl);
+	uc->ulp_avg  /= (i - uc->ulp_skipped);
+	uc->ulp_avgl /= (i - uc->ulp_skippedl);
 
 	/* Free resources */
-	mpfr_clears(mp_exact,  mp_x,  mp_y,  (mpfr_ptr)NULL);
-	mpfr_clears(mp_exactl, mp_xl, mp_yl, (mpfr_ptr)NULL);
+	mpc_clear(mp_exact);
+	mpc_clear(mp_x);
+	mpc_clear(mp_y);
+	mpc_clear(mp_exactl);
+	mpc_clear(mp_xl);
+	mpc_clear(mp_yl);
 
 	/* Success */
 	return 0;
 }
 
 void
-printulps_double_complex(struct ulp_complex u)
+printulps_double_complex(struct ulp_complex uc)
 {
-	if (u.ulp_max > 9.9 || u.ulp_min > 9.9) {
-		printf("%-10.4e %-10.e %-10.4e   ",
-		    u.ulp_max, u.ulp_min, u.ulp_avg);
-	} else {
-		printf("%-10.4f %-10.4f %-10.4f   ",
-		    u.ulp_max, u.ulp_min, u.ulp_avg);
-	}
-	printf("%5u\n", u.ulp_skipped);
+	printf("%-10.4f %-10.4f %-10.4f   ",
+	    uc.ulp_real.ulp_max, uc.ulp_real.ulp_min, uc.ulp_real.ulp_avg);
+	printf("%5u\n", uc.ulp_real.ulp_skipped);
 }
 
 void
-printulps_long_double_complex(struct ulp_complex u)
+printulps_long_double_complex(struct ulp_complex uc)
 {
-	if (u.ulp_maxl > 9.9 || u.ulp_minl > 9.9) {
-		printf("%-10.4e %-10.4e %-10.4e   ",
-		    (double)u.ulp_maxl, (double)u.ulp_minl, (double)u.ulp_avgl);
-	} else {
-		printf("%-10.4f %-10.4f %-10.4f   ",
-		    (double)u.ulp_maxl, (double)u.ulp_minl, (double)u.ulp_avgl);
-	}
-	printf("%5u\n", u.ulp_skippedl);
+	printf("%-10.4f %-10.4f %-10.4f   ",
+	    (double)uc.ulp_real.ulp_maxl, (double)uc.ulp_real.ulp_minl, (double)uc.ulp_real.ulp_avgl);
+	printf("%5u\n", uc.ulp_real.ulp_skippedl);
 }

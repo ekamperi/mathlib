@@ -31,57 +31,60 @@ struct ulp_complex {
  ******************************************************************************/
 #define	ULP_INIT(u)				\
 	assert(u);				\
-	u->ulp_max = -DBL_MAX;			\
-	u->ulp_min = DBL_MAX;			\
-	u->ulp_avg = 0.0;			\
-	u->ulp_skipped = 0;			\
-	u->ulp_maxl = -LDBL_MAX;		\
-	u->ulp_minl = LDBL_MAX;			\
-	u->ulp_avgl = 0.0;			\
-	u->ulp_skippedl = 0;
+	(u)->ulp_max = -DBL_MAX;		\
+	(u)->ulp_min = DBL_MAX;			\
+	(u)->ulp_avg = 0.0;			\
+	(u)->ulp_skipped = 0;			\
+	(u)->ulp_maxl = -LDBL_MAX;		\
+	(u)->ulp_minl = LDBL_MAX;		\
+	(u)->ulp_avgl = 0.0;			\
+	(u)->ulp_skippedl = 0;
 
 #define	ULP_UPDATE(u, n)			\
 assert(u);					\
 do {						\
-	if (n > u->ulp_max)			\
-		u->ulp_max = n;			\
-	if (n < u->ulp_min)			\
-		u->ulp_min = n;			\
-	u->ulp_avg += n;			\
+	if (n > (u)->ulp_max)			\
+		(u)->ulp_max = n;		\
+	if (n < (u)->ulp_min)			\
+		(u)->ulp_min = n;		\
+	(u)->ulp_avg += n;			\
 } while(0)
 
 #define ULP_UPDATEL(u, nl)			\
 assert(u);					\
 do {						\
-	if (nl > u->ulp_maxl)			\
-		u->ulp_maxl = nl;		\
-	if (nl < u->ulp_minl)			\
-		u->ulp_minl = nl;		\
-	u->ulp_avgl += nl;			\
+	if (nl > (u)->ulp_maxl)			\
+		 (u)->ulp_maxl = nl;		\
+	if (nl < (u)->ulp_minl)			\
+		 (u)->ulp_minl = nl;		\
+	(u)->ulp_avgl += nl;			\
 } while(0)
 
 
 /*******************************************************************************
  *				Complex arithmetic
  ******************************************************************************/
-#define ULP_COMPLEX_INIT(uc)			\
-	ULP_INIT(uc.ulp_real);			\
-	ULP_INIT(uc.ulp_imag);
+#define ULP_COMPLEX_INIT(uc)						\
+	ULP_INIT(&uc->ulp_real);					\
+	ULP_INIT(&uc->ulp_imag);
 
-#define ULP_COMPLEX_UPDATE(uc, n)		\
-assert(uc);					\
-do {						\
-	if (n > u->ulp_max)			\
-		u->ulp_max = n;			\
-	if (n < u->ulp_min)			\
-		u->ulp_min = n;			\
-	u->ulp_avg += n;			\
+#define ULP_COMPLEX_UPDATE(uc, n)					\
+assert(uc);								\
+do {									\
+	if (n > (u)->ulp_max)						\
+		(u)->ulp_max = n;					\
+	if (n < (u)->ulp_min)						\
+		(u)->ulp_min = n;					\
+	u->ulp_avg += n;						\
 } while(0)
 
 int getfunctionulp(const char *fname, struct ulp *u);
+int getfunctionulp_complex(const char *fname, struct ulp *u);
 void printulps(struct ulp u);
 void printulps_long_double(struct ulp u);
 
+void printulps_double_complex(struct ulp_complex u);
+void printulps_long_double_complex(struct ulp_complex u);
 
 double calculp_double(double computed, double exact);
 long double calculp_long_double(long double computedl, long double exactl);
