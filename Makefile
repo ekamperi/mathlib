@@ -378,7 +378,7 @@ run-html:
 	@echo
 	@rm -f tmp.xml tmp2.xml tmp3.xml
 	@rm -f tmp.html tmp2.html
-	atf-run . fenv | atf-report -o xml:tmp.xml
+	atf-run . fenv complex | atf-report -o xml:tmp.xml
 	@cat tmp.xml | col > tmp2.xml
 	@sed 's/http:\/\/www.NetBSD.org\/XML\/atf/\./' tmp2.xml > tmp3.xml
 	@xsltproc ./tests-results.xsl tmp3.xml > tmp.html
