@@ -12,6 +12,7 @@
 #include <mpfr.h>
 
 #include "gen.h"
+#include "subr_mpc.h"
 #include "subr_random.h"
 #include "ulp.h"
 

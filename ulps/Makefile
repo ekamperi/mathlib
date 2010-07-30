@@ -26,7 +26,7 @@ config.h:
 $(OBJDIR)/%.o: %.c | $(OBJDIR) config.h
 	$(CC99) -c -o $@ $< $(CCFLAGS) $(INCLUDE)
 
-_DEPS = main.o gen.o ulp.o ulp_complex.o subr_random.o
+_DEPS = main.o gen.o ulp.o ulp_complex.o subr_mpc.o subr_random.o
  DEPS = $(_DEPS:%=$(OBJDIR)/%)
 ulpcalc: $(DEPS)
 	$(CC99) -o ulps $(DEPS) $(CCFLAGS) $(INCLUDE) $(LIBS)
