@@ -28,7 +28,7 @@ calculp_double_complex(double complex computed, double complex exact)
 	return (fabs(ulp_real) + fabs(ulp_imag));
 }
 
-long double
+static long double
 calculp_long_double_complex(long double computedl, long double exactl)
 {
         long double ulp_reall;
@@ -40,7 +40,7 @@ calculp_long_double_complex(long double computedl, long double exactl)
         return (fabsl(ulp_reall) + fabsl(ulp_imagl));
 }
 
-void
+static void
 populate_complex_vars(const struct fentry *f,
     double complex *x, double complex *y,
     long double complex *xl, long double complex *yl,
@@ -128,7 +128,7 @@ getfunctionulp_complex(const char *fname, struct ulp_complex *uc)
 		} else {
 			f->f_mpc(mp_exact, mp_x, mp_y, tonearest);
 		}
-		exact = mpc_get_d(mp_exact,  tonearest);
+		exact = mpc_get_dc(mp_exact,  tonearest);
 
 		/* We can't tell the same for long double functions though */
 		if (f->f_libml) {
@@ -137,7 +137,7 @@ getfunctionulp_complex(const char *fname, struct ulp_complex *uc)
 			} else {
 				f->f_mpc(mp_exactl, mp_xl, mp_yl, tonearest);
 			}
-			exactl = mpc_get_ld(mp_exactl, tonearest);
+			exactl = mpc_get_ldc(mp_exactl, tonearest);
 		}
 
 		/* Ready to call the libm*() */
