@@ -44,7 +44,6 @@ const struct fentry *getfunctionbyidx(int idx);
 const struct fentry *getfunctionbyname(const char *fname);
 void printfunctions(void);
 
-
 #define	DEBUG
 #ifdef	DEBUG
 #define	DPRINTF(x)	printf x; fflush(stdout);

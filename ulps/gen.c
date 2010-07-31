@@ -943,7 +943,22 @@ ftable[] = {
 #endif
 		.f_mpc = mpc_sqrt,
 		.f_uc.fp1 = dom_csqrt
-	}
+	},
+#endif
+
+	/* ctan() */
+#ifdef  HAVE_CTAN
+        {
+	  .f_narg = 1,
+	  .f_name = "ctan",
+	  .f_libm_complex = ctan,
+#ifdef  HAVE_CTANL
+	  .f_namel = "ctanl",
+	  .f_libml_complex = ctanl,
+#endif
+	  .f_mpc = mpc_tan,
+	  .f_uc.fp1 = dom_ctan
+        }
 #endif
 };
 
