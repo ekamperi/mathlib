@@ -279,6 +279,13 @@ dom_csqrt(long double complex z)
 }
 
 static int
+dom_ctan(long double complex z)
+{
+	/* XXX */
+	return 1;
+}
+
+static int
 dom_conj(long double complex z)
 {
 	return 1;
