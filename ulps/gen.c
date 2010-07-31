@@ -246,6 +246,12 @@ dom_carg(long double complex z)
 }
 
 static int
+dom_ccos(long double complex z)
+{
+	return 1;
+}
+
+static int
 dom_cexp(long double complex z)
 {
 	return 1;
@@ -799,64 +805,79 @@ ftable[] = {
 /*******************************************************************************
  *				Complex arithmetic
  ******************************************************************************/
-        /* cabs() */
+	/* cabs() */
 #ifdef  HAVE_CABS
-        {
-                .f_narg = 1,
-                .f_name = "cabs",
-                .f_libm_complex = cabs,
+	{
+		.f_narg = 1,
+		.f_name = "cabs",
+		.f_libm_complex = cabs,
 #ifdef  HAVE_CABSL
-                .f_namel = "cabsl",
-                .f_libml_complex = cabsl,
+		.f_namel = "cabsl",
+		.f_libml_complex = cabsl,
 #endif
-                .f_mpc = mpc_abs,
-                .f_uc.fp1 = dom_cabs
-        },
+		.f_mpc = mpc_abs,
+		.f_uc.fp1 = dom_cabs
+	},
 #endif
 
-        /* cacos() */
+	/* cacos() */
 #ifdef  HAVE_CACOS
-        {
-                .f_narg = 1,
-                .f_name = "cacos",
-                .f_libm_complex = cacos,
+	{
+		.f_narg = 1,
+		.f_name = "cacos",
+		.f_libm_complex = cacos,
 #ifdef  HAVE_CABSL
-                .f_namel = "cacosl",
-                .f_libml_complex = cacosl,
+		.f_namel = "cacosl",
+		.f_libml_complex = cacosl,
 #endif
-                .f_mpc = mpc_acos,
-                .f_uc.fp1 = dom_cacos
-        },
+		.f_mpc = mpc_acos,
+		.f_uc.fp1 = dom_cacos
+	},
 #endif
 
-        /* carg() */
+	/* carg() */
 #ifdef  HAVE_CARG
-        {
-                .f_narg = 1,
-                .f_name = "carg",
-                .f_libm_complex = carg,
+	{
+		.f_narg = 1,
+		.f_name = "carg",
+		.f_libm_complex = carg,
 #ifdef  HAVE_CARGL
-                .f_namel = "cargl",
-                .f_libml_complex = cargl,
+		.f_namel = "cargl",
+		.f_libml_complex = cargl,
 #endif
 		.f_mpc = mpc_arg,
-                .f_uc.fp1 = dom_carg
-        },
+		.f_uc.fp1 = dom_carg
+	},
+#endif
+
+	/* ccos() */
+#ifdef  HAVE_CCOS
+	{
+		.f_narg = 1,
+		.f_name = "ccos",
+		.f_libm_complex = ccos,
+#ifdef  HAVE_CARGL
+		.f_namel = "ccosl",
+		.f_libml_complex = ccosl,
+#endif
+		.f_mpc = mpc_cos,
+		.f_uc.fp1 = dom_ccos
+	},
 #endif
 
 	/* cexp() */
 #ifdef  HAVE_CEXP
-        {
-                .f_narg = 1,
-                .f_name = "cexp",
-                .f_libm_complex = cexp,
+	{
+		.f_narg = 1,
+		.f_name = "cexp",
+		.f_libm_complex = cexp,
 #ifdef  HAVE_CEXPL
-                .f_namel = "cexpl",
-                .f_libml_complex = cexpl,
+		.f_namel = "cexpl",
+		.f_libml_complex = cexpl,
 #endif
-                .f_mpc = mpc_exp,
-                .f_uc.fp1 = dom_cexp
-        },
+		.f_mpc = mpc_exp,
+		.f_uc.fp1 = dom_cexp
+	},
 #endif
 
 	/* clog() */
@@ -891,7 +912,7 @@ ftable[] = {
 
 	/* csqrt() */
 #ifdef  HAVE_CSQRT
-        {
+	{
 		.f_narg = 1,
 		.f_name = "csqrt",
 		.f_libm_complex = csqrt,
@@ -901,7 +922,7 @@ ftable[] = {
 #endif
 		.f_mpc = mpc_sqrt,
 		.f_uc.fp1 = dom_csqrt
-        }
+	}
 #endif
 };
 

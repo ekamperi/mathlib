@@ -139,7 +139,9 @@ getfunctionulp_complex(const struct fentry *f, struct ulp_complex *uc)
 		 * Ready to call the mpfr*()
 		 * The double version ALWAYS exist!
 		 */
-		DPRINTF(("f->f_mpc: enter\n"));
+		char *str_x = mpc_get_str(10, 16, mp_x, tonearest);
+		char *str_y = mpc_get_str(10, 16, mp_y, tonearest);
+		DPRINTF(("f->f_mpc: enter x=%s, y=%s\n", str_x, str_y));
 		if(f->f_narg == 1) {
 			f->f_mpc(mp_exact, mp_x, tonearest);
 		} else {
@@ -157,6 +159,8 @@ getfunctionulp_complex(const struct fentry *f, struct ulp_complex *uc)
 			exactl = mpc_get_ldc(mp_exactl, tonearest);
 		}
 		DPRINTF(("f->f_mpc: left\n"));
+		mpc_free_str(str_x);
+		mpc_free_str(str_y);
 
 		/* Ready to call the libm*() */
 		if (f->f_narg == 1) {
