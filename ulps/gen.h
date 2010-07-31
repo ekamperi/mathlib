@@ -3,10 +3,7 @@
 
 #include <complex.h>
 
-typedef enum { REAL, COMPLEX } domain_t;
-
 struct fentry {
-	domain_t f_domain;
 	size_t f_narg;
 	const char *f_name;
 	const char *f_namel;
@@ -35,7 +32,6 @@ struct fentry {
 	int (*f_mpfr)();
 	int (*f_mpc)();
 };
-
 
 #define	f_libm_real	f_ulibm.f_ulibm_real
 #define	f_libm_complex	f_ulibm.f_ulibm_complex

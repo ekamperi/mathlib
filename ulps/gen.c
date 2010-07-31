@@ -266,6 +266,12 @@ dom_csin(long double complex z)
 	return 1;
 }
 
+static int
+dom_csqrt(long double complex z)
+{
+	return 1;
+}
+
 /*
  * ISO/IEC 9899:1999 - 6.7.8.10 - Initialization
  *
@@ -880,7 +886,22 @@ ftable[] = {
 #endif
 	  .f_mpc = mpc_sin,
 	  .f_uc.fp1 = dom_csin
-	}
+	},
+#endif
+
+	/* csqrt() */
+#ifdef  HAVE_CSQRT
+        {
+		.f_narg = 1,
+		.f_name = "csqrt",
+		.f_libm_complex = csqrt,
+#ifdef  HAVE_CSQRTL
+		.f_namel = "csqrt",
+		.f_libml_complex = csqrtl,
+#endif
+		.f_mpc = mpc_sqrt,
+		.f_uc.fp1 = dom_csqrt
+        }
 #endif
 };
 
