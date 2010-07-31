@@ -91,7 +91,7 @@ populate_vars(const struct fentry *f,
 	mpfr_set_ld(mp_yl, tyl, tonearest);
 }
 
-int
+void
 getfunctionulp(const struct fentry *f, struct ulp *u)
 {
 	const mpfr_rnd_t tonearest = GMP_RNDN;
@@ -183,9 +183,6 @@ getfunctionulp(const struct fentry *f, struct ulp *u)
 	/* Free resources */
 	mpfr_clears(mp_exact,  mp_x,  mp_y,  (mpfr_ptr)NULL);
 	mpfr_clears(mp_exactl, mp_xl, mp_yl, (mpfr_ptr)NULL);
-
-	/* Success */
-	return 0;
 }
 
 void
@@ -206,10 +203,14 @@ printulps_long_double(struct ulp u)
 {
 	if (u.ulp_maxl > 9.9 || u.ulp_minl > 9.9) {
 		printf("%-10.4e %-10.4e %-10.4e   ",
-		    (double)u.ulp_maxl, (double)u.ulp_minl, (double)u.ulp_avgl);
+		    (double)u.ulp_maxl,
+		    (double)u.ulp_minl,
+		    (double)u.ulp_avgl);
 	} else {
 		printf("%-10.4f %-10.4f %-10.4f   ",
-		    (double)u.ulp_maxl, (double)u.ulp_minl, (double)u.ulp_avgl);
+		    (double)u.ulp_maxl,
+		    (double)u.ulp_minl,
+		    (double)u.ulp_avgl);
 	}
 	printf("%5u\n", u.ulp_skippedl);
 }

@@ -11,7 +11,7 @@ main(int argc, char *argv[])
 {
 	struct ulp u;
 	struct ulp_complex uc;
-	int i, rv, total, all;
+	int i, total, all;
 	const char *target;
 	const struct fentry *f;
 
@@ -56,9 +56,9 @@ main(int argc, char *argv[])
 
 		/* Calculate ulp */
 		if (f->f_mpfr)
-			rv = getfunctionulp(f, &u);
+			getfunctionulp(f, &u);
 		else
-			rv = getfunctionulp_complex(f, &uc);
+			getfunctionulp_complex(f, &uc);
 
 		if (f->f_mpfr) {
 			printf("[%2u/%2u] %-12s ", i+1, total, target);

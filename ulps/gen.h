@@ -44,6 +44,11 @@ const struct fentry *getfunctionbyidx(size_t idx);
 const struct fentry *getfunctionbyname(const char *fname);
 void printfunctions(void);
 
+
+#ifdef	DEBUG
 #define	DPRINTF(x)	printf x; fflush(stdout);
+#else
+#define	DPRINTF(x)
+#endif
 
 #endif	/* !__GEN_H__ */

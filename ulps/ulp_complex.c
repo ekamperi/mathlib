@@ -83,7 +83,7 @@ populate_complex_vars(const struct fentry *f,
 	mpc_set_ld_ld(mp_yl, creall(tyl), cimagl(tyl), tonearest);
 }
 
-int
+void
 getfunctionulp_complex(const struct fentry *f, struct ulp_complex *uc)
 {
 	const mpc_rnd_t tonearest = MPC_RNDNN;
@@ -182,16 +182,13 @@ getfunctionulp_complex(const struct fentry *f, struct ulp_complex *uc)
 	mpc_clear(mp_exactl);
 	mpc_clear(mp_xl);
 	mpc_clear(mp_yl);
-
-	/* Success */
-	return 0;
 }
 
 void
 printulps_double_complex(struct ulp_complex uc)
 {
 	if (uc.ulp_total.ulp_max > 9.9 || uc.ulp_total.ulp_min > 9.9) {
-		printf("%-10.4f %-10.4f %-10.4f   ",
+		printf("%-10.4e %-10.4e %-10.4e   ",
 		    uc.ulp_total.ulp_max,
 		    uc.ulp_total.ulp_min,
 		    uc.ulp_total.ulp_avg);
@@ -208,7 +205,7 @@ void
 printulps_long_double_complex(struct ulp_complex uc)
 {
 	if (uc.ulp_total.ulp_maxl > 9.9 || uc.ulp_total.ulp_minl > 9.9) {
-		printf("%-10.4f %-10.4f %-10.4f   ",
+		printf("%-10.4e %-10.4e %-10.4e   ",
 		    (double)uc.ulp_real.ulp_maxl,
 		    (double)uc.ulp_real.ulp_minl,
 		    (double)uc.ulp_real.ulp_avgl);
