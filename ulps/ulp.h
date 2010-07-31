@@ -20,12 +20,6 @@ struct ulp_complex {
 	struct ulp ulp_imag;
 };
 
-/*
- * As usual, bite the bullet and don't surround macro arguments with parentheses.
- * Nor put any intermediate variables. Trade security, for beauty. Until it bites
- * as back ;)
- */
-
 /*******************************************************************************
  *				Real arithmetic
  ******************************************************************************/
@@ -75,7 +69,7 @@ do {									\
 		       (uc)->ulp_real.ulp_max = n;			\
 	if (creal(n) < (uc)->ulp_real.ulp_min)				\
 		       (uc)->ulp_real.ulp_min = n;			\
-	uc->ulp_real.ulp_avg += creal(n);				\
+	(uc)->ulp_real.ulp_avg += creal(n);				\
 } while(0)
 
 #define ULP_COMPLEX_UPDATEL(uc, n)					\
@@ -85,7 +79,7 @@ do {                                                                    \
 			(uc)->ulp_real.ulp_max = n;			\
 	if (creall(n) < (uc)->ulp_real.ulp_min)                         \
 			(uc)->ulp_real.ulp_min = n;			\
-	uc->ulp_real.ulp_avgl += creal(n);				\
+	(uc)->ulp_real.ulp_avgl += creal(n);				\
 } while(0)
 
 double calculp_double(double computed, double exact);
