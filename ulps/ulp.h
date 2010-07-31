@@ -88,11 +88,8 @@ do {                                                                    \
 	uc->ulp_real.ulp_avgl += creal(n);				\
 } while(0)
 
-
-
-
-int getfunctionulp(const char *fname, struct ulp *u);
-int getfunctionulp_complex(const char *fname, struct ulp_complex *u);
+int getfunctionulp(const struct fentry *f, struct ulp *u);
+int getfunctionulp_complex(const struct fentry *f, struct ulp_complex *u);
 void printulps(struct ulp u);
 void printulps_long_double(struct ulp u);
 

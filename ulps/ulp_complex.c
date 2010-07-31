@@ -83,21 +83,14 @@ populate_complex_vars(const struct fentry *f,
 }
 
 int
-getfunctionulp_complex(const char *fname, struct ulp_complex *uc)
+getfunctionulp_complex(const struct fentry *f, struct ulp_complex *uc)
 {
-	const struct fentry *f;
 	const mpc_rnd_t tonearest = MPC_RNDNN;
 	mpc_t mp_exactl, mp_xl, mp_yl;
 	mpc_t mp_exact, mp_x, mp_y;
 	long double complex xl, yl, computedl, exactl, myulpl;
 	double complex x, y, computed, exact, myulp;
 	size_t i;
-
-	f = getfunctionbyname(fname);
-	if (f == NULL)
-		return (-1);
-
-	assert(f->f_mpfr && f->f_mpc == NULL);
 
 	/* Initialize high precision variables */
 	mpc_init2(mp_exact, 200);

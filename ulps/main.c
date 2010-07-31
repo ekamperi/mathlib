@@ -46,26 +46,29 @@ main(int argc, char *argv[])
 		} else {
 			target = argv[i];
 		}
-		printf("-> %s\n", target);
+
 		/* Is it real or complex value function ? */
+		f = getfunctionbyname(target);
+		if (f == NULL) {
+                        fprintf(stderr, "function: %s not found\n", argv[i]);
+                        continue;
+		}
+
+		/* Calculate ulp */
 		if (f->f_mpfr)
-			rv = getfunctionulp(target, &u);
+			rv = getfunctionulp(f, &u);
 		else
-			rv = getfunctionulp_complex(target, &uc);
-		if (rv != -1) {
-			if (f->f_mpfr) {
-				printf("[%2u/%2u] %-12s ", i+1, total, target);
-				printulps(u);
-				if (all && f->f_libml_real) {
+			rv = getfunctionulp_complex(f, &uc);
+
+		if (f->f_mpfr) {
+			printf("[%2u/%2u] %-12s ", i+1, total, target);
+			printulps(u);
+			if (all && f->f_libml_real) {
 					printf("        %-12s ", f->f_namel);
 					printulps_long_double(u);
-				}
-			} else {
-				printf("COMPLEX\n");
 			}
 		} else {
-			fprintf(stderr, "function: %s not found\n", argv[i]);
-			continue;
+			printf("COMPLEX\n");
 		}
 	}
 

@@ -92,19 +92,14 @@ populate_vars(const struct fentry *f,
 }
 
 int
-getfunctionulp(const char *fname, struct ulp *u)
+getfunctionulp(const struct fentry *f, struct ulp *u)
 {
-	const struct fentry *f;
 	const mpfr_rnd_t tonearest = GMP_RNDN;
 	mpfr_t mp_exactl, mp_xl, mp_yl;
 	mpfr_t mp_exact, mp_x, mp_y;
 	long double xl, yl, computedl, exactl, myulpl;
 	double x, y, computed, exact, myulp;
 	size_t i;
-
-	f = getfunctionbyname(fname);
-	if (f == NULL)
-		return (-1);
 
 	/* Initialize high precision variables */
 	mpfr_inits2(200, mp_exact,  mp_x,  mp_y,  (mpfr_ptr)NULL);
