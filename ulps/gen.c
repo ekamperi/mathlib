@@ -239,6 +239,13 @@ dom_cacos(long double complex z)
 }
 
 static int
+dom_carg(long double complex z)
+{
+	/* XXX */
+	return 1;
+}
+
+static int
 dom_cexp(long double complex z)
 {
 	return 1;
@@ -813,6 +820,21 @@ ftable[] = {
 #endif
                 .f_mpc = mpc_acos,
                 .f_uc.fp1 = dom_cacos
+        },
+#endif
+
+        /* carg() */
+#ifdef  HAVE_CARG
+        {
+                .f_narg = 1,
+                .f_name = "carg",
+                .f_libm_complex = carg,
+#ifdef  HAVE_CARGL
+                .f_namel = "cargl",
+                .f_libml_complex = cargl,
+#endif
+		.f_mpc = mpc_arg,
+                .f_uc.fp1 = dom_carg
         },
 #endif
 
