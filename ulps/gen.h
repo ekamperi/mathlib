@@ -10,6 +10,8 @@ struct fentry {
 	size_t f_narg;
 	const char *f_name;
 	const char *f_namel;
+
+	/* Domain validator functions */
 	union {
 		int (*fp1)(long double x);
 		int (*fp2)(long double x, long double y);
@@ -18,11 +20,27 @@ struct fentry {
 		int (*fp1)(long double complex x);
 		int (*fp2)(long double complex x, long double complex y);
 	} f_uc;
-	double (*f_libm)();
-	long double (*f_libml)();
+
+	/* Computation functions */
+	union {
+		double (*f_ulibm_real)();
+		double complex (*f_ulibm_complex)();
+	} f_ulibm;
+
+	union {
+		long double (*f_ulibml_real)();
+		long double complex (*f_ulibml_complex)();
+	} f_ulibml;
+
 	int (*f_mpfr)();
 	int (*f_mpc)();
 };
+
+
+#define	f_libm_real	f_ulibm.f_ulibm_real
+#define	f_libm_complex	f_ulibm.f_ulibm_complex
+#define	f_libml_real	f_ulibml.f_ulibml_real
+#define	f_libml_complex	f_ulibml.f_ulibml_complex
 
 extern const int fsize;
 

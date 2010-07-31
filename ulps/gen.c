@@ -251,10 +251,10 @@ ftable[] = {
 	{
 		.f_narg = 1,
 		.f_name = "acos",
-		.f_libm = acos,
+		.f_libm_real = acos,
 #ifdef	HAVE_ACOSL
 		.f_namel = "acosl",
-		.f_libml = acosl,
+		.f_libml_real = acosl,
 #endif
 		.f_mpfr = mpfr_acos,
 		.f_u.fp1 = dom_acos
@@ -266,10 +266,10 @@ ftable[] = {
 	{
 		.f_narg = 1,
 		.f_name = "acosh",
-		.f_libm = acosh,
+		.f_libm_real = acosh,
 #ifdef  HAVE_ACOSHL
 		.f_namel = "acoshl",
-		.f_libml = acoshl,
+		.f_libml_real = acoshl,
 #endif
 		.f_mpfr = mpfr_acosh,
 		.f_u.fp1 = dom_acosh
@@ -281,10 +281,10 @@ ftable[] = {
 	{
 		.f_narg = 1,
 		.f_name = "asin",
-		.f_libm = asin,
+		.f_libm_real = asin,
 #ifdef	HAVE_ASINL
 		.f_namel = "asinl",
-		.f_libml = asinl,
+		.f_libml_real = asinl,
 #endif
 		.f_mpfr = mpfr_asin,
 		.f_u.fp1 = dom_asin
@@ -296,10 +296,10 @@ ftable[] = {
 	{
 		.f_narg = 1,
 		.f_name = "asinh",
-		.f_libm = asinh,
+		.f_libm_real = asinh,
 #ifdef	HAVE_ASINHL
 		.f_namel = "asinhl",
-		.f_libml = asinhl,
+		.f_libml_real = asinhl,
 #endif
 		.f_mpfr = mpfr_asinh,
 		.f_u.fp1 = dom_asinh
@@ -311,10 +311,10 @@ ftable[] = {
 	{
 		.f_narg = 1,
 		.f_name = "atan",
-		.f_libm = atan,
+		.f_libm_real = atan,
 #ifdef	HAVE_ATANL
 		.f_namel = "atanl",
-		.f_libml = atanl,
+		.f_libml_real = atanl,
 #endif
 		.f_mpfr = mpfr_atan,
 		.f_u.fp1 = dom_atan
@@ -326,10 +326,10 @@ ftable[] = {
 	{
 		.f_narg = 2,
 		.f_name = "atan2",
-		.f_libm = atan2,
+		.f_libm_real = atan2,
 #ifdef	HAVE_ATAN2L
 		.f_namel = "atan2l",
-		.f_libml = atan2l,
+		.f_libml_real = atan2l,
 #endif
 		.f_mpfr = mpfr_atan2,
 		.f_u.fp2 = dom_atan2
@@ -341,10 +341,10 @@ ftable[] = {
 	{
 		.f_narg = 1,
 		.f_name = "atanh",
-		.f_libm = atanh,
+		.f_libm_real = atanh,
 #ifdef	HAVE_ATANHL
 		.f_namel = "atanhl",
-		.f_libml = atanhl,
+		.f_libml_real = atanhl,
 #endif
 		.f_mpfr = mpfr_atanh,
 		.f_u.fp1 = dom_atanh
@@ -356,10 +356,10 @@ ftable[] = {
 	{
 		.f_narg = 1,
 		.f_name = "cbrt",
-		.f_libm = cbrt,
+		.f_libm_real = cbrt,
 #ifdef	HAVE_CBRTL
 		.f_namel = "cbrtl",
-		.f_libml = cbrtl,
+		.f_libml_real = cbrtl,
 #endif
 		.f_mpfr = mpfr_cbrt,
 		.f_u.fp1 = dom_cbrt
@@ -371,10 +371,10 @@ ftable[] = {
 	{
 		.f_name = "ceil",
 		.f_narg = 1,
-		.f_libm = ceil,
+		.f_libm_real = ceil,
 #ifdef	HAVE_CEILL
 		.f_namel = "ceill",
-		.f_libml = ceill,
+		.f_libml_real = ceill,
 #endif
 		.f_mpfr = mpfr_ceil,
 		.f_u.fp1 = dom_ceil
@@ -386,10 +386,10 @@ ftable[] = {
 	{
 		.f_narg = 1,
 		.f_name = "cos",
-		.f_libm = cos,
+		.f_libm_real = cos,
 #ifdef	HAVE_COSL
 		.f_namel = "cosl",
-		.f_libml = cosl,
+		.f_libml_real = cosl,
 #endif
 		.f_mpfr = mpfr_cos,
 		.f_u.fp1 = dom_cos
@@ -401,10 +401,10 @@ ftable[] = {
 	{
 		.f_narg = 1,
 		.f_name = "cosh",
-		.f_libm = cosh,
+		.f_libm_real = cosh,
 #ifdef	HAVE_COSHL
 		.f_namel = "coshl",
-		.f_libml = coshl,
+		.f_libml_real = coshl,
 #endif
 		.f_mpfr = mpfr_cosh,
 		.f_u.fp1 = dom_cosh
@@ -416,10 +416,10 @@ ftable[] = {
 	{
 		.f_narg = 1,
 		.f_name = "exp",
-		.f_libm = exp,
+		.f_libm_real = exp,
 #ifdef	HAVE_EXPL
 		.f_namel = "expl",
-		.f_libml = expl,
+		.f_libml_real = expl,
 #endif
 		.f_mpfr = mpfr_exp,
 		.f_u.fp1 = dom_exp
@@ -431,10 +431,10 @@ ftable[] = {
 	{
 		.f_narg = 1,
 		.f_name = "expm1",
-		.f_libm = expm1,
+		.f_libm_real = expm1,
 #ifdef	HAVE_EXPM1L
 		.f_namel = "expm1l",
-		.f_libml = expm1l,
+		.f_libml_real = expm1l,
 #endif
 		.f_mpfr = mpfr_expm1,
 		.f_u.fp1 = dom_expm1
@@ -446,10 +446,10 @@ ftable[] = {
 	{
 		.f_narg = 1,
 		.f_name = "exp2",
-		.f_libm = exp2,
+		.f_libm_real = exp2,
 #ifdef	HAVE_EXP2L
 		.f_namel = "exp2l",
-		.f_libml = exp2l,
+		.f_libml_real = exp2l,
 #endif
 		.f_mpfr = mpfr_exp2,
 		.f_u.fp1 = dom_exp2
@@ -461,10 +461,10 @@ ftable[] = {
 	{
 		.f_narg = 1,
 		.f_name = "erf",
-		.f_libm = erf,
+		.f_libm_real = erf,
 #ifdef	HAVE_ERFL
 		.f_namel = "erfl",
-		.f_libml = erfl,
+		.f_libml_real = erfl,
 #endif
 		.f_mpfr = mpfr_erf,
 		.f_u.fp1 = dom_erf
@@ -476,10 +476,10 @@ ftable[] = {
 	{
 		.f_narg = 1,
 		.f_name = "erfc",
-		.f_libm = erfc,
+		.f_libm_real = erfc,
 #ifdef	HAVE_ERFCL
 		.f_namel = "erfcl",
-		.f_libml = erfcl,
+		.f_libml_real = erfcl,
 #endif
 		.f_mpfr = mpfr_erfc,
 		.f_u.fp1 = dom_erfc
@@ -491,10 +491,10 @@ ftable[] = {
 	{
 		.f_narg = 1,
 		.f_name = "fabs",
-		.f_libm = fabs,
+		.f_libm_real = fabs,
 #ifdef	HAVE_FABSL
 		.f_namel = "fabsl",
-		.f_libml = fabsl,
+		.f_libml_real = fabsl,
 #endif
 		.f_mpfr = mpfr_abs,
 		.f_u.fp1 = dom_fabs
@@ -506,10 +506,10 @@ ftable[] = {
 	{
 		.f_narg = 1,
 		.f_name = "floor",
-		.f_libm = floor,
+		.f_libm_real = floor,
 #ifdef	HAVE_FLOORL
 		.f_namel = "floorl",
-		.f_libml = floorl,
+		.f_libml_real = floorl,
 #endif
 		.f_mpfr = mpfr_floor,
 		.f_u.fp1 = dom_floor
@@ -521,10 +521,10 @@ ftable[] = {
 	{
 		.f_narg = 2,
 		.f_name = "hypot",
-		.f_libm = hypot,
+		.f_libm_real = hypot,
 #ifdef	HAVE_HYPOTL
 		.f_namel = "hypotl",
-		.f_libml = hypotl,
+		.f_libml_real = hypotl,
 #endif
 		.f_mpfr = mpfr_hypot,
 		.f_u.fp2 = dom_hypot
@@ -536,10 +536,10 @@ ftable[] = {
 	{
 		.f_narg = 1,
 		.f_name = "log",
-		.f_libm = log,
+		.f_libm_real = log,
 #ifdef	HAVE_LOGL
 		.f_namel = "logl",
-		.f_libml = logl,
+		.f_libml_real = logl,
 #endif
 		.f_mpfr = mpfr_log,
 		.f_u.fp1 = dom_log
@@ -551,10 +551,10 @@ ftable[] = {
 	{
 		.f_narg = 1,
 		.f_name = "log1p",
-		.f_libm = log1p,
+		.f_libm_real = log1p,
 #ifdef	HAVE_LOG1PL
 		.f_namel = "log1pl",
-		.f_libml = log1pl,
+		.f_libml_real = log1pl,
 #endif
 		.f_mpfr = mpfr_log1p,
 		.f_u.fp1 = dom_log1p
@@ -566,10 +566,10 @@ ftable[] = {
 	{
 		.f_narg = 1,
 		.f_name = "log10",
-		.f_libm = log10,
+		.f_libm_real = log10,
 #ifdef	HAVE_LOG10L
 		.f_namel = "log10l",
-		.f_libml = log10l,
+		.f_libml_real = log10l,
 #endif
 		.f_mpfr = mpfr_log10,
 		.f_u.fp1 = dom_log10
@@ -581,10 +581,10 @@ ftable[] = {
 	{
 		.f_narg = 1,
 		.f_name = "log2",
-		.f_libm = log2,
+		.f_libm_real = log2,
 #ifdef	HAVE_LOG2L
 		.f_namel = "log2l",
-		.f_libml = log2l,
+		.f_libml_real = log2l,
 #endif
 		.f_mpfr = mpfr_log2,
 		.f_u.fp1 = dom_log2
@@ -596,10 +596,10 @@ ftable[] = {
 	{
 		.f_narg = 2,
 		.f_name = "remainder",
-		.f_libm = remainder,
+		.f_libm_real = remainder,
 #ifdef	HAVE_REMAINDERL
 		.f_namel = "remainderl",
-		.f_libml = remainderl,
+		.f_libml_real = remainderl,
 #endif
 		.f_mpfr = mpfr_remainder,
 		.f_u.fp2 = dom_remainder
@@ -611,10 +611,10 @@ ftable[] = {
 	{
 		.f_narg = 1,
 		.f_name = "rint",
-		.f_libm = rint,
+		.f_libm_real = rint,
 #ifdef	HAVE_RINTL
 		.f_namel = "rintl",
-		.f_libml = rintl,
+		.f_libml_real = rintl,
 #endif
 		.f_mpfr = mpfr_rint,
 		.f_u.fp1 = dom_rint
@@ -626,10 +626,10 @@ ftable[] = {
 	{
 		.f_narg = 1,
 		.f_name = "sin",
-		.f_libm = sin,
+		.f_libm_real = sin,
 #ifdef  HAVE_SINL
 		.f_namel = "sinl",
-		.f_libml = sinl,
+		.f_libml_real = sinl,
 #endif
 		.f_mpfr = mpfr_sin,
 		.f_u.fp1 = dom_sin
@@ -641,10 +641,10 @@ ftable[] = {
 	{
 		.f_narg = 1,
 		.f_name = "sinh",
-		.f_libm = sinh,
+		.f_libm_real = sinh,
 #ifdef	HAVE_SINHL
 		.f_namel = "sinhl",
-		.f_libml = sinhl,
+		.f_libml_real = sinhl,
 #endif
 		.f_mpfr = mpfr_sinh,
 		.f_u.fp1 = dom_sinh
@@ -656,10 +656,10 @@ ftable[] = {
 	{
 		.f_narg = 1,
 		.f_name = "sqrt",
-		.f_libm = sqrt,
+		.f_libm_real = sqrt,
 #ifdef	HAVE_SQRTL
 		.f_namel = "sqrtl",
-		.f_libml = sqrtl,
+		.f_libml_real = sqrtl,
 #endif
 		.f_mpfr = mpfr_sqrt,
 		.f_u.fp1 = dom_sqrt
@@ -671,10 +671,10 @@ ftable[] = {
 	{
 		.f_narg = 2,
 		.f_name = "pow",
-		.f_libm = pow,
+		.f_libm_real = pow,
 #ifdef	HAVE_POWL
 		.f_namel = "powl",
-		.f_libml = powl,
+		.f_libml_real = powl,
 #endif
 		.f_mpfr = mpfr_pow,
 		.f_u.fp2 = dom_pow
@@ -686,10 +686,10 @@ ftable[] = {
 	{
 		.f_narg = 1,
 		.f_name = "tan",
-		.f_libm = tan,
+		.f_libm_real = tan,
 #ifdef	HAVE_TANL
 		.f_namel = "tanl",
-		.f_libml = tanl,
+		.f_libml_real = tanl,
 #endif
 		.f_mpfr = mpfr_tan,
 		.f_u.fp1 = dom_tan
@@ -701,10 +701,10 @@ ftable[] = {
 	{
 		.f_narg = 1,
 		.f_name = "tanh",
-		.f_libm = tanh,
+		.f_libm_real = tanh,
 #ifdef	HAVE_TANHL
 		.f_namel = "tanhl",
-		.f_libml = tanhl,
+		.f_libml_real = tanhl,
 #endif
 		.f_mpfr = mpfr_tanh,
 		.f_u.fp1 = dom_tanh
@@ -716,10 +716,10 @@ ftable[] = {
 	{
 		.f_narg = 1,
 		.f_name = "tgamma",
-		.f_libm = tgamma,
+		.f_libm_real = tgamma,
 #ifdef	HAVE_TGAMMAL
 		.f_namel = "tgammal",
-		.f_libml = tgammal,
+		.f_libml_real = tgammal,
 #endif
 		.f_mpfr = mpfr_gamma,
 		.f_u.fp1 = dom_tgamma
@@ -731,7 +731,7 @@ ftable[] = {
 	{
 		.f_narg = 1,
 		.f_name = "y0",
-		.f_libm = y0,
+		.f_libm_real = y0,
 		.f_mpfr = mpfr_y0,
 		.f_u.fp1 = dom_y0
 	},
@@ -742,7 +742,7 @@ ftable[] = {
 	{
 		.f_narg = 1,
 		.f_name = "y1",
-		.f_libm = y1,
+		.f_libm_real = y1,
 		.f_mpfr = mpfr_y1,
 		.f_u.fp1 = dom_y1
 	},
@@ -753,7 +753,7 @@ ftable[] = {
 	{
 		.f_narg = 2,
 		.f_name = "yn",
-		.f_libm = yn,
+		.f_libm_real = yn,
 		.f_mpfr = mpfr_yn,
 		.f_u.fp2 = dom_yn
 	},
@@ -768,10 +768,10 @@ ftable[] = {
 		.f_domain = COMPLEX,
 		.f_narg = 1,
 		.f_name = "clog",
-		.f_libm = clog,
+		.f_libm_complex = clog,
 #ifdef  HAVE_CLOGL
                 .f_namel = "clogl",
-                .f_libml = clogl,
+                .f_libml_complex = clogl,
 #endif
 		.f_mpc = mpc_log,
 		.f_uc.fp1 = dom_clog
@@ -787,9 +787,11 @@ assertfunction(const struct fentry *f)
 	assert(f);
         assert(f->f_narg == 1 || f->f_narg == 2);
 	assert(f->f_name);
-	assert(f->f_libm);
+#if 0
+	assert(f->f_libml);
 	if (f->f_namel)
 		assert(f->f_libml);
+#endif
 	if (f->f_mpfr)
 		assert(f->f_u.fp1 || f->f_u.fp2);
 	if (f->f_mpc)

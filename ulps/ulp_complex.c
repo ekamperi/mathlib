@@ -131,7 +131,7 @@ getfunctionulp_complex(const char *fname, struct ulp_complex *uc)
 		exact = mpc_get_dc(mp_exact,  tonearest);
 
 		/* We can't tell the same for long double functions though */
-		if (f->f_libml) {
+		if (f->f_libml_complex) {
 			if(f->f_narg == 1) {
 				f->f_mpc(mp_exactl, mp_xl, tonearest);
 			} else {
@@ -142,16 +142,16 @@ getfunctionulp_complex(const char *fname, struct ulp_complex *uc)
 
 		/* Ready to call the libm*() */
 		if (f->f_narg == 1) {
-			computed = f->f_libm(x);
+			computed = f->f_libm_complex(x);
 		} else {
-			computed = f->f_libm(x, y);
+			computed = f->f_libm_complex(x, y);
 		}
 
-		if (f->f_libml) {
+		if (f->f_libml_complex) {
 			if (f->f_narg == 1) {
-				computedl = f->f_libml(xl);
+				computedl = f->f_libml_complex(xl);
 			} else {
-				computedl = f->f_libml(xl, yl);
+				computedl = f->f_libml_complex(xl, yl);
 			}
 		}
 
@@ -165,7 +165,7 @@ getfunctionulp_complex(const char *fname, struct ulp_complex *uc)
 			uc->ulp_imag.ulp_skipped++;
 		}
 
-		if (f->f_libml) {
+		if (f->f_libml_complex) {
 			if (fpclassify(computedl) == FP_NORMAL &&
 			    fpclassify(exactl) == FP_NORMAL) {
 				myulpl = calculp_long_double_complex(computedl, exactl);

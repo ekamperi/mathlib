@@ -1,5 +1,6 @@
 #include <mpc.h>
 #include "mytypes.h"
+#include "subr_mpc.h"
 
 double complex
 mpc_get_dc(mpc_t op, mpc_rnd_t rnd)

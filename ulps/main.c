@@ -10,6 +10,7 @@ int
 main(int argc, char *argv[])
 {
 	struct ulp u;
+	struct ulp_complex uc;
 	int i, rv, total, all;
 	const char *target;
 	const struct fentry *f;
@@ -50,13 +51,17 @@ main(int argc, char *argv[])
 		if (f->f_mpfr)
 			rv = getfunctionulp(target, &u);
 		else
-			rv = getfunctionulp_complex(target, &u);
+			rv = getfunctionulp_complex(target, &uc);
 		if (rv != -1) {
-			printf("[%2u/%2u] %-12s ", i+1, total, target);
-			printulps(u);
-			if (all && f->f_libml) {
-				printf("        %-12s ", f->f_namel);
-				printulps_long_double(u);
+			if (f->f_mpfr) {
+				printf("[%2u/%2u] %-12s ", i+1, total, target);
+				printulps(u);
+				if (all && f->f_libml_real) {
+					printf("        %-12s ", f->f_namel);
+					printulps_long_double(u);
+				}
+			} else {
+				printf("COMPLEX\n");
 			}
 		} else {
 			fprintf(stderr, "function: %s not found\n", argv[i]);
