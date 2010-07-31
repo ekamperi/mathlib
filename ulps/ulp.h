@@ -18,6 +18,7 @@ struct ulp {
 struct ulp_complex {
 	struct ulp ulp_real;
 	struct ulp ulp_imag;
+	struct ulp ulp_total;
 };
 
 /*******************************************************************************
@@ -60,26 +61,27 @@ do {						\
  ******************************************************************************/
 #define ULP_COMPLEX_INIT(uc)						\
 	ULP_INIT(&uc->ulp_real);					\
-	ULP_INIT(&uc->ulp_imag);
+	ULP_INIT(&uc->ulp_imag);					\
+	ULP_INIT(&uc->ulp_total);
 
 #define ULP_COMPLEX_UPDATE(uc, n)					\
 assert(uc);								\
 do {									\
-	if (creal(n) > (uc)->ulp_real.ulp_max)				\
-		       (uc)->ulp_real.ulp_max = n;			\
-	if (creal(n) < (uc)->ulp_real.ulp_min)				\
-		       (uc)->ulp_real.ulp_min = n;			\
-	(uc)->ulp_real.ulp_avg += creal(n);				\
+	if (creal(n) > (uc)->ulp_total.ulp_max)				\
+		       (uc)->ulp_total.ulp_max = n;			\
+	if (creal(n) < (uc)->ulp_total.ulp_min)				\
+		       (uc)->ulp_total.ulp_min = n;			\
+	(uc)->ulp_total.ulp_avg += creal(n);				\
 } while(0)
 
 #define ULP_COMPLEX_UPDATEL(uc, n)					\
 assert(uc);                                                             \
 do {                                                                    \
-	if (creall(n) > (uc)->ulp_real.ulp_max)                         \
-			(uc)->ulp_real.ulp_max = n;			\
-	if (creall(n) < (uc)->ulp_real.ulp_min)                         \
-			(uc)->ulp_real.ulp_min = n;			\
-	(uc)->ulp_real.ulp_avgl += creal(n);				\
+	if (creall(n) > (uc)->ulp_total.ulp_max)                         \
+			(uc)->ulp_total.ulp_max = n;			\
+	if (creall(n) < (uc)->ulp_total.ulp_min)                         \
+			(uc)->ulp_total.ulp_min = n;			\
+	(uc)->ulp_total.ulp_avgl += creal(n);				\
 } while(0)
 
 double calculp_double(double computed, double exact);
@@ -93,6 +95,6 @@ void printulps_long_double(struct ulp u);
 void printulps_double_complex(struct ulp_complex u);
 void printulps_long_double_complex(struct ulp_complex u);
 
-#define	NITERATIONS (10 * 1000)
+#define	NITERATIONS (1 * 1000)
 
 #endif	/* ! __ULP_H__ */

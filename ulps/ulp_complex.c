@@ -29,7 +29,8 @@ calculp_double_complex(double complex computed, double complex exact)
 }
 
 static long double
-calculp_long_double_complex(long double computedl, long double exactl)
+calculp_long_double_complex(long double complex computedl,
+			    long double complex exactl)
 {
         long double ulp_reall;
         long double ulp_imagl;
@@ -158,8 +159,7 @@ getfunctionulp_complex(const struct fentry *f, struct ulp_complex *uc)
 			myulp = calculp_double_complex(computed, exact);
 			ULP_COMPLEX_UPDATE(uc, myulp);
 		} else {
-			uc->ulp_real.ulp_skipped++;
-			uc->ulp_imag.ulp_skipped++;
+			uc->ulp_total.ulp_skipped++;
 		}
 
 		if (f->f_libml_complex) {
@@ -169,13 +169,11 @@ getfunctionulp_complex(const struct fentry *f, struct ulp_complex *uc)
 				ULP_COMPLEX_UPDATEL(uc, myulpl);
 			}
 		} else {
-			uc->ulp_real.ulp_skippedl++;
-			uc->ulp_imag.ulp_skippedl++;
+			uc->ulp_total.ulp_skippedl++;
 		}
 	}
 
-	uc->ulp_real.ulp_avg  /= (i - uc->ulp_real.ulp_skipped);
-	uc->ulp_imag.ulp_avgl /= (i - uc->ulp_imag.ulp_skippedl);
+	uc->ulp_total.ulp_avg  /= (i - uc->ulp_total.ulp_skipped);
 
 	/* Free resources */
 	mpc_clear(mp_exact);
@@ -192,15 +190,29 @@ getfunctionulp_complex(const struct fentry *f, struct ulp_complex *uc)
 void
 printulps_double_complex(struct ulp_complex uc)
 {
-	printf("%-10.4f %-10.4f %-10.4f   ",
-	    uc.ulp_real.ulp_max, uc.ulp_real.ulp_min, uc.ulp_real.ulp_avg);
-	printf("%5u\n", uc.ulp_real.ulp_skipped);
+	if (uc.ulp_total.ulp_max > 9.9 || uc.ulp_total.ulp_min > 9.9) {
+		printf("%-10.4f %-10.4f %-10.4f   ",
+		    uc.ulp_total.ulp_max,
+		    uc.ulp_total.ulp_min,
+		    uc.ulp_total.ulp_avg);
+	} else {
+                printf("%-10.4f %-10.4f %-10.4f   ",
+                    uc.ulp_total.ulp_max,
+		    uc.ulp_total.ulp_min,
+		    uc.ulp_total.ulp_avg);
+	}
+	printf("%5u\n", uc.ulp_total.ulp_skipped);
 }
 
 void
 printulps_long_double_complex(struct ulp_complex uc)
 {
-	printf("%-10.4f %-10.4f %-10.4f   ",
-	    (double)uc.ulp_real.ulp_maxl, (double)uc.ulp_real.ulp_minl, (double)uc.ulp_real.ulp_avgl);
-	printf("%5u\n", uc.ulp_real.ulp_skippedl);
+	if (uc.ulp_total.ulp_maxl > 9.9 || uc.ulp_total.ulp_minl > 9.9) {
+		printf("%-10.4f %-10.4f %-10.4f   ",
+		    (double)uc.ulp_real.ulp_maxl,
+		    (double)uc.ulp_real.ulp_minl,
+		    (double)uc.ulp_real.ulp_avgl);
+	} else {
+	}
+	printf("%5u\n", uc.ulp_total.ulp_skippedl);
 }
