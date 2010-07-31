@@ -235,6 +235,12 @@ dom_clog(long double complex z)
 		fpclassify(ldcz.parts[1]) != FP_ZERO);
 }
 
+static int
+dom_csin(long double complex z)
+{
+	return 1;
+}
+
 /*
  * ISO/IEC 9899:1999 - 6.7.8.10 - Initialization
  *
@@ -765,16 +771,30 @@ ftable[] = {
 	/* clog() */
 #ifdef	HAVE_CLOG
 	{
-		.f_domain = COMPLEX,
 		.f_narg = 1,
 		.f_name = "clog",
 		.f_libm_complex = clog,
 #ifdef  HAVE_CLOGL
-                .f_namel = "clogl",
-                .f_libml_complex = clogl,
+		.f_namel = "clogl",
+		.f_libml_complex = clogl,
 #endif
 		.f_mpc = mpc_log,
 		.f_uc.fp1 = dom_clog
+	},
+#endif
+
+	/* csin() */
+#ifdef  HAVE_CSIN
+	{
+	  .f_narg = 1,
+	  .f_name = "csin",
+	  .f_libm_complex = csin,
+#ifdef  HAVE_CSINL
+	  .f_namel = "csinl",
+	  .f_libml_complex = csinl,
+#endif
+	  .f_mpc = mpc_sin,
+	  .f_uc.fp1 = dom_csin
 	}
 #endif
 };
@@ -785,7 +805,7 @@ static const void
 assertfunction(const struct fentry *f)
 {
 	assert(f);
-        assert(f->f_narg == 1 || f->f_narg == 2);
+	assert(f->f_narg == 1 || f->f_narg == 2);
 	assert(f->f_name);
 #if 0
 	assert(f->f_libml);

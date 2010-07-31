@@ -110,12 +110,15 @@ getfunctionulp_complex(const struct fentry *f, struct ulp_complex *uc)
 		}
 
 		/* Generate random arguments */
+		DPRINTF(("populate_complex_vars: entering\n"));
 		populate_complex_vars(f, &x, &y, &xl, &yl, mp_x, mp_y, mp_xl, mp_yl);
+		DPRINTF(("populate_complex_vars: left\n"));
 
 		/*
 		 * Ready to call the mpfr*()
 		 * The double version ALWAYS exist!
 		 */
+		DPRINTF(("f->f_mpc: enter\n"));
 		if(f->f_narg == 1) {
 			f->f_mpc(mp_exact, mp_x, tonearest);
 		} else {
@@ -132,6 +135,7 @@ getfunctionulp_complex(const struct fentry *f, struct ulp_complex *uc)
 			}
 			exactl = mpc_get_ldc(mp_exactl, tonearest);
 		}
+		DPRINTF(("f->f_mpc: left\n"));
 
 		/* Ready to call the libm*() */
 		if (f->f_narg == 1) {

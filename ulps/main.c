@@ -68,7 +68,8 @@ main(int argc, char *argv[])
 					printulps_long_double(u);
 			}
 		} else {
-			printf("COMPLEX\n");
+                        printf("[%2u/%2u] %-12s ", i+1, total, target);
+			printulps_double_complex(uc);
 		}
 	}
 
