@@ -32,13 +32,13 @@ static long double
 calculp_long_double_complex(long double complex computedl,
 			    long double complex exactl)
 {
-        long double ulp_reall;
-        long double ulp_imagl;
+	long double ulp_reall;
+	long double ulp_imagl;
 
-        ulp_reall = calculp_long_double(creall(computedl), creall(exactl));
-        ulp_imagl = calculp_long_double(cimagl(computedl), cimagl(exactl));
+	ulp_reall = calculp_long_double(creall(computedl), creall(exactl));
+	ulp_imagl = calculp_long_double(cimagl(computedl), cimagl(exactl));
 
-        return (fabsl(ulp_reall) + fabsl(ulp_imagl));
+	return (fabsl(ulp_reall) + fabsl(ulp_imagl));
 }
 
 static void
@@ -83,6 +83,26 @@ populate_complex_vars(const struct fentry *f,
 	mpc_set_ld_ld(mp_yl, creall(tyl), cimagl(tyl), tonearest);
 }
 
+static int
+isbogus(long double complex z)
+{
+	long double real = creall(z);
+	long double imag = cimagl(z);
+	int bogus = 0;
+
+	/* Real part */
+	if ((fpclassify(real) != FP_NORMAL) &&
+	    (fpclassify(real) != FP_SUBNORMAL))
+		bogus = 1;
+
+	/* Imaginary part */
+	if ((fpclassify(imag) != FP_NORMAL) &&
+	    (fpclassify(imag) != FP_SUBNORMAL))
+		bogus = 1;
+
+	return (bogus);
+}
+
 void
 getfunctionulp_complex(const struct fentry *f, struct ulp_complex *uc)
 {
@@ -95,8 +115,8 @@ getfunctionulp_complex(const struct fentry *f, struct ulp_complex *uc)
 
 	/* Initialize high precision variables */
 	mpc_init2(mp_exact, 200);
-        mpc_init2(mp_x,     200);
-        mpc_init2(mp_y,     200);
+	mpc_init2(mp_x,     200);
+	mpc_init2(mp_y,     200);
 	mpc_init2(mp_exactl,200);
 	mpc_init2(mp_xl,    200);
 	mpc_init2(mp_yl,    200);
@@ -154,8 +174,7 @@ getfunctionulp_complex(const struct fentry *f, struct ulp_complex *uc)
 		}
 
 		/* Skip bogus results */
-		if (fpclassify(computed) == FP_NORMAL &&
-		    fpclassify(exact) == FP_NORMAL) {
+		if (!isbogus(computed) && !isbogus(exact)) {
 			myulp = calculp_double_complex(computed, exact);
 			ULP_COMPLEX_UPDATE(uc, myulp);
 		} else {
@@ -163,8 +182,7 @@ getfunctionulp_complex(const struct fentry *f, struct ulp_complex *uc)
 		}
 
 		if (f->f_libml_complex) {
-			if (fpclassify(computedl) == FP_NORMAL &&
-			    fpclassify(exactl) == FP_NORMAL) {
+			if (!isbogus(computed) && !isbogus(exact)) {
 				myulpl = calculp_long_double_complex(computedl, exactl);
 				ULP_COMPLEX_UPDATEL(uc, myulpl);
 			}
@@ -193,8 +211,8 @@ printulps_double_complex(struct ulp_complex uc)
 		    uc.ulp_total.ulp_min,
 		    uc.ulp_total.ulp_avg);
 	} else {
-                printf("%-10.4f %-10.4f %-10.4f   ",
-                    uc.ulp_total.ulp_max,
+		printf("%-10.4f %-10.4f %-10.4f   ",
+		    uc.ulp_total.ulp_max,
 		    uc.ulp_total.ulp_min,
 		    uc.ulp_total.ulp_avg);
 	}

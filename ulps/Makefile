@@ -5,7 +5,7 @@ CCFLAGS=-Wall -W -Wformat-nonliteral -Wcast-align -Wpointer-arith 	    	\
 	-Wshadow -Wwrite-strings -Wno-unused-parameter 				\
 	-Wswitch -Wbad-function-cast -g
 INCLUDE= -I../include -I/usr/include/gmp -I/usr/include/mpfr -I/usr/pkg/include	\
-	 -I/usr/local/include
+	 -I/usr/local/include -I/usr/opt/include
 LIBS=-lm -lmpfr -lmpc -L/usr/local/lib -L/usr/opt/lib -L/usr/pkg/lib -R/usr/opt/lib
 
 # Don't use 'obj' or funny things will happen with VPATH set to ../
