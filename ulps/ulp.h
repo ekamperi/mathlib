@@ -88,16 +88,16 @@ do {                                                                    \
 	uc->ulp_real.ulp_avgl += creal(n);				\
 } while(0)
 
-int getfunctionulp(const struct fentry *f, struct ulp *u);
-int getfunctionulp_complex(const struct fentry *f, struct ulp_complex *u);
-void printulps(struct ulp u);
-void printulps_long_double(struct ulp u);
-
-void printulps_double_complex(struct ulp_complex u);
-void printulps_long_double_complex(struct ulp_complex u);
-
 double calculp_double(double computed, double exact);
 long double calculp_long_double(long double computedl, long double exactl);
+
+int getfunctionulp(const struct fentry *f, struct ulp *u);
+int getfunctionulp_complex(const struct fentry *f, struct ulp_complex *u);
+
+void printulps_double(struct ulp u);
+void printulps_long_double(struct ulp u);
+void printulps_double_complex(struct ulp_complex u);
+void printulps_long_double_complex(struct ulp_complex u);
 
 #define	NITERATIONS (10 * 1000)
 

@@ -62,7 +62,7 @@ main(int argc, char *argv[])
 
 		if (f->f_mpfr) {
 			printf("[%2u/%2u] %-12s ", i+1, total, target);
-			printulps(u);
+			printulps_double(u);
 			if (all && f->f_libml_real) {
 					printf("        %-12s ", f->f_namel);
 					printulps_long_double(u);

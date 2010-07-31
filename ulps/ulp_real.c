@@ -189,7 +189,7 @@ getfunctionulp(const struct fentry *f, struct ulp *u)
 }
 
 void
-printulps(struct ulp u)
+printulps_double(struct ulp u)
 {
 	if (u.ulp_max > 9.9 || u.ulp_min > 9.9) {
 		printf("%-10.4e %-10.e %-10.4e   ",
