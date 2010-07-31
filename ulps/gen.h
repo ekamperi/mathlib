@@ -40,7 +40,7 @@ struct fentry {
 
 extern const int fsize;
 
-const struct fentry *getfunctionbyidx(size_t idx);
+const struct fentry *getfunctionbyidx(int idx);
 const struct fentry *getfunctionbyname(const char *fname);
 void printfunctions(void);
 

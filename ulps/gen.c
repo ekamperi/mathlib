@@ -947,9 +947,9 @@ assertfunction(const struct fentry *f)
 }
 
 const struct fentry *
-getfunctionbyidx(size_t idx)
+getfunctionbyidx(int idx)
 {
-	assert(idx < fsize);
+	assert(0 <= idx && idx < fsize);
 
 	return (&ftable[idx]);
 }

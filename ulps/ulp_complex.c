@@ -9,7 +9,6 @@
 
 #include <gmp.h>
 #include <mpc.h>
-#include <mpfr.h>
 
 #include "gen.h"
 #include "subr_mpc.h"
@@ -76,6 +75,11 @@ populate_complex_vars(const struct fentry *f,
 	*xl = txl;
 	*yl = tyl;
 
+	DPRINTF(( "x  = % .16e + I *% .16e\n",  creal (*x),  cimag (*x)));
+	DPRINTF(( "y  = % .16e + I *% .16e\n",  creal (*y),  cimag (*y)));
+	DPRINTF(("xl = % .16Le + I *% .16Le\n", creall(*xl), cimagl(*xl)));
+	DPRINTF(("yl = % .16Le + I *% .16Le\n", creall(*yl), cimagl(*yl)));
+
 	/* Copy arguments to mpc variables */
 	mpc_set_d_d  (mp_x,  creal (tx),  cimag (tx),  tonearest);
 	mpc_set_d_d  (mp_y,  creal (ty),  cimag (ty),  tonearest);
@@ -136,7 +140,7 @@ getfunctionulp_complex(const struct fentry *f, struct ulp_complex *uc)
 		DPRINTF(("populate_complex_vars: left\n"));
 
 		/*
-		 * Ready to call the mpfr*()
+		 * Ready to call the mpc*()
 		 * The double version ALWAYS exist!
 		 */
 		char *str_x = mpc_get_str(10, 16, mp_x, tonearest);
@@ -148,8 +152,14 @@ getfunctionulp_complex(const struct fentry *f, struct ulp_complex *uc)
 			f->f_mpc(mp_exact, mp_x, mp_y, tonearest);
 		}
 		exact = mpc_get_dc(mp_exact,  tonearest);
+		DPRINTF(("f->f_mpc: left\n"));
+		mpc_free_str(str_x);
+		mpc_free_str(str_y);
 
 		/* We can't tell the same for long double functions though */
+		char *str_xl = mpc_get_str(10, 35, mp_xl, tonearest);
+		char *str_yl = mpc_get_str(10, 35, mp_yl, tonearest);
+		DPRINTF(("f->f_mpcl: enter x=%s, y=%s\n", str_xl, str_yl));
 		if (f->f_libml_complex) {
 			if(f->f_narg == 1) {
 				f->f_mpc(mp_exactl, mp_xl, tonearest);
@@ -158,9 +168,9 @@ getfunctionulp_complex(const struct fentry *f, struct ulp_complex *uc)
 			}
 			exactl = mpc_get_ldc(mp_exactl, tonearest);
 		}
-		DPRINTF(("f->f_mpc: left\n"));
-		mpc_free_str(str_x);
-		mpc_free_str(str_y);
+		DPRINTF(("f->f_mpcl: left\n"));
+		mpc_free_str(str_xl);
+		mpc_free_str(str_yl);
 
 		/* Ready to call the libm*() */
 		if (f->f_narg == 1) {
