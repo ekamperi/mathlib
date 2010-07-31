@@ -278,6 +278,12 @@ dom_csqrt(long double complex z)
 	return 1;
 }
 
+static int
+dom_conj(long double complex z)
+{
+	return 1;
+}
+
 /*
  * ISO/IEC 9899:1999 - 6.7.8.10 - Initialization
  *
@@ -892,6 +898,21 @@ ftable[] = {
 #endif
 		.f_mpc = mpc_log,
 		.f_uc.fp1 = dom_clog
+	},
+#endif
+
+	/* conj() */
+#ifdef  HAVE_CONJ
+	{
+		.f_narg = 1,
+		.f_name = "conj",
+		.f_libm_complex = conj,
+#ifdef  HAVE_CONJL
+		.f_namel = "conj",
+		.f_libml_complex = conjl,
+#endif
+		.f_mpc = mpc_conj,
+		.f_uc.fp1 = dom_conj
 	},
 #endif
 
