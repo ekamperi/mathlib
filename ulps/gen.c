@@ -227,6 +227,24 @@ dom_yn(long double x, long double y)
  *				Complex arithmetic
  ******************************************************************************/
 static int
+dom_cabs(long double complex z)
+{
+	return 1;
+}
+
+static int
+dom_cacos(long double complex z)
+{
+	return 1;
+}
+
+static int
+dom_cexp(long double complex z)
+{
+	return 1;
+}
+
+static int
 dom_clog(long double complex z)
 {
 	long_double_complex ldcz = { .z = z };
@@ -768,6 +786,51 @@ ftable[] = {
 /*******************************************************************************
  *				Complex arithmetic
  ******************************************************************************/
+        /* cabs() */
+#ifdef  HAVE_CABS
+        {
+                .f_narg = 1,
+                .f_name = "cabs",
+                .f_libm_complex = cabs,
+#ifdef  HAVE_CABSL
+                .f_namel = "cabsl",
+                .f_libml_complex = cabsl,
+#endif
+                .f_mpc = mpc_abs,
+                .f_uc.fp1 = dom_cabs
+        },
+#endif
+
+        /* cacos() */
+#ifdef  HAVE_CACOS
+        {
+                .f_narg = 1,
+                .f_name = "cacos",
+                .f_libm_complex = cacos,
+#ifdef  HAVE_CABSL
+                .f_namel = "cacosl",
+                .f_libml_complex = cacosl,
+#endif
+                .f_mpc = mpc_acos,
+                .f_uc.fp1 = dom_cacos
+        },
+#endif
+
+	/* cexp() */
+#ifdef  HAVE_CEXP
+        {
+                .f_narg = 1,
+                .f_name = "cexp",
+                .f_libm_complex = cexp,
+#ifdef  HAVE_CEXPL
+                .f_namel = "cexpl",
+                .f_libml_complex = cexpl,
+#endif
+                .f_mpc = mpc_exp,
+                .f_uc.fp1 = dom_cexp
+        },
+#endif
+
 	/* clog() */
 #ifdef	HAVE_CLOG
 	{
