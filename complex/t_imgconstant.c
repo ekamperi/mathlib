@@ -92,8 +92,8 @@ ATF_TC_BODY(test_imgconstant2, tc)
 
 	/* float */
 	fcx = I*(-0.0);
-	ATF_CHECK(fpreal_equalf(creal(fcx), 0.0)
-	    fpreal_equalf(cimagf(fcx), -0.0));
+	ATF_CHECK(fpreal_equalf(creal (fcx), -0.0) == 0);
+	ATF_CHECK(fpreal_equalf(cimagf(fcx),  0.0) == 0);
 
 	/* double */
 
