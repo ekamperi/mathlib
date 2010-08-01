@@ -26,8 +26,7 @@ include/config.h:
 $(OBJDIR)/%.o: %.c | $(OBJDIR) include/config.h
 	$(CC99) -c -o $@ $< $(CFLAGS)
 
-$(OBJDIR)/%o: %cpp
-	mkdir -p obj
+$(OBJDIR)/%o: %cpp | $(OBJDIR) include/config.h
 	$(CPP) -c -o $@ $< $(CPPFLAGS)
 
 TESTS=	t_extern t_feclearexcept t_fegetround t_fegetexceptflag t_fenv 		\
