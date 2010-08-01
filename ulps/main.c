@@ -70,7 +70,7 @@ main(int argc, char *argv[])
 
 		/* Calculate ulp */
 		if (f->f_mpfr)
-			getfunctionulp(f, &u);
+			getfunctionulp_real(f, &u);
 		else
 			getfunctionulp_complex(f, &uc);
 

@@ -87,7 +87,7 @@ do {                                                                    \
 double calculp_double(double computed, double exact);
 long double calculp_long_double(long double computedl, long double exactl);
 
-void getfunctionulp(const struct fentry *f, struct ulp *u);
+void getfunctionulp_real(const struct fentry *f, struct ulp *u);
 void getfunctionulp_complex(const struct fentry *f, struct ulp_complex *u);
 
 void printulps_double(struct ulp u);

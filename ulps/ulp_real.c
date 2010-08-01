@@ -92,7 +92,7 @@ populate_vars(const struct fentry *f,
 }
 
 void
-getfunctionulp(const struct fentry *f, struct ulp *u)
+getfunctionulp_real(const struct fentry *f, struct ulp *u)
 {
 	const mpfr_rnd_t tonearest = GMP_RNDN;
 	mpfr_t mp_exactl, mp_xl, mp_yl;
