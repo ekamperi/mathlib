@@ -65,22 +65,6 @@ fpreal_equall(long double x, long double y)
  * In particular, I*Inf is corrupted to NaN+I*Inf, and I*-0 is corrupted to
  * -0.0+I*0.0. This is the reason that we don't use the x + yI form.
  */
-typedef union {
-	float complex z;
-	float parts[2];
-} float_complex;
-
-typedef union {
-	double complex z;
-	double parts[2];
-} double_complex;
-
-typedef union {
-	long double complex z;
-	long double parts[2];
-} long_double_complex;
-
-
 int
 fpcomplex_equalf(float complex x, float complex y)
 {
