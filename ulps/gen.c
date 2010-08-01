@@ -297,7 +297,7 @@ dom_clog(long double complex z)
 }
 
 static int
-dom_cpow(long double complex z)
+dom_cpow(long double complex z, long double complex w)
 {
 	/* XXX */
 	return 1;
@@ -1047,14 +1047,14 @@ ftable[] = {
 	/* cpow() */
 #ifdef  HAVE_CPOW
 	{
-	  .f_narg = 1,
+	  .f_narg = 2,
 	  .f_name = "cpow",
 	  .f_libm_complex = cpow,
 #ifdef  HAVE_CPOWL
 	  .f_namel = "cpowl",
 	  .f_libml_complex = cpowl,
 #endif
-	  .f_mpc = mpc_cpow,
+	  .f_mpc = mpc_pow,
 	  .f_uc.fp1 = dom_cpow
 	},
 #endif
