@@ -1020,9 +1020,21 @@ getfunctionbyname(const char *fname)
 void
 printfunctions(void)
 {
-	int i;
+	const struct fentry *f;
+	int i, cnt;
 
-	for (i = 0; i < fsize; i++)
-		printf("%s ", ftable[i].f_name);
-	printf("\n");
+	for (i = 0, cnt = 0; i < fsize; i++, cnt++) {
+		f = &ftable[i];
+		printf("%-10s ", f->f_name);
+		if (cnt % 5 == 4)
+			printf("\n");
+		if (f->f_namel) {
+			cnt++;
+			printf("%-10s ", f->f_namel);
+			if (cnt % 5 == 4)
+				printf("\n");
+		}
+	}
+	if (cnt % 5 != 4)
+		printf("\n");
 }
