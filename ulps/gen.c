@@ -1062,6 +1062,6 @@ printfunctions(void)
 				printf("\n");
 		}
 	}
-	if (cnt % 5 != 4)
+	if (cnt % 5 != 0)
 		printf("\n");
 }
