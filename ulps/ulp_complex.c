@@ -9,6 +9,7 @@
 
 #include <gmp.h>
 #include <mpc.h>
+#include <mpfr.h>
 
 #include "gen.h"
 #include "subr_mpc.h"
@@ -47,7 +48,6 @@ populate_complex_vars(const struct fentry *f,
     mpc_t mp_x, mpc_t mp_y, mpc_t mp_xl, mpc_t mp_yl)
 {
 	const mpc_rnd_t tonearest = MPC_RNDNN;
-	const mpfr_rnd_t mpfr_tonearest = MPFR_RNDN;
 	long double complex txl, tyl;
 	double complex tx, ty;
 
@@ -112,6 +112,7 @@ void
 getfunctionulp_complex(const struct fentry *f, struct ulp_complex *uc)
 {
 	const mpc_rnd_t tonearest = MPC_RNDNN;
+	const mpfr_rnd_t mpfr_tonearest = MPFR_RNDN;
 	mpc_t mp_exactl, mp_xl, mp_yl;
 	mpc_t mp_exact, mp_x, mp_y;
 	long double complex xl, yl, computedl, exactl, myulpl;
