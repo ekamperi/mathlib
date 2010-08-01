@@ -239,9 +239,39 @@ dom_cacos(long double complex z)
 }
 
 static int
+dom_cacosh(long double complex z)
+{
+	return 1;
+}
+
+static int
 dom_carg(long double complex z)
 {
 	/* XXX */
+	return 1;
+}
+
+static int
+dom_casin(long double complex z)
+{
+	return 1;
+}
+
+static int
+dom_casinh(long double complex z)
+{
+	return 1;
+}
+
+static int
+dom_catan(long double complex z)
+{
+	return 1;
+}
+
+static int
+dom_catanh(long double complex z)
+{
 	return 1;
 }
 
@@ -264,6 +294,13 @@ dom_clog(long double complex z)
 
 	return (fpclassify(ldcz.parts[0]) != FP_ZERO ||
 		fpclassify(ldcz.parts[1]) != FP_ZERO);
+}
+
+static int
+dom_cpow(long double complex z)
+{
+	/* XXX */
+	return 1;
 }
 
 static int
@@ -308,6 +345,9 @@ dom_conj(long double complex z)
  */
 static const struct fentry
 ftable[] = {
+/*******************************************************************************
+ *                              Real arithmetic
+ ******************************************************************************/
 	/* acos() */
 #ifdef	HAVE_ACOS
 	{
@@ -845,12 +885,27 @@ ftable[] = {
 		.f_narg = 1,
 		.f_name = "cacos",
 		.f_libm_complex = cacos,
-#ifdef  HAVE_CABSL
+#ifdef  HAVE_CACOSL
 		.f_namel = "cacosl",
 		.f_libml_complex = cacosl,
 #endif
 		.f_mpc = mpc_acos,
 		.f_uc.fp1 = dom_cacos
+	},
+#endif
+
+	/* cacosh() */
+#ifdef  HAVE_CACOSH
+	{
+		.f_narg = 1,
+		.f_name = "cacosh",
+		.f_libm_complex = cacosh,
+#ifdef  HAVE_CACOSHL
+		.f_namel = "cacoshl",
+		.f_libml_complex = cacoshl,
+#endif
+		.f_mpc = mpc_acosh,
+		.f_uc.fp1 = dom_cacosh
 	},
 #endif
 
@@ -866,6 +921,66 @@ ftable[] = {
 #endif
 		.f_mpc = mpc_arg,
 		.f_uc.fp1 = dom_carg
+	},
+#endif
+
+	/* casin() */
+#ifdef  HAVE_CASIN
+	{
+		.f_narg = 1,
+		.f_name = "casin",
+		.f_libm_complex = casin,
+#ifdef  HAVE_CASINL
+		.f_namel = "casinl",
+		.f_libml_complex = casinl,
+#endif
+		.f_mpc = mpc_asin,
+		.f_uc.fp1 = dom_casin
+	},
+#endif
+
+	/* casinh() */
+#ifdef  HAVE_CASINH
+	{
+		.f_narg = 1,
+		.f_name = "casinh",
+		.f_libm_complex = casinh,
+#ifdef  HAVE_CASINHL
+		.f_namel = "casinhl",
+		.f_libml_complex = casinhl,
+#endif
+		.f_mpc = mpc_asinh,
+		.f_uc.fp1 = dom_casinh
+	},
+#endif
+
+	/* catan() */
+#ifdef  HAVE_CATAN
+	{
+		.f_narg = 1,
+		.f_name = "catan",
+		.f_libm_complex = catan,
+#ifdef  HAVE_CATANL
+		.f_namel = "catanl",
+		.f_libml_complex = catanl,
+#endif
+		.f_mpc = mpc_atan,
+		.f_uc.fp1 = dom_catan
+	},
+#endif
+
+	/* catanh() */
+#ifdef  HAVE_CATANH
+	{
+		.f_narg = 1,
+		.f_name = "catanH",
+		.f_libm_complex = catanh,
+#ifdef  HAVE_CATANHL
+		.f_namel = "catanhl",
+		.f_libml_complex = catanhl,
+#endif
+		.f_mpc = mpc_atanh,
+		.f_uc.fp1 = dom_catanh
 	},
 #endif
 
@@ -926,6 +1041,21 @@ ftable[] = {
 #endif
 		.f_mpc = mpc_conj,
 		.f_uc.fp1 = dom_conj
+	},
+#endif
+
+	/* cpow() */
+#ifdef  HAVE_CPOW
+	{
+	  .f_narg = 1,
+	  .f_name = "cpow",
+	  .f_libm_complex = cpow,
+#ifdef  HAVE_CPOWL
+	  .f_namel = "cpowl",
+	  .f_libml_complex = cpowl,
+#endif
+	  .f_mpc = mpc_cpow,
+	  .f_uc.fp1 = dom_cpow
 	},
 #endif
 
@@ -1062,6 +1192,8 @@ printfunctions(void)
 				printf("\n");
 		}
 	}
+
+	/* If cnt % 5 was equal to 4, then now it's equal to 0 */
 	if (cnt % 5 != 0)
 		printf("\n");
 }
