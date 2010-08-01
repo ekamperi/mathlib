@@ -47,6 +47,7 @@ populate_complex_vars(const struct fentry *f,
     mpc_t mp_x, mpc_t mp_y, mpc_t mp_xl, mpc_t mp_yl)
 {
 	const mpc_rnd_t tonearest = MPC_RNDNN;
+	const mpfr_rnd_t mpfr_tonearest = MPFR_RNDN;
 	long double complex txl, tyl;
 	double complex tx, ty;
 
@@ -151,7 +152,7 @@ getfunctionulp_complex(const struct fentry *f, struct ulp_complex *uc)
 		} else {
 			f->f_mpc(mp_exact, mp_x, mp_y, tonearest);
 		}
-		exact = mpc_get_dc(mp_exact,  tonearest);
+		exact = mpc_get_dc(mp_exact, mpfr_tonearest);
 		DPRINTF(("f->f_mpc: left\n"));
 		mpc_free_str(str_x);
 		mpc_free_str(str_y);
@@ -166,7 +167,7 @@ getfunctionulp_complex(const struct fentry *f, struct ulp_complex *uc)
 			} else {
 				f->f_mpc(mp_exactl, mp_xl, mp_yl, tonearest);
 			}
-			exactl = mpc_get_ldc(mp_exactl, tonearest);
+			exactl = mpc_get_ldc(mp_exactl, mpfr_tonearest);
 		}
 		DPRINTF(("f->f_mpcl: left\n"));
 		mpc_free_str(str_xl);

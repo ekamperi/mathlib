@@ -3,7 +3,7 @@
 #include "subr_mpc.h"
 
 double complex
-mpc_get_dc(mpc_t op, mpc_rnd_t rnd)
+mpc_get_dc(mpc_t op, mpfr_rnd_t rnd)
 {
 	mpfr_t mp_real;
 	mpfr_t mp_imag;
@@ -25,7 +25,7 @@ mpc_get_dc(mpc_t op, mpc_rnd_t rnd)
 }
 
 long double complex
-mpc_get_ldc(mpc_t op, mpc_rnd_t rnd)
+mpc_get_ldc(mpc_t op, mpfr_rnd_t rnd)
 {
 	mpfr_t mp_real;
 	mpfr_t mp_imag;

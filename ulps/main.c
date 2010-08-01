@@ -11,7 +11,7 @@ main(int argc, char *argv[])
 {
 	struct ulp u;
 	struct ulp_complex uc;
-	int i, total, all;
+	int i, total, all, list;
 	const char *target;
 	const struct fentry *f;
 
@@ -20,56 +20,67 @@ main(int argc, char *argv[])
 	argc--;
 
 	/*
-	 * If none argument or "all" is given, then we assume
-	 * that all functions should be probed.
+	 * Parse command line arguments
+	 * all  = probe all supported functions
+	 * list = list  all supported functions
 	 */
 	all = 0;
-	if (argc == 0 || (argc == 1 && !strcmp(argv[0], "all"))) {
-		argv++;
-		argc--;
-
-		all = 1;
+	list = 0;
+	if (argc == 1) {
+		if (!strcmp(argv[0], "list")) {
+			list = 1;
+			argv++; argc--;
+		} else if (!strcmp(argv[0], "all")) {
+			all = 1;
+			argv++; argc--;
+		}
 	}
 
-	/* Initialize random number generator */
-	init_randgen();
+	if (list)
+		printfunctions();
+	else {
+		/* Initialize random number generator */
+		init_randgen();
 
-	/* Print header */
-	printf("\tFUNCTION     Max ULP    Min ULP    Avg ULP    skipped\n");
+		/* Print header */
+		printf("\tFUNCTION     Max ULP    Min ULP    Avg ULP    "
+		       "skipped\n");
 
-	total = all ? fsize : argc;
+		total = all ? fsize : argc;
 
-	for (i = 0; i < total; i++) {
-		if (all) {
-			f = getfunctionbyidx(i);
-			target = f->f_name;
+		for (i = 0; i < total; i++) {
+			if (all) {
+				f = getfunctionbyidx(i);
+				target = f->f_name;
 		} else {
-			target = argv[i];
-		}
+				target = argv[i];
+			}
 
-		/* Is it real or complex value function ? */
-		f = getfunctionbyname(target);
-		if (f == NULL) {
-                        fprintf(stderr, "function: %s not found\n", argv[i]);
-                        continue;
-		}
+			/* Is it real or complex value function ? */
+			f = getfunctionbyname(target);
+			if (f == NULL) {
+				fprintf(stderr, "function: %s not found\n",
+				    argv[i]);
+				continue;
+			}
 
-		/* Calculate ulp */
-		if (f->f_mpfr)
-			getfunctionulp(f, &u);
-		else
-			getfunctionulp_complex(f, &uc);
+			/* Calculate ulp */
+			if (f->f_mpfr)
+				getfunctionulp(f, &u);
+			else
+				getfunctionulp_complex(f, &uc);
 
-		if (f->f_mpfr) {
-			printf("[%2u/%2u] %-12s ", i+1, total, target);
-			printulps_double(u);
-			if (all && f->f_libml_real) {
+			if (f->f_mpfr) {
+				printf("[%2u/%2u] %-12s ", i+1, total, target);
+				printulps_double(u);
+				if (all && f->f_libml_real) {
 					printf("        %-12s ", f->f_namel);
 					printulps_long_double(u);
+				}
+			} else {
+				printf("[%2u/%2u] %-12s ", i+1, total, target);
+				printulps_double_complex(uc);
 			}
-		} else {
-                        printf("[%2u/%2u] %-12s ", i+1, total, target);
-			printulps_double_complex(uc);
 		}
 	}
 

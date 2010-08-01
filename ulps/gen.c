@@ -273,6 +273,12 @@ dom_csin(long double complex z)
 }
 
 static int
+dom_csinh(long double complex z)
+{
+	return 1;
+}
+
+static int
 dom_csqrt(long double complex z)
 {
 	return 1;
@@ -915,7 +921,7 @@ ftable[] = {
 		.f_name = "conj",
 		.f_libm_complex = conj,
 #ifdef  HAVE_CONJL
-		.f_namel = "conj",
+		.f_namel = "conjl",
 		.f_libml_complex = conjl,
 #endif
 		.f_mpc = mpc_conj,
@@ -938,6 +944,21 @@ ftable[] = {
 	},
 #endif
 
+	/* csinh() */
+#ifdef  HAVE_CSINH
+	{
+		.f_narg = 1,
+		.f_name = "csinh",
+		.f_libm_complex = csinh,
+#ifdef  HAVE_CSINHL
+		.f_namel = "csinhl",
+		.f_libml_complex = csinhl,
+#endif
+		.f_mpc = mpc_sinh,
+		.f_uc.fp1 = dom_csinh
+	},
+#endif
+
 	/* csqrt() */
 #ifdef  HAVE_CSQRT
 	{
@@ -945,7 +966,7 @@ ftable[] = {
 		.f_name = "csqrt",
 		.f_libm_complex = csqrt,
 #ifdef  HAVE_CSQRTL
-		.f_namel = "csqrt",
+		.f_namel = "csqrtl",
 		.f_libml_complex = csqrtl,
 #endif
 		.f_mpc = mpc_sqrt,
@@ -955,7 +976,7 @@ ftable[] = {
 
 	/* ctan() */
 #ifdef  HAVE_CTAN
-        {
+	{
 	  .f_narg = 1,
 	  .f_name = "ctan",
 	  .f_libm_complex = ctan,
@@ -965,7 +986,7 @@ ftable[] = {
 #endif
 	  .f_mpc = mpc_tan,
 	  .f_uc.fp1 = dom_ctan
-        }
+	}
 #endif
 };
 
@@ -977,15 +998,21 @@ assertfunction(const struct fentry *f)
 	assert(f);
 	assert(f->f_narg == 1 || f->f_narg == 2);
 	assert(f->f_name);
-#if 0
-	assert(f->f_libml);
-	if (f->f_namel)
-		assert(f->f_libml);
-#endif
-	if (f->f_mpfr)
+
+	if (f->f_mpfr) {
 		assert(f->f_u.fp1 || f->f_u.fp2);
-	if (f->f_mpc)
+		assert(f->f_libm_real);
+		if (f->f_namel)
+			assert(f->f_libml_real);
+	}
+
+	if (f->f_mpc) {
 		assert(f->f_uc.fp1 || f->f_u.fp2);
+		assert(f->f_libm_complex);
+		if (f->f_namel)
+			assert(f->f_libml_complex);
+	}
+
 	assert(f->f_mpfr || f->f_mpc);
 }
 
