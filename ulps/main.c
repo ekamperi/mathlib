@@ -54,8 +54,8 @@ main(int argc, char *argv[])
 
 	for (i = 0; i < total; i++) {
 		if (all) {
-				f = getfunctionbyidx(i);
-				target = f->f_name;
+			f = getfunctionbyidx(i);
+			target = f->f_name;
 		} else {
 			target = argv[i];
 		}
@@ -66,13 +66,13 @@ main(int argc, char *argv[])
 			fprintf(stderr, "function: %s not found\n",
 			    argv[i]);
 			continue;
-			}
+		}
 
 		/* Calculate ulp */
 		if (f->f_mpfr)
 			getfunctionulp(f, &u);
-			else
-				getfunctionulp_complex(f, &uc);
+		else
+			getfunctionulp_complex(f, &uc);
 
 		if (f->f_mpfr) {
 			printf("[%2u/%2u] %-12s ", i+1, total, target);
