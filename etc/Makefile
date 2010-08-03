@@ -1,4 +1,4 @@
-all:	goodgen proffenv testrand
+all:	realgen proffenv profmath testrand
 
 # -Wstrict-prototypes
 CC99=gcc -std=c99
@@ -11,13 +11,13 @@ INCLUDE=-I../include -I../ulps -I/usr/include/gmp -I/usr/include/mpfr		\
 	-I/usr/opt/include -L/usr/opt/lib -R/usr/opt/lib
 LIB=-lm -lmpfr -lmpc
 
-goodgen: goodgen.c ../ulps/gen.c ../subr_random.c
+realgen: realgen.c ../ulps/gen.c ../subr_random.c
 	@test -f ../ulps/config.h \
 	|| (echo "You should first run autoreconf && ./configure in ../ulps" \
 	&& exit 1)
 	$(CC99) $(CCFLAGS) $(INCLUDE)				\
-		goodgen.c ../ulps/gen.c ../subr_random.c	\
-	-o goodgen						\
+		realgen.c ../ulps/gen.c ../subr_random.c	\
+	-o realgen						\
 	$(LIB)
 
 proffenv: proffenv.c

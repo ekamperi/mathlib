@@ -110,9 +110,9 @@ proffunc(const char *fname)
 
 		for (j = 0; j < 1000; j++) {
 			if (f->f_narg == 1) {
-				dz[i] = f->f_libm(dx[i]);
+				dz[i] = f->f_libm_real(dx[i]);
 			} else {
-				dz[i] = f->f_libm(dx[i], dy[i]);
+				dz[i] = f->f_libm_real(dx[i], dy[i]);
 			}
 		}
 
@@ -182,9 +182,11 @@ main(int argc, char *argv[])
 	for (i = 0; i < total; i++) {
 		f = getfunctionbyidx(i);
 		target = all ? f->f_name : argv[i];
+		printf("[%2d/%2d] %-10s : ", i+1, total, target);
+		fflush(stdout);
 		rv = proffunc(target);
 		if (rv != -1) {
-			printf("[%2d/%2d] %-10s : OK\n", i+1, total, target);
+			printf("OK\n");
 		} else {
 			fprintf(stderr, "function: %s not probed -- skipping\n",
 			    argv[i]);
