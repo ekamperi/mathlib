@@ -6,8 +6,15 @@
 
 #include "subr_atf.h"
 
-/* Default value for 'iterations' variable, if not provided */
-static const char *defiterations = "1000";
+/* Default values for variables */
+static const struct
+ventry {
+	const char *ve_name;
+	const char *ve_defval;
+} vtable[] = {
+	{ "iterations", "1000" },
+	{ NULL, NULL }
+};
 
 static void
 print_undefined_var_msg(const char *name, const char *defval)
@@ -43,6 +50,7 @@ get_config_var_as_bool(const atf_tc_t *tc, const char *name)
 long
 get_config_var_as_long(const atf_tc_t *tc, const char *name)
 {
+	const struct ventry *ve;
 	const char *valstr, *defval;
 	long rv;
 	atf_error_t err;
@@ -50,14 +58,24 @@ get_config_var_as_long(const atf_tc_t *tc, const char *name)
 	ATF_REQUIRE(tc);
 	ATF_REQUIRE(name);
 
-	if (!strcmp(name, "iterations")) {
-		if (!atf_tc_has_config_var(tc, name)) {
-			defval = defiterations;
-			print_undefined_var_msg(name, defval);
+	/* Fallback to default value, if possible */
+	defval = NULL;
+	for (ve = vtable; ve != NULL; ve++) {
+		if (ve->ve_name == NULL || ve->ve_defval == NULL)
+			break;
+
+		if (!strcmp(name, ve->ve_name)) {
+			if (!atf_tc_has_config_var(tc, name)) {
+				defval = ve->ve_defval;
+				print_undefined_var_msg(name, defval);
+			}
+			break;
 		}
-	} else {
-		ATF_REQUIRE(atf_tc_has_config_var(tc, name));
 	}
+
+	/* If no default fallback value exists, strictly require it */
+	if (!defval)
+		ATF_REQUIRE(atf_tc_has_config_var(tc, name));
 
 	valstr = atf_tc_get_config_var_wd(tc, name, defval);
 
