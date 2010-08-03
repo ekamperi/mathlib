@@ -54,7 +54,7 @@ ATF_TC_BODY(test_const_avail, tc)
 	/* Value of loge10 */
 	isdefined = 0;
 #ifdef  M_LN10
-	ATF_CHECK(fpreal_equal(M_LN2, 2.30258509299404568402));
+	ATF_CHECK(fpreal_equal(M_LN10, 2.30258509299404568402));
 	isdefined = 1;
 #endif
 	ATF_CHECK(isdefined == 1);
