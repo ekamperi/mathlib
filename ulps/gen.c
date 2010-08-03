@@ -1125,7 +1125,7 @@ ftable[] = {
 
 const int fsize = sizeof(ftable) / sizeof(ftable[0]);
 
-static const void
+static void
 assertfunction(const struct fentry *f)
 {
 	assert(f);

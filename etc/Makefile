@@ -7,8 +7,9 @@ CCFLAGS=-Wall -W -Wformat-nonliteral -Wcast-align -Wpointer-arith 		\
 	-Wmissing-declarations -Winline -Wundef -Wnested-externs -Wcast-qual 	\
 	-Wshadow -Wwrite-strings -Wno-unused-parameter 				\
 	-Wswitch -Wbad-function-cast -g
-INCLUDE=-I../include -I../ulps -I/usr/include/gmp -I/usr/include/mpfr
-LIB=-lm -lmpfr
+INCLUDE=-I../include -I../ulps -I/usr/include/gmp -I/usr/include/mpfr		\
+	-I/usr/opt/include -L/usr/opt/lib -R/usr/opt/lib
+LIB=-lm -lmpfr -lmpc
 
 goodgen: goodgen.c ../ulps/gen.c ../subr_random.c
 	@test -f ../ulps/config.h \

@@ -224,7 +224,7 @@ gen_double(const char *fname, size_t total,
 	assert(f);
 
 	/* Initialize high precision variables */
-	mpfr_inits2(97, mp_x, mp_y, mp_exact, NULL);
+	mpfr_inits2(97, mp_x, mp_y, mp_exact, (mpfr_ptr)NULL);
 
 	for (i = 0; i < total; i++) {
 		/* Generate a random input for function f */
@@ -267,7 +267,7 @@ gen_double(const char *fname, size_t total,
 	}
 
 	/* Free resources */
-	mpfr_clears(mp_x, mp_y, mp_exact, NULL);
+	mpfr_clears(mp_x, mp_y, mp_exact, (mpfr_ptr)NULL);
 }
 
 static void
@@ -285,7 +285,7 @@ gen_long_double(const char *fname, size_t total,
 	assert(f);
 
 	/* Initialize high precision variables */
-	mpfr_inits2(97, mp_x, mp_y, mp_exact, NULL);
+	mpfr_inits2(97, mp_x, mp_y, mp_exact, (mpfr_ptr)NULL);
 
 	for (i = 0; i < total; i++) {
 		/* Generate a random input for function f */
@@ -332,7 +332,7 @@ gen_long_double(const char *fname, size_t total,
 	}
 
 	/* Free resources */
-	mpfr_clears(mp_x, mp_y, mp_exact, NULL);
+	mpfr_clears(mp_x, mp_y, mp_exact, (mpfr_ptr)NULL);
 }
 
 static void
