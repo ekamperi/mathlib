@@ -50,13 +50,13 @@ get_config_var_as_long(const atf_tc_t *tc, const char *name)
 	ATF_REQUIRE(tc);
 	ATF_REQUIRE(name);
 
-	if (!strcmp(name, "iterations") &&
-	    !atf_tc_has_config_var(tc, name)) {
-		print_undefined_var_msg(name, defiterations);
-		defval = defiterations;
+	if (!strcmp(name, "iterations")) {
+		if (!atf_tc_has_config_var(tc, name)) {
+			defval = defiterations;
+			print_undefined_var_msg(name, defval);
+		}
 	} else {
 		ATF_REQUIRE(atf_tc_has_config_var(tc, name));
-		/* NEVER RETURNS */
 	}
 
 	valstr = atf_tc_get_config_var_wd(tc, name, defval);
