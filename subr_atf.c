@@ -24,7 +24,7 @@ print_undefined_var_msg(const char *name, const char *defval)
 
 	fprintf(stderr,
 	    "Variable '%s' appears to be undefined\n"
-	    "Please provide a value for it, by either running the test case\n"
+	    "Please provide a value for it, either by running the test case\n"
 	    "via atf-run or by invoking it as <test> -v %s=<val>\n"
 	    "Using default value '%s'\n",
 	    name, name, defval);
