@@ -1,4 +1,4 @@
-all:	realgen proffenv profmath testrand
+all:	complexgen realgen proffenv profmath testrand
 
 # -Wstrict-prototypes
 CC99=gcc -std=c99
