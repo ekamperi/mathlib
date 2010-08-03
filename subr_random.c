@@ -9,6 +9,8 @@
 #include <string.h>
 #include <time.h>
 
+#include "mytypes.h"
+#include "subr_fpclassify.h"
 #include "subr_random.h"
 
 #define	MY_RANDOM(x)	mrand48()
@@ -133,10 +135,13 @@ isvalidfp_intel80bit(const uint32_t *y)
  * That said, the following functions do NOT constitute a uniform distribution
  * of floating-point numbers. They are biased towards zero. If you want
  * equally distributed numbers, you may want drand48() or you should roll
- * out your own  with rand().
+ * out your own with rand().
  *
  * The formats we are studying (96bits, 128bits) are 4-byte aligned,
  * so uin32_t is fine for the moment.
+ *
+ * `fpclass' is the bitwise OR combination of the fp class types,
+ * e.g. MY_FP_NORMAL | MY_FP_SUBNORMAL
  */
 long double
 random_long_double(int fpclass)
@@ -152,7 +157,7 @@ random_long_double(int fpclass)
 	do {
 		for (i = 0; i < NBYTES; i++)
 			u.y[i] = MY_RANDOM();
-	} while (!ISVALIDFP(u.y) || fpclassify(u.x) != fpclass);
+	} while (!ISVALIDFP(u.y) || ((fpclass & my_fpclassify(u.x)) == 0));
 
 	return (u.x);
 }
@@ -192,71 +197,52 @@ random_float(int fpclass)
  ******************************************************************************/
 
 /*
- * Solaris doesn't provide the `_Imaginary' datatype,
- * so we need to workaround it.
- *
- * ISO/IEC 9899:TC2 - 6.2.5.13 Types
- * Each complex type has the same representation and alignment requirements as
- * an array type containing exactly two elements of the corresponding real type;
- * the first element is equal to the real part, and the second element to the
- * imaginary part, of the complex number.
+ * Solaris doesn't provide the `_Imaginary' datatype, so we need to
+ * workaround it by using the union types as found in `mytypes.h'.
  */
-
 long double complex
 random_long_double_complex(int fpclass)
 {
+	long_double_complex z;
 	long double x, y;
 
 	x = random_long_double(fpclass);
 	y = random_long_double(fpclass);
 
-#if defined(__sun__)
-	union {
-		long double complex z;
-		long double a[2];
-	} u = { .a = {x, y}};
-	return (u.z);
-#else
-	return (x + y*I);
-#endif
+	z.parts[0] = x;
+	z.parts[1] = y;
+
+	return (z.z);
 }
 
 double complex
 random_double_complex(int fpclass)
 {
+	double_complex z;
 	double x, y;
 
 	x = random_double(fpclass);
 	y = random_double(fpclass);
 
-#if defined(__sun__)
-	union {
-		double complex z;
-		double a[2];
-	} u = { .a = {x, y}};
-	return (u.z);
-#else
-	return (x + y*I);
-#endif
+	z.parts[0] = x;
+	z.parts[1] = y;
+
+	return (z.z);
 }
 
 float complex
 random_float_complex(int fpclass)
 {
+	float_complex z;
 	float x, y;
 
 	x = random_float(fpclass);
 	y = random_float(fpclass);
 
-#if defined(__sun__)
-	union {
-		long double complex z;
-		long double a[2];
-	} u = { .a = {x, y}};
-	return (u.z);
-#else
-	return (x + y*I);
-#endif
+	z.parts[0] = x;
+	z.parts[1] = y;
+
+	return (z.z);
 }
 
 void

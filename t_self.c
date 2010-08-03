@@ -4,6 +4,7 @@
 #include <math.h>
 #include <stdio.h>
 
+#include "mytypes.h"
 #include "subr_atf.h"
 #include "subr_random.h"
 
@@ -139,11 +140,44 @@ ATF_TC_BODY(test_rand2, tc)
 #endif	/* defined(__i386__) || defined(__x86_64__) */
 }
 
+ATF_TC(test_rand3);
+ATF_TC_HEAD(test_rand3, tc)
+{
+	atf_tc_set_md_var(tc,
+	    "descr",
+	    "Check zeros, nan, inf");
+}
+ATF_TC_BODY(test_rand3, tc)
+{
+	long double ldx, ldy;
+	long cnt_normal, cnt_subnormal;
+        long i, N;
+
+	N = get_config_var_as_long(tc, "iterations");
+	ATF_REQUIRE(N > 0);
+
+	cnt_normal = 0;
+	cnt_subnormal = 0;
+	for (i = 0; i < N; i++) {
+		ldx = random_long_double(MY_FP_NORMAL | MY_FP_SUBNORMAL);
+		if (fpclassify(ldx) == FP_NORMAL)
+			cnt_normal++;
+		if (fpclassify(ldx) == FP_SUBNORMAL)
+			cnt_subnormal++;
+	}
+#if 0
+	printf("normal = %ld, subnormal = %ld\n", cnt_normal, cnt_subnormal);
+#endif
+
+	ATF_CHECK(cnt_normal + cnt_subnormal == N);
+}
+
 /* Add test cases to test program */
 ATF_TP_ADD_TCS(tp)
 {
 	ATF_TP_ADD_TC(tp, test_rand1);
 	ATF_TP_ADD_TC(tp, test_rand2);
+	ATF_TP_ADD_TC(tp, test_rand3);
 
 	return atf_no_error();
 }

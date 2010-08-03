@@ -27,4 +27,22 @@ typedef union {
 	long double parts[2];
 } long_double_complex;
 
+/*
+ * The FP_* macros shall be defined for number classification. They represent
+ * the mutually-exclusive kinds of floating-point values. They expand to integer
+ * constant expressions with distinct values.
+ *
+ * Unfortunately, the standard doesn't have a requirement for the values to be
+ * _bitwise_ exclusive. So we can't safely assume that e.g.
+ * FP_NORMAL | FP_SUBNORMAL will be distinct from FP_ZERO. For this reason we
+ * provide wrappers that are guaranteed to be bitwise distinct.
+ */
+#define	MY_FP_INFINITE	0x01
+#define	MY_FP_NAN	0x02
+#define	MY_FP_NORMAL	0x04
+#define	MY_FP_SUBNORMAL	0x08
+#define	MY_FP_ZERO	0x10
+
+#define	MY_FP_REAL (MY_FP_NORMAL | MY_FP_SUBNORMAL | MY_FP_ZERO)
+
 #endif	/* ! __MY_TYPES__ */
