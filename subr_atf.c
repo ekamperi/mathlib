@@ -20,6 +20,8 @@ static void
 print_undefined_var_msg(const char *name, const char *defval)
 {
 	ATF_REQUIRE(name);
+	ATF_REQUIRE(defval);
+
 	fprintf(stderr,
 	    "Variable '%s' appears to be undefined\n"
 	    "Please provide a value for it, by either running the test case\n"
