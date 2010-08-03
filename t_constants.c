@@ -128,11 +128,11 @@ ATF_TC_BODY(test_const_avail, tc)
 ATF_TC(test_const_avail2);
 ATF_TC_HEAD(test_const_avail2, tc)
 {
-  atf_tc_set_md_var(tc,
-		    "descr",
-		    "The value of FP_ILOGB0 shall be either {INT_MIN} or -"
-		    "{INT_MAX}. The value of FP_ILOGBNAN shall be either "
-		    "{INT_MAX} or {INT_MIN}");
+	atf_tc_set_md_var(tc,
+	    "descr",
+	    "The value of FP_ILOGB0 shall be either {INT_MIN} or -"
+	    "{INT_MAX}. The value of FP_ILOGBNAN shall be either "
+	    "{INT_MAX} or {INT_MIN}");
 }
 ATF_TC_BODY(test_const_avail2, tc)
 {
@@ -151,7 +151,7 @@ ATF_TC_HEAD(test_const_avail3, tc)
 {
 	atf_tc_set_md_var(tc,
 	    "descr",
-	    "Test availibility of various math constants");
+	    "Test value of MATH_{ERRNO, ERREXCEPT} macros");
 }
 ATF_TC_BODY(test_const_avail3, tc)
 {
