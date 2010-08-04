@@ -1,4 +1,5 @@
-all:	complexgen realgen proffenv profmath testrand
+PROGS=complexgen realgen proffenv profmath testrand
+ALL: $(PROGS)
 
 # -Wstrict-prototypes
 CC99=gcc -std=c99
@@ -47,7 +48,7 @@ gen-graphs: gen-csv
 	@./csv2plot.sh graphs/ 2>/dev/null
 
 clean:
-	rm -f *.o *~ core
+	rm -f $(PROGS) *.o *~ core
 
 git-clean:
 	git clean -fd > /dev/null

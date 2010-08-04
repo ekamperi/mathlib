@@ -9,7 +9,7 @@
 #include "gen.h"
 #include "subr_random.h"
 
-#define NSAMPLE (10*1000)
+#define NSAMPLE (1*1000)
 
 /*
  * They are esentially the same, but we still define them as if
@@ -32,6 +32,9 @@
 double *dx = NULL;
 double *dy = NULL;
 double *dz = NULL;
+double complex *cdx = NULL;
+double complex *cdy = NULL;
+double complex *cdz = NULL;
 struct timeval *start = NULL;
 struct timeval *end   = NULL;
 
@@ -41,6 +44,11 @@ init_arrays(void)
 	dx    = malloc(NSAMPLE * sizeof(double));
 	dy    = malloc(NSAMPLE * sizeof(double));
 	dz    = malloc(NSAMPLE * sizeof(double));
+
+	cdx    = malloc(NSAMPLE * sizeof(double complex));
+	cdy    = malloc(NSAMPLE * sizeof(double complex));
+	cdz    = malloc(NSAMPLE * sizeof(double complex));
+
 	start = malloc(NSAMPLE * sizeof(struct timeval));
 	end   = malloc(NSAMPLE * sizeof(struct timeval));
 
@@ -55,6 +63,11 @@ reset(void)
 	memset(dx,    0, NSAMPLE * sizeof(double));
 	memset(dy,    0, NSAMPLE * sizeof(double));
 	memset(dz,    0, NSAMPLE * sizeof(double));
+
+	memset(cdx,   0, NSAMPLE * sizeof(double complex));
+	memset(cdy,   0, NSAMPLE * sizeof(double complex));
+	memset(cdz,   0, NSAMPLE * sizeof(double complex));
+
 	memset(start, 0, NSAMPLE * sizeof(struct timeval));
 	memset(end,   0, NSAMPLE * sizeof(struct timeval));
 }
@@ -64,13 +77,13 @@ cleanup(void)
 {
 	assert(dx && dy && dz && start && end);
 
-	free(dx);
-	free(dy);
-	free(dz);
+	free(dx);  free(dy);  free(dz);
+	free(cdx); free(cdy); free(cdz);
 	free(start);
 	free(end);
 
 	dx = dy = dz = NULL;
+	cdx = cdy = cdz = NULL;
 	start = end = NULL;
 }
 
@@ -91,16 +104,30 @@ proffunc(const char *fname)
 
 	/* Generate random input -- do it before hand */
 	for (i = 0; i < NSAMPLE; i++) {
-		if (f->f_narg >= 1) {
-			do {
-				dx[i] = random_double(FP_NORMAL);
-			} while (!f->f_u.fp1(dx[i]));
-		}
-		if (f->f_narg >= 2) {
-			do {
-				dx[i] = random_double(FP_NORMAL);
-				dy[i] = random_double(FP_NORMAL);
-			} while (!f->f_u.fp2(dx[i], dy[i]));
+		if (f->f_mpfr) {
+			if (f->f_narg == 1) {
+				do {
+					dx[i] = random_double(FP_NORMAL);
+				} while (!f->f_u.fp1(dx[i]));
+			}
+			if (f->f_narg >= 2) {
+				do {
+					dx[i] = random_double(FP_NORMAL);
+					dy[i] = random_double(FP_NORMAL);
+				} while (!f->f_u.fp2(dx[i], dy[i]));
+			}
+		} else {
+			if (f->f_narg == 1) {
+				do {
+					cdx[i] = random_double_complex(FP_NORMAL);
+				} while (!f->f_uc.fp1(cdx[i]));
+			}
+			if (f->f_narg >= 2) {
+				do {
+					cdx[i] = random_double_complex(FP_NORMAL);
+					cdy[i] = random_double_complex(FP_NORMAL);
+				} while (!f->f_uc.fp2(cdx[i], cdy[i]));
+			}
 		}
 	}
 
@@ -109,10 +136,18 @@ proffunc(const char *fname)
 		MARK_START(&start[i]);
 
 		for (j = 0; j < 1000; j++) {
-			if (f->f_narg == 1) {
-				dz[i] = f->f_libm_real(dx[i]);
+			if (f->f_mpfr) {
+				if (f->f_narg == 1) {
+					dz[i] = f->f_libm_real(dx[i]);
+				} else {
+					dz[i] = f->f_libm_real(dx[i], dy[i]);
+				}
 			} else {
-				dz[i] = f->f_libm_real(dx[i], dy[i]);
+				if (f->f_narg == 1) {
+					cdz[i] = f->f_libm_complex(cdx[i]);
+				} else {
+					cdz[i] = f->f_libm_complex(cdx[i], cdy[i]);
+				}
 			}
 		}
 
@@ -125,22 +160,38 @@ proffunc(const char *fname)
 	fp = fopen(buf, "w");
 	assert(fp);
 
-	fprintf(fp, "#%d\n", f->f_narg);
+	if (f->f_mpfr)
+		fprintf(fp, "#%d\n", f->f_narg);
+	else
+		fprintf(fp, "#%d\n", f->f_narg + 1);
+
 	for (i = 0; i < NSAMPLE; i++) {
-		if (f->f_narg == 1) {
-			if (fpclassify(dx[i]) != FP_NORMAL ||
-			    fpclassify(dz[i]) != FP_NORMAL)
+		if (f->f_mpfr) {
+			if (fpclassify(dz[i]) != FP_NORMAL)
 				continue;
-			fprintf(fp, "% .16e   % ld\n",
-			    dx[i], USECS(start[i], end[i]));
-		}
-		else {
-                        if (fpclassify(dx[i]) != FP_NORMAL ||
-			    fpclassify(dy[i]) != FP_NORMAL ||
-                            fpclassify(dz[i]) != FP_NORMAL)
+
+			if (f->f_narg == 1) {
+				fprintf(fp, "% .16e   % ld\n",
+				    dx[i], USECS(start[i], end[i]));
+			} else {
+				fprintf(fp, "%.16e   %.16e   %ld\n",
+				    dx[i], dy[i], USECS(start[i], end[i]));
+			}
+		} else {
+			if ((fpclassify(creal(cdz[i])) != FP_NORMAL) ||
+			     fpclassify(cimag(cdz[i])) != FP_NORMAL)
 				continue;
-			fprintf(fp, "%.16e   %.16e   %ld\n",
-			    dx[i], dy[i], USECS(start[i], end[i]));
+
+			if (f->f_narg == 1) {
+				fprintf(fp, "% .16e % .16e   % ld\n",
+				    creal(cdx[i]), cimag(cdx[i]),
+				    USECS(start[i], end[i]));
+			} else {
+				fprintf(fp, "%.16e   %.16e   %.16e   %.16e %ld\n",
+				    creal(cdx[i]), cimag(cdx[i]),
+				    creal(cdy[i]), cimag(cdy[i]),
+				    USECS(start[i], end[i]));
+			}
 		}
 	}
 

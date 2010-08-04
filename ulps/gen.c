@@ -854,7 +854,7 @@ ftable[] = {
 #endif
 
 	/* yn() */
-#ifdef	HAVE_YN
+#ifdef	HAVE_YNxxx
 	{
 		.f_narg = 2,
 		.f_name = "yn",
