@@ -146,16 +146,16 @@ isvalidfp_intel80bit(const uint32_t *y)
 long double
 random_long_double(int fpclass)
 {
-#define	NBYTES	(sizeof(long double) / sizeof(uint32_t))
+#define	NQUADS	(sizeof(long double) / sizeof(uint32_t))
 	size_t i;
 
 	union {
 		long double x;
-		uint32_t y[NBYTES];
+		uint32_t y[NQUADS];
 	} u;
 
 	do {
-		for (i = 0; i < NBYTES; i++)
+		for (i = 0; i < NQUADS; i++)
 			u.y[i] = MY_RANDOM();
 	} while (!ISVALIDFP(u.y) || ((fpclass & my_fpclassify(u.x)) == 0));
 
