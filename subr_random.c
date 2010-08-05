@@ -157,7 +157,7 @@ random_long_double(int fpclass)
 	do {
 		for (i = 0; i < NQUADS; i++)
 			u.y[i] = MY_RANDOM();
-	} while (!ISVALIDFP(u.y) || ((fpclass & my_fpclassify(u.x)) == 0));
+	} while (!ISVALIDFP(u.y) || ((fpclassify(u.x)) != fpclass));
 
 	return (u.x);
 }
