@@ -195,11 +195,6 @@ random_float(int fpclass)
 /*******************************************************************************
  *				Complex Numbers				       *
  ******************************************************************************/
-
-/*
- * Solaris doesn't provide the `_Imaginary' datatype, so we need to
- * workaround it by using the union types as found in `mytypes.h'.
- */
 long double complex
 random_long_double_complex(int fpclass)
 {

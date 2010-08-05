@@ -47,24 +47,6 @@ fpreal_equall(long double x, long double y)
 /*******************************************************************************
  *				Complex arithmetic
  ******************************************************************************/
-/*
- * Quoting from ISO/IEC 9899:TC2:
- *
- * 6.2.5.13 Types
- * Each complex type has the same representation and alignment requirements as
- * an array type containing exactly two elements of the corresponding real type;
- * the first element is equal to the real part, and the second element to the
- * imaginary part, of the complex number.
- *
- * Quoting comment in freebsd/lib/msun/src/math_private.h:
- *
- * x+I*y is unusable in general,since gcc introduces many overflow,
- * underflow, sign and efficiency bugs by rewriting I*y as (0.0+I)*(y+0.0*I)
- * and laboriously computing the full complex product.
- *
- * In particular, I*Inf is corrupted to NaN+I*Inf, and I*-0 is corrupted to
- * -0.0+I*0.0. This is the reason that we don't use the x + yI form.
- */
 int
 fpcomplex_equalf(float complex x, float complex y)
 {
