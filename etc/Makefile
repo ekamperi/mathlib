@@ -46,6 +46,9 @@ gen-graphs: gen-csv
 	@mkdir -p graphs
 	@rm -f graphs/*
 	@./csv2plot.sh graphs/ 2>/dev/null
+	@mkdir -p csv
+	@rm -f csv/*
+	@mv *.csv csv/
 
 clean:
 	rm -f $(PROGS) *.o *~ core
