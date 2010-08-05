@@ -5,6 +5,7 @@
 #include <math.h>
 #include <stdio.h>
 
+#include "config.h"
 #include "subr_atf.h"
 #include "subr_fpcmp.h"
 #include "subr_random.h"
