@@ -976,7 +976,7 @@ ftable[] = {
 #ifdef  HAVE_CATANH
 	{
 		.f_narg = 1,
-		.f_name = "catanH",
+		.f_name = "catanh",
 		.f_libm_complex = catanh,
 #ifdef  HAVE_CATANHL
 		.f_namel = "catanhl",
