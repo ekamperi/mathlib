@@ -149,7 +149,7 @@ ATF_TC_HEAD(test_rand3, tc)
 }
 ATF_TC_BODY(test_rand3, tc)
 {
-	long double ldx, ldy;
+	long double ldx;
 	long cnt_normal, cnt_subnormal;
         long i, N;
 
