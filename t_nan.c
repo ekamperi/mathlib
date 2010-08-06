@@ -108,12 +108,33 @@ ATF_TC_BODY(test_nan3, tc)
 #endif
 }
 
+/*
+ * Test case 4
+ */
+ATF_TC(test_nan4);
+ATF_TC_HEAD(test_nan4, tc)
+{
+	atf_tc_set_md_var(tc,
+	    "descr",
+	    "Check that NAN is ... NAN");
+}
+ATF_TC_BODY(test_nan4, tc)
+{
+	ATF_CHECK(isnan(NAN));
+	ATF_CHECK(isnan(nan("")));
+	ATF_CHECK(isnan(nanf("")));
+#ifdef	HAVE_NANL
+	ATF_CHECK(isnan(nanl("")));
+#endif
+}
+
 /* Add test cases to test program */
 ATF_TP_ADD_TCS(tp)
 {
 	ATF_TP_ADD_TC(tp, test_nan1);
 	ATF_TP_ADD_TC(tp, test_nan2);
 	ATF_TP_ADD_TC(tp, test_nan3);
+	ATF_TP_ADD_TC(tp, test_nan4);
 
 	return atf_no_error();
 }
