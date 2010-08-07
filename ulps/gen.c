@@ -125,6 +125,12 @@ dom_floor(long double x)
 }
 
 static int
+dom_fmod(long double x, long double y)
+{
+	return (fpclassify(y) != FP_ZERO);
+}
+
+static int
 dom_hypot(long double x, long double y)
 {
 	return 1;
@@ -624,6 +630,21 @@ ftable[] = {
 #endif
 		.f_mpfr = mpfr_floor,
 		.f_u.fp1 = dom_floor
+	},
+#endif
+
+	/* fmod() */
+#ifdef  HAVE_FMOD
+	{
+		.f_narg = 2,
+		.f_name = "fmod",
+		.f_libm_real = fmod,
+#ifdef  HAVE_FMODL
+		.f_namel = "fmodl",
+		.f_libml_real = fmodl,
+#endif
+		.f_mpfr = mpfr_fmod,
+		.f_u.fp1 = dom_fmod
 	},
 #endif
 
