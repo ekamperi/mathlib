@@ -209,6 +209,12 @@ dom_tgamma(long double x)
 }
 
 static int
+dom_trunc(long double x)
+{
+	return 1;
+}
+
+static int
 dom_y0(long double x)
 {
 	return (x > 0.0);
@@ -828,6 +834,21 @@ ftable[] = {
 #endif
 		.f_mpfr = mpfr_gamma,
 		.f_u.fp1 = dom_tgamma
+	},
+#endif
+
+	/* trunc() */
+#ifdef	HAVE_TRUNC
+	{
+		.f_narg = 1,
+		.f_name = "trunc",
+		.f_libm_real = trunc,
+#ifdef  HAVE_TGAMMAL
+		.f_namel = "truncl",
+		.f_libml_real = truncl,
+#endif
+		.f_mpfr = mpfr_trunc,
+		.f_u.fp1 = dom_trunc
 	},
 #endif
 
