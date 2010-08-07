@@ -137,6 +137,18 @@ dom_hypot(long double x, long double y)
 }
 
 static int
+dom_j0(long double x)
+{
+	return 1;
+}
+
+static int
+dom_j1(long double x)
+{
+	return 1;
+}
+
+static int
 dom_log(long double x)
 {
 	return (x > 0.0);
@@ -662,6 +674,37 @@ ftable[] = {
 		.f_u.fp2 = dom_hypot
 	},
 #endif
+
+	/* j0() */
+#ifdef  HAVE_J0
+	{
+		.f_narg = 1,
+		.f_name = "j0",
+		.f_libm_real = j0,
+#ifdef  HAVE_J0Lxxx
+		.f_namel = "j0l",
+		.f_libml_real = j0l,
+#endif
+		.f_mpfr = mpfr_j0,
+		.f_u.fp2 = dom_j0
+	},
+#endif
+
+	/* j1() */
+#ifdef  HAVE_J1
+	{
+		.f_narg = 1,
+		.f_name = "j1",
+		.f_libm_real = j1,
+#ifdef  HAVE_J1Lxxx
+		.f_namel = "j1l",
+		.f_libml_real = j1l,
+#endif
+		.f_mpfr = mpfr_j1,
+		.f_u.fp2 = dom_j1
+	},
+#endif
+
 
 	/* log()*/
 #ifdef	HAVE_LOG
