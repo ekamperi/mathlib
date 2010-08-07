@@ -51,14 +51,14 @@ ATF_TC_BODY(test_cacosh2, tc)
 		fcy = cacoshf(fcx);
 		ATF_PASS_OR_BREAK(crealf(fcy) >= 0.0);
 		ATF_PASS_OR_BREAK(cimagf(fcy) >= -(float)M_PI
-			       && cimagf(fcx) <=  (float)M_PI);
+			       && cimagf(fcy) <=  (float)M_PI);
 
 		/* double */
 		dcx = random_double_complex(FP_NORMAL);
 		dcy = cacosh(dcx);
 		ATF_PASS_OR_BREAK(creal(dcy) >= 0.0);
 		ATF_PASS_OR_BREAK(cimag(dcy) >= -M_PI
-			       && cimag(dcx) <=  M_PI);
+			       && cimag(dcy) <=  M_PI);
 
 		/* long double */
 #if defined(HAVE_CACOSHL) && defined(HAVE_CREALL)
@@ -66,7 +66,7 @@ ATF_TC_BODY(test_cacosh2, tc)
 		ldcy = cacoshl(ldcx);
 		ATF_PASS_OR_BREAK(creall(ldcy) >= 0.0);
 		ATF_PASS_OR_BREAK(cimagl(ldcy) >= -M_PIl
-			       && cimagl(ldcx) <=  M_PIl);
+			       && cimagl(ldcy) <=  M_PIl);
 #endif
 	}
 }
