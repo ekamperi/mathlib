@@ -18,11 +18,16 @@ $(OBJDIR)/%.o: %.c
 	mkdir -p $(OBJDIR)
 	$(CC99) -c -o $@ $< $(CFLAGS)
 
-TESTS=	t_cacos t_cacosh t_carg t_casin t_casinh t_catan t_catanh t_csqrt	\
-	t_imgconstant
+TESTS=	t_cabs t_cacos t_cacosh t_carg t_casin t_casinh t_catan t_catanh \
+	t_csqrt t_imgconstant
 
 .PHONY: all
 all: $(TESTS)
+
+_DEPS_T_CABS = t_cabs.o subr_atf.o subr_fpcmp.o subr_random.o
+ DEPS_T_CABS = $(_DEPS_T_CABS:%=$(OBJDIR)/%)
+t_cabs: $(DEPS_T_CABS)
+	$(CC99) -o t_cabs $(DEPS_T_CABS) $(CFLAGS) $(LIBS)
 
 _DEPS_T_CACOS = t_cacos.o subr_atf.o subr_fpcmp.o subr_random.o
  DEPS_T_CACOS = $(_DEPS_T_CACOS:%=$(OBJDIR)/%)
