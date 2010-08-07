@@ -142,12 +142,12 @@ ATF_TC_BODY(test_frexp3, tc)
 			    dx, dy * pow(2, myexp)));
 
 		/* long double */
-#ifdef	HAVE_FREXPL
+#if	defined(HAVE_FREXPL) && defined(HAVE_POWL)
 		ldx = random_long_double(FP_NORMAL);
-		ldy = frexp(ldx, &myexp);
+		ldy = frexpl(ldx, &myexp);
 		ATF_PASS_OR_BREAK(-0.5 <= fabsl(ldy) && fabsl(ldy) < 1.0);
 		ATF_PASS_OR_BREAK(fpreal_equal(
-			    ldx, ldy * pow(2, myexp)));
+			    ldx, ldy * powl(2, myexp)));
 #endif
 	}
 }
