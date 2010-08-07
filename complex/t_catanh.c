@@ -50,20 +50,20 @@ ATF_TC_BODY(test_catanh2, tc)
 		fcx = random_float_complex(FP_NORMAL);
 		fcy = catanhf(fcx);
 		ATF_PASS_OR_BREAK(crealf(fcy) >= -(float)M_PI_2
-			       && crealf(fcx) <=  (float)M_PI_2);
+			       && crealf(fcy) <=  (float)M_PI_2);
 
 		/* double */
 		dcx = random_double_complex(FP_NORMAL);
 		dcy = catanh(dcx);
 		ATF_PASS_OR_BREAK(creal(dcy) >= -M_PI_2
-			       && creal(dcx) <=  M_PI_2);
+			       && creal(dcy) <=  M_PI_2);
 
 		/* long double */
 #if defined(HAVE_CATANHL) && defined(HAVE_CREALL)
 		ldcx = random_long_double_complex(FP_NORMAL);
 		ldcy = catanhl(ldcx);
 		ATF_PASS_OR_BREAK(creall(ldcy) >= -M_PI_2l
-			       && creall(ldcx) <=  M_PI_2l);
+			       && creall(ldcy) <=  M_PI_2l);
 #endif
 	}
 }
