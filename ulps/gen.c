@@ -185,6 +185,12 @@ dom_rint(long double x)
 }
 
 static int
+dom_round(long double x)
+{
+	return 1;
+}
+
+static int
 dom_sin(long double x)
 {
 	return 1;
@@ -793,6 +799,21 @@ ftable[] = {
 #endif
 		.f_mpfr = mpfr_rint,
 		.f_u.fp1 = dom_rint
+	},
+#endif
+
+	/* round() */
+#ifdef  HAVE_ROUND
+	{
+		.f_narg = 1,
+		.f_name = "round",
+		.f_libm_real = round,
+#ifdef  HAVE_ROUNDL
+		.f_namel = "roundl",
+		.f_libml_real = roundl,
+#endif
+		.f_mpfr = mpfr_round,
+		.f_u.fp1 = dom_round
 	},
 #endif
 

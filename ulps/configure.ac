@@ -29,14 +29,15 @@ AC_TYPE_SIZE_T
 # Checks for library functions.
 AC_CHECK_FUNCS([acos acosh asin asinh atan atanh atan2 cbrt ceil cos cosh erf])
 AC_CHECK_FUNCS([erfc exp expm1 exp2 fabs floor fmod hypot j0 j1 lgamma log log1p])
-AC_CHECK_FUNCS([log10 log2 pow remainder rint sin sinh sqrt tan tanh tgamma])
+AC_CHECK_FUNCS([log10 log2 pow remainder rint round sin sinh sqrt tan tanh tgamma])
 AC_CHECK_FUNCS([trunc y0 y1 yn])
 
 # j0l, j1l are extentions to the standard.
+# XXX: roundl
 AC_CHECK_FUNCS([acosl acoshl asinl asinhl atanl atanhl atan2l cbrtl ceill cosl])
 AC_CHECK_FUNCS([cosl coshl erfl erfcl expl exp2l expm1l fabsl floorl fmodl])
 AC_CHECK_FUNCS([hypotl j0l j1l lgammal log10l log1pl log2l logbl logl])
-AC_CHECK_FUNCS([powl remainderl rintl sinhl sinl sqrtl tanhl tanl tgammal truncl])
+AC_CHECK_FUNCS([powl remainderl rintl roundl sinhl sinl sqrtl tanhl tanl tgammal truncl])
 
 # Long double versions of complex arithmetic functions.
 AC_CHECK_FUNCS([cabs cacos cacosh carg casin casinh catan catanh ccos cexp clog])
