@@ -19,7 +19,7 @@ $(OBJDIR)/%.o: %.c
 	$(CC99) -c -o $@ $< $(CFLAGS)
 
 TESTS=	t_cabs t_cacos t_cacosh t_carg t_casin t_casinh t_catan t_catanh \
-	t_conj t_creal t_csqrt t_imgconstant
+	t_cimag t_clog t_conj t_creal t_csqrt t_imgconstant
 
 .PHONY: all
 all: $(TESTS)
@@ -69,6 +69,12 @@ _DEPS_T_CATANH = t_catanh.o subr_atf.o subr_fpcmp.o subr_random.o
  DEPS_T_CATANH = $(_DEPS_T_CATANH:%=$(OBJDIR)/%)
 t_catanh: $(DEPS_T_CATANH)
 	$(CC99) -o t_catanh $(DEPS_T_CATANH) $(CFLAGS) $(LIBS)
+
+
+_DEPS_T_CIMAG = t_cimag.o subr_atf.o subr_fpcmp.o subr_random.o
+ DEPS_T_CIMAG = $(_DEPS_T_CIMAG:%=$(OBJDIR)/%)
+t_cimag: $(DEPS_T_CIMAG)
+	$(CC99) -o t_cimag $(DEPS_T_CIMAG) $(CFLAGS) $(LIBS)
 
 
 _DEPS_T_CLOG = t_clog.o subr_atf.o subr_fpcmp.o subr_random.o
