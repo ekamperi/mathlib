@@ -6,6 +6,7 @@
 #include <time.h>
 
 #include "config.h"
+#include "lconstants.h"
 #include "subr_atf.h"
 #include "subr_fpcmp.h"
 #include "t_asin.h"
@@ -93,7 +94,7 @@ ATF_TC_BODY(test_asin2, tc)
 
 		/* float */
 		fy = asinf(x);
-		ATF_PASS_OR_BREAK(fy >= -M_PI_2 && fy <= M_PI_2);
+		ATF_PASS_OR_BREAK(fy >= -(float)M_PI_2 && fy <= (float)M_PI_2);
 
 		/* double */
 		dy = asin(x);
@@ -102,7 +103,7 @@ ATF_TC_BODY(test_asin2, tc)
 		/* long double */
 #ifdef	HAVE_ASINL
 		ldy = asinl(x);
-		ATF_PASS_OR_BREAK(ldy >= -M_PI_2 && ldy <= M_PI_2);
+		ATF_PASS_OR_BREAK(ldy >= -M_PI_2l && ldy <= M_PI_2l);
 #endif
 	}
 }
