@@ -75,7 +75,7 @@ static const struct t2entry {
 	 **********************************************************************/
 	/* Normals */
 	{ .u.x =  1.00E-10, .v = 1 },
-        { .u.x = -1.00E-10, .v = 1 },
+	{ .u.x = -1.00E-10, .v = 1 },
 	{ .u.x =  1.23E-20, .v = 1 },
 	{ .u.x = -1.23E-20, .v = 1 },
 	{ .u.x =  1.234567, .v = 1 },
@@ -83,7 +83,7 @@ static const struct t2entry {
 
 	/* Denormals */
 	{ .u.x =  1.68105157155604675313133890866087630e-4932L, .v = 1 },
-        { .u.x = -1.68105157155604675313133890866087630e-4932L, .v = 1 },
+	{ .u.x = -1.68105157155604675313133890866087630e-4932L, .v = 1 },
 	{ .u.x =  2.19619904728995135778739881115052741e-4932L, .v = 1 },
 	{ .u.x = -2.19619904728995135778739881115052741e-4932L, .v = 1 },
 	{ .u.x =  2.09040270689746357591598655419975601e-4932L, .v = 1 },
@@ -140,36 +140,74 @@ ATF_TC_BODY(test_rand2, tc)
 #endif	/* defined(__i386__) || defined(__x86_64__) */
 }
 
+/*
+ * Test case 3 -- Check FP_NORMAL
+ */
 ATF_TC(test_rand3);
 ATF_TC_HEAD(test_rand3, tc)
 {
 	atf_tc_set_md_var(tc,
 	    "descr",
-	    "Check zeros, nan, inf");
+	    "Check FP_NORMAL generation");
 }
 ATF_TC_BODY(test_rand3, tc)
 {
+	float fx;
+	double dx;
 	long double ldx;
-	long cnt_normal, cnt_subnormal;
-        long i, N;
+	long i, N;
 
 	N = get_config_var_as_long(tc, "iterations");
 	ATF_REQUIRE(N > 0);
 
-	cnt_normal = 0;
-	cnt_subnormal = 0;
-	for (i = 0; i < N; i++) {
-		ldx = random_long_double(MY_FP_NORMAL | MY_FP_SUBNORMAL);
-		if (fpclassify(ldx) == FP_NORMAL)
-			cnt_normal++;
-		if (fpclassify(ldx) == FP_SUBNORMAL)
-			cnt_subnormal++;
-	}
-#if 0
-	printf("normal = %ld, subnormal = %ld\n", cnt_normal, cnt_subnormal);
-#endif
+	ATF_FOR_LOOP(i, N, i++) {
+		/* float */
+		fx = random_float(FP_NORMAL);
+		ATF_PASS_OR_BREAK(fpclassify(fx) == FP_NORMAL);
 
-	ATF_CHECK(cnt_normal + cnt_subnormal == N);
+		/* double */
+		dx = random_double(FP_NORMAL);
+		ATF_PASS_OR_BREAK(fpclassify(dx) == FP_NORMAL);
+
+		/* long double */
+		ldx = random_long_double(FP_NORMAL);
+		ATF_PASS_OR_BREAK(fpclassify(ldx) == FP_NORMAL);
+	}
+}
+
+/*
+ * Test csae 4 -- Check FP_SUBNORMAL
+ */
+ATF_TC(test_rand4);
+ATF_TC_HEAD(test_rand4, tc)
+{
+	atf_tc_set_md_var(tc,
+	    "descr",
+	    "Check FP_SUBNORMAL generation");
+}
+ATF_TC_BODY(test_rand4, tc)
+{
+	float fx;
+	double dx;
+	long double ldx;
+	long i, N;
+
+	N = get_config_var_as_long(tc, "iterations");
+	ATF_REQUIRE(N > 0);
+
+	ATF_FOR_LOOP(i, N, i++) {
+		/* float */
+		fx = random_float(FP_SUBNORMAL);
+		ATF_PASS_OR_BREAK(fpclassify(fx) == FP_SUBNORMAL);
+
+		/* double */
+		dx = random_double(FP_SUBNORMAL);
+		ATF_PASS_OR_BREAK(fpclassify(dx) == FP_SUBNORMAL);
+
+		/* long double */
+		ldx = random_long_double(FP_SUBNORMAL);
+		ATF_PASS_OR_BREAK(fpclassify(ldx) == FP_SUBNORMAL);
+	}
 }
 
 /* Add test cases to test program */
@@ -178,6 +216,7 @@ ATF_TP_ADD_TCS(tp)
 	ATF_TP_ADD_TC(tp, test_rand1);
 	ATF_TP_ADD_TC(tp, test_rand2);
 	ATF_TP_ADD_TC(tp, test_rand3);
+	ATF_TP_ADD_TC(tp, test_rand4);
 
 	return atf_no_error();
 }
