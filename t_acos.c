@@ -6,6 +6,7 @@
 #include <time.h>
 
 #include "config.h"
+#include "lconstants.h"
 #include "subr_atf.h"
 #include "subr_fpcmp.h"
 #include "t_acos.h"
@@ -72,12 +73,18 @@ ATF_TC_BODY(test_acos2, tc)
 	/* Reusing the table from test 1 */
 	N = sizeof(t1dtable) / sizeof(t1dtable[0]);
 	for (i = 0; i < N; i++) {
+		/* float */
+		fy = acos((float)t1dtable[i].x);
+		ATF_CHECK(fy >= 0.0 && fy <= (float)M_PI);
+
+		/* double */
 		dy = acos(t1dtable[i].x);
 		ATF_CHECK(dy >= 0.0 && dy <= M_PI);
 
+		/* long double */
 #ifdef	HAVE_ACOSL
-		ldy = acosl(t1dtable[i].x);
-		ATF_CHECK(ldy >= 0.0 && ldy <= M_PI);
+		ldy = acosl(t1ldtable[i].x);
+		ATF_CHECK(ldy >= 0.0 && ldy <= M_PIl);
 #endif
 	}
 
@@ -94,7 +101,7 @@ ATF_TC_BODY(test_acos2, tc)
 
 		/* float */
 		fy = acosf(x);
-		ATF_PASS_OR_BREAK(fy >= 0.0 && fy <= M_PI);
+		ATF_PASS_OR_BREAK(fy >= 0.0 && fy <= (float)M_PI);
 
 		/* double */
 		dy = acos(x);
@@ -103,7 +110,7 @@ ATF_TC_BODY(test_acos2, tc)
 		/* long double */
 #ifdef	HAVE_ACOSL
 		ldy = acosl(x);
-		ATF_PASS_OR_BREAK(ldy >= 0.0 && ldy <= M_PI);
+		ATF_PASS_OR_BREAK(ldy >= 0.0 && ldy <= M_PIl);
 #endif
 	}
 }
