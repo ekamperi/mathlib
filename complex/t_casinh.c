@@ -50,20 +50,20 @@ ATF_TC_BODY(test_casinh2, tc)
 		fcx = random_float_complex(FP_NORMAL);
 		fcy = casinhf(fcx);
 		ATF_PASS_OR_BREAK(cimagf(fcy) >= -(float)M_PI_2
-			       && cimagf(fcx) <=  (float)M_PI_2);
+			       && cimagf(fcy) <=  (float)M_PI_2);
 
 		/* double */
 		dcx = random_double_complex(FP_NORMAL);
 		dcy = casinh(dcx);
 		ATF_PASS_OR_BREAK(cimag(dcy) >= -M_PI_2
-			       && cimag(dcx) <=  M_PI_2);
+			       && cimag(dcy) <=  M_PI_2);
 
 		/* long double */
 #if defined(HAVE_CASINHL) && defined(HAVE_CIMAGL)
 		ldcx = random_long_double_complex(FP_NORMAL);
 		ldcy = casinhl(ldcx);
 		ATF_PASS_OR_BREAK(cimagl(ldcy) >= -M_PI_2l
-			       && cimagl(ldcx) <=  M_PI_2l);
+			       && cimagl(ldcy) <=  M_PI_2l);
 #endif
 	}
 }
