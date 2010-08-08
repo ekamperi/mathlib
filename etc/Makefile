@@ -25,9 +25,9 @@ realgen: realgen.c ../ulps/gen.c ../subr_random.c
 proffenv: proffenv.c
 	$(CC99) $(CCFLAGS) $(INCLUDE) proffenv.c -o proffenv $(LIB)
 
-profmath: profmath.c ../ulps/gen.c ../subr_random.c
+profmath: profmath.c ../ulps/basic-complex.c ../ulps/gen.c ../subr_random.c
 	$(CC99) $(CCFLAGS) $(INCLUDE)				\
-		profmath.c ../ulps/gen.c ../subr_random.c	\
+		profmath.c ../ulps/basic-complex.c ../ulps/gen.c ../subr_random.c	\
 	-o profmath $(LIB)
 
 testrand: testrand.c ../subr_random.c
