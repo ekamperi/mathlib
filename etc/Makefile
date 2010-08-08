@@ -1,4 +1,4 @@
-PROGS=complexgen realgen proffenv profmath testrand
+PROGS=proffenv profmath realgen testrand
 ALL: $(PROGS)
 
 # -Wstrict-prototypes
@@ -9,18 +9,8 @@ CCFLAGS=-Wall -W -Wformat-nonliteral -Wcast-align -Wpointer-arith 		\
 	-Wshadow -Wwrite-strings -Wno-unused-parameter 				\
 	-Wswitch -Wbad-function-cast -g
 INCLUDE=-I../include -I../ulps -I/usr/include/gmp -I/usr/include/mpfr		\
-	-I/usr/opt/include -I/usr/local/include -L/usr/opt/lib -L/usr/local/lib	\
-	-R/usr/opt/lib
-LIB=-lm -lmpfr -lmpc
-
-realgen: realgen.c ../ulps/gen.c ../subr_random.c
-	@test -f ../ulps/config.h \
-	|| (echo "You should first run autoreconf && ./configure in ../ulps" \
-	&& exit 1)
-	$(CC99) $(CCFLAGS) $(INCLUDE)				\
-		realgen.c ../ulps/gen.c ../subr_random.c	\
-	-o realgen						\
-	$(LIB)
+	-I/usr/opt/include -I/usr/local/include
+LIB=-lm -lmpfr -lmpc -L/usr/opt/lib -L/usr/local/lib -R /usr/opt/lib
 
 proffenv: proffenv.c
 	$(CC99) $(CCFLAGS) $(INCLUDE) proffenv.c -o proffenv $(LIB)
@@ -29,6 +19,16 @@ profmath: profmath.c ../ulps/basic-complex.c ../ulps/gen.c ../subr_random.c
 	$(CC99) $(CCFLAGS) $(INCLUDE)				\
 		profmath.c ../ulps/basic-complex.c ../ulps/gen.c ../subr_random.c	\
 	-o profmath $(LIB)
+
+realgen: realgen.c ../ulps/basic-complex.c ../ulps/gen.c ../subr_random.c
+	@test -f ../ulps/config.h \
+	|| (echo "You should first run autoreconf && ./configure in ../ulps" \
+	&& exit 1)
+	$(CC99) $(CCFLAGS) $(INCLUDE)                           \
+		realgen.c ../ulps/basic-complex.c ../ulps/gen.c \
+		../subr_random.c        			\
+	-o realgen                                              \
+	$(LIB)
 
 testrand: testrand.c ../subr_random.c
 	$(CC99) $(CCFLAGS) $(INCLUDE)				\
