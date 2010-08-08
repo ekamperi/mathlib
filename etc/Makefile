@@ -9,7 +9,8 @@ CCFLAGS=-Wall -W -Wformat-nonliteral -Wcast-align -Wpointer-arith 		\
 	-Wshadow -Wwrite-strings -Wno-unused-parameter 				\
 	-Wswitch -Wbad-function-cast -g
 INCLUDE=-I../include -I../ulps -I/usr/include/gmp -I/usr/include/mpfr		\
-	-I/usr/opt/include -L/usr/opt/lib -R/usr/opt/lib
+	-I/usr/opt/include -I/usr/local/include -L/usr/opt/lib -L/usr/local/lib	\
+	-R/usr/opt/lib
 LIB=-lm -lmpfr -lmpc
 
 realgen: realgen.c ../ulps/gen.c ../subr_random.c
@@ -45,7 +46,7 @@ gen-graphs: gen-csv
 	@echo "*** Generating .png plot graphs ***"
 	@mkdir -p graphs
 	@rm -f graphs/*
-	@./csv2plot.sh graphs/ 2>/dev/null
+	@./csv2plot.sh graphs
 	@mkdir -p csv
 	@rm -f csv/*
 	@mv *.csv csv/
