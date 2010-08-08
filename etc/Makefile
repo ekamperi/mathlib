@@ -10,7 +10,7 @@ CCFLAGS=-Wall -W -Wformat-nonliteral -Wcast-align -Wpointer-arith 		\
 	-Wswitch -Wbad-function-cast -g
 INCLUDE=-I../include -I../ulps -I/usr/include/gmp -I/usr/include/mpfr		\
 	-I/usr/opt/include -I/usr/local/include
-LIB=-lm -lmpfr -lmpc -L/usr/opt/lib -L/usr/local/lib -R /usr/opt/lib
+LIB=-lm -lmpfr -lmpc -L/usr/opt/lib -L/usr/local/lib -R/usr/opt/lib
 
 proffenv: proffenv.c
 	$(CC99) $(CCFLAGS) $(INCLUDE) proffenv.c -o proffenv $(LIB)
