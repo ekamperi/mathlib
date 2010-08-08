@@ -9,6 +9,7 @@
 #include <mpc.h>
 #include <mpfr.h>
 
+#include "basic-complex.h"
 #include "config.h"
 #include "gen.h"
 #include "mytypes.h"
@@ -370,6 +371,36 @@ static int
 dom_ctan(long double complex z)
 {
 	/* XXX */
+	return 1;
+}
+
+/*******************************************************************************
+ *                      Basic arithmetic of complex numbers
+ ******************************************************************************/
+static int
+dom_cadd(long double complex z, long double complex w)
+{
+	return 1;
+}
+
+static int
+dom_csub(long double complex z, long double complex w)
+{
+	return 1;
+}
+static int
+dom_cmul(long double complex z, long double complex w)
+{
+	return 1;
+}
+static int
+dom_cdiv(long double complex z, long double complex w)
+{
+	return 1;
+}
+static int
+dom_cneg(long double complex z)
+{
 	return 1;
 }
 
@@ -1246,8 +1277,66 @@ ftable[] = {
 #endif
 	  .f_mpc = mpc_tan,
 	  .f_uc.fp1 = dom_ctan
-	}
+	},
 #endif
+
+/*******************************************************************************
+ *			Basic arithmetic of complex numbers
+ ******************************************************************************/
+	/* cadd() */
+	{
+		.f_narg = 2,
+		.f_name = "cadd",
+		.f_libm_complex = cadd,
+		.f_namel = "caddl",
+		.f_libml_complex = caddl,
+		.f_mpc = mpc_add,
+		.f_uc.fp2 = dom_cadd
+	},
+
+	/* csub() */
+	{
+		.f_narg = 2,
+		.f_name = "csub",
+		.f_libm_complex = csub,
+		.f_namel = "csubl",
+		.f_libml_complex = csubl,
+		.f_mpc = mpc_sub,
+		.f_uc.fp2 = dom_csub
+	},
+
+	/* cmul() */
+	{
+		.f_narg = 2,
+		.f_name = "cmul",
+		.f_libm_complex = cmul,
+		.f_namel = "cmull",
+		.f_libml_complex = cmull,
+		.f_mpc = mpc_mul,
+		.f_uc.fp2 = dom_cmul
+	},
+
+	/* cdiv() */
+	{
+		.f_narg = 2,
+		.f_name = "cdiv",
+		.f_libm_complex = cdiv,
+		.f_namel = "cdivl",
+		.f_libml_complex = cdivl,
+		.f_mpc = mpc_div,
+		.f_uc.fp2 = dom_cdiv
+	},
+
+	/* cneg() */
+	{
+		.f_narg = 1,
+		.f_name = "cneg",
+		.f_libm_complex = cneg,
+		.f_namel = "cnegl",
+		.f_libml_complex = cnegl,
+		.f_mpc = mpc_neg,
+		.f_uc.fp2 = dom_cneg
+	}
 };
 
 const int fsize = sizeof(ftable) / sizeof(ftable[0]);
