@@ -95,6 +95,6 @@ void printulps_long_double(struct ulp u);
 void printulps_double_complex(struct ulp_complex u);
 void printulps_long_double_complex(struct ulp_complex u);
 
-#define	NITERATIONS (1 * 1000)
+#define	NITERATIONS (10 * 1000)
 
 #endif	/* ! __ULP_H__ */

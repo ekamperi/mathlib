@@ -396,7 +396,10 @@ dom_cmul(long double complex z, long double complex w)
 static int
 dom_cdiv(long double complex z, long double complex w)
 {
-	return 1;
+	long_double_complex ldcw = { .z = w };
+
+	return (fpclassify(ldcw.parts[0]) != FP_ZERO ||
+		fpclassify(ldcw.parts[1]) != FP_ZERO);
 }
 static int
 dom_cneg(long double complex z)
