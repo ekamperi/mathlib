@@ -330,9 +330,21 @@ dom_clog(long double complex z)
 }
 
 static int
+dom_conj(long double complex z)
+{
+	return 1;
+}
+
+static int
 dom_cpow(long double complex z, long double complex w)
 {
 	/* XXX */
+	return 1;
+}
+
+static int
+dom_cproj(long double complex z)
+{
 	return 1;
 }
 
@@ -358,12 +370,6 @@ static int
 dom_ctan(long double complex z)
 {
 	/* XXX */
-	return 1;
-}
-
-static int
-dom_conj(long double complex z)
-{
 	return 1;
 }
 
@@ -1165,6 +1171,21 @@ ftable[] = {
 #endif
 	  .f_mpc = mpc_pow,
 	  .f_uc.fp1 = dom_cpow
+	},
+#endif
+
+	/* cproj() */
+#ifdef  HAVE_CPROJ
+	{
+		.f_narg = 1,
+		.f_name = "cproj",
+		.f_libm_complex = cproj,
+#ifdef  HAVE_CPROJL
+		.f_namel = "cprojl",
+		.f_libml_complex = cprojl,
+#endif
+		.f_mpc = mpc_proj,
+		.f_uc.fp1 = dom_cproj
 	},
 #endif
 

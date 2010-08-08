@@ -41,7 +41,7 @@ AC_CHECK_FUNCS([powl remainderl rintl roundl sinhl sinl sqrtl tanhl tanl tgammal
 
 # Long double versions of complex arithmetic functions.
 AC_CHECK_FUNCS([cabs cacos cacosh carg casin casinh catan catanh ccos cexp clog])
-AC_CHECK_FUNCS([cpow csin csinh csqrt ctan ccos conj])
+AC_CHECK_FUNCS([cpow cproj csin csinh csqrt ctan ccos conj])
 
 AC_CHECK_FUNCS([cabsl cacoshl cacosl cargl casinhl casinl catanhl catanl])
 AC_CHECK_FUNCS([ccoshl ccosl cexpl cimagl clogl conjl cpowl cprojl creall])
