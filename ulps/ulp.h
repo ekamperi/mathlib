@@ -26,32 +26,32 @@ struct ulp_complex {
  ******************************************************************************/
 #define	ULP_INIT(u)				\
 	assert(u);				\
-	(u)->ulp_max = -DBL_MAX;		\
-	(u)->ulp_min = DBL_MAX;			\
-	(u)->ulp_avg = 0.0;			\
-	(u)->ulp_skipped = 0;			\
-	(u)->ulp_maxl = -LDBL_MAX;		\
-	(u)->ulp_minl = LDBL_MAX;		\
-	(u)->ulp_avgl = 0.0;			\
-	(u)->ulp_skippedl = 0;
+	(u)->ulp_max	  = -DBL_MAX;		\
+	(u)->ulp_min	  =  DBL_MAX;		\
+	(u)->ulp_avg	  =  0.0;		\
+	(u)->ulp_skipped  =  0;			\
+	(u)->ulp_maxl	  = -LDBL_MAX;		\
+	(u)->ulp_minl	  =  LDBL_MAX;		\
+	(u)->ulp_avgl	  =  0.0;		\
+	(u)->ulp_skippedl =  0;
 
 #define	ULP_UPDATE(u, n)			\
 assert(u);					\
 do {						\
-	if (n > (u)->ulp_max)			\
-		(u)->ulp_max = n;		\
-	if (n < (u)->ulp_min)			\
-		(u)->ulp_min = n;		\
+	if ((n) > (u)->ulp_max)			\
+		  (u)->ulp_max = n;		\
+	if ((n) < (u)->ulp_min)			\
+		  (u)->ulp_min = n;		\
 	(u)->ulp_avg += n;			\
 } while(0)
 
 #define ULP_UPDATEL(u, nl)			\
 assert(u);					\
 do {						\
-	if (nl > (u)->ulp_maxl)			\
-		 (u)->ulp_maxl = nl;		\
-	if (nl < (u)->ulp_minl)			\
-		 (u)->ulp_minl = nl;		\
+	if ((nl) > (u)->ulp_maxl)		\
+		   (u)->ulp_maxl = nl;		\
+	if ((nl) < (u)->ulp_minl)		\
+		   (u)->ulp_minl = nl;		\
 	(u)->ulp_avgl += nl;			\
 } while(0)
 
@@ -66,23 +66,15 @@ do {						\
 
 #define ULP_COMPLEX_UPDATE(uc, n)					\
 assert(uc);								\
-do {									\
-	if (creal(n) > (uc)->ulp_total.ulp_max)				\
-		       (uc)->ulp_total.ulp_max = n;			\
-	if (creal(n) < (uc)->ulp_total.ulp_min)				\
-		       (uc)->ulp_total.ulp_min = n;			\
-	(uc)->ulp_total.ulp_avg += creal(n);				\
-} while(0)
+ULP_UPDATE(&uc->ulp_real, creal(n));					\
+ULP_UPDATE(&uc->ulp_imag, cimag(n));					\
+ULP_UPDATE(&uc->ulp_total, fabs(creal(n)) + fabs(cimag(n)));
 
 #define ULP_COMPLEX_UPDATEL(uc, n)					\
-assert(uc);                                                             \
-do {                                                                    \
-	if (creall(n) > (uc)->ulp_total.ulp_max)                         \
-			(uc)->ulp_total.ulp_max = n;			\
-	if (creall(n) < (uc)->ulp_total.ulp_min)                         \
-			(uc)->ulp_total.ulp_min = n;			\
-	(uc)->ulp_total.ulp_avgl += creal(n);				\
-} while(0)
+assert(uc);								\
+ULP_UPDATEL(&uc->ulp_real, creall(n));					\
+ULP_UPDATEL(&uc->ulp_imag, cimagl(n));					\
+ULP_UPDATEL(&uc->ulp_total, fabsl(creall(n)) + fabsl(cimagl(n)));
 
 double calculp_double(double computed, double exact);
 long double calculp_long_double(long double computedl, long double exactl);
@@ -95,6 +87,6 @@ void printulps_long_double(struct ulp u);
 void printulps_double_complex(struct ulp_complex u);
 void printulps_long_double_complex(struct ulp_complex u);
 
-#define	NITERATIONS (10 * 1000)
+#define	NITERATIONS (100 * 1000)
 
 #endif	/* ! __ULP_H__ */

@@ -12,33 +12,42 @@
 #include <mpfr.h>
 
 #include "gen.h"
+#include "mytypes.h"
 #include "subr_mpc.h"
 #include "subr_random.h"
 #include "ulp.h"
 
-static double
+static double complex
 calculp_double_complex(double complex computed, double complex exact)
 {
+	double_complex z;
 	double ulp_real;
 	double ulp_imag;
 
 	ulp_real = calculp_double(creal(computed), creal(exact));
 	ulp_imag = calculp_double(cimag(computed), cimag(exact));
 
-	return (fabs(ulp_real) + fabs(ulp_imag));
+	z.parts[0] = ulp_real;
+	z.parts[1] = ulp_imag;
+
+	return (z.z);
 }
 
-static long double
+static long double complex
 calculp_long_double_complex(long double complex computedl,
 			    long double complex exactl)
 {
+	long_double_complex z;
 	long double ulp_reall;
 	long double ulp_imagl;
 
 	ulp_reall = calculp_long_double(creall(computedl), creall(exactl));
 	ulp_imagl = calculp_long_double(cimagl(computedl), cimagl(exactl));
 
-	return (fabsl(ulp_reall) + fabsl(ulp_imagl));
+	z.parts[0] = ulp_reall;
+	z.parts[1] = ulp_imagl;
+
+	return (z.z);
 }
 
 static void
