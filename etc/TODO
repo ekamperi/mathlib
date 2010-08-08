@@ -2,10 +2,9 @@
 * static-fy all non-exported symbols in *.c -- DONE
 * const-ify all objects that shouldn't modified -- DONE
 * Allow ulps to be calculated on a per-function basis -- DONE
-* Allow ulps to be calculated for float and long versions as well
-* Add profiling capabilities for all math.h functions
-* Add profiling capabilities for all complex.h functions
-* Add good (x, $f(x)) pairs for all test cases
+* Allow ulps to be calculated for float and long versions as well -- PDONE
+* Add profiling capabilities for all math.h functions -- DONE
+* Add profiling capabilities for all complex.h functions -- DONE
+* Add good (x, $f(x)) pairs for all test cases -- PDONE
 * #ifdef protect all long double math functions -- DONE
-* Provide a long double version of M_PI and use it where due
-
+* Provide a long double version of M_PI and use it where due -- DONE
