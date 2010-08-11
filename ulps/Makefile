@@ -4,9 +4,10 @@ CCFLAGS=-Wall -W -Wformat-nonliteral -Wcast-align -Wpointer-arith 	    	\
 	-Wmissing-declarations -Winline -Wundef -Wnested-externs -Wcast-qual 	\
 	-Wshadow -Wwrite-strings -Wno-unused-parameter 				\
 	-Wswitch -Wbad-function-cast -g
-INCLUDE= -I../include -I/usr/include/gmp -I/usr/include/mpfr -I/usr/pkg/include	\
-	 -I/usr/local/include -I/usr/opt/include
-LIBS=-lm -lmpfr -lmpc -L/usr/local/lib -L/usr/opt/lib -L/usr/pkg/lib -R/usr/opt/lib
+INCLUDE= -I../include -I/usr/include/gmp -I/usr/include/mpfr 			\
+	 -I/usr/local/include -I/usr/opt/include -I/usr/pkg/include
+LIBS=-lm -lmpfr -lmpc -L/usr/local/lib -L/usr/opt/lib -L/usr/pkg/lib 		\
+	 -R/usr/local/lib -R/usr/opt/lib
 
 # Don't use 'obj' or funny things will happen with VPATH set to ../
 OBJDIR = obj-ulps
