@@ -413,8 +413,8 @@ dom_cneg(long double complex z)
  * If an object that has static storage duration is not initialized explicitly,
  * then [...] if it has pointer type, it is initialized to a null pointer.
  *
- * Therefore, we can safely assume that f_namel, f_libml_real or f_liml_complex
- * is NULL, if autoconf didn't define the corresponding HAVE_XYZ symbol for us.
+ * Therefore, we can safely assume that f_namel, f_mpfr or f_mpc is NULL,
+ * if autoconf didn't define the corresponding HAVE_XYZ symbol for us.
  */
 static const struct fentry
 ftable[] = {
