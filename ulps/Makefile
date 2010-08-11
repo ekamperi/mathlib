@@ -27,14 +27,11 @@ config.h:
 $(OBJDIR)/%.o: %.c | $(OBJDIR) config.h
 	$(CC99) -c -o $@ $< $(CCFLAGS) $(INCLUDE)
 
-_DEPS = main.o basic-complex.o gen.o ulp_real.o ulp_complex.o subr_mpc.o subr_random.o
+_DEPS = main.o basic-complex.o gen.o subr_mpc.o subr_random.o ulp_real.o \
+	ulp_complex.o
  DEPS = $(_DEPS:%=$(OBJDIR)/%)
 ulpcalc: $(DEPS)
 	$(CC99) -o ulps $(DEPS) $(CCFLAGS) $(INCLUDE) $(LIBS)
-
-.PHONY: run
-run:
-	./ulps
 
 .PHONY: clean
 clean:
@@ -49,6 +46,8 @@ git-clean:
 dist:
 	autoreconf && ./configure >/dev/null
 	cp ../subr_random.c .
+	cp ../include/mytypes.h .
+	cp ../include/subr_fpclassify.h .
 	cp ../include/subr_random.h .
 	tar czfv ../ulp-0.1.tar.gz .
 	mv ../ulp-0.1.tar.gz .
