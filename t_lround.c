@@ -187,7 +187,6 @@ ATF_TC_HEAD(test_lround4, tc)
 }
 ATF_TC_BODY(test_lround4, tc)
 {
-	float fx, fy;
 	double dx, dy;
 	long double ldx, ldy;
 	long i, N;
@@ -198,12 +197,6 @@ ATF_TC_BODY(test_lround4, tc)
 	srand48(time(NULL));
 
 	ATF_FOR_LOOP(i, N, i++) {
-		/* float */
-		fx = mrand48() + 0.5;
-		fy = lroundf(fx);
-		printf("%f %f\n", fx, fy);
-		ATF_PASS_OR_BREAK(fabsf(fy) > fabsf(fx));
-
 		/* double */
 		dx = mrand48() + 0.5;
 		dy = lround(dx);
