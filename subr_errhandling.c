@@ -86,6 +86,17 @@ iserrno_equalto(int error)
 	return (1);
 }
 
+int
+not_errno_equalto(int error)
+{
+#if defined(math_errhandling) && defined(MATH_ERRNO)		\
+	&& (math_errhandling & MATH_ERRNO)
+	return (error != errno);
+#endif
+
+	return (1);
+}
+
 void
 query_errhandling(int *hasfp, int *haserrno)
 {

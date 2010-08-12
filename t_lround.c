@@ -4,6 +4,9 @@
 #include <errno.h>
 #include <limits.h>	/* LONG_MAX */
 #include <math.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
 
 #include "config.h"
 #include "subr_atf.h"
@@ -11,16 +14,16 @@
 #include "subr_fpcmp.h"
 #include "subr_random.h"
 
-static const struct
-tentry {
-	double x;       /* Input */
-	double y;       /* lround output */
-} ttable[] = {
-};
-
 /*
  * Test case 1 -- Basic functionality
  */
+static const struct
+t1entry {
+	double x;       /* Input */
+	double y;       /* lround output */
+} t1table[] = {
+};
+
 ATF_TC(test_lround1);
 ATF_TC_HEAD(test_lround1, tc)
 {
@@ -121,11 +124,107 @@ ATF_TC_BODY(test_lround2, tc)
 	}
 }
 
+/*
+ * Test case 3
+ */
+ATF_TC(test_lround3);
+ATF_TC_HEAD(test_lround3, tc)
+{
+	atf_tc_set_md_var(tc,
+	    "descr",
+	    "Check for spurious errors");
+}
+ATF_TC_BODY(test_lround3, tc)
+{
+	float fx;
+	double dx;
+	long double ldx;
+	long i, N;
+
+	N = get_config_var_as_long(tc, "iterations");
+	ATF_REQUIRE(N > 0);
+
+	ATF_FOR_LOOP(i, N, i++) {
+		/* float */
+		fx = random_float_range(FP_NORMAL, -LONG_MAX, LONG_MAX);
+		errno = 0;
+		clear_exceptions();
+		(void)lroundf(fx);
+		ATF_PASS_OR_BREAK(not_errno_equalto(EDOM));
+		ATF_PASS_OR_BREAK(not_raised_exceptions(MY_FE_INVALID));
+
+		/* double */
+		dx = random_double_range(FP_NORMAL, -LONG_MAX, LONG_MAX);
+		errno = 0;
+		clear_exceptions();
+		(void)lround(dx);
+		ATF_PASS_OR_BREAK(not_errno_equalto(EDOM));
+		ATF_PASS_OR_BREAK(not_raised_exceptions(MY_FE_INVALID));
+
+		/* long double */
+#ifdef	HAVE_LROUNDL
+		ldx = random_long_double_range(FP_NORMAL, -LONG_MAX, LONG_MAX);
+		errno = 0;
+		clear_exceptions();
+		(void)lroundl(ldx);
+		ATF_PASS_OR_BREAK(not_errno_equalto(EDOM));
+		ATF_PASS_OR_BREAK(not_raised_exceptions(MY_FE_INVALID));
+#endif
+	}
+}
+
+/*
+ * Test case 4
+ * XXX: Try to change rounding modes, if host supports fenv.h
+ */
+ATF_TC(test_lround4);
+ATF_TC_HEAD(test_lround4, tc)
+{
+	atf_tc_set_md_var(tc,
+	    "descr",
+	    "Rounding of halfway cases happens away from zero, "
+	    "regardless of the current rounding direction");
+}
+ATF_TC_BODY(test_lround4, tc)
+{
+	float fx, fy;
+	double dx, dy;
+	long double ldx, ldy;
+	long i, N;
+
+	N = get_config_var_as_long(tc, "iterations");
+	ATF_REQUIRE(N > 0);
+
+	srand48(time(NULL));
+
+	ATF_FOR_LOOP(i, N, i++) {
+		/* float */
+		fx = mrand48() + 0.5;
+		fy = lroundf(fx);
+		printf("%f %f\n", fx, fy);
+		ATF_PASS_OR_BREAK(fabsf(fy) > fabsf(fx));
+
+		/* double */
+		dx = mrand48() + 0.5;
+		dy = lround(dx);
+		ATF_PASS_OR_BREAK(fabs(dy) > fabs(dx));
+
+		/* long double */
+#if defined(HAVE_LROUNDL) && defined(HAVE_FABSL)
+		ldx = mrand48() + 0.5;
+		ldy = lroundl(ldx);
+		ATF_PASS_OR_BREAK(fabsl(ldy) > fabsl(ldx));
+#endif
+	}
+}
+
 /* Add test cases to test program */
 ATF_TP_ADD_TCS(tp)
 {
 	ATF_TP_ADD_TC(tp, test_lround1);
 	ATF_TP_ADD_TC(tp, test_lround2);
+	ATF_TP_ADD_TC(tp, test_lround3);
+	ATF_TP_ADD_TC(tp, test_lround4);
 
 	return atf_no_error();
 }
