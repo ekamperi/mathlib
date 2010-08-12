@@ -50,19 +50,19 @@ t2table[] = {
 	 * and an unspecified value is returned
 	 */
 #ifdef  INFINITY
-        INFINITY,
+	INFINITY,
 	-INFINITY,
 #endif
 #ifdef  HUGE_VAL
-        HUGE_VAL,
+	HUGE_VAL,
 	-HUGE_VAL,
 #endif
 #ifdef  HUGE_VALF
-        HUGE_VALF,
+	HUGE_VALF,
 	-HUGE_VALF,
 #endif
 #ifdef  HUGE_VALL
-        HUGE_VALL,
+	HUGE_VALL,
 	-HUGE_VALL
 #endif
 
@@ -107,7 +107,7 @@ ATF_TC_BODY(test_lround2, tc)
 		errno = 0;
 		clear_exceptions();
 		(void)lround((double)t2table[i]);
-                ATF_CHECK(iserrno_equalto(EDOM));
+		ATF_CHECK(iserrno_equalto(EDOM));
 		ATF_CHECK(raised_exceptions(MY_FE_INVALID));
 
 		/* long double */
@@ -115,7 +115,7 @@ ATF_TC_BODY(test_lround2, tc)
 		errno = 0;
 		clear_exceptions();
 		(void)lroundl(t2table[i]);
-                ATF_CHECK(iserrno_equalto(EDOM));
+		ATF_CHECK(iserrno_equalto(EDOM));
 		ATF_CHECK(raised_exceptions(MY_FE_INVALID));
 #endif
 	}
