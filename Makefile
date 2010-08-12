@@ -258,6 +258,12 @@ t_lround: $(DEPS_T_LROUND)
 	$(CC99) -o t_lround $(DEPS_T_LROUND) $(CFLAGS) $(LIBS)
 
 
+_DEPS_T_LLROUND = t_llround.o subr_atf.o subr_errhandling.o subr_fpcmp.o subr_random.o
+ DEPS_T_LLROUND = $(_DEPS_T_LLROUND:%=obj/%)
+t_llround: $(DEPS_T_LLROUND)
+	$(CC99) -o t_llround $(DEPS_T_LLROUND) $(CFLAGS) $(LIBS)
+
+
 _DEPS_T_MAC = t_mac.o subr_atf.o subr_errhandling.o subr_random.o
  DEPS_T_MAC = $(_DEPS_T_MAC:%=obj/%)
 t_mac: $(DEPS_T_MAC)
