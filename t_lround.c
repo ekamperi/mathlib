@@ -146,7 +146,7 @@ ATF_TC_BODY(test_lround3, tc)
 
 	ATF_FOR_LOOP(i, N, i++) {
 		/* float */
-		fx = random_float_range(FP_NORMAL, -LONG_MAX, LONG_MAX);
+		fx = random_float_range_in(FP_NORMAL, -LONG_MAX, LONG_MAX);
 		errno = 0;
 		clear_exceptions();
 		(void)lroundf(fx);
@@ -154,7 +154,7 @@ ATF_TC_BODY(test_lround3, tc)
 		ATF_PASS_OR_BREAK(not_raised_exceptions(MY_FE_INVALID));
 
 		/* double */
-		dx = random_double_range(FP_NORMAL, -LONG_MAX, LONG_MAX);
+		dx = random_double_range_in(FP_NORMAL, -LONG_MAX, LONG_MAX);
 		errno = 0;
 		clear_exceptions();
 		(void)lround(dx);
@@ -163,7 +163,7 @@ ATF_TC_BODY(test_lround3, tc)
 
 		/* long double */
 #ifdef	HAVE_LROUNDL
-		ldx = random_long_double_range(FP_NORMAL, -LONG_MAX, LONG_MAX);
+		ldx = random_long_double_range_in(FP_NORMAL, -LONG_MAX, LONG_MAX);
 		errno = 0;
 		clear_exceptions();
 		(void)lroundl(ldx);
