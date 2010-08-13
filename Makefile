@@ -12,7 +12,7 @@ TESTS=	t_acos t_acosh t_asin t_asinh t_atan t_atan2 t_atanh t_cbrt t_ceil    	\
 	t_fabs t_fdim t_float t_floor t_fmax t_fpclassify t_fpmacros t_frexp  	\
 	t_ilogb t_lrint t_lround t_mac t_nan t_tgmath t_hypot t_log t_log10   	\
 	t_log1p t_log2 t_logb t_ldexp t_nextafter t_pow t_remainder t_rint    	\
-	t_signbit t_sin t_sinh t_sqrt t_trig_ident t_tan t_tanh t_trunc
+	t_round t_signbit t_sin t_sinh t_sqrt t_trig_ident t_tan t_tanh t_trunc
 #TESTS+= t_tgamma t_types
 TESTS+= t_self t_self_complex
 
@@ -298,6 +298,12 @@ _DEPS_T_RINT = t_rint.o subr_atf.o subr_errhandling.o subr_fpcmp.o subr_random.o
  DEPS_T_RINT = $(_DEPS_T_RINT:%=obj/%)
 t_rint: $(DEPS_T_RINT)
 	$(CC99) -o t_rint $(DEPS_T_RINT) $(CFLAGS) $(LIBS)
+
+
+_DEPS_T_ROUND = t_round.o subr_atf.o subr_errhandling.o subr_fpcmp.o subr_random.o
+ DEPS_T_ROUND = $(_DEPS_T_ROUND:%=obj/%)
+t_round: $(DEPS_T_ROUND)
+	$(CC99) -o t_round $(DEPS_T_ROUND) $(CFLAGS) $(LIBS)
 
 
 _DEPS_T_SELF = t_self.o subr_atf.o subr_random.o

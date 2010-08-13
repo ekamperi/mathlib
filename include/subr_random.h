@@ -11,9 +11,17 @@ float random_float(int class);
 double random_double(int class);
 long double random_long_double(int class);
 
-float random_float_range(int class, float min, float max);
-double random_double_range(int class, double min, double max);
-long double random_long_double_range(int class, long double min, long double max);
+float random_float_range_in(int class, float min, float max);
+double random_double_range_in(int class, double min, double max);
+long double random_long_double_range_in(int class,
+					long double min,
+					long double max);
+
+float random_float_range_ex(int class, float min, float max);
+double random_double_range_ex(int class, double min, double max);
+long double random_long_double_range_ex(int class,
+				     long double min,
+				     long double max);
 
 /* Complex numbers */
 float complex random_float_complex(int class);

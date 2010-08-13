@@ -193,7 +193,7 @@ random_float(int fpclass)
 }
 
 float
-random_float_range(int fpclass, float min, float max)
+random_float_range_in(int fpclass, float min, float max)
 {
 	float fx;
 
@@ -205,7 +205,7 @@ random_float_range(int fpclass, float min, float max)
 }
 
 double
-random_double_range(int fpclass, double min, double max)
+random_double_range_in(int fpclass, double min, double max)
 {
 	double dx;
 
@@ -217,13 +217,49 @@ random_double_range(int fpclass, double min, double max)
 }
 
 long double
-random_long_double_range(int fpclass, long double min, long double max)
+random_long_double_range_in(int fpclass, long double min, long double max)
 {
 	long double ldx;
 
         do {
                 ldx = random_long_double(fpclass);
         } while(ldx < min || ldx > max);
+
+        return (ldx);
+}
+
+float
+random_float_range_ex(int fpclass, float min, float max)
+{
+	float fx;
+
+	do {
+		fx = random_float(fpclass);
+	} while(fx <= min || fx >= max);
+
+	return (fx);
+}
+
+double
+random_double_range_ex(int fpclass, double min, double max)
+{
+	double dx;
+
+	do {
+		dx = random_double(fpclass);
+	} while(dx <= min || dx >= max);
+
+	return (dx);
+}
+
+long double
+random_long_double_range_ex(int fpclass, long double min, long double max)
+{
+	long double ldx;
+
+        do {
+                ldx = random_long_double(fpclass);
+	} while(ldx <= min || ldx >= max);
 
         return (ldx);
 }
