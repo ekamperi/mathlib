@@ -845,7 +845,7 @@ ATF_TC_BODY(test_pow510, tc)
 			/* long double */
 #ifdef  HAVE_POWL
 			do {
-				ldy = random_double(FP_NORMAL);
+				ldy = random_long_double(FP_NORMAL);
 			} while (ldy >= 0.0);
 			ATF_PASS_OR_BREAK(fpreal_equall(
 				    powl(t5table[j].x, ldy),
@@ -895,7 +895,7 @@ ATF_TC_BODY(test_pow511, tc)
 			/* long double */
 #ifdef  HAVE_POWL
 			do {
-				ldy = random_double(FP_NORMAL);
+				ldy = random_long_double(FP_NORMAL);
 			} while (ldy <= 0.0);
 			ATF_PASS_OR_BREAK(fpreal_equall(
 				    powl(t5table[j].x, ldy),
