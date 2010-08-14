@@ -8,6 +8,12 @@ CFLAGS=-Wall -W -Wformat-nonliteral -Wcast-align -Wpointer-arith 		\
 CPPFLAGS=-Wall -W -g $(INCLUDE)
 LIBS=-lm -latf-c
 
+TESTS=  t_cabs t_cacos t_cacosh t_carg t_casin t_casinh t_catan t_catanh \
+	t_cimag t_clog t_conj t_creal t_csqrt t_imgconstant
+
+.PHONY: all
+all: $(TESTS)
+
 # For ../subr_*.c
 VPATH = ../
 
@@ -26,11 +32,6 @@ $(OBJDIR)/%.o: %.c |  $(OBJDIR) include/config.h
 	mkdir -p $(OBJDIR)
 	$(CC99) -c -o $@ $< $(CFLAGS)
 
-TESTS=	t_cabs t_cacos t_cacosh t_carg t_casin t_casinh t_catan t_catanh \
-	t_cimag t_clog t_conj t_creal t_csqrt t_imgconstant
-
-.PHONY: all
-all: $(TESTS)
 
 _DEPS_T_CABS = t_cabs.o subr_atf.o subr_fpcmp.o subr_random.o
  DEPS_T_CABS = $(_DEPS_T_CABS:%=$(OBJDIR)/%)
