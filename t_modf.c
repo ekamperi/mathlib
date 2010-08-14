@@ -99,15 +99,15 @@ ATF_TC_BODY(test_modf2, tc)
 		ATF_CHECK(fpreal_equalf(fi, (float)t2table[i].iptr));
 
 		/* double */
-                dy = modf((double)t2table[i].x, &di);
-                ATF_CHECK(fpreal_equal(dy, (double)t2table[i].y));
-                ATF_CHECK(fpreal_equal(di, (double)t2table[i].iptr));
+		dy = modf((double)t2table[i].x, &di);
+		ATF_CHECK(fpreal_equal(dy, (double)t2table[i].y));
+		ATF_CHECK(fpreal_equal(di, (double)t2table[i].iptr));
 
 		/* long double */
 #ifdef	HAVE_MODFL
-                ldy = modfl((float)t2table[i].x, &ldi);
-                ATF_CHECK(fpreal_equalf(ldy, t2table[i].y));
-                ATF_CHECK(fpreal_equalf(ldi, t2table[i].iptr));
+		ldy = modfl((float)t2table[i].x, &ldi);
+		ATF_CHECK(fpreal_equalf(ldy, t2table[i].y));
+		ATF_CHECK(fpreal_equalf(ldi, t2table[i].iptr));
 #endif
 	}
 }
@@ -124,6 +124,9 @@ ATF_TC_HEAD(test_modf3, tc)
 }
 ATF_TC_BODY(test_modf3, tc)
 {
+	float fx, fy, fi;
+	double dx, dy, di;
+	long double ldx, ldy, ldi;
 	long i, N;
 
 	N = get_config_var_as_long(tc, "iterations");
@@ -131,10 +134,24 @@ ATF_TC_BODY(test_modf3, tc)
 
 	ATF_FOR_LOOP(i, N, i++) {
 		/* float */
+		fx = random_float(FP_NORMAL);
+		fy = modff(fx, &fi);
+		ATF_CHECK(signbit(fy) == signbit(fx));
+		ATF_CHECK(signbit(fi) == signbit(fx));
 
 		/* double */
+		dx = random_double(FP_NORMAL);
+		dy = modf(dx, &di);
+		ATF_CHECK(signbit(dy) == signbit(dx));
+		ATF_CHECK(signbit(di) == signbit(dx));
 
 		/* long double */
+#ifdef	HAVE_MODFL
+		ldx = random_long_double(FP_NORMAL);
+		ldy = modfl(ldx, &ldi);
+		ATF_CHECK(signbit(ldy) == signbit(ldx));
+		ATF_CHECK(signbit(ldi) == signbit(ldx));
+#endif
 	}
 }
 
