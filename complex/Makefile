@@ -8,7 +8,7 @@ CFLAGS=-Wall -W -Wformat-nonliteral -Wcast-align -Wpointer-arith 		\
 CPPFLAGS=-Wall -W -g $(INCLUDE)
 LIBS=-lm -latf-c
 
-TESTS=  t_cabs t_cacos t_cacosh t_carg t_casin t_casinh t_catan t_catanh \
+TESTS=  t_cabs t_cacos t_cacosh t_carg t_casin t_casinh t_catan t_catanh	\
 	t_cimag t_clog t_conj t_creal t_csqrt t_imgconstant
 
 .PHONY: all
@@ -28,8 +28,7 @@ include/config.h:
 	@mv include/config.h ../include/config.h
 	@rm -rf include
 
-$(OBJDIR)/%.o: %.c |  $(OBJDIR) include/config.h
-	mkdir -p $(OBJDIR)
+$(OBJDIR)/%.o: %.c | $(OBJDIR) include/config.h
 	$(CC99) -c -o $@ $< $(CFLAGS)
 
 

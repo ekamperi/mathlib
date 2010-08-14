@@ -9,17 +9,17 @@ CFLAGS=-Wall -W -Wformat-nonliteral -Wcast-align -Wpointer-arith 		\
 CPPFLAGS=-Wall -W -g $(INCLUDE)
 LIBS=-lm -latf-c
 
-# For ../subr_*.c
-VPATH = ../
-
-# Don't use 'obj' or funny things will happen with VPATH set to ../
-OBJDIR = obj-fenv
-
 TESTS=  t_extern t_feclearexcept t_fegetround t_fegetexceptflag t_fenv          \
 	t_feraiseexcept t_fesetenv t_fesetexceptflag t_ieeefp t_overrun
 
 .PHONY: all
 all: $(TESTS)
+
+# For ../subr_*.c
+VPATH = ../
+
+# Don't use 'obj' or funny things will happen with VPATH set to ../
+OBJDIR = obj-fenv
 
 $(OBJDIR):
 	mkdir -p $(OBJDIR)
