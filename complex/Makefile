@@ -14,7 +14,15 @@ VPATH = ../
 # Don't use 'obj' or funny things will happen with VPATH set to ../
 OBJDIR = obj-complex
 
-$(OBJDIR)/%.o: %.c
+$(OBJDIR):
+	mkdir -p $(OBJDIR)
+
+include/config.h:
+	autoreconf ../ && ../configure
+	@mv include/config.h ../include/config.h
+	@rm -rf include
+
+$(OBJDIR)/%.o: %.c |  $(OBJDIR) include/config.h
 	mkdir -p $(OBJDIR)
 	$(CC99) -c -o $@ $< $(CFLAGS)
 
