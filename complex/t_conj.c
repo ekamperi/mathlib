@@ -37,9 +37,9 @@ ATF_TC_HEAD(test_conj2, tc)
 }
 ATF_TC_BODY(test_conj2, tc)
 {
-	float complex fcx, fcy;
-	double complex dcx, dcy;
-	long double complex ldcx, ldcy;
+	float complex fcx;
+	double complex dcx;
+	long double complex ldcx;
 	long i, N;
 
 	N = get_config_var_as_long(tc, "iterations");
