@@ -15,6 +15,12 @@ VPATH = ../
 # Don't use 'obj' or funny things will happen with VPATH set to ../
 OBJDIR = obj-fenv
 
+TESTS=  t_extern t_feclearexcept t_fegetround t_fegetexceptflag t_fenv          \
+	t_feraiseexcept t_fesetenv t_fesetexceptflag t_ieeefp t_overrun
+
+.PHONY: all
+all: $(TESTS)
+
 $(OBJDIR):
 	mkdir -p $(OBJDIR)
 
@@ -29,11 +35,6 @@ $(OBJDIR)/%.o: %.c | $(OBJDIR) include/config.h
 $(OBJDIR)/%o: %cpp | $(OBJDIR) include/config.h
 	$(CPP) -c -o $@ $< $(CPPFLAGS)
 
-TESTS=	t_extern t_feclearexcept t_fegetround t_fegetexceptflag t_fenv 		\
-	t_feraiseexcept t_fesetenv t_fesetexceptflag t_ieeefp t_overrun
-
-.PHONY: all
-all: $(TESTS)
 
 _DEPS_T_EXTERN = t_extern.o
  DEPS_T_EXTERN = $(_DEPS_T_EXTERN:%=$(OBJDIR)/%)
