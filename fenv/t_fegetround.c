@@ -1,8 +1,9 @@
+#include <atf-c.h>
 #include <fenv.h>
 #include <stdio.h>
 #include <stdlib.h>
 
-#include <atf-c.h>
+#pragma STDC FENV_ACCESS ON
 
 /*
  * Test case 1 -- Basic functionality
@@ -16,7 +17,6 @@ ATF_TC_HEAD(test_fegetground, tc)
 }
 ATF_TC_BODY(test_fegetground, tc)
 {
-#pragma STDC FENV_ACCESS ON
 	int rounddir;
 	rounddir = fegetround();
 	ATF_CHECK(rounddir >= 0);
