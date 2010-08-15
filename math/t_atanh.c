@@ -127,7 +127,7 @@ ATF_TC_BODY(test_atanh3, tc)
 #ifdef	HUGE_VALF
 		ATF_CHECK(fpreal_equalf(atanhf(t3table[i].x), HUGE_VALF));
 #endif
-		ATF_CHECK(iserrno_equalto(ERANGE));
+		ATF_CHECK(errno_equalto(ERANGE));
 		ATF_CHECK(raised_exceptions(MY_FE_DIVBYZERO));
 
 		/* double */
@@ -136,7 +136,7 @@ ATF_TC_BODY(test_atanh3, tc)
 #ifdef	HUGE_VAL
 		ATF_CHECK(fpreal_equal(atanh(t3table[i].x), HUGE_VAL));
 #endif
-		ATF_CHECK(iserrno_equalto(ERANGE));
+		ATF_CHECK(errno_equalto(ERANGE));
 		ATF_CHECK(raised_exceptions(MY_FE_DIVBYZERO));
 
 		    /* long double */
@@ -146,7 +146,7 @@ ATF_TC_BODY(test_atanh3, tc)
 #ifdef	HUGE_VALL
 		ATF_CHECK(fpreal_equall(atanhl(t3table[i].x), HUGE_VALL));
 #endif
-		ATF_CHECK(iserrno_equalto(ERANGE));
+		ATF_CHECK(errno_equalto(ERANGE));
 		ATF_CHECK(raised_exceptions(MY_FE_DIVBYZERO));
 #endif	/* HAVE_ATANHL */
 	}
@@ -215,14 +215,14 @@ ATF_TC_BODY(test_atanh4, tc)
 		errno = 0;
 		clear_exceptions();
 		ATF_CHECK_IFNAN(atanhf(t3table[i].x));
-		ATF_CHECK(iserrno_equalto(EDOM));
+		ATF_CHECK(errno_equalto(EDOM));
 		ATF_CHECK(raised_exceptions(MY_FE_INVALID));
 
 		/* double */
 		errno = 0;
 		clear_exceptions();
 		ATF_CHECK_IFNAN(atanh(t3table[i].x));
-		ATF_CHECK(iserrno_equalto(EDOM));
+		ATF_CHECK(errno_equalto(EDOM));
 		ATF_CHECK(raised_exceptions(MY_FE_INVALID));
 
 		/* long double */
@@ -230,7 +230,7 @@ ATF_TC_BODY(test_atanh4, tc)
 		errno = 0;
 		clear_exceptions();
 		ATF_CHECK_IFNAN(atanhl(t3table[i].x));
-		ATF_CHECK(iserrno_equalto(EDOM));
+		ATF_CHECK(errno_equalto(EDOM));
 		ATF_CHECK(raised_exceptions(MY_FE_INVALID));
 #endif
 	}

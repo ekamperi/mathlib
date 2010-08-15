@@ -149,7 +149,7 @@ ATF_TC_BODY(test_expm13, tc)
 		clear_exceptions();
 		(void)expm1(dx);
 
-		ATF_PASS_OR_BREAK(iserrno_equalto(ERANGE));
+		ATF_PASS_OR_BREAK(errno_equalto(ERANGE));
 		ATF_PASS_OR_BREAK(raised_exceptions(MY_FE_OVERFLOW));
 	}
 }

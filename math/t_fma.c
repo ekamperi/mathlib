@@ -131,7 +131,7 @@ ATF_TC_BODY(test_fma3, tc)
 		clear_exceptions();
 		fw = fmaf(fx, fy, signbit(fy) ? fy : -fy);
 		ATF_CHECK_IFNAN(fw);
-		ATF_CHECK(iserrno_equalto(EDOM));
+		ATF_CHECK(errno_equalto(EDOM));
 		ATF_CHECK(raised_exceptions(MY_FE_INVALID));
 
 		/* double */
@@ -142,7 +142,7 @@ ATF_TC_BODY(test_fma3, tc)
 		clear_exceptions();
 		dw = fma(dx, dy, signbit(dy) ? dy : -dy);
 		ATF_CHECK_IFNAN(dw);
-		ATF_CHECK(iserrno_equalto(EDOM));
+		ATF_CHECK(errno_equalto(EDOM));
 		ATF_CHECK(raised_exceptions(MY_FE_INVALID));
 
 		/* long double */
@@ -154,7 +154,7 @@ ATF_TC_BODY(test_fma3, tc)
 		clear_exceptions();
 		ldw = fmal(ldx, ldy, signbit(ldy) ? ldy : -ldy);
 		ATF_CHECK_IFNAN(ldw);
-		ATF_CHECK(iserrno_equalto(EDOM));
+		ATF_CHECK(errno_equalto(EDOM));
 		ATF_CHECK(raised_exceptions(MY_FE_INVALID));
 #endif
 	}
@@ -224,7 +224,7 @@ ATF_TC_BODY(test_fma4, tc)
 			  (float)t4table[i].y,
 			  random_float(FP_NORMAL));
 		ATF_CHECK_IFNAN(fw);
-		ATF_CHECK(iserrno_equalto(EDOM));
+		ATF_CHECK(errno_equalto(EDOM));
 		ATF_CHECK(raised_exceptions(MY_FE_INVALID));
 
 		/* double */
@@ -234,7 +234,7 @@ ATF_TC_BODY(test_fma4, tc)
 			 (double)t4table[i].y,
 			 random_double(FP_NORMAL));
 		ATF_CHECK_IFNAN(dw);
-		ATF_CHECK(iserrno_equalto(EDOM));
+		ATF_CHECK(errno_equalto(EDOM));
 		ATF_CHECK(raised_exceptions(MY_FE_INVALID));
 
 		/* long double */
@@ -245,7 +245,7 @@ ATF_TC_BODY(test_fma4, tc)
 			   t4table[i].y,
 			   random_long_double(FP_NORMAL));
 		ATF_CHECK_IFNAN(ldw);
-		ATF_CHECK(iserrno_equalto(EDOM));
+		ATF_CHECK(errno_equalto(EDOM));
 		ATF_CHECK(raised_exceptions(MY_FE_INVALID));
 #endif
 	}
@@ -283,7 +283,7 @@ ATF_TC_BODY(test_fma5, tc)
 		ATF_CHECK(isnan(fw));
 		/* domain error is optional */
 		if (errno) {
-			ATF_CHECK(iserrno_equalto(EDOM));
+			ATF_CHECK(errno_equalto(EDOM));
 		}
 		if (raised_exceptions(MY_FE_ALL_EXCEPT)) {
 			ATF_CHECK(raised_exceptions(MY_FE_INVALID));
@@ -296,7 +296,7 @@ ATF_TC_BODY(test_fma5, tc)
 		ATF_CHECK(isnan(dw));
 		/* domain error is optional */
 		if (errno) {
-			ATF_CHECK(iserrno_equalto(EDOM));
+			ATF_CHECK(errno_equalto(EDOM));
 		}
 		if (raised_exceptions(MY_FE_ALL_EXCEPT)) {
 			ATF_CHECK(raised_exceptions(MY_FE_INVALID));
@@ -310,7 +310,7 @@ ATF_TC_BODY(test_fma5, tc)
 		ATF_CHECK(isnan(dw));
 		/* domain error is optional */
 		if (errno) {
-			ATF_CHECK(iserrno_equalto(EDOM));
+			ATF_CHECK(errno_equalto(EDOM));
 		}
 		if (raised_exceptions(MY_FE_ALL_EXCEPT)) {
 			ATF_CHECK(raised_exceptions(MY_FE_INVALID));

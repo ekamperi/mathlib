@@ -137,7 +137,7 @@ ATF_TC_BODY(test_acosh3, tc)
 			clear_exceptions();
 			fy = acoshf(-(float)t2table[i].x);
 			ATF_CHECK_IFNAN(fy);
-			ATF_CHECK(iserrno_equalto(EDOM));
+			ATF_CHECK(errno_equalto(EDOM));
 			ATF_CHECK(raised_exceptions(MY_FE_INVALID));
 
 			/* double */
@@ -145,7 +145,7 @@ ATF_TC_BODY(test_acosh3, tc)
 			clear_exceptions();
 			dy = acosh(-(double)t2table[i].x);
 			ATF_CHECK_IFNAN(dy);
-			ATF_CHECK(iserrno_equalto(EDOM));
+			ATF_CHECK(errno_equalto(EDOM));
 			ATF_CHECK(raised_exceptions(MY_FE_INVALID));
 
 			/* long double */
@@ -154,7 +154,7 @@ ATF_TC_BODY(test_acosh3, tc)
 			clear_exceptions();
 			ldy = acoshl(-t2table[i].x);
 			ATF_CHECK_IFNAN(ldy);
-			ATF_CHECK(iserrno_equalto(EDOM));
+			ATF_CHECK(errno_equalto(EDOM));
 			ATF_CHECK(raised_exceptions(MY_FE_INVALID));
 #endif
 		}

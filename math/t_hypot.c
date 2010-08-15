@@ -169,7 +169,7 @@ ATF_TC_BODY(test_hypot3, tc)
 	errno = 0;
 	clear_exceptions();
 	(void)hypot(x, y);
-	ATF_CHECK(iserrno_equalto(0));
+	ATF_CHECK(errno_equalto(0));
 	ATF_CHECK(not_raised_exceptions(MY_FE_OVERFLOW));
 
 	/* This should indeed overflow */
@@ -207,7 +207,7 @@ ATF_TC_BODY(test_hypot4, tc)
 	errno = 0;
 	clear_exceptions();
 	(void)hypot(x, y);
-	ATF_CHECK(iserrno_equalto(0));
+	ATF_CHECK(errno_equalto(0));
 	ATF_CHECK(not_raised_exceptions(MY_FE_UNDERFLOW));
 }
 

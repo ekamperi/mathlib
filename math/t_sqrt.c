@@ -145,7 +145,7 @@ ATF_TC_BODY(test_sqrt3, tc)
 		clear_exceptions();
 		fy = sqrtf(fx);
 		ATF_CHECK_IFNAN(fy);
-		ATF_CHECK(iserrno_equalto(EDOM));
+		ATF_CHECK(errno_equalto(EDOM));
 		ATF_CHECK(raised_exceptions(MY_FE_INVALID));
 
 		/* double */
@@ -157,7 +157,7 @@ ATF_TC_BODY(test_sqrt3, tc)
 		clear_exceptions();
 		dy = sqrt(fx);
 		ATF_CHECK_IFNAN(dy);
-		ATF_CHECK(iserrno_equalto(EDOM));
+		ATF_CHECK(errno_equalto(EDOM));
 		ATF_CHECK(raised_exceptions(MY_FE_INVALID));
 
 
@@ -171,7 +171,7 @@ ATF_TC_BODY(test_sqrt3, tc)
 		clear_exceptions();
 		ldy = sqrtl(ldx);
 		ATF_CHECK_IFNAN(ldy);
-		ATF_CHECK(iserrno_equalto(EDOM));
+		ATF_CHECK(errno_equalto(EDOM));
 		ATF_CHECK(raised_exceptions(MY_FE_INVALID));
 #endif
 	}
@@ -235,7 +235,7 @@ ATF_TC_BODY(test_sqrt4, tc)
 		clear_exceptions();
 		fy = sqrtf((float)t4table[i]);
 		ATF_CHECK_IFNAN(fy);
-		ATF_CHECK(iserrno_equalto(EDOM));
+		ATF_CHECK(errno_equalto(EDOM));
 		ATF_CHECK(raised_exceptions(MY_FE_INVALID));
 
 		/* double */
@@ -243,7 +243,7 @@ ATF_TC_BODY(test_sqrt4, tc)
 		clear_exceptions();
 		dy = sqrt((double)t4table[i]);
 		ATF_CHECK_IFNAN(dy);
-		ATF_CHECK(iserrno_equalto(EDOM));
+		ATF_CHECK(errno_equalto(EDOM));
 		ATF_CHECK(raised_exceptions(MY_FE_INVALID));
 
 		/* long double */
@@ -252,7 +252,7 @@ ATF_TC_BODY(test_sqrt4, tc)
 		clear_exceptions();
 		ldy = sqrtl(t4table[i]);
 		ATF_CHECK_IFNAN(ldy);
-		ATF_CHECK(iserrno_equalto(EDOM));
+		ATF_CHECK(errno_equalto(EDOM));
 		ATF_CHECK(raised_exceptions(MY_FE_INVALID));
 #endif
 	}

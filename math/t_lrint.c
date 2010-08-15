@@ -82,14 +82,14 @@ ATF_TC_BODY(test_lrint2, tc)
 		errno = 0;
 		clear_exceptions();
 		(void)lrintf((float)t2table[i]);
-		ATF_CHECK(iserrno_equalto(ERANGE));
+		ATF_CHECK(errno_equalto(ERANGE));
 		ATF_CHECK(raised_exceptions(MY_FE_INVALID));
 
 		/* double */
 		errno = 0;
 		clear_exceptions();
 		lrint((double)t2table[i]);
-		ATF_CHECK(iserrno_equalto(ERANGE));
+		ATF_CHECK(errno_equalto(ERANGE));
 		ATF_CHECK(raised_exceptions(MY_FE_INVALID));
 
 		/* long double */
@@ -97,7 +97,7 @@ ATF_TC_BODY(test_lrint2, tc)
 		errno = 0;
 		clear_exceptions();
 		lrintl(t2table[i]);
-		ATF_CHECK(iserrno_equalto(ERANGE));
+		ATF_CHECK(errno_equalto(ERANGE));
 		ATF_CHECK(raised_exceptions(MY_FE_INVALID));
 #endif
 	}
@@ -141,14 +141,14 @@ ATF_TC_BODY(test_lrint3, tc)
 		errno = 0;
 		clear_exceptions();
 		(void)rint(dx);
-		ATF_PASS_OR_BREAK(iserrno_equalto(ERANGE));
+		ATF_PASS_OR_BREAK(errno_equalto(ERANGE));
 		ATF_PASS_OR_BREAK(raised_exceptions(MY_FE_INVALID));
 
 		/* negative */
 		errno = 0;
 		clear_exceptions();
 		(void)rint(-dx);
-		ATF_PASS_OR_BREAK(iserrno_equalto(ERANGE));
+		ATF_PASS_OR_BREAK(errno_equalto(ERANGE));
 		ATF_PASS_OR_BREAK(raised_exceptions(MY_FE_INVALID));
 
 		/* long double */
@@ -161,14 +161,14 @@ ATF_TC_BODY(test_lrint3, tc)
 		errno = 0;
 		clear_exceptions();
 		(void)lrintl(ldx);
-		ATF_PASS_OR_BREAK(iserrno_equalto(ERANGE));
+		ATF_PASS_OR_BREAK(errno_equalto(ERANGE));
 		ATF_PASS_OR_BREAK(raised_exceptions(MY_FE_INVALID));
 
 		/* negative */
 		errno = 0;
 		clear_exceptions();
 		(void)lrintl(-ldx);
-		ATF_PASS_OR_BREAK(iserrno_equalto(ERANGE));
+		ATF_PASS_OR_BREAK(errno_equalto(ERANGE));
 		ATF_PASS_OR_BREAK(raised_exceptions(MY_FE_INVALID));
 #endif
 	}

@@ -203,7 +203,7 @@ ATF_TC_BODY(test_nextafter4, tc)
 		    nextafterf(FLT_MAX, +INFINITY),
 		    HUGE_VALF));
 
-	ATF_CHECK(iserrno_equalto(ERANGE));
+	ATF_CHECK(errno_equalto(ERANGE));
 	ATF_CHECK(raised_exceptions(MY_FE_OVERFLOW));
 
 	/* double */
@@ -213,7 +213,7 @@ ATF_TC_BODY(test_nextafter4, tc)
 		    nextafter(DBL_MAX, +INFINITY),
 		    HUGE_VAL));
 
-	ATF_CHECK(iserrno_equalto(ERANGE));
+	ATF_CHECK(errno_equalto(ERANGE));
 	ATF_CHECK(raised_exceptions(MY_FE_OVERFLOW));
 
 	/* long double */
@@ -225,7 +225,7 @@ ATF_TC_BODY(test_nextafter4, tc)
 		    nextafterl(LDBL_MAX, +INFINITY),
 		    HUGE_VALL));
 
-	ATF_CHECK(iserrno_equalto(ERANGE));
+	ATF_CHECK(errno_equalto(ERANGE));
 	ATF_CHECK(raised_exceptions(MY_FE_OVERFLOW));
 #endif	/* HAVE_NEXTAFTERL */
 #endif	/* INFINITY */

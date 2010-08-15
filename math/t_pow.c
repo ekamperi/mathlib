@@ -90,7 +90,7 @@ ATF_TC_BODY(test_pow2, tc)
 #ifdef	NAN
 		ATF_PASS_OR_BREAK(isnan(powf(fx, fy)));
 #endif
-		ATF_PASS_OR_BREAK(iserrno_equalto(EDOM));
+		ATF_PASS_OR_BREAK(errno_equalto(EDOM));
 		ATF_PASS_OR_BREAK(raised_exceptions(MY_FE_INVALID));
 
 		/* double */
@@ -103,7 +103,7 @@ ATF_TC_BODY(test_pow2, tc)
 #ifdef  NAN
 		ATF_PASS_OR_BREAK(isnan(pow(dx, dy)));
 #endif
-		ATF_PASS_OR_BREAK(iserrno_equalto(EDOM));
+		ATF_PASS_OR_BREAK(errno_equalto(EDOM));
 		ATF_PASS_OR_BREAK(raised_exceptions(MY_FE_INVALID));
 
 		/* long double */
@@ -117,7 +117,7 @@ ATF_TC_BODY(test_pow2, tc)
 #ifdef  NAN
 		ATF_PASS_OR_BREAK(isnan(powl(ldx, ldy)));
 #endif
-		ATF_PASS_OR_BREAK(iserrno_equalto(EDOM));
+		ATF_PASS_OR_BREAK(errno_equalto(EDOM));
 		ATF_PASS_OR_BREAK(raised_exceptions(MY_FE_INVALID));
 #endif
 	}
@@ -145,7 +145,7 @@ ATF_TC_BODY(test_pow3, tc)
 	errno = 0;
 	clear_exceptions();
 	ATF_CHECK(powf(FLT_MAX, FLT_MAX) == HUGE_VALF);
-	ATF_CHECK(iserrno_equalto(ERANGE));
+	ATF_CHECK(errno_equalto(ERANGE));
 	ATF_CHECK(raised_exceptions(MY_FE_OVERFLOW));
 #endif
 
@@ -154,7 +154,7 @@ ATF_TC_BODY(test_pow3, tc)
 	errno = 0;
 	clear_exceptions();
 	ATF_CHECK(pow(DBL_MAX, DBL_MAX) == HUGE_VAL);
-	ATF_CHECK(iserrno_equalto(ERANGE));
+	ATF_CHECK(errno_equalto(ERANGE));
 	ATF_CHECK(raised_exceptions(MY_FE_OVERFLOW));
 #endif
 
@@ -163,7 +163,7 @@ ATF_TC_BODY(test_pow3, tc)
 	errno = 0;
 	clear_exceptions();
 	ATF_CHECK(powl(LDBL_MAX, LDBL_MAX) == HUGE_VALL);
-	ATF_CHECK(iserrno_equalto(ERANGE));
+	ATF_CHECK(errno_equalto(ERANGE));
 	ATF_CHECK(raised_exceptions(MY_FE_OVERFLOW));
 #endif
 }

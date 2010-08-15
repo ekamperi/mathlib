@@ -107,7 +107,7 @@ ATF_TC_BODY(test_ilogb2, tc)
 		ATF_CHECK(fpreal_equalf(
 			    ilogbf((float)t2table[i].x),
 				   (float)t2table[i].y));
-		ATF_CHECK(iserrno_equalto(EDOM));
+		ATF_CHECK(errno_equalto(EDOM));
 		ATF_CHECK(raised_exceptions(MY_FE_INVALID));
 
 		/* double */
@@ -116,7 +116,7 @@ ATF_TC_BODY(test_ilogb2, tc)
 		ATF_CHECK(fpreal_equal(
 			    ilogb((double)t2table[i].x),
 				  (double)t2table[i].y));
-		ATF_CHECK(iserrno_equalto(EDOM));
+		ATF_CHECK(errno_equalto(EDOM));
 		ATF_CHECK(raised_exceptions(MY_FE_INVALID));
 
 		/* long double */
@@ -126,7 +126,7 @@ ATF_TC_BODY(test_ilogb2, tc)
 		ATF_CHECK(fpreal_equall(
 			    ilogbl(t2table[i].x),
 				   t2table[i].y));
-		ATF_CHECK(iserrno_equalto(EDOM));
+		ATF_CHECK(errno_equalto(EDOM));
 		ATF_CHECK(raised_exceptions(MY_FE_INVALID));
 #endif
 	}
@@ -176,7 +176,7 @@ ATF_TC_BODY(test_ilogb3, tc)
 		errno = 0;
 		clear_exceptions();
 		ATF_PASS_OR_BREAK(fpreal_equalf(ilogbf(fx), INT_MAX));
-		ATF_PASS_OR_BREAK(iserrno_equalto(EDOM));
+		ATF_PASS_OR_BREAK(errno_equalto(EDOM));
 		ATF_PASS_OR_BREAK(raised_exceptions(MY_FE_INVALID));
 
 		/* double */
@@ -186,7 +186,7 @@ ATF_TC_BODY(test_ilogb3, tc)
 		errno = 0;
 		clear_exceptions();
 		ATF_PASS_OR_BREAK(fpreal_equal(ilogb(dx), INT_MAX));
-		ATF_PASS_OR_BREAK(iserrno_equalto(EDOM));
+		ATF_PASS_OR_BREAK(errno_equalto(EDOM));
 		ATF_PASS_OR_BREAK(raised_exceptions(MY_FE_INVALID));
 
 		/* long double */
@@ -197,7 +197,7 @@ ATF_TC_BODY(test_ilogb3, tc)
 		errno = 0;
 		clear_exceptions();
 		ATF_PASS_OR_BREAK(fpreal_equall(ilogbl(ldx), INT_MAX));
-		ATF_PASS_OR_BREAK(iserrno_equalto(EDOM));
+		ATF_PASS_OR_BREAK(errno_equalto(EDOM));
 		ATF_PASS_OR_BREAK(raised_exceptions(MY_FE_INVALID));
 #endif
 	}
@@ -248,7 +248,7 @@ ATF_TC_BODY(test_ilogb4, tc)
 		errno = 0;
 		clear_exceptions();
 		ATF_PASS_OR_BREAK(fpreal_equalf(ilogbf(fx), INT_MIN));
-		ATF_PASS_OR_BREAK(iserrno_equalto(EDOM));
+		ATF_PASS_OR_BREAK(errno_equalto(EDOM));
 		ATF_PASS_OR_BREAK(raised_exceptions(MY_FE_INVALID));
 
 		/* double */
@@ -258,7 +258,7 @@ ATF_TC_BODY(test_ilogb4, tc)
 		errno = 0;
 		clear_exceptions();
 		ATF_PASS_OR_BREAK(fpreal_equal(ilogb(dx), INT_MIN));
-		ATF_PASS_OR_BREAK(iserrno_equalto(EDOM));
+		ATF_PASS_OR_BREAK(errno_equalto(EDOM));
 		ATF_PASS_OR_BREAK(raised_exceptions(MY_FE_INVALID));
 
 		/* long double */
@@ -269,7 +269,7 @@ ATF_TC_BODY(test_ilogb4, tc)
 		errno = 0;
 		clear_exceptions();
 		ATF_PASS_OR_BREAK(fpreal_equall(ilogbl(ldx), INT_MIN));
-		ATF_PASS_OR_BREAK(iserrno_equalto(EDOM));
+		ATF_PASS_OR_BREAK(errno_equalto(EDOM));
 		ATF_PASS_OR_BREAK(raised_exceptions(MY_FE_INVALID));
 #endif
 	}

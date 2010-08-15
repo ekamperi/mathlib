@@ -75,7 +75,7 @@ ATF_TC_BODY(test_log102, tc)
 #ifdef  HUGE_VALF
 		ATF_CHECK(fy == -HUGE_VALF);
 #endif
-		ATF_CHECK(iserrno_equalto(ERANGE));
+		ATF_CHECK(errno_equalto(ERANGE));
 		ATF_CHECK(raised_exceptions(MY_FE_DIVBYZERO));
 
 		/* double */
@@ -85,7 +85,7 @@ ATF_TC_BODY(test_log102, tc)
 #ifdef	HUGE_VAL
 		ATF_CHECK(dy == -HUGE_VAL);
 #endif
-		ATF_CHECK(iserrno_equalto(ERANGE));
+		ATF_CHECK(errno_equalto(ERANGE));
 		ATF_CHECK(raised_exceptions(MY_FE_DIVBYZERO));
 
 		/* long double */
@@ -96,7 +96,7 @@ ATF_TC_BODY(test_log102, tc)
 #ifdef  HUGE_VALL
 		ATF_CHECK(ldy == -HUGE_VALL);
 #endif
-		ATF_CHECK(iserrno_equalto(ERANGE));
+		ATF_CHECK(errno_equalto(ERANGE));
 		ATF_CHECK(raised_exceptions(MY_FE_DIVBYZERO));
 #endif	/* HAVE_LOG10L */
 	}
@@ -164,7 +164,7 @@ ATF_TC_BODY(test_log103, tc)
 		clear_exceptions();
 		fy = log10f((float)t3table[i]);
 		ATF_CHECK_IFNAN(fy);
-		ATF_CHECK(iserrno_equalto(EDOM));
+		ATF_CHECK(errno_equalto(EDOM));
 		ATF_CHECK(raised_exceptions(MY_FE_INVALID));
 
 		/* double */
@@ -172,7 +172,7 @@ ATF_TC_BODY(test_log103, tc)
 		clear_exceptions();
 		dy = log10((double)t3table[i]);
 		ATF_CHECK_IFNAN(dy);
-		ATF_CHECK(iserrno_equalto(EDOM));
+		ATF_CHECK(errno_equalto(EDOM));
 		ATF_CHECK(raised_exceptions(MY_FE_INVALID));
 
 		/* long double */
@@ -181,7 +181,7 @@ ATF_TC_BODY(test_log103, tc)
 		clear_exceptions();
 		ldy = log10l(t3table[i]);
 		ATF_CHECK_IFNAN(ldy);
-		ATF_CHECK(iserrno_equalto(EDOM));
+		ATF_CHECK(errno_equalto(EDOM));
 		ATF_CHECK(raised_exceptions(MY_FE_INVALID));
 #endif
 	}
@@ -203,7 +203,7 @@ ATF_TC_BODY(test_log103, tc)
 #ifdef  NAN
 		ATF_PASS_OR_BREAK(isnan(fy));
 #endif
-		ATF_PASS_OR_BREAK(iserrno_equalto(EDOM));
+		ATF_PASS_OR_BREAK(errno_equalto(EDOM));
 		ATF_PASS_OR_BREAK(raised_exceptions(MY_FE_INVALID));
 
 		/* double */
@@ -216,7 +216,7 @@ ATF_TC_BODY(test_log103, tc)
 #ifdef  NAN
 		ATF_PASS_OR_BREAK(isnan(dy));
 #endif
-		ATF_PASS_OR_BREAK(iserrno_equalto(EDOM));
+		ATF_PASS_OR_BREAK(errno_equalto(EDOM));
 		ATF_PASS_OR_BREAK(raised_exceptions(MY_FE_INVALID));
 
 		/* long double */
@@ -230,7 +230,7 @@ ATF_TC_BODY(test_log103, tc)
 #ifdef  NAN
 		ATF_PASS_OR_BREAK(isnan(ldy));
 #endif
-		ATF_PASS_OR_BREAK(iserrno_equalto(EDOM));
+		ATF_PASS_OR_BREAK(errno_equalto(EDOM));
 		ATF_PASS_OR_BREAK(raised_exceptions(MY_FE_INVALID));
 #endif	/* HAVE_LOG10L */
 	}

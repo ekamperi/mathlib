@@ -171,7 +171,7 @@ ATF_TC_BODY(test_remainder3, tc)
 
 		if (isinf(fx) || isinf(fy) || iszero(fx) || iszero(fy)) {
 			ATF_CHECK_IFNAN(fz);
-			ATF_CHECK(iserrno_equalto(EDOM));
+			ATF_CHECK(errno_equalto(EDOM));
 			ATF_CHECK(raised_exceptions(MY_FE_INVALID));
 		} else {
 			ATF_CHECK_NOTNAN(fz);
@@ -186,7 +186,7 @@ ATF_TC_BODY(test_remainder3, tc)
 
 		if (isinf(dx) || isinf(dy) || iszero(dx) || iszero(dy)) {
 			ATF_CHECK_IFNAN(dz);
-			ATF_CHECK(iserrno_equalto(EDOM));
+			ATF_CHECK(errno_equalto(EDOM));
 			ATF_CHECK(raised_exceptions(MY_FE_INVALID));
 		} else {
 			ATF_CHECK_NOTNAN(dz);
@@ -202,7 +202,7 @@ ATF_TC_BODY(test_remainder3, tc)
 
 		if (isinf(ldx) || isinf(ldy) || iszero(ldx) || iszero(ldy)) {
 			ATF_CHECK_IFNAN(ldz);
-			ATF_CHECK(iserrno_equalto(EDOM));
+			ATF_CHECK(errno_equalto(EDOM));
 			ATF_CHECK(raised_exceptions(MY_FE_INVALID));
 		} else {
 			ATF_CHECK_NOTNAN(ldz);

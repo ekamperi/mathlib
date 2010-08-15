@@ -204,7 +204,7 @@ ATF_TC_BODY(test_erf3, tc)
 		errno = 0;
 		clear_exceptions();
 		(void)erff(fx);
-		ATF_CHECK(iserrno_equalto(0));
+		ATF_CHECK(errno_equalto(0));
 		ATF_CHECK(!raised_exceptions(MY_FE_ALL_EXCEPT));
 
 		/* double */
@@ -214,7 +214,7 @@ ATF_TC_BODY(test_erf3, tc)
 		errno = 0;
 		clear_exceptions();
 		(void)erf(dx);
-		ATF_CHECK(iserrno_equalto(0));
+		ATF_CHECK(errno_equalto(0));
 		ATF_CHECK(!raised_exceptions(MY_FE_ALL_EXCEPT));
 
 		/* long double */
@@ -225,7 +225,7 @@ ATF_TC_BODY(test_erf3, tc)
 		errno = 0;
 		clear_exceptions();
 		(void)erfl(ldx);
-		ATF_CHECK(iserrno_equalto(0));
+		ATF_CHECK(errno_equalto(0));
 		ATF_CHECK(!raised_exceptions(MY_FE_ALL_EXCEPT));
 #endif
 	}

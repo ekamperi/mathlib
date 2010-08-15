@@ -154,7 +154,7 @@ ATF_TC_BODY(test_remquo3, tc)
 
 		if (isinf(fx) || isinf(fy) || iszero(fx) || iszero(fy)) {
 			ATF_CHECK_IFNAN(fz);
-			ATF_PASS_OR_BREAK(iserrno_equalto(EDOM));
+			ATF_PASS_OR_BREAK(errno_equalto(EDOM));
 			ATF_PASS_OR_BREAK(raised_exceptions(MY_FE_INVALID));
 		} else {
 			ATF_CHECK_NOTNAN(fz);
@@ -169,7 +169,7 @@ ATF_TC_BODY(test_remquo3, tc)
 
 		if (isinf(dx) || isinf(dy) || iszero(dx) || iszero(dy)) {
 			ATF_CHECK_IFNAN(dz);
-			ATF_PASS_OR_BREAK(iserrno_equalto(EDOM));
+			ATF_PASS_OR_BREAK(errno_equalto(EDOM));
 			ATF_PASS_OR_BREAK(raised_exceptions(MY_FE_INVALID));
 		} else {
 			ATF_CHECK_NOTNAN(dz);
@@ -185,7 +185,7 @@ ATF_TC_BODY(test_remquo3, tc)
 
 		if (isinf(ldx) || isinf(ldy) || iszero(ldx) || iszero(ldy)) {
 			ATF_CHECK_IFNAN(ldz);
-			ATF_PASS_OR_BREAK(iserrno_equalto(EDOM));
+			ATF_PASS_OR_BREAK(errno_equalto(EDOM));
 			ATF_PASS_OR_BREAK(raised_exceptions(MY_FE_INVALID));
 		} else {
 			ATF_CHECK_NOTNAN(ldz);

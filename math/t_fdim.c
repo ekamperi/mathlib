@@ -131,7 +131,7 @@ ATF_TC_BODY(test_fdim3, tc)
 #ifdef	HUGE_VALF
 		ATF_CHECK(fpreal_equalf(fy, HUGE_VALF));
 #endif
-		ATF_CHECK(iserrno_equalto(ERANGE));
+		ATF_CHECK(errno_equalto(ERANGE));
 		ATF_CHECK(raised_exceptions(MY_FE_OVERFLOW));
 
 		/* double */
@@ -141,7 +141,7 @@ ATF_TC_BODY(test_fdim3, tc)
 #ifdef	HUGE_VAL
 		ATF_CHECK(fpreal_equal(dy, HUGE_VAL));
 #endif
-		ATF_CHECK(iserrno_equalto(ERANGE));
+		ATF_CHECK(errno_equalto(ERANGE));
 		ATF_CHECK(raised_exceptions(MY_FE_OVERFLOW));
 
 		/* long double */
@@ -152,7 +152,7 @@ ATF_TC_BODY(test_fdim3, tc)
 #ifdef	HUGE_VALL
 		ATF_CHECK(fpreal_equall(ldy, HUGE_VALL));
 #endif
-		ATF_CHECK(iserrno_equalto(ERANGE));
+		ATF_CHECK(errno_equalto(ERANGE));
 		ATF_CHECK(raised_exceptions(MY_FE_OVERFLOW));
 #endif	/* HAVE_FDIML */
 	}

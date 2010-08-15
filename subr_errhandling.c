@@ -76,7 +76,7 @@ not_raised_exceptions(int excepts)
  * exceptions is supported in the host environment.
  */
 int
-iserrno_equalto(int error)
+errno_equalto(int error)
 {
 #if defined(math_errhandling) && defined(MATH_ERRNO)		\
 	&& (math_errhandling & MATH_ERRNO)

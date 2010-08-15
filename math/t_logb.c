@@ -68,7 +68,7 @@ ATF_TC_BODY(test_logb2, tc)
 #ifdef  HUGE_VALF
 		ATF_CHECK(fy == -HUGE_VALF);
 #endif
-		ATF_CHECK(iserrno_equalto(ERANGE));
+		ATF_CHECK(errno_equalto(ERANGE));
 		ATF_CHECK(raised_exceptions(MY_FE_DIVBYZERO));
 
 		/* double */
@@ -78,7 +78,7 @@ ATF_TC_BODY(test_logb2, tc)
 #ifdef	HUGE_VAL
 		ATF_CHECK(dy == -HUGE_VAL);
 #endif
-		ATF_CHECK(iserrno_equalto(ERANGE));
+		ATF_CHECK(errno_equalto(ERANGE));
 		ATF_CHECK(raised_exceptions(MY_FE_DIVBYZERO));
 
 		/* long double */
@@ -89,7 +89,7 @@ ATF_TC_BODY(test_logb2, tc)
 #ifdef  HUGE_VALL
 		ATF_CHECK(ldy == -HUGE_VALL);
 #endif
-		ATF_CHECK(iserrno_equalto(ERANGE));
+		ATF_CHECK(errno_equalto(ERANGE));
 		ATF_CHECK(raised_exceptions(MY_FE_DIVBYZERO));
 #endif	/* HAVE_LOGBL */
 	}

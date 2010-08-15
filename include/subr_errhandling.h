@@ -47,7 +47,7 @@ void clear_errno(void);
 int raised_exceptions(int excepts);
 int not_raised_exceptions(int excepts);
 
-int iserrno_equalto(int error);
+int errno_equalto(int error);
 int not_errno_equalto(int error);
 
 void query_errhandling(int *hasfp, int *haserrno);

@@ -162,7 +162,7 @@ ATF_TC_BODY(test_cos4, tc)
 		errno = 0;
 		clear_exceptions();
 		fy = cosf((float)t4table[i]);
-		ATF_CHECK(iserrno_equalto(EDOM));
+		ATF_CHECK(errno_equalto(EDOM));
 		ATF_CHECK(raised_exceptions(MY_FE_INVALID));
 		ATF_CHECK_IFNAN(fy);
 
@@ -170,7 +170,7 @@ ATF_TC_BODY(test_cos4, tc)
 		errno = 0;
 		clear_exceptions();
 		dy = cos((double)t4table[i]);
-		ATF_CHECK(iserrno_equalto(EDOM));
+		ATF_CHECK(errno_equalto(EDOM));
 		ATF_CHECK(raised_exceptions(MY_FE_INVALID));
 		ATF_CHECK_IFNAN(dy);
 
@@ -179,7 +179,7 @@ ATF_TC_BODY(test_cos4, tc)
 		errno = 0;
 		clear_exceptions();
 		ldy = cosl(t4table[i]);
-		ATF_CHECK(iserrno_equalto(EDOM));
+		ATF_CHECK(errno_equalto(EDOM));
 		ATF_CHECK(raised_exceptions(MY_FE_INVALID));
 		ATF_CHECK_IFNAN(ldy);
 #endif

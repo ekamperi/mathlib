@@ -103,14 +103,14 @@ ATF_TC_BODY(test_lround2, tc)
 		errno = 0;
 		clear_exceptions();
 		(void)lroundf((float)t2table[i]);
-		ATF_CHECK(iserrno_equalto(EDOM));
+		ATF_CHECK(errno_equalto(EDOM));
 		ATF_CHECK(raised_exceptions(MY_FE_INVALID));
 
 		/* double */
 		errno = 0;
 		clear_exceptions();
 		(void)lround((double)t2table[i]);
-		ATF_CHECK(iserrno_equalto(EDOM));
+		ATF_CHECK(errno_equalto(EDOM));
 		ATF_CHECK(raised_exceptions(MY_FE_INVALID));
 
 		/* long double */
@@ -118,7 +118,7 @@ ATF_TC_BODY(test_lround2, tc)
 		errno = 0;
 		clear_exceptions();
 		(void)lroundl(t2table[i]);
-		ATF_CHECK(iserrno_equalto(EDOM));
+		ATF_CHECK(errno_equalto(EDOM));
 		ATF_CHECK(raised_exceptions(MY_FE_INVALID));
 #endif
 	}
