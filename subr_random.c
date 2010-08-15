@@ -25,7 +25,7 @@
 
 #undef	DEBUG
 #ifdef  DEBUG
-#define	DPRINTF(x)      do { printf x fflush(NULL); } while(0);
+#define	DPRINTF(x)	printf x; fflush(NULL)
 #else
 #define	DPRINTF(x)
 #endif
