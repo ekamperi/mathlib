@@ -138,7 +138,7 @@ ATF_TC_BODY(test_remquo3, tc)
 	long i, N, idx;
 	int haserrexcept, haserrno, quo;
 
-        N = get_config_var_as_long(tc, "iterations");
+	N = get_config_var_as_long(tc, "iterations");
 	ATF_REQUIRE(N > 0);
 
 	/* XXX: ATF_CHECK_IFNAN -> ATF_PASS_OR_BREAK_... */
@@ -153,7 +153,7 @@ ATF_TC_BODY(test_remquo3, tc)
 		fz = remquof(fx, fy, &quo);
 
 		if (isinf(fx) || isinf(fy) || iszero(fx) || iszero(fy)) {
-			ATF_CHECK_IFNAN(fx);
+			ATF_CHECK_IFNAN(fz);
 			ATF_PASS_OR_BREAK(iserrno_equalto(EDOM));
 			ATF_PASS_OR_BREAK(raised_exceptions(MY_FE_INVALID));
 		} else {
@@ -205,12 +205,58 @@ ATF_TC_BODY(test_remquo3, tc)
 	ATF_REQUIRE(haserrexcept || haserrno);
 }
 
+/*
+ * Test case 4 -- A little bit fuzzing
+ */
+ATF_TC(test_remquo4);
+ATF_TC_HEAD(test_remquo4, tc)
+{
+	atf_tc_set_md_var(tc,
+	    "descr",
+	    "In the object pointed to by quo, a value whose "
+	    "sign is the sign of x/y is stored");
+}
+ATF_TC_BODY(test_remquo4, tc)
+{
+	float fx, fy;
+	double dx, dy;
+	long double ldx, ldy;
+	long i, N;
+	int quo;
+
+	N = get_config_var_as_long(tc, "iterations");
+	ATF_REQUIRE(N > 0);
+
+	ATF_FOR_LOOP(i, N, i++) {
+		/* float */
+		fx = random_float(FP_NORMAL);
+		fy = random_float(FP_NORMAL);
+		(void)remquof(fx, fy, &quo);
+		ATF_PASS_OR_BREAK(signbit(quo) == signbit(fx/fy));
+
+		/* double */
+		dx = random_double(FP_NORMAL);
+		dy = random_double(FP_NORMAL);
+		(void)remquo(dx, dy, &quo);
+		ATF_PASS_OR_BREAK(signbit(quo) == signbit(dx/dy));
+
+		/* long double */
+#ifdef	HAVE_REMQUOL
+		ldx = random_long_double(FP_NORMAL);
+		ldy = random_long_double(FP_NORMAL);
+		(void)remquol(ldx, ldy, &quo);
+		ATF_PASS_OR_BREAK(signbit(quo) == signbit(ldx/ldy));
+#endif
+	}
+}
+
 /* Add test cases to test program */
 ATF_TP_ADD_TCS(tp)
 {
 	ATF_TP_ADD_TC(tp, test_remquo1);
 	ATF_TP_ADD_TC(tp, test_remquo2);
 	ATF_TP_ADD_TC(tp, test_remquo3);
+	ATF_TP_ADD_TC(tp, test_remquo4);
 
 	return atf_no_error();
 }
