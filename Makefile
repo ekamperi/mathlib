@@ -12,8 +12,8 @@ TESTS=	t_acos t_acosh t_asin t_asinh t_atan t_atan2 t_atanh t_cbrt t_ceil    	\
 	t_fabs t_fdim t_float t_floor t_fmax t_fpclassify t_fpmacros t_frexp  	\
 	t_ilogb t_lrint t_lround t_mac t_nan t_tgmath t_hypot t_log t_log10   	\
 	t_log1p t_log2 t_logb t_ldexp t_modf t_nextafter t_pow t_remainder 	\
-	t_rint t_round t_signbit t_sin t_sinh t_sqrt t_trig_ident t_tan t_tanh 	\
-	t_trunc
+	t_remquo t_rint t_round t_signbit t_sin t_sinh t_sqrt t_trig_ident 	\
+	t_tan t_tanh t_trunc
 #TESTS+= t_tgamma t_types
 TESTS+= t_self t_self_complex
 
@@ -299,6 +299,12 @@ _DEPS_T_REMAINDER = t_remainder.o subr_atf.o subr_errhandling.o subr_fpcmp.o sub
  DEPS_T_REMAINDER = $(_DEPS_T_REMAINDER:%=obj/%)
 t_remainder: $(DEPS_T_REMAINDER)
 	$(CC99) -o t_remainder $(DEPS_T_REMAINDER) $(CFLAGS) $(LIBS)
+
+
+_DEPS_T_REMQUO = t_remquo.o subr_atf.o subr_errhandling.o subr_fpcmp.o subr_random.o
+ DEPS_T_REMQUO = $(_DEPS_T_REMQUO:%=obj/%)
+t_remquo: $(DEPS_T_REMQUO)
+	$(CC99) -o t_remquo $(DEPS_T_REMQUO) $(CFLAGS) $(LIBS)
 
 
 _DEPS_T_RINT = t_rint.o subr_atf.o subr_errhandling.o subr_fpcmp.o subr_random.o
