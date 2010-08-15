@@ -3,19 +3,20 @@
 #include <atf-c.h>
 #include <math.h>
 
+#include "config.h"
 #include "subr_atf.h"
 #include "subr_random.h"
-
-static const struct
-tentry {
-	double x;       /* Input */
-	double y;       /* copysign output */
-} ttable[] = {
-};
 
 /*
  * Test case 1 -- Basic functionality
  */
+static const struct
+t1entry {
+	double x;       /* Input */
+	double y;       /* copysign output */
+} t1table[] = {
+};
+
 ATF_TC(test_copysign1);
 ATF_TC_HEAD(test_copysign1, tc)
 {
@@ -27,7 +28,7 @@ ATF_TC_BODY(test_copysign1, tc)
 {
 	size_t i, N;
 
-	N = sizeof(ttable) / sizeof(ttable[0]);
+	N = sizeof(t1table) / sizeof(t1table[0]);
 
 	for (i = 0; i < N; i++) {
 	}
@@ -35,6 +36,9 @@ ATF_TC_BODY(test_copysign1, tc)
 
 /*
  * Test case 2 -- Here comes the fuzzing
+ *
+ * Upon successful completion, these functions shall return a
+ * value with the magnitude of x and the sign of y.
  */
 ATF_TC(test_copysign2);
 ATF_TC_HEAD(test_copysign2, tc)
@@ -54,30 +58,28 @@ ATF_TC_BODY(test_copysign2, tc)
 	ATF_REQUIRE(N > 0);
 
 	ATF_FOR_LOOP(i, N, i++) {
-		dx = random_double(FP_NORMAL);
-		dy = random_double(FP_NORMAL);
-
-		fx = random_double(FP_NORMAL);
-		fy = random_double(FP_NORMAL);
-
-		ldx = random_double(FP_NORMAL);
-		ldy = random_double(FP_NORMAL);
-
-		/*
-		 * Upon successful completion, these functions shall return a
-		 * value with the magnitude of x and the sign of y.
-		 */
-		dz = copysignf(dx, dy);
-		ATF_PASS_OR_BREAK(fabsf(dz) == fabsf(dx));
-		ATF_PASS_OR_BREAK(signbit(dz) == signbit(dy));
-
-		fz = copysign(fx, fy);
-		ATF_PASS_OR_BREAK(fabs(fz) == fabs(fx));
+		/* float */
+		fx = random_float(FP_NORMAL);
+		fy = random_float(FP_NORMAL);
+		fz = copysignf(fx, fy);
+		ATF_PASS_OR_BREAK(fabsf(fz) == fabsf(fx));
 		ATF_PASS_OR_BREAK(signbit(fz) == signbit(fy));
 
+		/* double */
+		dx = random_double(FP_NORMAL);
+		dy = random_double(FP_NORMAL);
+		dz = copysign(dx, dy);
+		ATF_PASS_OR_BREAK(fabs(dz) == fabs(dx));
+		ATF_PASS_OR_BREAK(signbit(dz) == signbit(dy));
+
+		/* long double */
+#ifdef	HAVE_COPYSIGNL
+		ldx = random_long_double(FP_NORMAL);
+		ldy = random_long_double(FP_NORMAL);
 		ldz = copysignl(ldx, ldy);
 		ATF_PASS_OR_BREAK(fabsl(ldz) == fabsl(ldx));
 		ATF_PASS_OR_BREAK(signbit(ldz) == signbit(ldy));
+#endif
 	}
 }
 
