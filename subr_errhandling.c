@@ -118,7 +118,7 @@ query_errhandling(int *hasfp, int *haserrno)
 }
 
 /*******************************************************************************
- * This is used for debugging purposes
+ *			This is used for debugging purposes
  ******************************************************************************/
 static const
 struct fpeentry {
