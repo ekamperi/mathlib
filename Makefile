@@ -24,10 +24,7 @@ clean:
 
 .PHONY: git-clean
 git-clean:
-	@for i in $(SUBDIRS); 			\
-	do					\
-		(cd $$i; $(MAKE) git-clean);	\
-	done
+	git clean -fd > /dev/null
 
 ################################################################################
 #				Report generation			       #
