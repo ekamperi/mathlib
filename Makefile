@@ -27,7 +27,7 @@ git-clean:
 	git clean -fd > /dev/null
 
 ################################################################################
-#				Report generation			       #
+#				Html report generation			       #
 ################################################################################
 TMPFILES= tmp.xml tmp2.xml tmp3.xml tmp.html tmp2.html
 
