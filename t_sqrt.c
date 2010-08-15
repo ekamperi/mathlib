@@ -164,7 +164,7 @@ ATF_TC_BODY(test_sqrt3, tc)
 		/* long double */
 #ifdef	HAVE_SQRTL
 		do {
-			ldx = random_float(FP_NORMAL);
+			ldx = random_long_double(FP_NORMAL);
 		} while (ldx >= -0.0);
 
 		errno = 0;
