@@ -2,7 +2,7 @@
 
 AC_PREREQ([2.59])
 AC_INIT([mathlib], [0.1], [ekamperi@gmail.com])
-AC_CONFIG_SRCDIR([t_atan.c])
+#AC_CONFIG_SRCDIR([t_atan.c])
 AC_CONFIG_HEADERS([include/config.h])
 
 # Checks for programs.

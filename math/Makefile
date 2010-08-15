@@ -1,5 +1,5 @@
 CC99=gcc -std=c99
-INCLUDE=-Iinclude -I/usr/opt/include -L/usr/opt/lib
+INCLUDE=-Iinclude -I../include -I/usr/opt/include -L/usr/opt/lib
 CFLAGS=-Wall -W -Wformat-nonliteral -Wcast-align -Wpointer-arith 		\
 	-Wbad-function-cast -Wmissing-prototypes -Wstrict-prototypes 		\
 	-Wmissing-declarations -Winline -Wundef -Wnested-externs -Wcast-qual 	\
@@ -17,6 +17,8 @@ TESTS=	t_acos t_acosh t_asin t_asinh t_atan t_atan2 t_atanh t_cbrt t_ceil    	\
 #TESTS+= t_tgamma t_types
 TESTS+= t_self t_self_complex
 
+VPATH = ../
+
 .PHONY: all
 all: $(TESTS)
 
@@ -25,7 +27,7 @@ obj:
 
 include/config.h:
 	@echo "Preparing to run autotools. This may take a while."
-	autoreconf && ./configure
+	autoreconf ../ && ../configure
 
 # Use order-only prerequisite for obj/
 obj/%.o: %.c | obj include/config.h
