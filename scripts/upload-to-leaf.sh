@@ -37,6 +37,9 @@ case "$1" in
 	;;    
 esac
 
+# At least one argument must be given
+[ -z "$all"] && [ -z "$graphs" ] && [ -z "$results" ] && usage
+
 if [ ! -z "$results" ] || [ -z "all" ]; then
     echo ">>> Uploading ATF results to $USERNAME@$HOSTNAME:~/$REMOTEDIR"
     scp results.html "$USERNAME@$HOSTNAME:~/$REMOTELOGDIR/$FILENAME"
