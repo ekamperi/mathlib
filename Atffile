@@ -1,0 +1,10 @@
+Content-Type: application/X-atf-atffile; version="1"
+
+# This is a dummy Atffile, just to keep atf-run(1) happy.
+# See this:
+# http://www.julipedia.org/projects/atf/trac/ticket/42
+
+prop: test-suite = general
+conf: iterations = 1
+
+tp-glob: t_*
