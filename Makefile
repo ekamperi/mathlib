@@ -1,4 +1,4 @@
-MAKE = make
+MAKE = gmake
 SUBDIRS = math fenv complex
 
 .PHONY: all
