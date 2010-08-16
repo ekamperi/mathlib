@@ -407,8 +407,6 @@ run:
 clean:
 	rm -f $(TESTS)
 	rm -f obj/*.o *~ core
-	@rm -f tmp.xml tmp2.xml tmp3.xml
-	@rm -f tmp.html scripts/results.html
 
 .PHONY: git-clean
 git-clean:
