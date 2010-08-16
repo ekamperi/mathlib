@@ -403,22 +403,6 @@ t_types: $(DEPS_T_TYPES)
 run:
 	atf-run | atf-report
 
-.PHONY: run-html
-run-html:
-	@echo "*** This may take a while, depending on the value of      ***"
-	@echo "*** 'iterations' configuration variable, in your Atffile  ***"
-	@echo "*** and the speed of your computer.                       ***"
-	@echo
-	@rm -f tmp.xml tmp2.xml tmp3.xml
-	@rm -f tmp.html tmp2.html
-	atf-run . fenv complex | atf-report -o xml:tmp.xml
-	@cat tmp.xml | col > tmp2.xml
-	@sed 's/http:\/\/www.NetBSD.org\/XML\/atf/\./' tmp2.xml > tmp3.xml
-	@xsltproc ./tests-results.xsl tmp3.xml > tmp.html
-	@sed 's/tests-results.css/\.\.\/\.\.\/\.\.\/\.\.\/css\/tests-results.css/' tmp.html > scripts/results.html
-	@rm -f tmp.xml tmp2.xml tmp3.xml
-	@rm -f tmp.html
-
 .PHONY: clean
 clean:
 	rm -f $(TESTS)
