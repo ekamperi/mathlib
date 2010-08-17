@@ -7,21 +7,19 @@
 /* Function prototypes */
 static int prof_clearexcept_all(size_t iterations);
 static int prof_clearexcept_random(size_t iterations);
-
 static int prof_getenv(size_t iterations);
+static int prof_getround(size_t iterations);
 static int prof_holdexcept(size_t iterations);
-
 static int prof_raiseexcept(size_t iterations);
-
 static int prof_setenv_default(size_t iterations);
 static int prof_setenv_getenv(size_t iterations);
-
+static int prof_setround(size_t iterations);
 static int prof_updateenv_default(size_t iterations);
 static int prof_updateenv_getenv(size_t iterations);
 
 
 /* Constants and macros */
-#define ITERATIONS (1 * 1000 * 1000)
+#define ITERATIONS (10 * 1000 * 1000)
 
 /*
  * They are esentially the same, but we still define them as if
@@ -75,13 +73,17 @@ struct pentry {
 	  prof_getenv,
 	  ITERATIONS },
 
+	{ "   fegetround()              ",
+	  prof_getround,
+	  ITERATIONS },
+
 	{ " feholdexcept()              ",
 	  prof_holdexcept,
 	  ITERATIONS },
 
-        { "feraiseexcept()              ",
-          prof_raiseexcept,
-          ITERATIONS },
+	{ "feraiseexcept()              ",
+	  prof_raiseexcept,
+	  ITERATIONS },
 
 	{ "     fesetenv()    FE_DFL_ENV",
 	  prof_setenv_default,
@@ -89,6 +91,10 @@ struct pentry {
 
 	{ "     fesetenv()        random",
 	  prof_setenv_getenv,
+	  ITERATIONS },
+
+	{ "   fesetround()              ",
+	  prof_setround,
 	  ITERATIONS },
 
 	{ "  feupdateenv()    FE_DFL_ENV",
@@ -173,6 +179,22 @@ prof_getenv(size_t iterations)
 }
 
 static int
+prof_getround(size_t iterations)
+{
+	struct timeval tv1, tv2;
+	size_t i;
+
+	MARK_START(&tv1);
+
+	for (i = 0; i < iterations; i++)
+		assert(fegetround() == 0);
+
+	MARK_END(&tv2);
+
+	return MSECS(tv1, tv2);
+}
+
+static int
 prof_holdexcept(size_t iterations)
 {
 	struct timeval tv1, tv2;
@@ -233,6 +255,38 @@ prof_setenv_getenv(size_t iterations)
 	for (i = 0; i < iterations; i++) {
 		assert(fegetenv(&env) == 0);
 		assert(fesetenv(&env) == 0);
+	}
+
+	MARK_END(&tv2);
+
+	return MSECS(tv1, tv2);
+}
+
+static int
+prof_setround(size_t iterations)
+{
+	const int rndmodes[] = {
+#ifdef	FE_DOWNWARD
+	FE_DOWNWARD,
+#endif
+#ifdef	FE_TONEAREST
+	FE_TONEAREST,
+#endif
+#ifdef	FE_TOWARDZERO
+	FE_TOWARDZERO,
+#endif
+#ifdef	FE_UPWARD
+	FE_UPWARD
+#endif
+	};
+	const size_t N = sizeof(rndmodes) / sizeof(rndmodes[0]);
+	struct timeval tv1, tv2;
+	size_t i;
+
+	MARK_START(&tv1);
+
+	for (i = 0; i < iterations; i++) {
+		assert(fesetround(rndmodes[i % N]) == 0);
 	}
 
 	MARK_END(&tv2);
