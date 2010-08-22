@@ -9,7 +9,7 @@ CPPFLAGS=-Wall -W -g $(INCLUDE)
 LIBS=-lm -latf-c
 
 TESTS=  t_cabs t_cacos t_cacosh t_carg t_casin t_casinh t_catan t_catanh	\
-	t_cimag t_clog t_conj t_creal t_csqrt t_imgconstant
+	t_cimag t_clog t_conj t_cproj t_creal t_csqrt t_imgconstant
 
 .PHONY: all
 all: $(TESTS)
@@ -95,6 +95,12 @@ _DEPS_T_CONJ = t_conj.o subr_atf.o subr_random.o
  DEPS_T_CONJ = $(_DEPS_T_CONJ:%=$(OBJDIR)/%)
 t_conj: $(DEPS_T_CONJ)
 	$(CC99) -o t_conj $(DEPS_T_CONJ) $(CFLAGS) $(LIBS)
+
+
+_DEPS_T_CPROJ = t_cproj.o subr_atf.o subr_random.o
+ DEPS_T_CPROJ = $(_DEPS_T_CPROJ:%=$(OBJDIR)/%)
+t_cproj: $(DEPS_T_CPROJ)
+	$(CC99) -o t_cproj $(DEPS_T_CPROJ) $(CFLAGS) $(LIBS)
 
 
 _DEPS_T_CREAL = t_creal.o subr_atf.o subr_random.o
