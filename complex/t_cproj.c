@@ -3,8 +3,8 @@
 #include <atf-c.h>
 #include <complex.h>
 #include <math.h>
-#include <stdio.h>
 #include <stdlib.h>
+#include <time.h>
 
 #include "config.h"
 #include "lconstants.h"
@@ -116,6 +116,8 @@ ATF_TC_BODY(test_cproj3, tc)
 	long_double_complex uldcx;
 	long i, N, idx;
 
+	srand(time(NULL));
+
 	N = get_config_var_as_long(tc, "iterations");
 	ATF_REQUIRE(N > 0);
 
@@ -153,10 +155,8 @@ ATF_TC_BODY(test_cproj3, tc)
 		}
 
 		/* long double */
-#if defined(HAVE_CPROJL)
-		&& defined(HAVE_CREALL)
-		&& defined(HAVE_CIMAGL)
-		&& defined(HAVE_COPYSIGNL)
+#if defined(HAVE_CPROJL) && defined(HAVE_CREALL) && defined(HAVE_CIMAGL) && \
+    defined(HAVE_COPYSIGNL)
 		REAL_PART(uldcx) = rand() ? t3table[idx].x :
 					    random_long_double(FP_NORMAL);
 		IMAG_PART(uldcx) = rand() ? t3table[idx].y :
