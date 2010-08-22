@@ -125,10 +125,10 @@ ATF_TC_BODY(test_cproj3, tc)
 		idx = i % ( sizeof(t3table) / sizeof(t3table[0]) );
 
 		/* float */
-		REAL_PART(ufcx) = rand() ? (float)t3table[idx].x :
-					   random_float(FP_NORMAL);
-		IMAG_PART(ufcx) = rand() ? (float)t3table[idx].y :
-					   random_float(FP_NORMAL);
+		REAL_PART(ufcx) = rand() % 2 ? (float)t3table[idx].x :
+					       random_float(FP_NORMAL);
+		IMAG_PART(ufcx) = rand() % 2 ? (float)t3table[idx].y :
+					       random_float(FP_NORMAL);
 		fcx = ufcx.z;
 		fcy = cprojf(fcx);
 		if (isinf(crealf(fcx)) || isinf(cimagf(fcx))) {
@@ -140,10 +140,10 @@ ATF_TC_BODY(test_cproj3, tc)
 		}
 
 		/* double */
-		REAL_PART(udcx) = rand() ? (double)t3table[idx].x :
-					   random_double(FP_NORMAL);
-		IMAG_PART(udcx) = rand() ? (double)t3table[idx].y :
-					   random_double(FP_NORMAL);
+		REAL_PART(udcx) = rand() % 2 ? (double)t3table[idx].x :
+					       random_double(FP_NORMAL);
+		IMAG_PART(udcx) = rand() % 2 ? (double)t3table[idx].y :
+					       random_double(FP_NORMAL);
 		dcx = udcx.z;
 		dcy = cproj(dcx);
 		if (isinf(creal(dcx)) || isinf(cimag(dcx))) {
@@ -157,10 +157,10 @@ ATF_TC_BODY(test_cproj3, tc)
 		/* long double */
 #if defined(HAVE_CPROJL) && defined(HAVE_CREALL) && defined(HAVE_CIMAGL) && \
     defined(HAVE_COPYSIGNL)
-		REAL_PART(uldcx) = rand() ? t3table[idx].x :
-					    random_long_double(FP_NORMAL);
-		IMAG_PART(uldcx) = rand() ? t3table[idx].y :
-					    random_long_double(FP_NORMAL);
+		REAL_PART(uldcx) = rand() % 2 ? t3table[idx].x :
+						random_long_double(FP_NORMAL);
+		IMAG_PART(uldcx) = rand() % 2 ? t3table[idx].y :
+						random_long_double(FP_NORMAL);
 		ldcx = uldcx.z;
 		ldcy = cprojl(ldcx);
 		if (isinf(creall(ldcx)) || isinf(cimagl(ldcx))) {
