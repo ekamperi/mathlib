@@ -153,7 +153,10 @@ ATF_TC_BODY(test_cproj3, tc)
 		}
 
 		/* long double */
-#if defined(HAVE_CPROJL) && defined(HAVE_CREALL)
+#if defined(HAVE_CPROJL)
+		&& defined(HAVE_CREALL)
+		&& defined(HAVE_CIMAGL)
+		&& defined(HAVE_COPYSIGNL)
 		REAL_PART(uldcx) = rand() ? t3table[idx].x :
 					    random_long_double(FP_NORMAL);
 		IMAG_PART(uldcx) = rand() ? t3table[idx].y :
