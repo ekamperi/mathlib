@@ -38,6 +38,9 @@ typedef union {
 	long double parts[2];
 } long_double_complex;
 
+#define	REAL_PART(z)	((z).parts[0])
+#define	IMAG_PART(z)	((z).parts[1])
+
 /*
  * The FP_* macros shall be defined for number classification. They represent
  * the mutually-exclusive kinds of floating-point values. They expand to integer
