@@ -3,9 +3,12 @@
 #include <atf-c.h>
 #include <complex.h>
 #include <math.h>
+#include <stdio.h>
+#include <stdlib.h>
 
 #include "config.h"
 #include "lconstants.h"
+#include "mytypes.h"
 #include "subr_atf.h"
 #include "subr_fpcmp.h"
 #include "subr_random.h"
@@ -61,11 +64,118 @@ ATF_TC_BODY(test_cproj2, tc)
 	}
 }
 
+/*
+ * Test case 3
+ */
+static const struct
+t3entry {
+	long double x;
+	long double y;
+} t3table[] = {
+#ifdef  INFINITY
+	{  INFINITY,  INFINITY },
+	{  INFINITY, -INFINITY },
+	{ -INFINITY,  INFINITY },
+	{ -INFINITY, -INFINITY },
+#endif
+#ifdef  HUGE_VAL
+	{  HUGE_VAL,  HUGE_VAL },
+	{  HUGE_VAL, -HUGE_VAL },
+	{ -HUGE_VAL,  HUGE_VAL },
+	{ -HUGE_VAL, -HUGE_VAL },
+#endif
+#ifdef  HUGE_VALF
+	{  HUGE_VALF,  HUGE_VALF },
+	{  HUGE_VALF, -HUGE_VALF },
+	{ -HUGE_VALF,  HUGE_VALF },
+	{ -HUGE_VALF, -HUGE_VALF },
+#endif
+#ifdef  HUGE_VALL
+	{  HUGE_VALL,  HUGE_VALL },
+	{  HUGE_VALL, -HUGE_VALL },
+	{ -HUGE_VALL,  HUGE_VALL },
+	{ -HUGE_VALL, -HUGE_VALL }
+#endif
+};
+
+ATF_TC(test_cproj3);
+ATF_TC_HEAD(test_cproj3, tc)
+{
+	atf_tc_set_md_var(tc,
+	    "descr",
+	    "Check what happens when z has infinite parts");
+}
+ATF_TC_BODY(test_cproj3, tc)
+{
+	float complex fcx, fcy;
+	float_complex ufcx;
+	double complex dcx, dcy;
+	double_complex udcx;
+	long double complex ldcx, ldcy;
+	long_double_complex uldcx;
+	long i, N, idx;
+
+	N = get_config_var_as_long(tc, "iterations");
+	ATF_REQUIRE(N > 0);
+
+	ATF_FOR_LOOP(i, N, i++) {
+		idx = i % ( sizeof(t3table) / sizeof(t3table[0]) );
+
+		/* float */
+		REAL_PART(ufcx) = rand() ? (float)t3table[idx].x :
+					   random_float(FP_NORMAL);
+		IMAG_PART(ufcx) = rand() ? (float)t3table[idx].y :
+					   random_float(FP_NORMAL);
+		fcx = ufcx.z;
+		fcy = cprojf(fcx);
+		if (isinf(crealf(fcx)) || isinf(cimagf(fcx))) {
+			ATF_PASS_OR_BREAK(isinf(crealf(fcy)));
+			ATF_PASS_OR_BREAK(cimagf(fcy) ==
+					  copysignf(0.0, cimagf(fcx)));
+		} else {
+			ATF_PASS_OR_BREAK(fcy == fcx);
+		}
+
+		/* double */
+                REAL_PART(udcx) = rand() ? (double)t3table[idx].x :
+					   random_double(FP_NORMAL);
+                IMAG_PART(udcx) = rand() ? (double)t3table[idx].y :
+					   random_double(FP_NORMAL);
+		dcx = udcx.z;
+		dcy = cproj(dcx);
+                if (isinf(creal(dcx)) || isinf(cimag(dcx))) {
+			ATF_PASS_OR_BREAK(isinf(creal(dcy)));
+			ATF_PASS_OR_BREAK(cimag(dcy) ==
+					  copysign(0.0, cimagf(dcx)));
+		} else {
+                        ATF_PASS_OR_BREAK(dcy == dcx);
+                }
+
+		/* long double */
+#if defined(HAVE_CPROJL) && defined(HAVE_CREALL)
+                REAL_PART(uldcx) = rand() ? t3table[idx].x :
+					    random_long_double(FP_NORMAL);
+                IMAG_PART(uldcx) = rand() ? t3table[idx].y :
+					    random_long_double(FP_NORMAL);
+		ldcx = uldcx.z;
+		ldcy = cprojl(ldcx);
+                if (isinf(creall(ldcx)) || isinf(cimagl(ldcx))) {
+			ATF_PASS_OR_BREAK(isinf(creall(ldcy)));
+			ATF_PASS_OR_BREAK(cimagl(ldcy) ==
+					  copysignl(0.0, cimagl(ldcx)));
+		} else {
+                        ATF_PASS_OR_BREAK(ldcy == ldcx);
+                }
+#endif
+	}	/* ATF_FOR_LOOP */
+}
+
 /* Add test cases to test program */
 ATF_TP_ADD_TCS(tp)
 {
 	ATF_TP_ADD_TC(tp, test_cproj1);
 	ATF_TP_ADD_TC(tp, test_cproj2);
+	ATF_TP_ADD_TC(tp, test_cproj3);
 
 	return atf_no_error();
 }
