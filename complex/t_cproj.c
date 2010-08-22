@@ -66,6 +66,7 @@ ATF_TC_BODY(test_cproj2, tc)
 
 /*
  * Test case 3
+ * XXX: Add NaNs as well
  */
 static const struct
 t3entry {
@@ -137,35 +138,35 @@ ATF_TC_BODY(test_cproj3, tc)
 		}
 
 		/* double */
-                REAL_PART(udcx) = rand() ? (double)t3table[idx].x :
+		REAL_PART(udcx) = rand() ? (double)t3table[idx].x :
 					   random_double(FP_NORMAL);
-                IMAG_PART(udcx) = rand() ? (double)t3table[idx].y :
+		IMAG_PART(udcx) = rand() ? (double)t3table[idx].y :
 					   random_double(FP_NORMAL);
 		dcx = udcx.z;
 		dcy = cproj(dcx);
-                if (isinf(creal(dcx)) || isinf(cimag(dcx))) {
+		if (isinf(creal(dcx)) || isinf(cimag(dcx))) {
 			ATF_PASS_OR_BREAK(isinf(creal(dcy)));
 			ATF_PASS_OR_BREAK(cimag(dcy) ==
 					  copysign(0.0, cimagf(dcx)));
 		} else {
-                        ATF_PASS_OR_BREAK(dcy == dcx);
-                }
+			ATF_PASS_OR_BREAK(dcy == dcx);
+		}
 
 		/* long double */
 #if defined(HAVE_CPROJL) && defined(HAVE_CREALL)
-                REAL_PART(uldcx) = rand() ? t3table[idx].x :
+		REAL_PART(uldcx) = rand() ? t3table[idx].x :
 					    random_long_double(FP_NORMAL);
-                IMAG_PART(uldcx) = rand() ? t3table[idx].y :
+		IMAG_PART(uldcx) = rand() ? t3table[idx].y :
 					    random_long_double(FP_NORMAL);
 		ldcx = uldcx.z;
 		ldcy = cprojl(ldcx);
-                if (isinf(creall(ldcx)) || isinf(cimagl(ldcx))) {
+		if (isinf(creall(ldcx)) || isinf(cimagl(ldcx))) {
 			ATF_PASS_OR_BREAK(isinf(creall(ldcy)));
 			ATF_PASS_OR_BREAK(cimagl(ldcy) ==
 					  copysignl(0.0, cimagl(ldcx)));
 		} else {
-                        ATF_PASS_OR_BREAK(ldcy == ldcx);
-                }
+			ATF_PASS_OR_BREAK(ldcy == ldcx);
+		}
 #endif
 	}	/* ATF_FOR_LOOP */
 }
