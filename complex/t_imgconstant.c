@@ -65,7 +65,7 @@ ATF_TC_BODY(test_imgconstant1, tc)
 			    0.0));
 
 		/* long double */
-#if defined(creall)
+#if defined(HAVE_CREALL)
 		ldcx = I*t1table[i];
 		ATF_CHECK(fpreal_equall(
 			    creall(ldcx),
