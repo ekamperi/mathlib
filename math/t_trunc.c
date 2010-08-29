@@ -81,7 +81,7 @@ ATF_TC_BODY(test_trunc2, tc)
 		/* long double */
 #ifdef	HAVE_TRUNCL
 		ldx = random_long_double(FP_NORMAL);
-		ldy = truncl(dx);
+		ldy = truncl(ldx);
 		ATF_PASS_OR_BREAK(floorl(ldy) == ldy);
 		ATF_PASS_OR_BREAK(ceill(ldy) == ldy);
 		ATF_PASS_OR_BREAK(fabsl(ldx) >= fabsl(ldy));
