@@ -214,14 +214,14 @@ ATF_TC_BODY(test_atanh4, tc)
 		/* float */
 		errno = 0;
 		clear_exceptions();
-		ATF_CHECK_IFNAN(atanhf(t3table[i].x));
+		ATF_CHECK_IFNAN(atanhf((float)t4table[i]));
 		ATF_CHECK(errno_equalto(EDOM));
 		ATF_CHECK(raised_exceptions(MY_FE_INVALID));
 
 		/* double */
 		errno = 0;
 		clear_exceptions();
-		ATF_CHECK_IFNAN(atanh(t3table[i].x));
+		ATF_CHECK_IFNAN(atanh((double)t4table[i]));
 		ATF_CHECK(errno_equalto(EDOM));
 		ATF_CHECK(raised_exceptions(MY_FE_INVALID));
 
@@ -229,7 +229,7 @@ ATF_TC_BODY(test_atanh4, tc)
 #ifdef  HAVE_ATANHL
 		errno = 0;
 		clear_exceptions();
-		ATF_CHECK_IFNAN(atanhl(t3table[i].x));
+		ATF_CHECK_IFNAN(atanhl(t4table[i]));
 		ATF_CHECK(errno_equalto(EDOM));
 		ATF_CHECK(raised_exceptions(MY_FE_INVALID));
 #endif
