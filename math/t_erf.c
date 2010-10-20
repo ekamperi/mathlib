@@ -205,7 +205,7 @@ ATF_TC_BODY(test_erf3, tc)
 		clear_exceptions();
 		(void)erff(fx);
 		ATF_CHECK(errno_equalto(0));
-		ATF_CHECK(!raised_exceptions(MY_FE_ALL_EXCEPT));
+		ATF_CHECK(not_raised_exceptions(MY_FE_ALL_EXCEPT));
 
 		/* double */
 		do {
@@ -215,7 +215,7 @@ ATF_TC_BODY(test_erf3, tc)
 		clear_exceptions();
 		(void)erf(dx);
 		ATF_CHECK(errno_equalto(0));
-		ATF_CHECK(!raised_exceptions(MY_FE_ALL_EXCEPT));
+		ATF_CHECK(not_raised_exceptions(MY_FE_ALL_EXCEPT));
 
 		/* long double */
 #ifdef	HAVE_ERFL
@@ -226,7 +226,7 @@ ATF_TC_BODY(test_erf3, tc)
 		clear_exceptions();
 		(void)erfl(ldx);
 		ATF_CHECK(errno_equalto(0));
-		ATF_CHECK(!raised_exceptions(MY_FE_ALL_EXCEPT));
+		ATF_CHECK(not_raised_exceptions(MY_FE_ALL_EXCEPT));
 #endif
 	}
 
@@ -235,26 +235,23 @@ ATF_TC_BODY(test_erf3, tc)
 	errno = 0;
 	clear_exceptions();
 	(void)erff(0.5 * DBL_MIN);
-	ATF_CHECK(errno == 0 || errno == ERANGE);
-	ATF_CHECK(!raised_exceptions(MY_FE_ALL_EXCEPT) ||
-		  raised_exceptions(MY_FE_UNDERFLOW));
+	ATF_CHECK(errno_equalto(ERANGE));
+	ATF_CHECK(raised_exceptions(MY_FE_UNDERFLOW));
 
 	/* double */
 	errno = 0;
-        clear_exceptions();
-        (void)erf(0.5 * DBL_MIN);
-        ATF_CHECK(errno == 0 || errno == ERANGE);
-        ATF_CHECK(!raised_exceptions(MY_FE_ALL_EXCEPT) ||
-                  raised_exceptions(MY_FE_UNDERFLOW));
+	clear_exceptions();
+	(void)erf(0.5 * DBL_MIN);
+	ATF_CHECK(errno_equalto(ERANGE));
+	ATF_CHECK(raised_exceptions(MY_FE_UNDERFLOW));
 
 	/* long double */
 #ifdef	HAVE_ERFL
 	errno = 0;
-        clear_exceptions();
-        (void)erfl(0.5 * DBL_MIN);
-        ATF_CHECK(errno == 0 || errno == ERANGE);
-        ATF_CHECK(!raised_exceptions(MY_FE_ALL_EXCEPT) ||
-                  raised_exceptions(MY_FE_UNDERFLOW));
+	clear_exceptions();
+	(void)erfl(0.5 * DBL_MIN);
+	ATF_CHECK(errno_equalto(ERANGE));
+	ATF_CHECK(raised_exceptions(MY_FE_UNDERFLOW));
 #endif
 }
 
