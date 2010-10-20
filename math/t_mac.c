@@ -367,7 +367,7 @@ ATF_TC_BODY(test_isgreater, tc)
 
 	/* XXX: Should we refine it to only check against FE_ALL_EXCEPT ? */
 #ifdef	HAS_MATHERREXCEPT
-	ATF_CHECK(!raised_exceptions(FE_INVALID));
+	ATF_CHECK(not_raised_exceptions(FE_INVALID));
 #endif
 }
 
@@ -431,7 +431,7 @@ ATF_TC_BODY(test_isunordered, tc)
 
 	/* XXX: Should we refine it to only check against FE_ALL_EXCEPT ? */
 #ifdef	HAS_MATHERREXCEPT
-	ATF_CHECK(!raised_exceptions());
+	ATF_CHECK(not_raised_exceptions());
 #endif	/* HAS_MATHERREXCEPT */
 #endif	/* NAN */
 }
