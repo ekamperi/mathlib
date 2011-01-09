@@ -9,6 +9,7 @@
 #include "lconstants.h"
 #include "subr_atf.h"
 #include "subr_fpcmp.h"
+#include "subr_random.h"
 #include "t_atan.h"
 
 /*
@@ -162,11 +163,49 @@ ATF_TC_BODY(test_atan3, tc)
 				  t3table[i].y));
 #endif
 	}
+}
 
-	/*
-	 * XXX: If x is subnormal, a range error _may_ occur and x _should_ be
-	 * returned.
-	 */
+/*
+ * Test case 4 --
+ *
+ * If x is subnormal, a range error _may_ occur and x _should_ be
+ * returned.
+ */
+ATF_TC(test_atan4);
+ATF_TC_HEAD(test_atan4, tc)
+{
+	atf_tc_set_md_var(tc,
+	    "descr",
+	    "Input is subnormal");
+}
+ATF_TC_BODY(test_atan4, tc)
+{
+	float fx, fy;
+	double dx, dy;
+	long double ldx, ldy;
+	long i, N;
+
+	N = atf_tc_get_config_var_as_long(tc, "iterations");
+	ATF_REQUIRE(N > 0);
+
+	ATF_FOR_LOOP(i, N, i++) {
+		/* float */
+		fx = random_float(FP_SUBNORMAL);
+		fy = atanf(fx);
+		ATF_PASS_OR_BREAK(fy == fx);
+
+		/* double */
+		dx = random_double(FP_SUBNORMAL);
+		dy = atan(dx);
+		ATF_PASS_OR_BREAK(dy == dx);
+
+		/* long double */
+#ifdef  HAVE_ATANL
+		ldx = random_long_double(FP_SUBNORMAL);
+		ldy = atanl(ldx);
+		ATF_PASS_OR_BREAK(ldy == ldx);
+#endif
+	}
 }
 
 /* Add test cases to test program */
@@ -175,6 +214,7 @@ ATF_TP_ADD_TCS(tp)
 	ATF_TP_ADD_TC(tp, test_atan1);
 	ATF_TP_ADD_TC(tp, test_atan2);
 	ATF_TP_ADD_TC(tp, test_atan3);
+	ATF_TP_ADD_TC(tp, test_atan4);
 
 	return atf_no_error();
 }
