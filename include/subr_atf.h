@@ -4,9 +4,6 @@
 #include <atf-c.h>
 #include <math.h>
 
-bool get_config_var_as_bool(const atf_tc_t *tc, const char *name);
-long get_config_var_as_long(const atf_tc_t *tc, const char *name);
-
 #define ATF_PRINT_ERRMSG(fmt, ...)					\
 do {									\
 	atf_tc_fail_check(__FILE__, __LINE__, fmt, ##__VA_ARGS__);	\

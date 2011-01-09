@@ -76,7 +76,7 @@ ATF_TC_BODY(test_pow2, tc)
 	long double ldx, ldy;
 	long i, N;
 
-	N = get_config_var_as_long(tc, "iterations");
+	N = atf_tc_get_config_var_as_long(tc, "iterations");
 	ATF_REQUIRE(N > 0);
 
 	ATF_FOR_LOOP(i, N, i++) {
@@ -201,7 +201,7 @@ ATF_TC_BODY(test_pow42, tc)
 	long double ldy;
 	long i, N;
 
-	N = get_config_var_as_long(tc, "iterations");
+	N = atf_tc_get_config_var_as_long(tc, "iterations");
 	ATF_REQUIRE(N > 0);
 
 	ATF_FOR_LOOP(i, N, i++) {
@@ -246,7 +246,7 @@ ATF_TC_BODY(test_pow43, tc)
 	long double ldx;
 	long i, N;
 
-	N = get_config_var_as_long(tc, "iterations");
+	N = atf_tc_get_config_var_as_long(tc, "iterations");
 	ATF_REQUIRE(N > 0);
 
 	ATF_FOR_LOOP(i, N, i++) {
@@ -291,7 +291,7 @@ ATF_TC_BODY(test_pow44, tc)
 {
 	long i, N, y;
 
-	N = get_config_var_as_long(tc, "iterations");
+	N = atf_tc_get_config_var_as_long(tc, "iterations");
 	ATF_REQUIRE(N > 0);
 
 	ATF_FOR_LOOP(i, N, i++) {
@@ -331,7 +331,7 @@ ATF_TC_BODY(test_pow45, tc)
 	long double ldy;
 	long i, N;
 
-	N = get_config_var_as_long(tc, "iterations");
+	N = atf_tc_get_config_var_as_long(tc, "iterations");
 	ATF_REQUIRE(N > 0);
 
 	ATF_FOR_LOOP(i, N, i++) {
@@ -433,7 +433,7 @@ ATF_TC_BODY(test_pow52, tc)
 	long i, N;
 	size_t j;
 
-	N = get_config_var_as_long(tc, "iterations");
+	N = atf_tc_get_config_var_as_long(tc, "iterations");
 	ATF_REQUIRE(N > 0);
 
 	ATF_FOR_LOOP(i, N, i++) {
@@ -483,7 +483,7 @@ ATF_TC_BODY(test_pow53, tc)
 	long i, N;
 	size_t j;
 
-	N = get_config_var_as_long(tc, "iterations");
+	N = atf_tc_get_config_var_as_long(tc, "iterations");
 	ATF_REQUIRE(N > 0);
 
 	ATF_FOR_LOOP(i, N, i++) {
@@ -533,7 +533,7 @@ ATF_TC_BODY(test_pow54, tc)
 	long i, N;
 	size_t j;
 
-	N = get_config_var_as_long(tc, "iterations");
+	N = atf_tc_get_config_var_as_long(tc, "iterations");
 	ATF_REQUIRE(N > 0);
 
 	ATF_FOR_LOOP(i, N, i++) {
@@ -584,7 +584,7 @@ ATF_TC_BODY(test_pow55, tc)
 	long i, N;
 	size_t j;
 
-	N = get_config_var_as_long(tc, "iterations");
+	N = atf_tc_get_config_var_as_long(tc, "iterations");
 	ATF_REQUIRE(N > 0);
 
 	ATF_FOR_LOOP(i, N, i++) {
@@ -631,7 +631,7 @@ ATF_TC_BODY(test_pow56, tc)
 	long i, N, y;
 	size_t j;
 
-	N = get_config_var_as_long(tc, "iterations");
+	N = atf_tc_get_config_var_as_long(tc, "iterations");
 	ATF_REQUIRE(N > 0);
 
 	ATF_FOR_LOOP(i, N, i++) {
@@ -678,7 +678,7 @@ ATF_TC_BODY(test_pow57, tc)
 	long i, N;
 	size_t j;
 
-	N = get_config_var_as_long(tc, "iterations");
+	N = atf_tc_get_config_var_as_long(tc, "iterations");
 	ATF_REQUIRE(N > 0);
 
 	ATF_FOR_LOOP(i, N, i++) {
@@ -725,7 +725,7 @@ ATF_TC_BODY(test_pow58, tc)
 	long i, N, y;
 	size_t j;
 
-	N = get_config_var_as_long(tc, "iterations");
+	N = atf_tc_get_config_var_as_long(tc, "iterations");
 	ATF_REQUIRE(N > 0);
 
 	ATF_FOR_LOOP(i, N, i++) {
@@ -771,7 +771,7 @@ ATF_TC_BODY(test_pow59, tc)
 	long i, N;
 	size_t j;
 
-	N = get_config_var_as_long(tc, "iterations");
+	N = atf_tc_get_config_var_as_long(tc, "iterations");
 	ATF_REQUIRE(N > 0);
 
 	ATF_FOR_LOOP(i, N, i++) {
@@ -821,7 +821,7 @@ ATF_TC_BODY(test_pow510, tc)
 	long i, N;
 	size_t j;
 
-	N = get_config_var_as_long(tc, "iterations");
+	N = atf_tc_get_config_var_as_long(tc, "iterations");
 	ATF_REQUIRE(N > 0);
 
 	ATF_FOR_LOOP(i, N, i++) {
@@ -871,7 +871,7 @@ ATF_TC_BODY(test_pow511, tc)
 	long i, N;
 	size_t j;
 
-	N = get_config_var_as_long(tc, "iterations");
+	N = atf_tc_get_config_var_as_long(tc, "iterations");
 	ATF_REQUIRE(N > 0);
 
 	ATF_FOR_LOOP(i, N, i++) {

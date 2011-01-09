@@ -165,7 +165,7 @@ ATF_TC_BODY(test_ilogb3, tc)
 	int haserrexcept;
 	int haserrno;
 
-	N = get_config_var_as_long(tc, "iterations");
+	N = atf_tc_get_config_var_as_long(tc, "iterations");
 	ATF_REQUIRE(N > 0);
 
 	ATF_FOR_LOOP(i, N, i++) {
@@ -237,7 +237,7 @@ ATF_TC_BODY(test_ilogb4, tc)
 	int haserrexcept;
 	int haserrno;
 
-	N = get_config_var_as_long(tc, "iterations");
+	N = atf_tc_get_config_var_as_long(tc, "iterations");
 	ATF_REQUIRE(N > 0);
 
 	ATF_FOR_LOOP(i, N, i++) {

@@ -130,7 +130,7 @@ ATF_TC_BODY(test_rint3, tc)
 {
 	long i, N, x;
 
-	N = get_config_var_as_long(tc, "iterations");
+	N = atf_tc_get_config_var_as_long(tc, "iterations");
 	ATF_REQUIRE(N > 0);
 
 	/* Initialize random number generator */

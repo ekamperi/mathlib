@@ -193,7 +193,7 @@ ATF_TC_BODY(test_erf3, tc)
 	 * And if this happen, it _may_ result to a range error.
 	 * Check the ~ of this instead.
 	 */
-	N = get_config_var_as_long(tc, "iterations");
+	N = atf_tc_get_config_var_as_long(tc, "iterations");
 	ATF_REQUIRE(N > 0);
 
 	for (i = 0; i < N; i++) {

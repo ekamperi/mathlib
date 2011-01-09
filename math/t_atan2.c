@@ -74,7 +74,7 @@ ATF_TC_BODY(test_atan22, tc)
 	/* Try the same thing but with some random input */
 	srand(time(NULL));
 
-	N = get_config_var_as_long(tc, "iterations");
+	N = atf_tc_get_config_var_as_long(tc, "iterations");
 	ATF_REQUIRE(N > 0);
 
 #define X1      -1E4

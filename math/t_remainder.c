@@ -64,7 +64,7 @@ ATF_TC_BODY(test_remainder2, tc)
 	long double ldx, ldy, ldz;
 	long i, N;
 
-	N = get_config_var_as_long(tc, "iterations");
+	N = atf_tc_get_config_var_as_long(tc, "iterations");
 	ATF_REQUIRE(N > 0);
 
 	ATF_FOR_LOOP(i, N, i++) {

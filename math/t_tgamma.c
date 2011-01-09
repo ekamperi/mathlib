@@ -72,7 +72,7 @@ ATF_TC_BODY(test_tgamma2, tc)
 	/* First for real numbers */
 	init_randgen();
 
-	N = get_config_var_as_long(tc, "iterations");
+	N = atf_tc_get_config_var_as_long(tc, "iterations");
 	ATF_REQUIRE(N > 0);
 
 	cnt = 0;
@@ -319,7 +319,7 @@ ATF_TC_BODY(test_tgamma6, tc)
 	query_errhandling(&haserrexcept, &haserrno);
 	ATF_REQUIRE(haserrexcept || haserrno);
 
-	N = get_config_var_as_long(tc, "iterations");
+	N = atf_tc_get_config_var_as_long(tc, "iterations");
 	ATF_REQUIRE(N > 0);
 
 	ATF_FOR_LOOP(i, N, i++) {

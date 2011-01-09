@@ -45,7 +45,7 @@ ATF_TC_BODY(test_remquo2, tc)
 	long i, N;
 	int quo;
 
-	N = get_config_var_as_long(tc, "iterations");
+	N = atf_tc_get_config_var_as_long(tc, "iterations");
 	ATF_REQUIRE(N > 0);
 
 	ATF_FOR_LOOP(i, N, i++) {
@@ -138,7 +138,7 @@ ATF_TC_BODY(test_remquo3, tc)
 	long i, N, idx;
 	int haserrexcept, haserrno, quo;
 
-	N = get_config_var_as_long(tc, "iterations");
+	N = atf_tc_get_config_var_as_long(tc, "iterations");
 	ATF_REQUIRE(N > 0);
 
 	/* XXX: ATF_CHECK_IFNAN -> ATF_PASS_OR_BREAK_... */
@@ -224,7 +224,7 @@ ATF_TC_BODY(test_remquo4, tc)
 	long i, N;
 	int quo;
 
-	N = get_config_var_as_long(tc, "iterations");
+	N = atf_tc_get_config_var_as_long(tc, "iterations");
 	ATF_REQUIRE(N > 0);
 
 	ATF_FOR_LOOP(i, N, i++) {

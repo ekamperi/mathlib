@@ -56,7 +56,7 @@ ATF_TC_BODY(test_fma2, tc)
 	long double ldx, ldz;
 	long i, N;
 
-	N = get_config_var_as_long(tc, "iterations");
+	N = atf_tc_get_config_var_as_long(tc, "iterations");
 	ATF_REQUIRE(N > 0);
 
 	ATF_FOR_LOOP(i, N, i++) {
@@ -340,7 +340,7 @@ ATF_TC_BODY(test_fma6, tc)
 	long double ldx, ldy;
 	long i, N;
 
-	N = get_config_var_as_long(tc, "iterations");
+	N = atf_tc_get_config_var_as_long(tc, "iterations");
 	ATF_REQUIRE(N > 0);
 
 	ATF_FOR_LOOP(i, N, i++) {

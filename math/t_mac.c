@@ -133,7 +133,7 @@ ATF_TC_BODY(test_isnormal, tc)
 	long double ldz;
 	long i, N;
 
-	N = get_config_var_as_long(tc, "iterations");
+	N = atf_tc_get_config_var_as_long(tc, "iterations");
 	ATF_REQUIRE(N > 0);
 
 	ATF_FOR_LOOP(i, N, i++) {
@@ -168,7 +168,7 @@ ATF_TC_BODY(test_signbit, tc)
 	long double ldz;
 	long i, N;
 
-	N = get_config_var_as_long(tc, "iterations");
+	N = atf_tc_get_config_var_as_long(tc, "iterations");
 	ATF_REQUIRE(N > 0);
 
 	ATF_FOR_LOOP(i, N, i++) {
@@ -239,7 +239,7 @@ ATF_TC_BODY(test_isgreater, tc)
 	long double ldx, ldy;
 	long i, N;
 
-	N = get_config_var_as_long(tc, "iterations");
+	N = atf_tc_get_config_var_as_long(tc, "iterations");
 	ATF_REQUIRE(N > 0);
 
 	ATF_FOR_LOOP(i, N, i++) {
@@ -388,7 +388,7 @@ ATF_TC_BODY(test_isunordered, tc)
 	long double ldx;
 	long i, N;
 
-	N = get_config_var_as_long(tc, "iterations");
+	N = atf_tc_get_config_var_as_long(tc, "iterations");
 	ATF_REQUIRE(N > 0);
 
 	ATF_FOR_LOOP(i, N, i++) {

@@ -69,7 +69,7 @@ ATF_TC_BODY(test_nextafter2, tc)
 	size_t i, j;
 	long nwalks;
 
-	nwalks = get_config_var_as_long(tc, "iterations");
+	nwalks = atf_tc_get_config_var_as_long(tc, "iterations");
 	ATF_REQUIRE(nwalks > 0);
 
 	/*
@@ -136,7 +136,7 @@ ATF_TC_BODY(test_nextafter3, tc)
 	long double ldx;
 	long i, N;
 
-	N = get_config_var_as_long(tc, "iterations");
+	N = atf_tc_get_config_var_as_long(tc, "iterations");
 	ATF_REQUIRE(N > 0);
 
 	ATF_FOR_LOOP(i, N, i++) {

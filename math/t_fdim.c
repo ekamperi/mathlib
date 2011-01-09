@@ -53,7 +53,7 @@ ATF_TC_BODY(test_fdim2, tc)
 	long double ldx;
 	long i, N;
 
-	N = get_config_var_as_long(tc, "iterations");
+	N = atf_tc_get_config_var_as_long(tc, "iterations");
 	ATF_REQUIRE(N > 0);
 
 	/* If x or y is NaN, a NaN shall be returned */

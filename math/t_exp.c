@@ -138,7 +138,7 @@ ATF_TC_BODY(test_exp3, tc)
 	 * For IEEE Std 754-1985 double, 709.8 < x implies exp(x) has overflowed.
 	 * The value x < -708.4 implies exp(x) has underflowed.
 	 */
-	N = get_config_var_as_long(tc, "iterations");
+	N = atf_tc_get_config_var_as_long(tc, "iterations");
 	ATF_REQUIRE(N > 0);
 
 	ATF_FOR_LOOP(i, N, i++) {

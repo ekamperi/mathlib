@@ -42,7 +42,7 @@ ATF_TC_BODY(test_casin2, tc)
 	long double complex ldcx, ldcy;
 	long i, N;
 
-	N = get_config_var_as_long(tc, "iterations");
+	N = atf_tc_get_config_var_as_long(tc, "iterations");
 	ATF_REQUIRE(N > 0);
 
 	ATF_FOR_LOOP(i, N, i++) {
