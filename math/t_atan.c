@@ -6,6 +6,7 @@
 #include <time.h>
 
 #include "config.h"
+#include "lconstants.h"
 #include "subr_atf.h"
 #include "subr_fpcmp.h"
 #include "t_atan.h"
@@ -88,7 +89,7 @@ ATF_TC_BODY(test_atan2, tc)
 		/* long double */
 #ifdef	HAVE_ATANL
 		ldy = atanl(x);
-		ATF_PASS_OR_BREAK(ldy >= -M_PI_2 && ldy <= M_PI_2);
+		ATF_PASS_OR_BREAK(ldy >= -M_PI_2l && ldy <= M_PI_2l);
 #endif
 	}
 }
