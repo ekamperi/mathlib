@@ -58,7 +58,7 @@ t_asinh: $(DEPS_T_ASINH)
 	$(CC99) -o t_asinh $(DEPS_T_ASINH) $(CFLAGS) $(LIBS)
 
 
-_DEPS_T_ATAN = t_atan.o subr_atf.o subr_fpcmp.o
+_DEPS_T_ATAN = t_atan.o subr_atf.o subr_fpcmp.o subr_random.o
  DEPS_T_ATAN = $(_DEPS_T_ATAN:%=obj/%)
 t_atan:	$(DEPS_T_ATAN)
 	$(CC99) -o t_atan $(DEPS_T_ATAN) $(CFLAGS) $(LIBS)
