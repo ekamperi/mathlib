@@ -49,4 +49,34 @@ AC_CHECK_FUNCS([csinhl csinl csqrtl ctanhl ctanl])
 
 AC_CHECK_FUNCS([strtold])
 
+AC_RUN_IFELSE([
+#include <math.h>
+#include <stdio.h>
+
+int
+main(void)
+{
+	double x = 1.0;
+	int normal = 0, subnormal = 0, zero = 0;
+
+	normal = isnormal(x);
+	for (;;) {
+		x /= 2.0;
+		if (fpclassify(x) == FP_SUBNORMAL) {
+			subnormal = 1;
+		}
+		if (fpclassify(x) == FP_ZERO) {
+			zero = 1;
+			break;
+		}
+	}
+	return 1;
+	return (normal && subnormal && zero);
+}
+		],
+		[
+	AC_DEFINE([HAVE_SUBNORMALS],
+		  [1],
+		  ["Define to 1 if host cpu supports subnormal floating-point numbers"])])
+
 AC_OUTPUT
