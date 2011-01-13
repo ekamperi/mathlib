@@ -9,6 +9,7 @@
 #include <time.h>
 
 #include "config.h"
+#include "lconstants.h"
 #include "subr_atf.h"
 #include "subr_fpcmp.h"
 #include "t_atan2.h"
@@ -63,9 +64,11 @@ ATF_TC_HEAD(test_atan22, tc)
 }
 ATF_TC_BODY(test_atan22, tc)
 {
-	long i, N;
+	size_t i, N;
 
 	N = sizeof(t1dtable) / sizeof(t1dtable[0]);
+	ATF_REQUIRE(N > 0);
+
 	for (i = 0; i < N; i++) {
 		ATF_CHECK(atan2(t1dtable[i].y, t1dtable[i].x) >= -M_PI);
 		ATF_CHECK(atan2(t1dtable[i].y, t1dtable[i].x) <=  M_PI);
@@ -101,13 +104,13 @@ t3entry {
 	long double z;       /* atan2 output */
 } t3table[] = {
 	/* If y is +-0 and x is < 0, +-Pi shall be returned */
-	{ +0.0, -1E-5, M_PI },
-	{ +0.0, -1.0,  M_PI },
-	{ +0.0, -2.0,  M_PI },
+	{ +0.0, -1E-5, M_PIl },
+	{ +0.0, -1.0,  M_PIl },
+	{ +0.0, -2.0,  M_PIl },
 
-	{ -0.0, -1E-5,-M_PI },
-	{ -0.0, -1.0, -M_PI },
-	{ -0.0, -2.0, -M_PI },
+	{ -0.0, -1E-5,-M_PIl },
+	{ -0.0, -1.0, -M_PIl },
+	{ -0.0, -2.0, -M_PIl },
 
 	/* If y is +-0 and x is > 0, +-0 shall be returned */
 	{ +0.0, 1E-5,+0.0 },
@@ -119,22 +122,22 @@ t3entry {
 	{ -0.0, 2.0, -0.0 },
 
 	/* If y is < 0 and x is +-0, -Pi/2 shall be returned */
-	{ -1E-5, +0.0, -M_PI_2 },
-	{ -1.0,  +0.0, -M_PI_2 },
-	{ -2.0,  +0.0, -M_PI_2 },
+	{ -1E-5, +0.0, -M_PI_2l },
+	{ -1.0,  +0.0, -M_PI_2l },
+	{ -2.0,  +0.0, -M_PI_2l },
 
-	{ -1E-5, -0.0, -M_PI_2 },
-	{ -1.0,  -0.0, -M_PI_2 },
-	{ -2.0,  -0.0, -M_PI_2 },
+	{ -1E-5, -0.0, -M_PI_2l },
+	{ -1.0,  -0.0, -M_PI_2l },
+	{ -2.0,  -0.0, -M_PI_2l },
 
 	/* If y is > 0 and x is +-0, Pi/2 shall be returned */
-	{ 1E-5, +0.0, M_PI_2 },
-	{ 1.0,  +0.0, M_PI_2 },
-	{ 2.0,  +0.0, M_PI_2 },
+	{ 1E-5, +0.0, M_PI_2l },
+	{ 1.0,  +0.0, M_PI_2l },
+	{ 2.0,  +0.0, M_PI_2l },
 
-	{ 1E-5, -0.0, M_PI_2 },
-	{ 1.0,  -0.0, M_PI_2 },
-	{ 2.0,  -0.0, M_PI_2 },
+	{ 1E-5, -0.0, M_PI_2l },
+	{ 1.0,  -0.0, M_PI_2l },
+	{ 2.0,  -0.0, M_PI_2l },
 
 	/* If either x or y is NaN, a NaN shall be returned */
 #ifdef	NAN
@@ -153,13 +156,13 @@ t3entry {
 	{ -2.0, NAN, NAN },
 #endif	/* NAN */
 	/* If y is +-0 and x is -0, +-Pi shall be returned */
-	{ +0.0, -0.0,  M_PI },
-	{ +0.0, -0.0,  M_PI },
-	{ +0.0, -0.0,  M_PI },
+	{ +0.0, -0.0,  M_PIl },
+	{ +0.0, -0.0,  M_PIl },
+	{ +0.0, -0.0,  M_PIl },
 
-	{ -0.0, -0.0, -M_PI },
-	{ -0.0, -0.0, -M_PI },
-	{ -0.0, -0.0, -M_PI },
+	{ -0.0, -0.0, -M_PIl },
+	{ -0.0, -0.0, -M_PIl },
+	{ -0.0, -0.0, -M_PIl },
 
 	/* If y is +-0 and x is +0, +-0 shall be returned */
 	{ +0.0, +0.0, +0.0 },
@@ -172,15 +175,15 @@ t3entry {
 
 	/* For finite values of +-y > 0, if x is -Inf, +-Pi shall be returned */
 #ifdef	INFINITY
-	{ 1E-5, -INFINITY, M_PI },
-	{  1.0, -INFINITY, M_PI },
-	{  2.0, -INFINITY, M_PI },
-	{ 1E+5, -INFINITY, M_PI },
+	{ 1E-5, -INFINITY, M_PIl },
+	{  1.0, -INFINITY, M_PIl },
+	{  2.0, -INFINITY, M_PIl },
+	{ 1E+5, -INFINITY, M_PIl },
 
-	{ -1E-5, -INFINITY, -M_PI },
-	{  -1.0, -INFINITY, -M_PI },
-	{  -2.0, -INFINITY, -M_PI },
-	{ -1E+5, -INFINITY, -M_PI },
+	{ -1E-5, -INFINITY, -M_PIl },
+	{  -1.0, -INFINITY, -M_PIl },
+	{  -2.0, -INFINITY, -M_PIl },
+	{ -1E+5, -INFINITY, -M_PIl },
 
 	/* For finite values of +-y > 0, if x is +Inf, +-0 shall be returned */
 	{ 1E-5, +INFINITY, +0.0 },
@@ -194,39 +197,38 @@ t3entry {
 	{ -1E+5, +INFINITY, -0.0 },
 
 	/* For finite values of x, if y is +-Inf, +-Pi/2 shall be returned */
-	{ +INFINITY,  1E-5,  M_PI_2 },
-	{ +INFINITY,   1.0,  M_PI_2 },
-	{ +INFINITY,   2.0,  M_PI_2 },
-	{ +INFINITY,  1E+5,  M_PI_2 },
+	{ +INFINITY,  1E-5,  M_PI_2l },
+	{ +INFINITY,   1.0,  M_PI_2l },
+	{ +INFINITY,   2.0,  M_PI_2l },
+	{ +INFINITY,  1E+5,  M_PI_2l },
 
-	{ -INFINITY, -1E-5, -M_PI_2 },
-	{ -INFINITY,  -1.0, -M_PI_2 },
-	{ -INFINITY,  -2.0, -M_PI_2 },
-	{ -INFINITY, -1E+5, -M_PI_2 },
+	{ -INFINITY, -1E-5, -M_PI_2l },
+	{ -INFINITY,  -1.0, -M_PI_2l },
+	{ -INFINITY,  -2.0, -M_PI_2l },
+	{ -INFINITY, -1E+5, -M_PI_2l },
 
 	/* If y is +-Inf and x is -Inf, +-3Pi/4 shall be returned */
-	{ +INFINITY, -INFINITY,  3*M_PI/4 },
-	{ +INFINITY, -INFINITY,  3*M_PI/4 },
-	{ +INFINITY, -INFINITY,  3*M_PI/4 },
-	{ +INFINITY, -INFINITY,  3*M_PI/4 },
+	{ +INFINITY, -INFINITY,  3*M_PI_4l },
+	{ +INFINITY, -INFINITY,  3*M_PI_4l },
+	{ +INFINITY, -INFINITY,  3*M_PI_4l },
+	{ +INFINITY, -INFINITY,  3*M_PI_4l },
 
-	{ -INFINITY, -INFINITY, -3*M_PI/4 },
-	{ -INFINITY, -INFINITY, -3*M_PI/4 },
-	{ -INFINITY, -INFINITY, -3*M_PI/4 },
-	{ -INFINITY, -INFINITY, -3*M_PI/4 },
+	{ -INFINITY, -INFINITY, -3*M_PI_4l },
+	{ -INFINITY, -INFINITY, -3*M_PI_4l },
+	{ -INFINITY, -INFINITY, -3*M_PI_4l },
+	{ -INFINITY, -INFINITY, -3*M_PI_4l },
 
 	/* If y is +-Inf and x is +Inf, +-Pi/4 shall be returned */
-	{ +INFINITY, INFINITY,  M_PI/4 },
-	{ +INFINITY, INFINITY,  M_PI/4 },
-	{ +INFINITY, INFINITY,  M_PI/4 },
-	{ +INFINITY, INFINITY,  M_PI/4 },
+	{ +INFINITY, INFINITY,  M_PI_4l },
+	{ +INFINITY, INFINITY,  M_PI_4l },
+	{ +INFINITY, INFINITY,  M_PI_4l },
+	{ +INFINITY, INFINITY,  M_PI_4l },
 
-	{ -INFINITY, INFINITY, -M_PI/4 },
-	{ -INFINITY, INFINITY, -M_PI/4 },
-	{ -INFINITY, INFINITY, -M_PI/4 },
-	{ -INFINITY, INFINITY, -M_PI/4 },
+	{ -INFINITY, INFINITY, -M_PI_4l },
+	{ -INFINITY, INFINITY, -M_PI_4l },
+	{ -INFINITY, INFINITY, -M_PI_4l },
+	{ -INFINITY, INFINITY, -M_PI_4l },
 #endif	/* INFINITY */
-
 };
 
 ATF_TC(test_atan23);
