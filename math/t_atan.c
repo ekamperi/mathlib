@@ -180,6 +180,7 @@ ATF_TC_HEAD(test_atan4, tc)
 }
 ATF_TC_BODY(test_atan4, tc)
 {
+#ifdef	HAVE_SUBNORMALS
 	float fx, fy;
 	double dx, dy;
 	long double ldx, ldy;
@@ -206,6 +207,7 @@ ATF_TC_BODY(test_atan4, tc)
 		ATF_PASS_OR_BREAK(ldy == ldx);
 #endif
 	}
+#endif	/* HAVE_SUBNORMALS */
 }
 
 /* Add test cases to test program */
