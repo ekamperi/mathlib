@@ -64,7 +64,7 @@ t_atan:	$(DEPS_T_ATAN)
 	$(CC99) -o t_atan $(DEPS_T_ATAN) $(CFLAGS) $(LIBS)
 
 
-_DEPS_T_ATAN2 = t_atan2.o subr_atf.o subr_fpcmp.o
+_DEPS_T_ATAN2 = t_atan2.o subr_atf.o subr_errhandling.o subr_fpcmp.o
  DEPS_T_ATAN2 = $(_DEPS_T_ATAN2:%=obj/%)
 t_atan2: $(DEPS_T_ATAN2)
 	$(CC99) -o t_atan2 $(DEPS_T_ATAN2) $(CFLAGS) $(LIBS)

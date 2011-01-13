@@ -11,6 +11,7 @@
 #include "config.h"
 #include "lconstants.h"
 #include "subr_atf.h"
+#include "subr_errhandling.h"
 #include "subr_fpcmp.h"
 #include "t_atan2.h"
 
