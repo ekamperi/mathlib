@@ -70,7 +70,8 @@ t_atan2: $(DEPS_T_ATAN2)
 	$(CC99) -o t_atan2 $(DEPS_T_ATAN2) $(CFLAGS) $(LIBS)
 
 
-_DEPS_T_ATANH = t_atanh.o subr_atf.o subr_errhandling.o subr_fpcmp.o
+_DEPS_T_ATANH = t_atanh.o subr_atf.o subr_errhandling.o subr_fpcmp.o \
+		subr_random.o
  DEPS_T_ATANH = $(_DEPS_T_ATANH:%=obj/%)
 t_atanh: $(DEPS_T_ATANH)
 	$(CC99) -o t_atanh $(DEPS_T_ATANH) $(CFLAGS) $(LIBS)
