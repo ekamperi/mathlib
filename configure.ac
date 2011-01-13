@@ -70,13 +70,15 @@ main(void)
 			break;
 		}
 	}
-	return 1;
-	return (normal && subnormal && zero);
+
+	/* From autoconf's point of view, 0 is success and 1 is failure */
+	return !(normal && subnormal && zero);
 }
-		],
-		[
-	AC_DEFINE([HAVE_SUBNORMALS],
-		  [1],
-		  ["Define to 1 if host cpu supports subnormal floating-point numbers"])])
+],[
+AC_DEFINE([HAVE_SUBNORMALS],
+	  [1],
+	  [Define to 1 if host cpu supports subnormal floating-point numbers]
+	  )
+])
 
 AC_OUTPUT
