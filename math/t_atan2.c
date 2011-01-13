@@ -284,23 +284,23 @@ ATF_TC_HEAD(test_atan24, tc)
 ATF_TC_BODY(test_atan24, tc)
 {
 	/* float */
-	errno = 0; atan2f(+0.0, +0.0); ATF_CHECK(errno != EDOM);
-	errno = 0; atan2f(+0.0, -0.0); ATF_CHECK(errno != EDOM);
-	errno = 0; atan2f(-0.0, +0.0); ATF_CHECK(errno != EDOM);
-	errno = 0; atan2f(-0.0, -0.0); ATF_CHECK(errno != EDOM);
+	errno = 0; atan2f(+0.0, +0.0); ATF_CHECK(not_errno_equalto(EDOM));
+	errno = 0; atan2f(+0.0, -0.0); ATF_CHECK(not_errno_equalto(EDOM));
+	errno = 0; atan2f(-0.0, +0.0); ATF_CHECK(not_errno_equalto(EDOM));
+	errno = 0; atan2f(-0.0, -0.0); ATF_CHECK(not_errno_equalto(EDOM));
 
 	/* double */
-	errno = 0; atan2(+0.0, +0.0); ATF_CHECK(errno != EDOM);
-	errno = 0; atan2(+0.0, -0.0); ATF_CHECK(errno != EDOM);
-	errno = 0; atan2(-0.0, +0.0); ATF_CHECK(errno != EDOM);
-	errno = 0; atan2(-0.0, -0.0); ATF_CHECK(errno != EDOM);
+	errno = 0; atan2(+0.0, +0.0); ATF_CHECK(not_errno_equalto(EDOM));
+	errno = 0; atan2(+0.0, -0.0); ATF_CHECK(not_errno_equalto(EDOM));
+	errno = 0; atan2(-0.0, +0.0); ATF_CHECK(not_errno_equalto(EDOM));
+	errno = 0; atan2(-0.0, -0.0); ATF_CHECK(not_errno_equalto(EDOM));
 
 	/* long double */
 #ifdef	HAVE_ATAN2L
-	errno = 0; atan2l(+0.0, +0.0); ATF_CHECK(errno != EDOM);
-	errno = 0; atan2l(+0.0, -0.0); ATF_CHECK(errno != EDOM);
-	errno = 0; atan2l(-0.0, +0.0); ATF_CHECK(errno != EDOM);
-	errno = 0; atan2l(-0.0, -0.0); ATF_CHECK(errno != EDOM);
+	errno = 0; atan2l(+0.0, +0.0); ATF_CHECK(not_errno_equalto(EDOM));
+	errno = 0; atan2l(+0.0, -0.0); ATF_CHECK(not_errno_equalto(EDOM));
+	errno = 0; atan2l(-0.0, +0.0); ATF_CHECK(not_errno_equalto(EDOM));
+	errno = 0; atan2l(-0.0, -0.0); ATF_CHECK(not_errno_equalto(EDOM));
 #endif
 }
 
