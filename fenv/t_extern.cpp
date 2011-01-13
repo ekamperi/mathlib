@@ -5,7 +5,8 @@
 ATF_TEST_CASE(test_extern);
 ATF_TEST_CASE_HEAD(test_extern)
 {
-	set_md_var("descr", "Check whether C++ programs can use fenv.h");
+	set_md_var("descr",
+	    "Check whether C++ programs can use fenv.h");
 }
 ATF_TEST_CASE_BODY(test_extern)
 {
@@ -13,16 +14,16 @@ ATF_TEST_CASE_BODY(test_extern)
 	fenv_t env;
 
 	/* Make some fe*() calls */
-	ATF_CHECK(feclearexcept(FE_ALL_EXCEPT) == 0);
-	ATF_CHECK(fegetexceptflag(&flag, FE_ALL_EXCEPT) == 0);
-	ATF_CHECK(fesetexceptflag(&flag, FE_ALL_EXCEPT) == 0);
-	ATF_CHECK(feraiseexcept(FE_ALL_EXCEPT) == 0);
+	ATF_REQUIRE(feclearexcept(FE_ALL_EXCEPT) == 0);
+	ATF_REQUIRE(fegetexceptflag(&flag, FE_ALL_EXCEPT) == 0);
+	ATF_REQUIRE(fesetexceptflag(&flag, FE_ALL_EXCEPT) == 0);
+	ATF_REQUIRE(feraiseexcept(FE_ALL_EXCEPT) == 0);
 	(void) fegetround();
-	ATF_CHECK(fesetround(fegetround()) == 0);
-	ATF_CHECK(fegetenv(&env) == 0);
-	ATF_CHECK(feholdexcept(&env) == 0);
-	ATF_CHECK(fesetenv(&env) == 0);
-	ATF_CHECK(feupdateenv(&env) == 0);
+	ATF_REQUIRE(fesetround(fegetround()) == 0);
+	ATF_REQUIRE(fegetenv(&env) == 0);
+	ATF_REQUIRE(feholdexcept(&env) == 0);
+	ATF_REQUIRE(fesetenv(&env) == 0);
+	ATF_REQUIRE(feupdateenv(&env) == 0);
 }
 
 /* Add test case to test program */
