@@ -9,6 +9,7 @@
 #include "subr_atf.h"
 #include "subr_errhandling.h"
 #include "subr_fpcmp.h"
+#include "subr_random.h"
 #include "t_atanh.h"
 
 /*
@@ -237,6 +238,51 @@ ATF_TC_BODY(test_atanh4, tc)
 	ATF_REQUIRE(haserrexcept || haserrno);
 }
 
+/*
+ * Test case 5
+ *
+ * If x is subnormal, a range error _may_ occur and x _should_ be
+ * returned.
+ */
+ATF_TC(test_atanh5);
+ATF_TC_HEAD(test_atanh5, tc)
+{
+	atf_tc_set_md_var(tc,
+	    "descr",
+	    "Input is subnormal");
+}
+ATF_TC_BODY(test_atanh5, tc)
+{
+#ifdef	HAVE_SUBNORMALS
+	float fx, fy;
+	double dx, dy;
+	long double ldx, ldy;
+	long i, N;
+
+	N = atf_tc_get_config_var_as_long(tc, "iterations");
+	ATF_REQUIRE(N > 0);
+
+	ATF_FOR_LOOP(i, N, i++) {
+		/* float */
+		fx = random_float(FP_SUBNORMAL);
+		fy = atanhf(fx);
+		ATF_PASS_OR_BREAK(fy == fx);
+
+		/* double */
+		dx = random_double(FP_SUBNORMAL);
+		dy = atanh(dx);
+		ATF_PASS_OR_BREAK(dy == dx);
+
+		/* long double */
+#ifdef	HAVE_ATANHL
+		ldx = random_long_double(FP_SUBNORMAL);
+		ldy = atanhl(ldx);
+		ATF_PASS_OR_BREAK(ldy == ldx);
+#endif
+  }
+#endif	/* HAVE_SUBNORMALS */
+}
+
 /* Add test cases to test program */
 ATF_TP_ADD_TCS(tp)
 {
@@ -244,6 +290,7 @@ ATF_TP_ADD_TCS(tp)
 	ATF_TP_ADD_TC(tp, test_atanh2);
 	ATF_TP_ADD_TC(tp, test_atanh3);
 	ATF_TP_ADD_TC(tp, test_atanh4);
+	ATF_TP_ADD_TC(tp, test_atanh5);
 
 	return atf_no_error();
 }
