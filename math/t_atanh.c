@@ -25,19 +25,19 @@ ATF_TC_BODY(test_atanh1, tc)
 {
 	size_t i, N;
 
-        /* double */
-        N = sizeof(t1dtable) / sizeof(t1dtable[0]);
+	/* double */
+	N = sizeof(t1dtable) / sizeof(t1dtable[0]);
 	ATF_REQUIRE(N > 0);
-        for (i = 0; i < N; i++)
+	for (i = 0; i < N; i++)
 		ATF_CHECK(fpreal_equal(
 			    atanh(t1dtable[i].x),
 				  t1dtable[i].y));
 
-        /* long double */
+	/* long double */
 #ifdef  HAVE_ATANHL
-        N = sizeof(t1ldtable) / sizeof(t1ldtable[0]);
+	N = sizeof(t1ldtable) / sizeof(t1ldtable[0]);
 	ATF_REQUIRE(N > 0);
-        for (i = 0; i < N; i++)
+	for (i = 0; i < N; i++)
 		ATF_CHECK(fpreal_equall(
 			    atanhl(t1ldtable[i].x),
 				   t1ldtable[i].y));
@@ -100,7 +100,7 @@ t3entry {
 #endif
 #ifdef	HUGE_VALL
 	{  1.0,  HUGE_VALL },
-	{ -1.0, -HUGE_VALL},
+	{ -1.0, -HUGE_VALL },
 #endif
 };
 
@@ -124,34 +124,31 @@ ATF_TC_BODY(test_atanh3, tc)
 		/* float */
 		errno = 0;
 		clear_exceptions();
-#ifdef	HUGE_VALF
-		ATF_CHECK(fpreal_equalf(atanhf(t3table[i].x), HUGE_VALF));
-#endif
+		ATF_CHECK(fpreal_equalf(atanhf(t3table[i].x),
+					(float)t3table[i].y));
 		ATF_CHECK(errno_equalto(ERANGE));
 		ATF_CHECK(raised_exceptions(MY_FE_DIVBYZERO));
 
 		/* double */
 		errno = 0;
 		clear_exceptions();
-#ifdef	HUGE_VAL
-		ATF_CHECK(fpreal_equal(atanh(t3table[i].x), HUGE_VAL));
-#endif
+		ATF_CHECK(fpreal_equal(atanh(t3table[i].x),
+				      (double)t3table[i].y));
 		ATF_CHECK(errno_equalto(ERANGE));
 		ATF_CHECK(raised_exceptions(MY_FE_DIVBYZERO));
 
-		    /* long double */
+		/* long double */
 #ifdef	HAVE_ATANHL
 		errno = 0;
 		clear_exceptions();
-#ifdef	HUGE_VALL
-		ATF_CHECK(fpreal_equall(atanhl(t3table[i].x), HUGE_VALL));
-#endif
+		ATF_CHECK(fpreal_equall(atanhl(t3table[i].x),
+					       t3table[i].y));
 		ATF_CHECK(errno_equalto(ERANGE));
 		ATF_CHECK(raised_exceptions(MY_FE_DIVBYZERO));
-#endif	/* HAVE_ATANHL */
+#endif
 	}
 
-	/* We can't proceed if there's no way to detect errors */
+	/* Revenge is a Dish Best Served Cold :) */
 	query_errhandling(&haserrexcept, &haserrno);
 	ATF_REQUIRE(haserrexcept || haserrno);
 }
@@ -235,7 +232,7 @@ ATF_TC_BODY(test_atanh4, tc)
 #endif
 	}
 
-	/* We can't proceed if there's no way to detect errors */
+	/* Revenge is a Dish Best Served Cold :) */
 	query_errhandling(&haserrexcept, &haserrno);
 	ATF_REQUIRE(haserrexcept || haserrno);
 }
