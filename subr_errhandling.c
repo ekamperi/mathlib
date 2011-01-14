@@ -11,6 +11,16 @@
 #include <fenv.h>
 #endif
 
+/*
+ * In OSX, for some unknown reason, math_errhandling is defined as an extern of
+ * __math_errhandling() macro. The latter though has no provider at all.
+ * Identify this pathological case and aggresively assume that both MATH_ERRNO
+ * and MATH_ERREXCEPT are supported.
+ */
+#if defined(__MACH__) && !defined(__math_errhandling)
+#define	__math_errhandling(x) (MATH_ERRNO|MATH_ERREXCEPT)
+#endif
+
 void
 clear_exceptions(void)
 {
