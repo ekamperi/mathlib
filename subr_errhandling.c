@@ -17,7 +17,7 @@
  * Identify this pathological case and aggresively assume that both MATH_ERRNO
  * and MATH_ERREXCEPT are supported.
  */
-#if defined(__MACH__) && !defined(__math_errhandling)
+#if	defined(__MACH__) && !defined(__math_errhandling)
 #define	__math_errhandling(x) (MATH_ERRNO|MATH_ERREXCEPT)
 #endif
 
