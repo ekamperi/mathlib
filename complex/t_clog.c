@@ -56,7 +56,7 @@ ATF_TC_BODY(test_clog2, tc)
 		dcx = random_double_complex(FP_NORMAL);
 		dcy = clog(dcx);
 		ATF_PASS_OR_BREAK(cimag(dcy) >= -M_PI &&
-				  cimag(dcy) <= M_PI);
+				  cimag(dcy) <=  M_PI);
 
 		/* long double */
 #if defined(HAVE_CLOGL) && defined(HAVE_CIMAGL)
