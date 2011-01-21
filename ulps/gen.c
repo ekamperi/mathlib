@@ -1196,15 +1196,15 @@ ftable[] = {
 	/* cpow() */
 #ifdef  HAVE_CPOW
 	{
-	  .f_narg = 2,
-	  .f_name = "cpow",
-	  .f_libm_complex = cpow,
+		.f_narg = 2,
+		.f_name = "cpow",
+		.f_libm_complex = cpow,
 #ifdef  HAVE_CPOWL
-	  .f_namel = "cpowl",
-	  .f_libml_complex = cpowl,
+		.f_namel = "cpowl",
+		.f_libml_complex = cpowl,
 #endif
-	  .f_mpc = mpc_pow,
-	  .f_uc.fp1 = dom_cpow
+		.f_mpc = mpc_pow,
+		.f_uc.fp1 = dom_cpow
 	},
 #endif
 
@@ -1226,15 +1226,15 @@ ftable[] = {
 	/* csin() */
 #ifdef  HAVE_CSIN
 	{
-	  .f_narg = 1,
-	  .f_name = "csin",
-	  .f_libm_complex = csin,
+		.f_narg = 1,
+		.f_name = "csin",
+		.f_libm_complex = csin,
 #ifdef  HAVE_CSINL
-	  .f_namel = "csinl",
-	  .f_libml_complex = csinl,
+		.f_namel = "csinl",
+		.f_libml_complex = csinl,
 #endif
-	  .f_mpc = mpc_sin,
-	  .f_uc.fp1 = dom_csin
+		.f_mpc = mpc_sin,
+		.f_uc.fp1 = dom_csin
 	},
 #endif
 
@@ -1271,15 +1271,15 @@ ftable[] = {
 	/* ctan() */
 #ifdef  HAVE_CTAN
 	{
-	  .f_narg = 1,
-	  .f_name = "ctan",
-	  .f_libm_complex = ctan,
+		.f_narg = 1,
+		.f_name = "ctan",
+		.f_libm_complex = ctan,
 #ifdef  HAVE_CTANL
-	  .f_namel = "ctanl",
-	  .f_libml_complex = ctanl,
+		.f_namel = "ctanl",
+		.f_libml_complex = ctanl,
 #endif
-	  .f_mpc = mpc_tan,
-	  .f_uc.fp1 = dom_ctan
+		.f_mpc = mpc_tan,
+		.f_uc.fp1 = dom_ctan
 	},
 #endif
 
