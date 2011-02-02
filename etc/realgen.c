@@ -22,8 +22,8 @@
 #include "subr_random.h"
 
 /* Function prototypes */
-#define DECL_GEN(type)					\
-static void gen_##type(const char *fname, size_t total, \
+#define DECL_GEN(type)							\
+static void gen_##type(const char *fname, size_t total,			\
 			type lower, type upper, type delta)
 typedef long double long_double;
 DECL_GEN(double);
@@ -91,19 +91,19 @@ do {									\
 	    || mpfr_erangeflag_p())
 
 /* Used for debugging purposes only */
-#define MPFR_PRINT_FLAGS(x)			\
-do {						\
-	if (mpfr_underflow_p())			\
-		fprintf(stderr, "Underflow\n");	\
-	if (mpfr_overflow_p())			\
-		fprintf(stderr, "Overflow\n");	\
-	if (mpfr_nanflag_p())			\
-		fprintf(stderr, "NaN\n");	\
-	if (mpfr_inexflag_p())			\
-		fprintf(stderr, "Inexact\n");	\
-	if (mpfr_erangeflag_p())		\
-		fprintf(stderr, "Erange\n");	\
-	fprintf(stderr, "\n");			\
+#define MPFR_PRINT_FLAGS(x)						\
+do {									\
+	if (mpfr_underflow_p())						\
+		fprintf(stderr, "Underflow\n");				\
+	if (mpfr_overflow_p())						\
+		fprintf(stderr, "Overflow\n");				\
+	if (mpfr_nanflag_p())						\
+		fprintf(stderr, "NaN\n");				\
+	if (mpfr_inexflag_p())						\
+		fprintf(stderr, "Inexact\n");				\
+	if (mpfr_erangeflag_p())					\
+		fprintf(stderr, "Erange\n");				\
+	fprintf(stderr, "\n");						\
 } while(0)
 
 #define MPFR_PRINT_FPCLASS(x)						\
