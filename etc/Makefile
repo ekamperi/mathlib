@@ -1,4 +1,4 @@
-PROGS=proffenv profmath realgen testrand
+PROGS=proffenv profmath realgen testrand testrand2
 ALL: $(PROGS)
 
 # -Wstrict-prototypes
@@ -33,8 +33,12 @@ realgen: realgen.c ../ulps/basic-complex.c ../ulps/gen.c ../subr_random.c
 testrand: testrand.c ../subr_random.c
 	$(CC99) $(CCFLAGS) $(INCLUDE)				\
 		testrand.c ../subr_random.c			\
-	-o testrand						\
-	$(LIB)
+	-o testrand -lm
+
+testrand2: testrand2.c ../subr_random.c
+	$(CC99) $(CCFLAGS) $(INCLUDE)				\
+		testrand2.c ../subr_random.c			\
+	-o testrand2 -lm
 
 gen-csv: profmath
 

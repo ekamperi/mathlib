@@ -1,5 +1,6 @@
 #include <assert.h>
 #include <math.h>
+#include <mytypes.h>
 #include <stdio.h>
 #include <string.h>
 
@@ -9,7 +10,7 @@ struct
 stats {
 	const char *st_type;
 	size_t st_normals;
-	size_t st_denormals;
+	size_t st_subnormals;
 	size_t st_nans;
 	size_t st_inf;
 	size_t st_zero;
@@ -29,27 +30,26 @@ probe_##type(struct stats *st, size_t N)			\
 	st->st_type = #type;					\
 								\
 	for (i = 0; i < N; i++) {				\
-		x = random_##type(0);				\
-								\
+		x = random_##type(1);				\
 		switch (fpclassify(x)) {			\
 		case FP_NORMAL:					\
-			st->st_normals++;			\
+			++st->st_normals;			\
 			break;					\
 		case FP_SUBNORMAL:				\
-			st->st_denormals++;			\
+			++st->st_subnormals;			\
 			break;					\
 		case FP_NAN:					\
-			st->st_nans++;				\
+			++st->st_nans;				\
 			break;					\
 		case FP_INFINITE:				\
-			st->st_inf++;				\
+			++st->st_inf;				\
 			break;					\
 		case FP_ZERO:					\
-			st->st_zero++;				\
+			++st->st_zero;				\
 			break;					\
 		default:					\
 			/* invalid floating-point number */	\
-			st->st_invalid++;			\
+			++st->st_invalid;			\
 			break;					\
 		}						\
 	}							\
@@ -67,7 +67,7 @@ print_stats(const struct stats *st)
 
 	printf("---------- %s ----------\n", st->st_type);
 	printf("  Normals: %u\n", st->st_normals);
-        printf("Denormals: %u\n", st->st_denormals);
+        printf("Subnormals: %u\n", st->st_subnormals);
         printf("     NaNs: %u\n", st->st_nans);
         printf("      Inf: %u\n", st->st_inf);
         printf("     Zero: %u\n", st->st_zero);
@@ -79,8 +79,10 @@ int
 main(void)
 {
 	struct stats s;
-	const size_t N = 1*1000*1000;
+	const size_t N = 100*1000*1000;
 
+	init_randgen();
+#if 0
 	/* floats */
 	probe_float(&s, N);
 	print_stats(&s);
@@ -88,6 +90,7 @@ main(void)
 	/* double */
         probe_double(&s, N);
         print_stats(&s);
+#endif
 
 	/* long double */
         probe_long_double(&s, N);

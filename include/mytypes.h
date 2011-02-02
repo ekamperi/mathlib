@@ -58,5 +58,7 @@ typedef union {
 #define	MY_FP_ZERO	0x10
 
 #define	MY_FP_REAL (MY_FP_NORMAL | MY_FP_SUBNORMAL | MY_FP_ZERO)
+#define MY_FP_ALL  (MY_FP_NORMAL | MY_FP_SUBNORMAL | MY_FP_ZERO \
+		    | MY_FP_INFINITE | MY_FP_ZERO)
 
 #endif	/* ! __MY_TYPES__ */
