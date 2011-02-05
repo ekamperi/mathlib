@@ -250,6 +250,51 @@ ATF_TC_BODY(test_remquo4, tc)
 	}
 }
 
+
+/*
+ * Test case 5 -- A little bit fuzzing cont.
+ */
+ATF_TC(test_remquo5);
+ATF_TC_HEAD(test_remquo5, tc)
+{
+	atf_tc_set_md_var(tc,
+	    "descr",
+	    "remquo() should return the same thing as remainder()");
+}
+ATF_TC_BODY(test_remquo5, tc)
+{
+	float fx, fy, fz;
+	double dx, dy, dz;
+	long double ldx, ldy, ldz;
+	long i, N;
+	int quo;
+
+	N = atf_tc_get_config_var_as_long(tc, "iterations");
+	ATF_REQUIRE(N > 0);
+
+	ATF_FOR_LOOP(i, N, i++) {
+		/* float */
+		fx = random_float(FP_NORMAL);
+		fy = random_float(FP_NORMAL);
+		fz = remquof(fx, fy, &quo);
+		ATF_PASS_OR_BREAK(fz == remainderf(fx, fy));
+
+		/* double */
+		dx = random_double(FP_NORMAL);
+		dy = random_double(FP_NORMAL);
+		dz = remquo(dx, dy, &quo);
+		ATF_PASS_OR_BREAK(dz == remainder(dx, dy));
+
+		/* long double */
+#if defined(HAVE_REMQUOL) && defined(HAVE_REMAINDERL)
+		ldx = random_long_double(FP_NORMAL);
+		ldy = random_long_double(FP_NORMAL);
+		ldz = remquol(ldx, ldy, &quo);
+		ATF_PASS_OR_BREAK(ldz == remainderl(ldx, ldy));
+#endif
+	}
+}
+
 /* Add test cases to test program */
 ATF_TP_ADD_TCS(tp)
 {
@@ -257,6 +302,7 @@ ATF_TP_ADD_TCS(tp)
 	ATF_TP_ADD_TC(tp, test_remquo2);
 	ATF_TP_ADD_TC(tp, test_remquo3);
 	ATF_TP_ADD_TC(tp, test_remquo4);
+	ATF_TP_ADD_TC(tp, test_remquo5);
 
 	return atf_no_error();
 }
