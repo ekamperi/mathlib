@@ -250,9 +250,14 @@ ATF_TC_BODY(test_remquo4, tc)
 	}
 }
 
-
 /*
  * Test case 5 -- A little bit fuzzing cont.
+ *
+ * NOTE:
+ * Checking that remquo() equals remainder() doesn't render the signbit()
+ * checks from test 4 redundant. For example, consider the case where
+ * quo=0, dx=-0, dy!=0. Zeros with different signs compare as equal.
+ * (This isn't a thought experiment; I've seen it happening.)
  */
 ATF_TC(test_remquo5);
 ATF_TC_HEAD(test_remquo5, tc)
