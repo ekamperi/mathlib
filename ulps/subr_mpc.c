@@ -2,6 +2,7 @@
 #include "mytypes.h"
 #include "subr_mpc.h"
 
+#if MPC_VERSION_MAJOR == 0 && MPC_VERSION_MINOR < 9
 double complex
 mpc_get_dc(mpc_t op, mpfr_rnd_t rnd)
 {
@@ -45,3 +46,4 @@ mpc_get_ldc(mpc_t op, mpfr_rnd_t rnd)
 
 	return (z.z);
 }
+#endif
