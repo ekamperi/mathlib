@@ -6,7 +6,7 @@
 /*******************************************************************************
  *			Real arithmetic
  ******************************************************************************/
-#define __FPCMP_COMMON(x, y)				\
+#define FPCMP_COMMON(x, y)				\
 do {							\
 	if (isnan(x) || isnan(y))			\
 		return (isnan(x) && isnan(y));		\
@@ -23,7 +23,7 @@ do {							\
 int
 fpreal_equalf(float x, float y)
 {
-	__FPCMP_COMMON(x, y);
+	FPCMP_COMMON(x, y);
 
 	return ((fabsf(x - y) < (1E-6 * fmaxf(fabsf(x), fabsf(y)))));
 }
@@ -31,7 +31,7 @@ fpreal_equalf(float x, float y)
 int
 fpreal_equal(double x, double y)
 {
-	__FPCMP_COMMON(x, y);
+	FPCMP_COMMON(x, y);
 
 	return ((fabs(x - y) < (1E-8 * fmax(fabs(x), fabs(y)))));
 }
@@ -39,7 +39,7 @@ fpreal_equal(double x, double y)
 int
 fpreal_equall(long double x, long double y)
 {
-	__FPCMP_COMMON(x, y);
+	FPCMP_COMMON(x, y);
 
 	return ((fabsl(x - y) < (1E-10 * fmaxl(fabsl(x), fabsl(y)))));
 }
