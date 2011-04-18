@@ -231,6 +231,44 @@ ATF_TC_BODY(test_nextafter4, tc)
 #endif	/* INFINITY */
 }
 
+/*
+ * Test case 5
+ * http://gnats.netbsd.org/cgi-bin/query-pr-single.pl?number=44875
+ */
+ATF_TC(test_nextafter5);
+ATF_TC_HEAD(test_nextafter5, tc)
+{
+	atf_tc_set_md_var(tc,
+	    "descr",
+	    "If x == y, y (of the type x) shall be returned");
+}
+ATF_TC_BODY(test_nextafter5, tc)
+{
+	float fx, fy;
+	double dx, dy;
+	long double ldx, ldy;
+
+	/* float */
+	fy = nextafterf(-0.0, +0.0);
+	ATF_CHECK(iszero(fy) && signbit(fy) == 0);
+	fy = nextafterf(+0.0, -0.0);
+	ATF_CHECK(iszero(fy) && signbit(fy) == 1);
+
+	/* double */
+	dy = nextafter(-0.0, +0.0);
+	ATF_CHECK(iszero(dy) && signbit(dy) == 0);
+	dy = nextafterf(+0.0, -0.0);
+	ATF_CHECK(iszero(dy) && signbit(dy) == 1);
+
+	/* long double */
+#ifdef	HAVE_NEXTAFTERL
+	ldy = nextafterfl(-0.0, +0.0);
+	ATF_CHECK(iszero(ldy) && signbit(ldy) == 0);
+	ldy = nextafterfl(+0.0, -0.0);
+	ATF_CHECK(iszero(ldy) && signbit(ldy) == 1);
+#endif
+}
+
 /* Add test cases to test program */
 ATF_TP_ADD_TCS(tp)
 {
@@ -238,6 +276,7 @@ ATF_TP_ADD_TCS(tp)
 	ATF_TP_ADD_TC(tp, test_nextafter2);
 	ATF_TP_ADD_TC(tp, test_nextafter3);
 	ATF_TP_ADD_TC(tp, test_nextafter4);
+	ATF_TP_ADD_TC(tp, test_nextafter5);
 
 	return atf_no_error();
 }
