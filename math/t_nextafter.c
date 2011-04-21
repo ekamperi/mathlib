@@ -262,9 +262,9 @@ ATF_TC_BODY(test_nextafter5, tc)
 
 	/* long double */
 #ifdef	HAVE_NEXTAFTERL
-	ldy = nextafterfl(-0.0, +0.0);
+	ldy = nextafterl(-0.0, +0.0);
 	ATF_CHECK(iszero(ldy) && signbit(ldy) == 0);
-	ldy = nextafterfl(+0.0, -0.0);
+	ldy = nextafterl(+0.0, -0.0);
 	ATF_CHECK(iszero(ldy) && signbit(ldy) == 1);
 #endif
 }
