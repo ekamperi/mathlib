@@ -63,8 +63,8 @@ main(int argc, char *argv[])
 	for (i = 0; i < total; i++) {
 		if (all) {
 			f = getfunctionbyidx(i);
-			if ((realonly && !f->f_mpfr) ||
-			    (complexonly && f->f_mpfr))
+			if ((realonly    && !f->f_mpfr) ||
+			    (complexonly &&  f->f_mpfr))
 				continue;
 			target = f->f_name;
 		} else {
