@@ -6,6 +6,7 @@
 #include "subr_random.h"
 #include "ulp.h"
 
+static int isbanned(const char *fname, int argc, char *argv[]); 
 static void usage(void);
 
 int
@@ -13,7 +14,7 @@ main(int argc, char *argv[])
 {
 	struct ulp u;
 	struct ulp_complex uc;
-	int i, total, all, realonly, complexonly, list;
+	int i, total, all, realonly, complexonly, ban, list;
 	const char *target;
 	const struct fentry *f;
 
@@ -42,6 +43,9 @@ main(int argc, char *argv[])
 	} else if (argc == 1 && !strcmp(argv[0], "complex")) {
 		all = complexonly = 1;
 		argv++; argc--;
+	} else if (argc > 1 && !strcmp(argv[0], "ban")) {
+		all = ban = 1;
+		argv++; argc--;
 	} else if (argc == 1 && !strcmp(argv[0], "list")) {
 		list = 1;
 		argv++; argc--;
@@ -66,6 +70,14 @@ main(int argc, char *argv[])
 			if ((realonly    && !f->f_mpfr) ||
 			    (complexonly &&  f->f_mpfr))
 				continue;
+			
+			if (ban) {
+				if (isbanned(f->f_name, argc, argv)) {
+				  printf("[%2u/%2u] %-12s %s\n", i+1, total, f->f_name, "\t\t--- banned ---");
+					continue;
+				}
+			}
+
 			target = f->f_name;
 		} else {
 			target = argv[i];
@@ -101,11 +113,26 @@ main(int argc, char *argv[])
 	return EXIT_SUCCESS;
 }
 
+static int
+isbanned(const char *fname, int argc, char *argv[])
+{
+	int i;
+
+	for (i = 0; i < argc; i++) {
+		if (!strcmp(fname, argv[i])) {
+			return 1;
+		}
+	}
+
+	return 0;
+}
+
 static void
 usage(void)
 {
 	fprintf(stderr,
-	    "ulps: [all | real | complex | list | "
-	    "<function1> <function2> ...]\n");
+	    "ulps: [list | all | real | complex | "
+	    "ban <function1> <function2> ...] | "
+	    "<function1> <function2> ... \n");
 	exit(EXIT_FAILURE);
 }
