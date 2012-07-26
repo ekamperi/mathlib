@@ -6,7 +6,7 @@
 #include "subr_random.h"
 #include "ulp.h"
 
-static int isbanned(const char *fname, int argc, char *argv[]); 
+static int isbanned(const char *fname, int argc, char *argv[]);
 static void usage(void);
 
 int
@@ -73,7 +73,9 @@ main(int argc, char *argv[])
 			
 			if (ban) {
 				if (isbanned(f->f_name, argc, argv)) {
-				  printf("[%2u/%2u] %-12s %s\n", i+1, total, f->f_name, "\t\t--- banned ---");
+					printf("[%2u/%2u] %-12s %s\n",
+					    i+1, total, f->f_name,
+					    "\t\t--- banned ---");
 					continue;
 				}
 			}
