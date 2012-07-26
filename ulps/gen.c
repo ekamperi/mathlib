@@ -1139,7 +1139,7 @@ ftable[] = {
 		.f_narg = 1,
 		.f_name = "ccos",
 		.f_libm_complex = ccos,
-#ifdef  HAVE_CARGL
+#ifdef  HAVE_CCOSL
 		.f_namel = "ccosl",
 		.f_libml_complex = ccosl,
 #endif
