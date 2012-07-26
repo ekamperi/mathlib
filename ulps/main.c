@@ -13,7 +13,7 @@ main(int argc, char *argv[])
 {
 	struct ulp u;
 	struct ulp_complex uc;
-	int i, total, all, list;
+	int i, total, all, realonly, complexonly, list;
 	const char *target;
 	const struct fentry *f;
 
@@ -27,12 +27,20 @@ main(int argc, char *argv[])
 	 * list = list  all supported functions
 	 */
 	all = 0;
+	realonly = 0;
+	complexonly = 0;
 	list = 0;
 	if (argc == 0) {
 		usage();
 		/* never reached */
 	} else if (argc == 1 && !strcmp(argv[0], "all")) {
 		all = 1;
+		argv++; argc--;
+	} else if (argc == 1 && !strcmp(argv[0], "real")) {
+		all = realonly = 1;
+		argv++; argc--;
+	} else if (argc == 1 && !strcmp(argv[0], "complex")) {
+		all = complexonly = 1;
 		argv++; argc--;
 	} else if (argc == 1 && !strcmp(argv[0], "list")) {
 		list = 1;
@@ -55,6 +63,9 @@ main(int argc, char *argv[])
 	for (i = 0; i < total; i++) {
 		if (all) {
 			f = getfunctionbyidx(i);
+			if ((realonly && !f->f_mpfr) ||
+			    (complexonly && f->f_mpfr))
+				continue;
 			target = f->f_name;
 		} else {
 			target = argv[i];
@@ -93,6 +104,8 @@ main(int argc, char *argv[])
 static void
 usage(void)
 {
-	fprintf(stderr, "ulps: [all | list | <function1> <function2> ...]\n");
+	fprintf(stderr,
+	    "ulps: [all | real | complex | list | "
+	    "<function1> <function2> ...]\n");
 	exit(EXIT_FAILURE);
 }
